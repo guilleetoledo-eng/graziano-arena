@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRAZIANO · ARENA DE VENTAS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<style>
+  :root {
+    --bg: #FAFAF7;
+    --bg-soft: #F2F2EE;
+    --bg-card: #FFFFFF;
+    --ink: #0A0A0A;
+    --ink-2: #2A2A2A;
+    --ink-3: #5F5F5F;
+    --ink-4: #8A8A8A;
+    --ink-5: #B8B8B8;
+    --line: #1A1A1A;
+    --line-soft: #E0E0DC;
+    --line-soft-2: #EAEAE6;
+    --red: #FF2E1F;
+    --red-deep: #C71808;
+    --red-soft: #FFE5E2;
+    --red-tint: #FFF4F2;
+    --green: #0A7C42;
+    --amber: #B8860B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg); color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    min-height: 100vh; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-image:
+      radial-gradient(ellipse at top right, rgba(255,46,31,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom left, rgba(0,0,0,0.02) 0%, transparent 60%);
+    background-attachment: fixed; position: relative;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,0,0,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,0,0,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    pointer-events: none; z-index: 0;
+  }
+  .container { position: relative; z-index: 2; max-width: 1480px; margin: 0 auto; padding: 24px 28px 120px; }
+
+  /* ==== LOGIN OVERLAY ==== */
+  .login-overlay {
+    position: fixed; inset: 0; background: var(--bg); z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    background-image:
+      radial-gradient(ellipse at center, rgba(255,46,31,0.06) 0%, transparent 60%);
+  }
+  .login-overlay.hidden { display: none; }
+  .login-card { max-width: 560px; width: 100%; text-align: center; }
+  .login-brand {
+    display: inline-flex; align-items: center; gap: 14px; margin-bottom: 40px;
+    padding-bottom: 28px; border-bottom: 1px solid var(--line);
+  }
+  .login-brand svg { width: 56px; height: 56px; }
+  .login-brand .txt {
+    text-align: left; line-height: 1;
+  }
+  .login-brand .name {
+    font-family: 'Archivo Black', sans-serif; font-size: 24px;
+    letter-spacing: 0.02em; color: var(--red);
+  }
+  .login-brand .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.3em; color: var(--ink-3); margin-top: 6px;
+  }
+  .login-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(48px, 9vw, 96px); line-height: 0.9;
+    letter-spacing: -0.01em; color: var(--ink); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .login-title .red { color: var(--red); }
+  .login-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.4em; color: var(--ink-3); margin-bottom: 36px;
+    text-transform: uppercase;
+  }
+  .login-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+  }
+  .login-btn {
+    padding: 28px 20px; border: 1.5px solid var(--line);
+    background: var(--bg-card); cursor: pointer;
+    font-family: 'Anton', sans-serif; font-size: 28px;
+    letter-spacing: 0.04em; color: var(--ink);
+    transition: all 0.25s; text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: flex-start;
+    text-align: left; position: relative; overflow: hidden;
+  }
+  .login-btn .role {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-4); margin-top: 6px;
+    font-weight: 400; text-transform: uppercase;
+  }
+  .login-btn:hover {
+    background: var(--ink); color: var(--bg-card); transform: translateY(-2px);
+  }
+  .login-btn:hover .role { color: var(--ink-5); }
+  .login-btn.primary {
+    grid-column: 1 / -1;
+    background: var(--ink); color: var(--bg-card);
+  }
+  .login-btn.primary:hover { background: var(--red); }
+  .login-btn.primary .role { color: var(--ink-5); }
+  .login-btn.primary:hover .role { color: var(--red-soft); }
+
+  .pin-screen {
+    display: none; flex-direction: column; align-items: center; max-width: 380px; margin: 0 auto;
+  }
+  .pin-screen.show { display: flex; }
+  .pin-back {
+    align-self: flex-start; margin-bottom: 24px;
+    background: transparent; border: none; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.25em; color: var(--ink-3); text-transform: uppercase;
+    padding: 8px 0;
+  }
+  .pin-back:hover { color: var(--red); }
+  .pin-title {
+    font-family: 'Anton', sans-serif; font-size: 48px;
+    color: var(--ink); margin-bottom: 8px; text-transform: uppercase;
+  }
+  .pin-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.3em; color: var(--ink-3); margin-bottom: 28px;
+    text-transform: uppercase;
+  }
+  .pin-input {
+    width: 100%; max-width: 240px; padding: 18px;
+    text-align: center; font-family: 'Anton', sans-serif;
+    font-size: 36px; letter-spacing: 0.5em;
+    background: var(--bg-card); border: 1.5px solid var(--line);
+    color: var(--ink); outline: none;
+  }
+  .pin-input:focus { border-color: var(--red); }
+  .pin-input.error { border-color: var(--red); animation: shake 0.4s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .pin-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-4); margin-top: 18px;
+  }
+
+  /* ==== TOP BAR ==== */
+  .top-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; border: 1.5px solid var(--line);
+    background: var(--bg-card); margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-logo { width: 44px; height: 44px; flex-shrink: 0; }
+  .brand-text { display: flex; flex-direction: column; line-height: 1; }
+  .brand-text .name {
+    font-family: 'Archivo Black', sans-serif; font-size: 22px;
+    letter-spacing: 0.02em; color: var(--red);
+  }
+  .brand-text .sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.3em; color: var(--ink-3); margin-top: 4px;
+  }
+  .top-meta { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .top-meta-item { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+  .top-meta-item .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 6px; text-transform: uppercase;
+  }
+  .top-meta-item .value {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px; color: var(--ink);
+  }
+  .top-meta-item .value.red { color: var(--red); }
+  .pulse-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red); margin-right: 8px; animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.35; transform: scale(0.8); }
+  }
+  .user-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 14px; background: var(--ink); color: var(--bg-card);
+    font-family: 'Archivo Black', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .user-chip:hover { background: var(--red); }
+  .user-chip.viewer { background: var(--bg-card); color: var(--ink); border: 1.5px solid var(--line); }
+  .user-chip.viewer:hover { background: var(--ink); color: var(--bg-card); }
+
+  /* ==== HERO ==== */
+  .hero { text-align: center; padding: 36px 0 32px; position: relative; }
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.5em; color: var(--ink-3);
+    margin-bottom: 18px; text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(56px, 11vw, 148px);
+    line-height: 0.88; letter-spacing: -0.02em;
+    color: var(--ink); text-transform: uppercase;
+  }
+  .hero h1 .accent { color: var(--red); display: inline-block; position: relative; }
+  .hero-divider {
+    width: 80px; height: 3px; background: var(--red); margin: 24px auto;
+  }
+
+  /* ==== PENDIENTES BANNER (admin) ==== */
+  .pending-banner {
+    display: none; padding: 18px 22px; margin-bottom: 24px;
+    background: var(--red); color: white;
+    box-shadow: 6px 6px 0 var(--ink);
+    align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .pending-banner.visible { display: flex; }
+  .pending-banner-text {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .pending-banner-text .count {
+    font-family: 'Anton', sans-serif; font-size: 28px; margin-right: 10px;
+    vertical-align: -4px;
+  }
+  .pending-banner-btn {
+    background: white; color: var(--red); border: none;
+    padding: 12px 22px; font-family: 'Archivo Black', sans-serif;
+    font-size: 11px; letter-spacing: 0.2em; cursor: pointer;
+    text-transform: uppercase;
+  }
+  .pending-banner-btn:hover { background: var(--ink); color: white; }
+
+  /* ==== GLOBAL STRIP ==== */
+  .global-strip {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border: 1.5px solid var(--line); margin-bottom: 36px;
+    background: var(--bg-card);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .global-cell {
+    padding: 22px 20px; display: flex; flex-direction: column; gap: 8px;
+    border-right: 1px solid var(--line-soft);
+  }
+  .global-cell:last-child { border-right: none; }
+  .global-cell .label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .global-cell .value {
+    font-family: 'Anton', sans-serif; font-size: 36px; line-height: 1; color: var(--ink);
+  }
+  .global-cell .value.red { color: var(--red); }
+  .global-cell .value.green { color: var(--green); }
+  .global-cell .sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-4); }
+
+  /* ==== SECTION ==== */
+  .section-title { display: flex; align-items: center; gap: 16px; margin: 48px 0 24px; }
+  .section-title-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: 0.2em; }
+  .section-title-text { font-family: 'Archivo Black', sans-serif; font-size: 14px; letter-spacing: 0.3em; color: var(--ink); text-transform: uppercase; }
+  .section-title-line { flex: 1; height: 1.5px; background: var(--line); }
+
+  /* ==== DUELO ==== */
+  .duelo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
+  .seller-card {
+    position: relative; padding: 32px 28px;
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .seller-card.leader {
+    background: var(--red-tint); border-color: var(--red);
+    box-shadow: 6px 6px 0 var(--red);
+  }
+  .seller-card.leader::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: var(--red);
+  }
+  .seller-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .seller-rank {
+    font-family: 'Anton', sans-serif; font-size: 64px; line-height: 0.8;
+    color: var(--red); letter-spacing: -0.04em;
+  }
+  .seller-rank .hash { font-size: 32px; vertical-align: top; opacity: 0.5; }
+  .seller-name-block { text-align: right; }
+  .seller-name {
+    font-family: 'Anton', sans-serif; font-size: 44px; line-height: 0.9;
+    color: var(--ink); letter-spacing: 0.01em; text-transform: uppercase;
+  }
+  .seller-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.2em; margin-top: 6px; text-transform: uppercase;
+  }
+  .seller-amount {
+    font-family: 'Anton', sans-serif; font-size: clamp(42px, 6vw, 76px);
+    line-height: 0.95; color: var(--ink); margin: 18px 0 4px;
+    letter-spacing: -0.02em;
+  }
+  .seller-amount .currency { color: var(--ink-4); font-size: 0.55em; vertical-align: top; margin-right: 6px; }
+  .seller-meta-line {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); margin-bottom: 24px;
+  }
+  .seller-meta-line .sep { color: var(--ink-5); margin: 0 10px; }
+  .seller-meta-line .val { color: var(--ink); font-weight: 700; }
+
+  /* PROGRESS */
+  .progress-block { margin: 16px 0 28px; }
+  .progress-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .progress-pct { font-family: 'Archivo Black', sans-serif; font-size: 24px; color: var(--ink); }
+  .progress-track {
+    height: 18px; background: var(--bg-soft); border: 1.5px solid var(--line);
+    position: relative; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--red); position: relative;
+    transition: width 1.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .progress-fill::after {
+    content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 3px; background: var(--ink);
+  }
+
+  /* STATS */
+  .seller-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1.5px solid var(--line); margin-bottom: 22px; }
+  .stat-cell { padding: 16px 14px; border-right: 1px solid var(--line-soft); background: var(--bg-card); }
+  .stat-cell:last-child { border-right: none; }
+  .seller-card.leader .stat-cell { background: var(--bg-card); }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .stat-value { font-family: 'Anton', sans-serif; font-size: 26px; color: var(--ink); line-height: 1; }
+
+  /* EARNINGS */
+  .earnings {
+    background: var(--ink); color: var(--bg-card);
+    padding: 20px 22px; position: relative; overflow: hidden;
+  }
+  .seller-card.leader .earnings { background: var(--red); }
+  .earnings-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.3em; color: var(--red); text-transform: uppercase; margin-bottom: 6px;
+  }
+  .seller-card.leader .earnings-label { color: white; opacity: 0.9; }
+  .earnings-amount {
+    font-family: 'Anton', sans-serif; font-size: 42px; color: white;
+    line-height: 1; letter-spacing: -0.01em;
+  }
+  .earnings-breakdown {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(255,255,255,0.65); margin-top: 8px; line-height: 1.6;
+  }
+  .earnings-breakdown .plus { color: var(--red); font-weight: 700; }
+  .seller-card.leader .earnings-breakdown .plus { color: var(--ink); }
+
+  /* PENDIENTE pill */
+  .pending-pill {
+    display: inline-block; margin-top: 12px; padding: 6px 12px;
+    background: var(--amber); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .pending-pill .num { font-weight: 700; }
+
+  /* VS */
+  .vs-badge {
+    display: flex; align-items: center; justify-content: center;
+    width: 80px; position: relative;
+    background: var(--bg); 
+  }
+  .vs-text {
+    font-family: 'Anton', sans-serif; font-size: 56px; color: var(--red);
+    letter-spacing: 0.02em; transform: rotate(-90deg); white-space: nowrap;
+  }
+
+  /* PREMIOS */
+  .premios-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+    border: 1.5px solid var(--line); background: var(--bg-card);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .premio {
+    padding: 22px 24px; display: flex; align-items: center; gap: 20px;
+    position: relative; transition: all 0.4s;
+    border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+  }
+  .premio:nth-child(even) { border-right: none; }
+  .premio:nth-last-child(-n+2) { border-bottom: none; }
+  .premio.unlocked { background: var(--red-tint); }
+  .premio.unlocked::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--red);
+  }
+  .premio-icon {
+    width: 52px; height: 52px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--ink-5); background: var(--bg);
+    font-family: 'Anton', sans-serif; font-size: 22px;
+    color: var(--ink-4); transition: all 0.4s;
+  }
+  .premio.unlocked .premio-icon {
+    border-color: var(--red); color: var(--red); background: white;
+    animation: premio-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes premio-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,46,31,0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(255,46,31,0); }
+  }
+  .premio-body { flex: 1; }
+  .premio-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    letter-spacing: 0.1em; color: var(--ink); text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .premio.locked .premio-title { color: var(--ink-3); }
+  .premio-desc {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); line-height: 1.4;
+  }
+  .premio-desc strong { font-weight: 700; }
+  .premio-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; padding: 6px 12px;
+    border: 1.5px solid var(--line); background: var(--bg-card);
+  }
+  .premio.unlocked .premio-status {
+    color: var(--red); border-color: var(--red); background: white;
+  }
+  .premio.locked .premio-status { color: var(--ink-4); }
+
+  /* HOF */
+  .hof {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border: 1.5px solid var(--line); background: var(--bg-card);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .hof-card { padding: 24px 22px; border-right: 1px solid var(--line-soft); }
+  .hof-card:last-child { border-right: none; }
+  .hof-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--red); text-transform: uppercase; margin-bottom: 14px;
+  }
+  .hof-value { font-family: 'Anton', sans-serif; font-size: 30px; color: var(--ink); line-height: 1; margin-bottom: 8px; }
+  .hof-desc { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
+
+  /* FAB */
+  .fab {
+    position: fixed; bottom: 28px; right: 28px; z-index: 100;
+    width: 64px; height: 64px; background: var(--red); color: white;
+    border: 1.5px solid var(--ink); cursor: pointer;
+    font-family: 'Anton', sans-serif; font-size: 36px;
+    box-shadow: 6px 6px 0 var(--ink);
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fab:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
+  .fab:active { transform: translate(2px, 2px); box-shadow: 4px 4px 0 var(--ink); }
+  .fab-badge {
+    position: absolute; top: -8px; right: -8px;
+    background: var(--ink); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+    min-width: 26px; height: 26px; padding: 0 6px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1.5px solid var(--ink);
+  }
+  .fab-hidden { display: none; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px); z-index: 200;
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-card); border: 1.5px solid var(--line);
+    width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+    padding: 32px; position: relative;
+    box-shadow: 8px 8px 0 var(--ink);
+  }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--bg); border: 1.5px solid var(--line); color: var(--ink);
+    width: 36px; height: 36px; font-size: 16px;
+    cursor: pointer; font-family: 'JetBrains Mono', monospace;
+  }
+  .modal-close:hover { background: var(--red); color: white; border-color: var(--red); }
+  .modal h2 {
+    font-family: 'Anton', sans-serif; font-size: 36px;
+    color: var(--ink); margin-bottom: 6px; letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .modal-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--red); letter-spacing: 0.3em; margin-bottom: 24px;
+  }
+  .form-row { margin-bottom: 18px; }
+  .form-row label {
+    display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .form-row input, .form-row select {
+    width: 100%; padding: 14px 16px;
+    background: var(--bg); border: 1.5px solid var(--line);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 15px;
+    transition: border-color 0.2s; outline: none;
+  }
+  .form-row input:focus, .form-row select:focus { border-color: var(--red); }
+  .seller-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .seller-toggle button {
+    padding: 14px; background: var(--bg); border: 1.5px solid var(--line);
+    color: var(--ink); font-family: 'Archivo Black', sans-serif;
+    font-size: 14px; letter-spacing: 0.1em; cursor: pointer;
+    transition: all 0.2s; text-transform: uppercase;
+  }
+  .seller-toggle button.active { background: var(--red); border-color: var(--red); color: white; }
+  .seller-toggle button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary {
+    width: 100%; padding: 16px; margin-top: 10px;
+    background: var(--ink); border: 1.5px solid var(--ink); color: white;
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    letter-spacing: 0.2em; cursor: pointer; text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover { background: var(--red); border-color: var(--red); }
+  .btn-secondary {
+    padding: 10px 14px; background: var(--bg); border: 1.5px solid var(--line);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; cursor: pointer;
+    text-transform: uppercase; transition: all 0.2s;
+  }
+  .btn-secondary:hover { background: var(--red); border-color: var(--red); color: white; }
+  .actions-row {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;
+    padding-top: 20px; border-top: 1.5px solid var(--line-soft);
+  }
+
+  /* SALES LIST */
+  .sales-list { margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--line-soft); }
+  .sales-list-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .sale-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; margin-bottom: 6px;
+    background: var(--bg); border-left: 4px solid var(--ink-5);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    gap: 10px;
+  }
+  .sale-item.lauti { border-left-color: var(--red); }
+  .sale-item.toto { border-left-color: var(--ink); }
+  .sale-item.pending { background: #FFF8E5; border-left-color: var(--amber); }
+  .sale-item .left { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .sale-item .seller-tag {
+    font-family: 'Archivo Black', sans-serif; font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .sale-item.lauti .seller-tag { color: var(--red); }
+  .sale-item.toto .seller-tag { color: var(--ink); }
+  .sale-item .amount { color: var(--ink); font-weight: 700; }
+  .sale-item .date { color: var(--ink-4); font-size: 10px; }
+  .sale-item .pending-badge {
+    background: var(--amber); color: white; padding: 2px 8px;
+    font-size: 9px; letter-spacing: 0.15em; font-weight: 700;
+  }
+  .sale-item .actions { display: flex; gap: 4px; }
+  .sale-btn {
+    background: transparent; border: 1.5px solid var(--line); color: var(--ink);
+    width: 28px; height: 28px; cursor: pointer; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s; padding: 0;
+  }
+  .sale-btn.approve:hover { background: var(--green); border-color: var(--green); color: white; }
+  .sale-btn.reject:hover { background: var(--red); border-color: var(--red); color: white; }
+  .sale-btn.delete:hover { background: var(--red); border-color: var(--red); color: white; }
+
+  .empty-msg {
+    color: var(--ink-4); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 12px 0;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; top: 24px; right: 24px; z-index: 300;
+    background: var(--ink); color: white;
+    padding: 16px 22px; font-family: 'Archivo Black', sans-serif;
+    letter-spacing: 0.15em; border: 1.5px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--red);
+    transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    text-transform: uppercase; font-size: 12px;
+  }
+  .toast.show { transform: translateX(0); }
+  .toast.unlock { background: var(--red); box-shadow: 6px 6px 0 var(--ink); }
+  .toast.warn { background: var(--amber); box-shadow: 6px 6px 0 var(--ink); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 60px; padding-top: 28px; border-top: 1.5px solid var(--line-soft);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-4); letter-spacing: 0.2em; text-transform: uppercase;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer strong { color: var(--ink); }
+
+  /* MOBILE */
+  @media (max-width: 900px) {
+    .container { padding: 16px 14px 100px; }
+    .top-bar { padding: 12px 14px; box-shadow: 4px 4px 0 var(--ink); }
+    .top-meta { gap: 18px; width: 100%; justify-content: space-between; }
+    .top-meta-item .value { font-size: 13px; }
+    .hero { padding: 20px 0 24px; }
+    .hero-eyebrow { font-size: 9px; letter-spacing: 0.4em; }
+    .global-strip { grid-template-columns: repeat(2, 1fr); box-shadow: 4px 4px 0 var(--ink); }
+    .global-cell:nth-child(2n) { border-right: none; }
+    .global-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
+    .global-cell .value { font-size: 26px; }
+    .duelo { grid-template-columns: 1fr; }
+    .vs-badge { width: auto; height: 60px; }
+    .vs-text { transform: rotate(0); font-size: 36px; }
+    .seller-card { padding: 24px 20px; box-shadow: 4px 4px 0 var(--ink); }
+    .seller-card.leader { box-shadow: 4px 4px 0 var(--red); }
+    .seller-rank { font-size: 48px; }
+    .seller-name { font-size: 32px; }
+    .premios-grid { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
+    .premio { border-right: none; }
+    .premio:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
+    .premio:last-child { border-bottom: none; }
+    .premio { padding: 18px 16px; }
+    .hof { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
+    .hof-card { border-right: none; border-bottom: 1px solid var(--line-soft); }
+    .hof-card:last-child { border-bottom: none; }
+    .modal { padding: 24px 20px; box-shadow: 4px 4px 0 var(--ink); }
+    .fab { bottom: 18px; right: 18px; width: 56px; height: 56px; font-size: 30px; box-shadow: 4px 4px 0 var(--ink); }
+    .footer { font-size: 9px; }
+    .login-grid { grid-template-columns: 1fr; }
+    .login-btn { padding: 22px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+
+    <div class="pin-screen" id="selectScreen" style="display:flex;">
+      <div class="login-brand">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="brick-login" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF4A3A"/>
+              <stop offset="100%" stop-color="#C71808"/>
+            </linearGradient>
+          </defs>
+          <g transform="translate(15,30)">
+            <rect x="20" y="20" width="38" height="22" fill="url(#brick-login)" rx="1" transform="rotate(-8 39 31)"/>
+            <rect x="0" y="32" width="48" height="26" fill="url(#brick-login)" rx="1" transform="rotate(8 24 45)"/>
+            <circle cx="30" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
+            <circle cx="42" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
+            <circle cx="50" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
+          </g>
+        </svg>
+        <div class="txt">
+          <div class="name">GRAZIANO</div>
+          <div class="sub">ARENA DE VENTAS</div>
+        </div>
+      </div>
+      <div class="login-eyebrow">— ¿QUIÉN ENTRA? —</div>
+      <div class="login-grid" style="width:100%;">
+        <button class="login-btn primary" onclick="enterAs('view')">
+          PANTALLA
+          <span class="role">Solo mirar — sin login</span>
+        </button>
+        <button class="login-btn" onclick="askPin('lauti')">
+          LAUTI
+          <span class="role">Cargar mis ventas</span>
+        </button>
+        <button class="login-btn" onclick="askPin('toto')">
+          TOTO
+          <span class="role">Cargar mis ventas</span>
+        </button>
+        <button class="login-btn" style="grid-column:1/-1;" onclick="askPin('admin')">
+          ADMIN
+          <span class="role">Guille / Cami — control total</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="pin-screen" id="pinScreen">
+      <button class="pin-back" onclick="backToSelect()">← VOLVER</button>
+      <div class="pin-title" id="pinTitle">PIN</div>
+      <div class="pin-sub" id="pinSub">— INGRESÁ TU PIN —</div>
+      <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="pin-input" id="pinInput" autocomplete="off">
+      <div class="pin-hint" id="pinHint">4 dígitos</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="container" id="mainContainer" style="display:none;">
+
+  <div class="top-bar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="brick" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FF4A3A"/>
+            <stop offset="100%" stop-color="#C71808"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(15,30)">
+          <rect x="20" y="20" width="38" height="22" fill="url(#brick)" rx="1" transform="rotate(-8 39 31)"/>
+          <rect x="0" y="32" width="48" height="26" fill="url(#brick)" rx="1" transform="rotate(8 24 45)"/>
+          <circle cx="30" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
+          <circle cx="42" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
+          <circle cx="50" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
+        </g>
+      </svg>
+      <div class="brand-text">
+        <span class="name">GRAZIANO</span>
+        <span class="sub">MATERIALES · SISTEMA DE INCENTIVOS</span>
+      </div>
+    </div>
+    <div class="top-meta">
+      <div class="top-meta-item">
+        <span class="label">Período</span>
+        <span class="value" id="periodLabel">—</span>
+      </div>
+      <div class="top-meta-item">
+        <span class="label">Cierre</span>
+        <span class="value red"><span id="daysLeft">—</span> DÍAS</span>
+      </div>
+      <div class="top-meta-item">
+        <span class="label">En vivo</span>
+        <span class="value"><span class="pulse-dot"></span><span id="liveStatus">ACTIVO</span></span>
+      </div>
+      <button class="user-chip" id="userChip" onclick="logout()">— · CAMBIAR</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">— ARENA DE VENTAS —</div>
+    <h1>EL <span class="accent">DUELO</span><br>DEL MES</h1>
+    <div class="hero-divider"></div>
+  </div>
+
+  <!-- Banner pendientes (solo admin con pendientes) -->
+  <div class="pending-banner" id="pendingBanner">
+    <div class="pending-banner-text">
+      <span class="count" id="pendingCount">0</span>VENTAS PENDIENTES DE APROBACIÓN
+    </div>
+    <button class="pending-banner-btn" onclick="openModal()">REVISAR AHORA</button>
+  </div>
+
+  <div class="global-strip">
+    <div class="global-cell">
+      <span class="label">Total Facturado</span>
+      <span class="value red" id="globalTotal">$0</span>
+      <span class="sub" id="globalCount">0 operaciones</span>
+    </div>
+    <div class="global-cell">
+      <span class="label">Meta Equipo</span>
+      <span class="value" id="globalTarget">$27M</span>
+      <span class="sub">13,5M por vendedor</span>
+    </div>
+    <div class="global-cell">
+      <span class="label">Cumplimiento</span>
+      <span class="value" id="globalPct">0%</span>
+      <span class="sub" id="globalGap">faltan $27M</span>
+    </div>
+    <div class="global-cell" id="globalCostCell">
+      <span class="label">Proyección Costo</span>
+      <span class="value green" id="globalCost">$0</span>
+      <span class="sub">incentivos del mes</span>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-title-num">/01</span>
+    <span class="section-title-text">CARA A CARA</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="duelo">
+    <div class="seller-card" id="card-lauti">
+      <div class="seller-header">
+        <div class="seller-rank"><span class="hash">#</span><span id="rank-lauti">—</span></div>
+        <div class="seller-name-block">
+          <div class="seller-name">LAUTI</div>
+          <div class="seller-title">EL CAZADOR</div>
+        </div>
+      </div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-lauti">0</span></div>
+      <div class="seller-meta-line">
+        <span class="val" id="count-lauti">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-lauti">$0</span>
+      </div>
+      <div class="progress-block">
+        <div class="progress-header">
+          <span class="progress-label">Meta · $13,5M</span>
+          <span class="progress-pct" id="pct-lauti">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bar-lauti" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="stat-cell">
+          <div class="stat-label">Excedente</div>
+          <div class="stat-value" id="excess-lauti">$0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Mejor venta</div>
+          <div class="stat-value" id="best-lauti">$0</div>
+        </div>
+      </div>
+      <div class="earnings">
+        <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
+        <div class="earnings-amount" id="earn-lauti">$300.000</div>
+        <div class="earnings-breakdown" id="breakdown-lauti">Base $250k</div>
+      </div>
+      <div class="pending-pill" id="pending-lauti" style="display:none;">
+        <span class="num" id="pending-num-lauti">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-lauti">$0</span>
+      </div>
+    </div>
+
+    <div class="vs-badge"><div class="vs-text">VS</div></div>
+
+    <div class="seller-card" id="card-toto">
+      <div class="seller-header">
+        <div class="seller-rank"><span class="hash">#</span><span id="rank-toto">—</span></div>
+        <div class="seller-name-block">
+          <div class="seller-name">TOTO</div>
+          <div class="seller-title">EL CONSTANTE</div>
+        </div>
+      </div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-toto">0</span></div>
+      <div class="seller-meta-line">
+        <span class="val" id="count-toto">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-toto">$0</span>
+      </div>
+      <div class="progress-block">
+        <div class="progress-header">
+          <span class="progress-label">Meta · $13,5M</span>
+          <span class="progress-pct" id="pct-toto">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bar-toto" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="stat-cell">
+          <div class="stat-label">Excedente</div>
+          <div class="stat-value" id="excess-toto">$0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Mejor venta</div>
+          <div class="stat-value" id="best-toto">$0</div>
+        </div>
+      </div>
+      <div class="earnings">
+        <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
+        <div class="earnings-amount" id="earn-toto">$300.000</div>
+        <div class="earnings-breakdown" id="breakdown-toto">Base $250k</div>
+      </div>
+      <div class="pending-pill" id="pending-toto" style="display:none;">
+        <span class="num" id="pending-num-toto">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-toto">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-title-num">/02</span>
+    <span class="section-title-text">PREMIOS A DESBLOQUEAR</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="premios-grid" id="premiosGrid"></div>
+
+  <div class="section-title">
+    <span class="section-title-num">/03</span>
+    <span class="section-title-text">HALL OF FAME</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="hof">
+    <div class="hof-card">
+      <div class="hof-label">★ Récord Ticket del Mes</div>
+      <div class="hof-value" id="hofTicket">—</div>
+      <div class="hof-desc" id="hofTicketDesc">Sin registros aún</div>
+    </div>
+    <div class="hof-card">
+      <div class="hof-label">★ Vendedor del Mes Anterior</div>
+      <div class="hof-value" id="hofPrev">LAUTI</div>
+      <div class="hof-desc" id="hofPrevDesc">$10M · Abril 2026</div>
+    </div>
+    <div class="hof-card">
+      <div class="hof-label">★ Mayor Operación</div>
+      <div class="hof-value" id="hofBest">—</div>
+      <div class="hof-desc" id="hofBestDesc">Aún no hay ventas</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span><strong>◢ GRAZIANO MATERIALES</strong> · 2026</span>
+    <span id="lastUpdate">— SIN ACTUALIZAR —</span>
+  </div>
+
+</div>
+
+<button class="fab fab-hidden" id="fab" onclick="openModal()">
+  +<span class="fab-badge" id="fabBadge" style="display:none;">0</span>
+</button>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2 id="modalTitle">CARGAR VENTA</h2>
+    <div class="modal-sub" id="modalSub">— PANEL —</div>
+
+    <div class="form-row">
+      <label>Vendedor</label>
+      <div class="seller-toggle">
+        <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI</button>
+        <button id="btn-toto" onclick="selectSeller('toto')">TOTO</button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Monto facturado (ARS)</label>
+      <input type="number" id="saleAmount" placeholder="Ej: 850000" min="0" step="1000">
+    </div>
+
+    <div class="form-row">
+      <label>Fecha</label>
+      <input type="date" id="saleDate">
+    </div>
+
+    <button class="btn-primary" onclick="addSale()" id="submitBtn">REGISTRAR VENTA</button>
+
+    <div class="sales-list" id="pendingSection" style="display:none;">
+      <div class="sales-list-title" style="color:var(--amber);">▸ Pendientes de aprobación</div>
+      <div id="pendingListContainer"></div>
+    </div>
+
+    <div class="sales-list">
+      <div class="sales-list-title">▸ Operaciones aprobadas del mes</div>
+      <div id="salesListContainer"></div>
+    </div>
+
+    <div class="actions-row" id="adminActions" style="display:none;">
+      <button class="btn-secondary" onclick="exportData()">EXPORTAR JSON</button>
+      <button class="btn-secondary" onclick="importData()">IMPORTAR JSON</button>
+      <button class="btn-secondary" onclick="resetMonth()" style="margin-left:auto;">RESET MES</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ===== CONFIG =====
+  const CONFIG = {
+    baseSalary: 300000,
+    baseCommission: 0.03,
+    target: 13500000,
+    bonusOnTarget: 35000,
+    tiers: [
+      { from: 1.00, to: 1.10, rate: 0.005 },
+      { from: 1.10, to: 1.25, rate: 0.01  },
+      { from: 1.25, to: 99,   rate: 0.015 }
+    ],
+    bonusFirstPlace: 30000,
+    bonusTeamGoal: 20000
+  };
+
+  const PINS = { lauti: '1111', toto: '2222', admin: '0000' };
+  const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+
+  // ===== FIREBASE =====
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTOKP7evzD9QiKDdGEO2GKVx6y7V9e8wg",
+    authDomain: "graziano-arena.firebaseapp.com",
+    databaseURL: "https://graziano-arena-default-rtdb.firebaseio.com",
+    projectId: "graziano-arena",
+    storageBucket: "graziano-arena.firebasestorage.app",
+    messagingSenderId: "281849216987",
+    appId: "1:281849216987:web:d9ffd0f5de8bbff31a71fe"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  const stateRef = db.ref('state');
+
+  let state = {
+    sales: [], // {id, seller, amount, date, status: 'pending'|'approved', submittedBy, submittedAt}
+    hofPrev: { name: 'LAUTI', amount: 10000000, label: 'Abril 2026' }
+  };
+
+  let currentUser = null; // 'view' | 'lauti' | 'toto' | 'admin'
+  let pinTargetUser = null;
+
+  // ===== STORAGE (Firebase) =====
+  async function saveState() {
+    try {
+      await stateRef.set({
+        sales: state.sales || [],
+        hofPrev: state.hofPrev || null
+      });
+    } catch (e) { console.warn('Firebase save failed', e); }
+  }
+  function listenState() {
+    stateRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        state.sales = data.sales || [];
+        if (data.hofPrev) state.hofPrev = data.hofPrev;
+      } else {
+        state.sales = [];
+      }
+      if (currentUser) renderAll();
+    }, (err) => { console.warn('Firebase read error', err); });
+  }
+
+  // ===== HELPERS =====
+  function fmt(n) {
+    if (n >= 1000000) return (n/1000000).toFixed(n >= 10000000 ? 1 : 2).replace(/\.?0+$/,'') + 'M';
+    if (n >= 1000) return Math.round(n/1000) + 'k';
+    return Math.round(n).toString();
+  }
+  function fmtFull(n) { return new Intl.NumberFormat('es-AR', { maximumFractionDigits: 0 }).format(Math.round(n)); }
+  function fmtMoney(n) { return '$' + fmtFull(n); }
+  function daysLeftInMonth() {
+    const d = new Date();
+    const last = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    return Math.max(0, Math.ceil((last - d) / (1000*60*60*24)));
+  }
+  function periodLabel() {
+    const d = new Date();
+    return `${MONTHS_ES[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  // ===== LOGIN FLOW =====
+  function enterAs(user) {
+    currentUser = user;
+    document.getElementById('loginOverlay').classList.add('hidden');
+    document.getElementById('mainContainer').style.display = 'block';
+    applyUserMode();
+    renderAll();
+  }
+  function askPin(user) {
+    pinTargetUser = user;
+    document.getElementById('selectScreen').style.display = 'none';
+    document.getElementById('pinScreen').classList.add('show');
+    document.getElementById('pinTitle').textContent = user.toUpperCase();
+    document.getElementById('pinSub').textContent = '— INGRESÁ TU PIN —';
+    document.getElementById('pinHint').textContent = '4 dígitos';
+    const inp = document.getElementById('pinInput');
+    inp.value = ''; inp.classList.remove('error');
+    setTimeout(() => inp.focus(), 100);
+  }
+  function backToSelect() {
+    document.getElementById('selectScreen').style.display = 'flex';
+    document.getElementById('pinScreen').classList.remove('show');
+    pinTargetUser = null;
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const inp = document.getElementById('pinInput');
+    inp.addEventListener('input', (e) => {
+      if (inp.value.length === 4) {
+        if (inp.value === PINS[pinTargetUser]) {
+          enterAs(pinTargetUser);
+        } else {
+          inp.classList.add('error');
+          document.getElementById('pinHint').textContent = 'PIN INCORRECTO';
+          setTimeout(() => { inp.value = ''; inp.classList.remove('error'); inp.focus(); }, 600);
+        }
+      }
+    });
+    document.getElementById('saleAmount').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addSale();
+    });
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'modalOverlay') closeModal();
+    });
+  });
+
+  function logout() {
+    currentUser = null; pinTargetUser = null;
+    document.getElementById('mainContainer').style.display = 'none';
+    document.getElementById('loginOverlay').classList.remove('hidden');
+    backToSelect();
+  }
+
+  function applyUserMode() {
+    const chip = document.getElementById('userChip');
+    const fab = document.getElementById('fab');
+    const costCell = document.getElementById('globalCostCell');
+    const adminActions = document.getElementById('adminActions');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSub = document.getElementById('modalSub');
+    const btnLauti = document.getElementById('btn-lauti');
+    const btnToto = document.getElementById('btn-toto');
+
+    // user chip
+    const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', toto: '👤 TOTO', admin: '★ ADMIN' };
+    chip.textContent = labels[currentUser] + ' · CAMBIAR';
+    chip.classList.toggle('viewer', currentUser === 'view');
+
+    // fab
+    if (currentUser === 'view') {
+      fab.classList.add('fab-hidden');
+    } else {
+      fab.classList.remove('fab-hidden');
+    }
+
+    // costo solo admin
+    costCell.style.display = (currentUser === 'admin') ? '' : 'none';
+
+    // admin actions
+    adminActions.style.display = (currentUser === 'admin') ? 'flex' : 'none';
+
+    // modal title
+    if (currentUser === 'admin') {
+      modalTitle.textContent = 'PANEL ADMIN';
+      modalSub.textContent = '— GUILLE / CAMI —';
+      btnLauti.disabled = false; btnToto.disabled = false;
+    } else if (currentUser === 'lauti' || currentUser === 'toto') {
+      modalTitle.textContent = 'CARGAR MI VENTA';
+      modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
+      // lock toggle al user actual
+      if (currentUser === 'lauti') {
+        btnLauti.disabled = false; btnToto.disabled = true;
+        selectSeller('lauti');
+      } else {
+        btnLauti.disabled = true; btnToto.disabled = false;
+        selectSeller('toto');
+      }
+    }
+  }
+
+  // ===== CÁLCULO =====
+  function approvedSales(seller) {
+    return state.sales.filter(s => s.seller === seller && s.status === 'approved');
+  }
+  function pendingSales(seller) {
+    return state.sales.filter(s => s.seller === seller && s.status === 'pending');
+  }
+  function allPending() {
+    return state.sales.filter(s => s.status === 'pending');
+  }
+
+  function computeSeller(key) {
+    const sales = approvedSales(key);
+    const total = sales.reduce((a, v) => a + v.amount, 0);
+    const count = sales.length;
+    const ticketAvg = count ? total / count : 0;
+    const pct = total / CONFIG.target;
+    const excess = Math.max(0, total - CONFIG.target);
+    const best = sales.reduce((m, v) => Math.max(m, v.amount), 0);
+
+    const baseSalary = CONFIG.baseSalary;
+    const baseComm = total * CONFIG.baseCommission;
+    const bonusTarget = total >= CONFIG.target ? CONFIG.bonusOnTarget : 0;
+
+    let extraComm = 0;
+    for (const tier of CONFIG.tiers) {
+      const tierStart = CONFIG.target * tier.from;
+      const tierEnd = CONFIG.target * tier.to;
+      if (total > tierStart) {
+        const inTier = Math.min(total, tierEnd) - tierStart;
+        extraComm += inTier * tier.rate;
+      }
+    }
+
+    return { total, count, ticketAvg, pct, excess, best, baseSalary, baseComm, bonusTarget, extraComm };
+  }
+
+  function computeAll() {
+    const lauti = computeSeller('lauti');
+    const toto  = computeSeller('toto');
+    const bothMet = lauti.total >= CONFIG.target && toto.total >= CONFIG.target;
+    const teamBonus = bothMet ? CONFIG.bonusTeamGoal : 0;
+
+    let firstPlace = null;
+    if (lauti.total > toto.total && lauti.total > 0) firstPlace = 'lauti';
+    else if (toto.total > lauti.total && toto.total > 0) firstPlace = 'toto';
+
+    lauti.teamBonus = teamBonus; toto.teamBonus = teamBonus;
+    lauti.firstBonus = firstPlace === 'lauti' ? CONFIG.bonusFirstPlace : 0;
+    toto.firstBonus  = firstPlace === 'toto'  ? CONFIG.bonusFirstPlace : 0;
+    lauti.totalEarn = lauti.baseSalary + lauti.baseComm + lauti.bonusTarget + lauti.extraComm + lauti.teamBonus + lauti.firstBonus;
+    toto.totalEarn  = toto.baseSalary  + toto.baseComm  + toto.bonusTarget  + toto.extraComm  + toto.teamBonus  + toto.firstBonus;
+
+    return { lauti, toto, bothMet, firstPlace };
+  }
+
+  // ===== RENDER =====
+  function renderSeller(key, data, isLeader) {
+    document.getElementById(`amount-${key}`).textContent = fmtFull(data.total);
+    document.getElementById(`count-${key}`).textContent = data.count;
+    document.getElementById(`ticket-${key}`).textContent = fmtMoney(data.ticketAvg);
+    document.getElementById(`pct-${key}`).textContent = Math.round(data.pct * 100) + '%';
+    document.getElementById(`bar-${key}`).style.width = Math.min(100, data.pct * 100) + '%';
+    document.getElementById(`excess-${key}`).textContent = data.excess > 0 ? '+' + fmtMoney(data.excess) : '$0';
+    document.getElementById(`best-${key}`).textContent = fmtMoney(data.best);
+    document.getElementById(`earn-${key}`).textContent = fmtMoney(data.totalEarn);
+
+    const parts = [`Base $${fmt(data.baseSalary)}`, `3% $${fmt(data.baseComm)}`];
+    if (data.bonusTarget) parts.push(`<span class="plus">+meta $${fmt(data.bonusTarget)}</span>`);
+    if (data.extraComm)   parts.push(`<span class="plus">+extra $${fmt(data.extraComm)}</span>`);
+    if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmt(data.firstBonus)}</span>`);
+    if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmt(data.teamBonus)}</span>`);
+    document.getElementById(`breakdown-${key}`).innerHTML = parts.join(' · ');
+
+    document.getElementById(`card-${key}`).classList.toggle('leader', isLeader);
+
+    // Pending pill
+    const pending = pendingSales(key);
+    const pill = document.getElementById(`pending-${key}`);
+    if (pending.length > 0) {
+      pill.style.display = 'inline-block';
+      document.getElementById(`pending-num-${key}`).textContent = pending.length;
+      const pendingTotal = pending.reduce((a,v) => a + v.amount, 0);
+      document.getElementById(`pending-amount-${key}`).textContent = fmtMoney(pendingTotal);
+    } else {
+      pill.style.display = 'none';
+    }
+  }
+
+  function renderPremios(c) {
+    const items = [
+      {
+        icon: '◆', title: 'Cumplir meta de 13,5M', desc: 'Bonus fijo al cruzar la línea · ',
+        reward: '+$35.000 c/u',
+        unlockedBy: (c.lauti.bonusTarget > 0 ? 'LAUTI' : '') + (c.toto.bonusTarget > 0 ? (c.lauti.bonusTarget > 0 ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.bonusTarget > 0 || c.toto.bonusTarget > 0
+      },
+      {
+        icon: '▲', title: 'Superar 110% (14,85M)', desc: 'Comisión extra sobre el excedente · ',
+        reward: '+0,5%',
+        unlockedBy: (c.lauti.total > CONFIG.target * 1.10 ? 'LAUTI' : '') + (c.toto.total > CONFIG.target * 1.10 ? (c.lauti.total > CONFIG.target * 1.10 ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.total > CONFIG.target * 1.10 || c.toto.total > CONFIG.target * 1.10
+      },
+      {
+        icon: '▲▲', title: 'Superar 125% (16,875M)', desc: 'Comisión extra sobre el excedente · ',
+        reward: '+1%',
+        unlockedBy: (c.lauti.total > CONFIG.target * 1.25 ? 'LAUTI' : '') + (c.toto.total > CONFIG.target * 1.25 ? (c.lauti.total > CONFIG.target * 1.25 ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.total > CONFIG.target * 1.25 || c.toto.total > CONFIG.target * 1.25
+      },
+      {
+        icon: '▲▲▲', title: 'Zona élite (+17,55M)', desc: 'Máxima comisión sobre excedente · ',
+        reward: '+1,5%',
+        unlockedBy: (c.lauti.total > CONFIG.target * 1.30 ? 'LAUTI' : '') + (c.toto.total > CONFIG.target * 1.30 ? (c.lauti.total > CONFIG.target * 1.30 ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.total > CONFIG.target * 1.30 || c.toto.total > CONFIG.target * 1.30
+      },
+      {
+        icon: '♛', title: '#1 del mes', desc: 'Premio físico al líder absoluto · ',
+        reward: '+$30.000',
+        unlockedBy: c.firstPlace ? c.firstPlace.toUpperCase() + ' LIDERA' : '—',
+        unlocked: !!c.firstPlace
+      },
+      {
+        icon: '⚐', title: 'Ambos cumplen meta', desc: 'Bono de equipo · anti-rivalidad · ',
+        reward: '+$20.000 c/u',
+        unlockedBy: c.bothMet ? 'EQUIPO COMPLETO' : '—',
+        unlocked: c.bothMet
+      }
+    ];
+
+    document.getElementById('premiosGrid').innerHTML = items.map(p => `
+      <div class="premio ${p.unlocked ? 'unlocked' : 'locked'}">
+        <div class="premio-icon">${p.icon}</div>
+        <div class="premio-body">
+          <div class="premio-title">${p.title}</div>
+          <div class="premio-desc">${p.desc}<strong style="color:${p.unlocked ? 'var(--red)' : 'var(--ink)'}">${p.reward}</strong></div>
+        </div>
+        <div class="premio-status">${p.unlocked ? '✓ ' + (p.unlockedBy || 'ON') : '◯ BLOQUEADO'}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderHOF() {
+    const all = state.sales.filter(s => s.status === 'approved');
+    if (all.length) {
+      const top = all.reduce((m, v) => v.amount > m.amount ? v : m, all[0]);
+      document.getElementById('hofTicket').textContent = fmtMoney(top.amount);
+      document.getElementById('hofTicketDesc').textContent = `${top.seller.toUpperCase()} · ${top.date}`;
+      document.getElementById('hofBest').textContent = fmtMoney(top.amount);
+      document.getElementById('hofBestDesc').textContent = `Operación de ${top.seller.toUpperCase()}`;
+    } else {
+      document.getElementById('hofTicket').textContent = '—';
+      document.getElementById('hofTicketDesc').textContent = 'Cargá la primera venta';
+      document.getElementById('hofBest').textContent = '—';
+      document.getElementById('hofBestDesc').textContent = 'Aún no hay ventas';
+    }
+    if (state.hofPrev) {
+      document.getElementById('hofPrev').textContent = state.hofPrev.name;
+      document.getElementById('hofPrevDesc').textContent = `${fmtMoney(state.hofPrev.amount)} · ${state.hofPrev.label}`;
+    }
+  }
+
+  function renderGlobals(c) {
+    const total = c.lauti.total + c.toto.total;
+    const targetTotal = CONFIG.target * 2;
+    const pct = total / targetTotal;
+    const gap = Math.max(0, targetTotal - total);
+    const totalCount = c.lauti.count + c.toto.count;
+    const totalCost = (c.lauti.totalEarn - CONFIG.baseSalary) + (c.toto.totalEarn - CONFIG.baseSalary);
+
+    document.getElementById('globalTotal').textContent = fmtMoney(total);
+    document.getElementById('globalCount').textContent = `${totalCount} operaciones`;
+    document.getElementById('globalTarget').textContent = '$27M';
+    document.getElementById('globalPct').textContent = Math.round(pct * 100) + '%';
+    document.getElementById('globalGap').textContent = gap > 0 ? `faltan $${fmt(gap)}` : `excedente $${fmt(total - targetTotal)}`;
+    document.getElementById('globalCost').textContent = fmtMoney(totalCost);
+  }
+
+  function renderTopBar() {
+    document.getElementById('periodLabel').textContent = periodLabel();
+    document.getElementById('daysLeft').textContent = daysLeftInMonth();
+    document.getElementById('lastUpdate').textContent = `▸ ACTUALIZADO ${new Date().toLocaleString('es-AR')}`;
+  }
+
+  function renderPendingBanner() {
+    const pending = allPending();
+    const banner = document.getElementById('pendingBanner');
+    const fabBadge = document.getElementById('fabBadge');
+    if (currentUser === 'admin' && pending.length > 0) {
+      banner.classList.add('visible');
+      document.getElementById('pendingCount').textContent = pending.length;
+      fabBadge.style.display = 'flex';
+      fabBadge.textContent = pending.length;
+    } else {
+      banner.classList.remove('visible');
+      fabBadge.style.display = 'none';
+    }
+  }
+
+  function renderPendingList() {
+    const section = document.getElementById('pendingSection');
+    const container = document.getElementById('pendingListContainer');
+
+    let visible = [];
+    if (currentUser === 'admin') {
+      visible = allPending();
+    } else if (currentUser === 'lauti' || currentUser === 'toto') {
+      visible = pendingSales(currentUser);
+    }
+
+    if (visible.length === 0) {
+      section.style.display = 'none';
+      return;
+    }
+    section.style.display = 'block';
+
+    container.innerHTML = visible.sort((a,b) => b.submittedAt - a.submittedAt).map(s => `
+      <div class="sale-item ${s.seller} pending">
+        <div class="left">
+          <span class="seller-tag">${s.seller.toUpperCase()}</span>
+          <span class="amount">${fmtMoney(s.amount)}</span>
+          <span class="date">${s.date}</span>
+          <span class="pending-badge">PENDIENTE</span>
+        </div>
+        <div class="actions">
+          ${currentUser === 'admin' ? `
+            <button class="sale-btn approve" onclick="approveSale('${s.id}')" title="Aprobar">✓</button>
+            <button class="sale-btn reject" onclick="rejectSale('${s.id}')" title="Rechazar">✕</button>
+          ` : `
+            <button class="sale-btn delete" onclick="cancelMyPending('${s.id}')" title="Cancelar">✕</button>
+          `}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderSalesList() {
+    const approved = state.sales.filter(s => s.status === 'approved');
+    const container = document.getElementById('salesListContainer');
+    if (approved.length === 0) {
+      container.innerHTML = '<div class="empty-msg">Sin operaciones aprobadas todavía.</div>';
+      return;
+    }
+    container.innerHTML = approved.sort((a,b) => (b.date + b.id).localeCompare(a.date + a.id)).map(s => `
+      <div class="sale-item ${s.seller}">
+        <div class="left">
+          <span class="seller-tag">${s.seller.toUpperCase()}</span>
+          <span class="amount">${fmtMoney(s.amount)}</span>
+          <span class="date">${s.date}</span>
+        </div>
+        ${currentUser === 'admin' ? `<button class="sale-btn delete" onclick="deleteSale('${s.id}')" title="Eliminar">✕</button>` : ''}
+      </div>
+    `).join('');
+  }
+
+  function renderAll() {
+    if (!currentUser) return;
+    const c = computeAll();
+    renderTopBar();
+    renderGlobals(c);
+    const lautiLeader = c.firstPlace === 'lauti';
+    const totoLeader  = c.firstPlace === 'toto';
+    renderSeller('lauti', c.lauti, lautiLeader);
+    renderSeller('toto',  c.toto,  totoLeader);
+
+    if (c.firstPlace) {
+      document.getElementById('rank-lauti').textContent = lautiLeader ? '1' : '2';
+      document.getElementById('rank-toto').textContent  = totoLeader  ? '1' : '2';
+    } else {
+      document.getElementById('rank-lauti').textContent = '—';
+      document.getElementById('rank-toto').textContent  = '—';
+    }
+
+    renderPremios(c);
+    renderHOF();
+    renderPendingBanner();
+    renderPendingList();
+    renderSalesList();
+  }
+
+  // ===== ACTIONS =====
+  function openModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('saleDate').valueAsDate = new Date();
+    renderPendingList(); renderSalesList();
+    setTimeout(() => document.getElementById('saleAmount').focus(), 100);
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('saleAmount').value = '';
+  }
+
+  let selectedSellerForSale = 'lauti';
+  function selectSeller(s) {
+    if (currentUser === 'lauti' && s !== 'lauti') return;
+    if (currentUser === 'toto' && s !== 'toto') return;
+    selectedSellerForSale = s;
+    document.getElementById('btn-lauti').classList.toggle('active', s === 'lauti');
+    document.getElementById('btn-toto').classList.toggle('active', s === 'toto');
+  }
+
+  function showToast(msg, type) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast';
+    if (type) t.classList.add(type);
+    setTimeout(() => t.classList.add('show'), 10);
+    setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  async function addSale() {
+    const amount = parseFloat(document.getElementById('saleAmount').value);
+    const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
+    if (!amount || amount <= 0) { showToast('MONTO INVÁLIDO', 'warn'); return; }
+
+    const before = computeAll();
+    const isAdmin = currentUser === 'admin';
+    const newSale = {
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      seller: selectedSellerForSale,
+      amount, date,
+      status: isAdmin ? 'approved' : 'pending',
+      submittedBy: currentUser,
+      submittedAt: Date.now()
+    };
+    state.sales.push(newSale);
+    await saveState();
+    renderAll();
+
+    if (isAdmin) {
+      showToast(`✓ ${selectedSellerForSale.toUpperCase()} +${fmtMoney(amount)}`);
+      checkUnlocks(before, computeAll(), selectedSellerForSale);
+    } else {
+      showToast(`✓ ENVIADO · ESPERA APROBACIÓN`, 'warn');
+    }
+
+    document.getElementById('saleAmount').value = '';
+    document.getElementById('saleAmount').focus();
+  }
+
+  function checkUnlocks(before, after, seller) {
+    const prev = before[seller], curr = after[seller];
+    let delay = 600;
+    if (prev.bonusTarget === 0 && curr.bonusTarget > 0) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} DESBLOQUEÓ META 13,5M`, 'unlock'), delay); delay += 700;
+    }
+    if (prev.total <= CONFIG.target * 1.10 && curr.total > CONFIG.target * 1.10) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 110%`, 'unlock'), delay); delay += 700;
+    }
+    if (prev.total <= CONFIG.target * 1.25 && curr.total > CONFIG.target * 1.25) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 125%`, 'unlock'), delay); delay += 700;
+    }
+    if (prev.total <= CONFIG.target * 1.30 && curr.total > CONFIG.target * 1.30) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} ZONA ÉLITE`, 'unlock'), delay); delay += 700;
+    }
+    if (!before.bothMet && after.bothMet) {
+      setTimeout(() => showToast(`🔓 EQUIPO COMPLETO · BONUS`, 'unlock'), delay);
+    }
+  }
+
+  async function approveSale(id) {
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale) return;
+    const before = computeAll();
+    sale.status = 'approved';
+    await saveState();
+    renderAll();
+    showToast(`✓ APROBADA · ${sale.seller.toUpperCase()} +${fmtMoney(sale.amount)}`);
+    checkUnlocks(before, computeAll(), sale.seller);
+  }
+
+  async function rejectSale(id) {
+    if (!confirm('¿Rechazar esta venta? Se eliminará.')) return;
+    state.sales = state.sales.filter(s => s.id !== id);
+    await saveState();
+    renderAll();
+    showToast('✕ VENTA RECHAZADA', 'warn');
+  }
+
+  async function cancelMyPending(id) {
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale || sale.submittedBy !== currentUser) return;
+    if (!confirm('¿Cancelar esta venta pendiente?')) return;
+    state.sales = state.sales.filter(s => s.id !== id);
+    await saveState();
+    renderAll();
+    showToast('✕ CANCELADA');
+  }
+
+  async function deleteSale(id) {
+    if (currentUser !== 'admin') return;
+    if (!confirm('¿Eliminar esta operación aprobada?')) return;
+    state.sales = state.sales.filter(s => s.id !== id);
+    await saveState();
+    renderAll();
+    showToast('✓ ELIMINADA');
+  }
+
+  async function resetMonth() {
+    if (currentUser !== 'admin') return;
+    if (!confirm('Esto va a borrar TODAS las ventas del mes. ¿Confirmás?')) return;
+    if (!confirm('Última oportunidad. ¿Realmente reset total?')) return;
+    state.sales = [];
+    await saveState();
+    renderAll();
+    showToast('✓ MES RESETEADO');
+  }
+
+  function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `graziano-arena-${periodLabel().toLowerCase().replace(' ','-')}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✓ EXPORTADO');
+  }
+
+  function importData() {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'application/json';
+    input.onchange = async (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const text = await file.text();
+      try {
+        const parsed = JSON.parse(text);
+        if (Array.isArray(parsed.sales)) {
+          state.sales = parsed.sales;
+          if (parsed.hofPrev) state.hofPrev = parsed.hofPrev;
+          await saveState();
+          renderAll();
+          showToast('✓ DATOS IMPORTADOS');
+        } else { showToast('ARCHIVO INVÁLIDO', 'warn'); }
+      } catch { showToast('ERROR DE LECTURA', 'warn'); }
+    };
+    input.click();
+  }
+
+  // ===== INIT =====
+  (function init() {
+    listenState();
+    setInterval(() => { if (currentUser) renderTopBar(); }, 60000);
+  })();
+</script>
+</body>
+</html>
