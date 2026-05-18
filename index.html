@@ -498,10 +498,11 @@
   .modal-overlay.open { display: flex; }
   .modal {
     background: var(--bg-card); border: 1.5px solid var(--line);
-    width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto;
+    width: 100%; max-width: 640px; max-height: 92vh; overflow-y: auto;
     padding: 32px; position: relative;
     box-shadow: 8px 8px 0 var(--ink);
   }
+  .modal.small { max-width: 460px; }
   .modal-close {
     position: absolute; top: 16px; right: 16px;
     background: var(--bg); border: 1.5px solid var(--line); color: var(--ink);
@@ -518,19 +519,29 @@
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: var(--red); letter-spacing: 0.3em; margin-bottom: 24px;
   }
-  .form-row { margin-bottom: 18px; }
+  .form-row { margin-bottom: 14px; }
+  .form-row.compact { margin-bottom: 8px; }
   .form-row label {
     display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 8px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 6px;
     text-transform: uppercase;
   }
-  .form-row input, .form-row select {
+  .form-row input, .form-row select, .form-row textarea {
     width: 100%; padding: 14px 16px;
     background: var(--bg); border: 1.5px solid var(--line);
     color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 15px;
     transition: border-color 0.2s; outline: none;
+    font-weight: 500;
   }
-  .form-row input:focus, .form-row select:focus { border-color: var(--red); }
+  .form-row textarea {
+    resize: vertical; min-height: 80px; font-family: 'Archivo', sans-serif;
+    line-height: 1.5;
+  }
+  .form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color: var(--red); }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) {
+    .form-grid-2 { grid-template-columns: 1fr; }
+  }
   .seller-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .seller-toggle button {
     padding: 14px; background: var(--bg); border: 1.5px solid var(--line);
@@ -548,6 +559,8 @@
     transition: all 0.2s;
   }
   .btn-primary:hover { background: var(--red); border-color: var(--red); }
+  .btn-primary.danger { background: var(--red); border-color: var(--red); }
+  .btn-primary.danger:hover { background: #A30000; border-color: #A30000; }
   .btn-secondary {
     padding: 10px 14px; background: var(--bg); border: 1.5px solid var(--line);
     color: var(--ink); font-family: 'JetBrains Mono', monospace;
@@ -560,51 +573,134 @@
     padding-top: 20px; border-top: 1.5px solid var(--line-soft);
   }
 
-  /* SALES LIST */
-  .sales-list { margin-top: 24px; padding-top: 20px; border-top: 1.5px solid var(--line-soft); }
+  /* CHANNEL STRIP */
+  .channel-strip {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+    border: 1.5px solid var(--line); background: var(--bg-card);
+    box-shadow: 6px 6px 0 var(--ink); margin-bottom: 24px;
+  }
+  .channel-cell {
+    padding: 20px 22px; border-right: 1px solid var(--line-soft);
+    position: relative;
+  }
+  .channel-cell:last-child { border-right: none; }
+  .channel-cell .channel-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    letter-spacing: 0.25em; color: var(--ink); text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .channel-cell .channel-name::before {
+    content: ''; display: inline-block; width: 8px; height: 8px;
+    background: var(--red); border-radius: 50%;
+  }
+  .channel-cell .channel-amount {
+    font-family: 'Anton', sans-serif; font-size: 30px; color: var(--ink);
+    line-height: 1; margin-bottom: 8px;
+  }
+  .channel-cell .channel-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); line-height: 1.5;
+  }
+  .channel-cell .channel-meta .val { color: var(--ink); font-weight: 700; }
+  .channel-cell .channel-pct {
+    position: absolute; top: 16px; right: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--red); letter-spacing: 0.15em;
+    padding: 3px 8px; background: var(--red-tint); border: 1px solid var(--red);
+  }
+
+  /* SALES LIST - actualizado para más detalle */
+  .sales-list { margin-top: 20px; padding-top: 16px; border-top: 1.5px solid var(--line-soft); }
   .sales-list-title {
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 14px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 12px;
     text-transform: uppercase;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .sales-list-title .count {
+    background: var(--ink); color: white; padding: 2px 8px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
   }
   .sale-item {
-    display: flex; align-items: center; justify-content: space-between;
     padding: 12px 14px; margin-bottom: 6px;
     background: var(--bg); border-left: 4px solid var(--ink-5);
     font-family: 'JetBrains Mono', monospace; font-size: 12px;
-    gap: 10px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: all 0.15s;
   }
   .sale-item.lauti { border-left-color: var(--red); }
   .sale-item.toto { border-left-color: var(--ink); }
   .sale-item.pending { background: #FFF8E5; border-left-color: var(--amber); }
-  .sale-item .left { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .sale-item.cancelled { background: #F5F5F5; opacity: 0.65; }
+  .sale-item.cancelled .amount, .sale-item.voided .amount { text-decoration: line-through; }
+  .sale-item.voided { background: #FFF0EE; border-left-color: var(--red); opacity: 0.75; }
+  .sale-row-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; flex-wrap: wrap;
+  }
+  .sale-row-bottom {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 10.5px; color: var(--ink-3); flex-wrap: wrap;
+  }
+  .sale-row-bottom .pipe { color: var(--ink-5); }
+  .sale-row-bottom .void-reason {
+    background: var(--red-tint); color: var(--red); padding: 2px 8px;
+    font-size: 9.5px; letter-spacing: 0.1em; font-weight: 700;
+    width: 100%; margin-top: 2px;
+  }
   .sale-item .seller-tag {
-    font-family: 'Archivo Black', sans-serif; font-size: 10px;
-    letter-spacing: 0.1em;
+    font-family: 'Archivo Black', sans-serif; font-size: 10px; letter-spacing: 0.1em;
   }
   .sale-item.lauti .seller-tag { color: var(--red); }
   .sale-item.toto .seller-tag { color: var(--ink); }
-  .sale-item .amount { color: var(--ink); font-weight: 700; }
-  .sale-item .date { color: var(--ink-4); font-size: 10px; }
-  .sale-item .pending-badge {
-    background: var(--amber); color: white; padding: 2px 8px;
-    font-size: 9px; letter-spacing: 0.15em; font-weight: 700;
+  .sale-item .amount { color: var(--ink); font-weight: 700; font-size: 13px; }
+  .sale-item .client { color: var(--ink); font-weight: 700; }
+  .sale-item .badge {
+    padding: 2px 8px; font-size: 9px; letter-spacing: 0.15em; font-weight: 700;
   }
+  .sale-item .pending-badge { background: var(--amber); color: white; }
+  .sale-item .cancelled-badge { background: var(--ink-4); color: white; }
+  .sale-item .voided-badge { background: var(--red); color: white; }
   .sale-item .actions { display: flex; gap: 4px; }
   .sale-btn {
     background: transparent; border: 1.5px solid var(--line); color: var(--ink);
     width: 28px; height: 28px; cursor: pointer; font-size: 13px;
     display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; padding: 0;
+    transition: all 0.15s; padding: 0; flex-shrink: 0;
   }
   .sale-btn.approve:hover { background: var(--green); border-color: var(--green); color: white; }
-  .sale-btn.reject:hover { background: var(--red); border-color: var(--red); color: white; }
-  .sale-btn.delete:hover { background: var(--red); border-color: var(--red); color: white; }
+  .sale-btn.reject:hover, .sale-btn.delete:hover, .sale-btn.void:hover {
+    background: var(--red); border-color: var(--red); color: white;
+  }
 
   .empty-msg {
     color: var(--ink-4); font-family: 'JetBrains Mono', monospace;
     font-size: 11px; padding: 12px 0;
   }
+
+  /* TABS para el modal admin */
+  .tabs {
+    display: flex; gap: 0; margin-bottom: 16px;
+    border-bottom: 1.5px solid var(--line);
+  }
+  .tab {
+    padding: 10px 14px; background: transparent; border: none;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--ink-3); cursor: pointer;
+    text-transform: uppercase; transition: all 0.2s;
+    border-bottom: 2px solid transparent; margin-bottom: -1.5px;
+    flex: 1; position: relative;
+  }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--red); border-bottom-color: var(--red); font-weight: 700; }
+  .tab .tab-count {
+    background: var(--red-tint); color: var(--red); padding: 1px 6px;
+    font-size: 9px; margin-left: 4px;
+  }
+  .tab.active .tab-count { background: var(--red); color: white; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
   /* TOAST */
   .toast {
@@ -900,6 +996,39 @@
 
   <div class="section-title">
     <span class="section-title-num">/02</span>
+    <span class="section-title-text">VENTAS POR CANAL</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="channel-strip" id="channelStrip">
+    <div class="channel-cell">
+      <div class="channel-name">Marketplace</div>
+      <div class="channel-pct" id="pct-marketplace">0%</div>
+      <div class="channel-amount" id="amount-marketplace">$0</div>
+      <div class="channel-meta">
+        <span class="val" id="count-marketplace">0</span> ventas · ticket prom. <span class="val" id="ticket-marketplace">$0</span>
+      </div>
+    </div>
+    <div class="channel-cell">
+      <div class="channel-name">WhatsApp</div>
+      <div class="channel-pct" id="pct-whatsapp">0%</div>
+      <div class="channel-amount" id="amount-whatsapp">$0</div>
+      <div class="channel-meta">
+        <span class="val" id="count-whatsapp">0</span> ventas · ticket prom. <span class="val" id="ticket-whatsapp">$0</span>
+      </div>
+    </div>
+    <div class="channel-cell">
+      <div class="channel-name">Presencial</div>
+      <div class="channel-pct" id="pct-presencial">0%</div>
+      <div class="channel-amount" id="amount-presencial">$0</div>
+      <div class="channel-meta">
+        <span class="val" id="count-presencial">0</span> ventas · ticket prom. <span class="val" id="ticket-presencial">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-title-num">/03</span>
     <span class="section-title-text">PREMIOS A DESBLOQUEAR</span>
     <span class="section-title-line"></span>
   </div>
@@ -907,7 +1036,7 @@
   <div class="premios-grid" id="premiosGrid"></div>
 
   <div class="section-title">
-    <span class="section-title-num">/03</span>
+    <span class="section-title-num">/04</span>
     <span class="section-title-text">HALL OF FAME</span>
     <span class="section-title-line"></span>
   </div>
@@ -924,9 +1053,9 @@
       <div class="hof-desc" id="hofPrevDesc">$10M · Abril 2026</div>
     </div>
     <div class="hof-card">
-      <div class="hof-label">★ Mayor Operación</div>
-      <div class="hof-value" id="hofBest">—</div>
-      <div class="hof-desc" id="hofBestDesc">Aún no hay ventas</div>
+      <div class="hof-label">★ Más Operaciones del Mes</div>
+      <div class="hof-value" id="hofMostOps">—</div>
+      <div class="hof-desc" id="hofMostOpsDesc">El más activo gana</div>
     </div>
   </div>
 
@@ -941,7 +1070,7 @@
   +<span class="fab-badge" id="fabBadge" style="display:none;">0</span>
 </button>
 
-<!-- ===== MODAL ===== -->
+<!-- ===== MODAL CARGA ===== -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -957,32 +1086,101 @@
     </div>
 
     <div class="form-row">
-      <label>Monto facturado (ARS)</label>
-      <input type="number" id="saleAmount" placeholder="Ej: 850000" min="0" step="1000">
+      <label>Cliente</label>
+      <input type="text" id="saleClient" placeholder="Nombre del cliente" autocomplete="off">
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-row compact">
+        <label>Canal</label>
+        <select id="saleChannel">
+          <option value="Marketplace">Marketplace</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Presencial">Presencial</option>
+        </select>
+      </div>
+      <div class="form-row compact">
+        <label>Método de pago</label>
+        <select id="salePayment">
+          <option value="Transferencia">Transferencia</option>
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Débito">Débito</option>
+          <option value="Mixto">Mixto</option>
+        </select>
+      </div>
     </div>
 
     <div class="form-row">
-      <label>Fecha</label>
-      <input type="date" id="saleDate">
+      <label>Producto</label>
+      <input type="text" id="saleProduct" placeholder="Ej: Cemento + Plasticor" autocomplete="off">
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-row compact">
+        <label>Monto (ARS)</label>
+        <input type="number" id="saleAmount" placeholder="Ej: 850000" min="0" step="1000">
+      </div>
+      <div class="form-row compact">
+        <label>Fecha</label>
+        <input type="date" id="saleDate">
+      </div>
     </div>
 
     <button class="btn-primary" onclick="addSale()" id="submitBtn">REGISTRAR VENTA</button>
 
-    <div class="sales-list" id="pendingSection" style="display:none;">
-      <div class="sales-list-title" style="color:var(--amber);">▸ Pendientes de aprobación</div>
-      <div id="pendingListContainer"></div>
+    <!-- Tabs (solo admin: pendientes / aprobadas / canceladas-anuladas) -->
+    <div class="tabs" id="tabsRow" style="display:none;">
+      <button class="tab active" data-tab="pending" onclick="switchTab('pending')">PENDIENTES<span class="tab-count" id="tabCountPending">0</span></button>
+      <button class="tab" data-tab="approved" onclick="switchTab('approved')">APROBADAS<span class="tab-count" id="tabCountApproved">0</span></button>
+      <button class="tab" data-tab="archive" onclick="switchTab('archive')">ARCHIVO<span class="tab-count" id="tabCountArchive">0</span></button>
     </div>
 
-    <div class="sales-list">
-      <div class="sales-list-title">▸ Operaciones aprobadas del mes</div>
-      <div id="salesListContainer"></div>
+    <div class="tab-panel active" id="panel-pending">
+      <div class="sales-list" id="pendingSection" style="display:none;">
+        <div class="sales-list-title" style="color:var(--amber);">▸ PENDIENTES DE APROBACIÓN</div>
+        <div id="pendingListContainer"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-approved">
+      <div class="sales-list">
+        <div class="sales-list-title">▸ APROBADAS DEL MES <span class="count" id="approvedCount">0</span></div>
+        <div id="salesListContainer"></div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="panel-archive">
+      <div class="sales-list">
+        <div class="sales-list-title">▸ CANCELADAS / ANULADAS</div>
+        <div id="archiveListContainer"></div>
+      </div>
     </div>
 
     <div class="actions-row" id="adminActions" style="display:none;">
       <button class="btn-secondary" onclick="exportData()">EXPORTAR JSON</button>
-      <button class="btn-secondary" onclick="importData()">IMPORTAR JSON</button>
+      <button class="btn-secondary" onclick="exportExcel()">EXPORTAR EXCEL</button>
+      <button class="btn-secondary" onclick="importData()">IMPORTAR</button>
       <button class="btn-secondary" onclick="resetMonth()" style="margin-left:auto;">RESET MES</button>
     </div>
+  </div>
+</div>
+
+<!-- ===== MODAL ANULAR ===== -->
+<div class="modal-overlay" id="voidModalOverlay">
+  <div class="modal small">
+    <button class="modal-close" onclick="closeVoidModal()">✕</button>
+    <h2>ANULAR VENTA</h2>
+    <div class="modal-sub">— REQUIERE MOTIVO —</div>
+
+    <div id="voidSaleInfo" style="background:var(--bg);border-left:4px solid var(--red);padding:14px 16px;margin-bottom:18px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-2);line-height:1.6;"></div>
+
+    <div class="form-row">
+      <label>Motivo de la anulación <span style="color:var(--red);">*</span></label>
+      <textarea id="voidReason" placeholder="Explicá brevemente por qué se anula (ej: el cliente devolvió, anuló el pedido, error de carga, etc.)"></textarea>
+    </div>
+
+    <button class="btn-primary danger" onclick="confirmVoid()">ANULAR VENTA</button>
   </div>
 </div>
 
@@ -1042,7 +1240,14 @@
     stateRef.on('value', (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        state.sales = data.sales || [];
+        state.sales = (data.sales || []).map(s => ({
+          status: 'approved',
+          client: '',
+          channel: 'Presencial',
+          product: '',
+          paymentMethod: '',
+          ...s
+        }));
         if (data.hofPrev) state.hofPrev = data.hofPrev;
       } else {
         state.sales = [];
@@ -1112,6 +1317,9 @@
     document.getElementById('modalOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'modalOverlay') closeModal();
     });
+    document.getElementById('voidModalOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'voidModalOverlay') closeVoidModal();
+    });
   });
 
   function logout() {
@@ -1130,34 +1338,29 @@
     const modalSub = document.getElementById('modalSub');
     const btnLauti = document.getElementById('btn-lauti');
     const btnToto = document.getElementById('btn-toto');
+    const tabsRow = document.getElementById('tabsRow');
 
-    // user chip
     const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', toto: '👤 TOTO', admin: '★ ADMIN' };
     chip.textContent = labels[currentUser] + ' · CAMBIAR';
     chip.classList.toggle('viewer', currentUser === 'view');
 
-    // fab
     if (currentUser === 'view') {
       fab.classList.add('fab-hidden');
     } else {
       fab.classList.remove('fab-hidden');
     }
 
-    // costo solo admin
     costCell.style.display = (currentUser === 'admin') ? '' : 'none';
-
-    // admin actions
     adminActions.style.display = (currentUser === 'admin') ? 'flex' : 'none';
+    tabsRow.style.display = (currentUser !== 'view') ? 'flex' : 'none';
 
-    // modal title
     if (currentUser === 'admin') {
       modalTitle.textContent = 'PANEL ADMIN';
-      modalSub.textContent = '— GUILLE / CAMI —';
+      modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
       btnLauti.disabled = false; btnToto.disabled = false;
     } else if (currentUser === 'lauti' || currentUser === 'toto') {
       modalTitle.textContent = 'CARGAR MI VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
-      // lock toggle al user actual
       if (currentUser === 'lauti') {
         btnLauti.disabled = false; btnToto.disabled = true;
         selectSeller('lauti');
@@ -1177,6 +1380,17 @@
   }
   function allPending() {
     return state.sales.filter(s => s.status === 'pending');
+  }
+  function allApproved() {
+    return state.sales.filter(s => s.status === 'approved');
+  }
+  function allArchive() {
+    return state.sales.filter(s => s.status === 'cancelled' || s.status === 'voided');
+  }
+  function visibleSalesFor(role) {
+    if (role === 'admin') return state.sales;
+    if (role === 'lauti' || role === 'toto') return state.sales;
+    return state.sales;
   }
 
   function computeSeller(key) {
@@ -1311,22 +1525,59 @@
 
   function renderHOF() {
     const all = state.sales.filter(s => s.status === 'approved');
+    // Récord ticket
     if (all.length) {
       const top = all.reduce((m, v) => v.amount > m.amount ? v : m, all[0]);
       document.getElementById('hofTicket').textContent = fmtMoney(top.amount);
-      document.getElementById('hofTicketDesc').textContent = `${top.seller.toUpperCase()} · ${top.date}`;
-      document.getElementById('hofBest').textContent = fmtMoney(top.amount);
-      document.getElementById('hofBestDesc').textContent = `Operación de ${top.seller.toUpperCase()}`;
+      const clientPart = top.client ? ` · ${top.client}` : '';
+      document.getElementById('hofTicketDesc').textContent = `${top.seller.toUpperCase()}${clientPart} · ${top.date}`;
     } else {
       document.getElementById('hofTicket').textContent = '—';
       document.getElementById('hofTicketDesc').textContent = 'Cargá la primera venta';
-      document.getElementById('hofBest').textContent = '—';
-      document.getElementById('hofBestDesc').textContent = 'Aún no hay ventas';
     }
+
+    // Más operaciones (el vendedor con más ventas aprobadas)
+    const lautiCount = all.filter(s => s.seller === 'lauti').length;
+    const totoCount  = all.filter(s => s.seller === 'toto').length;
+    if (lautiCount === 0 && totoCount === 0) {
+      document.getElementById('hofMostOps').textContent = '—';
+      document.getElementById('hofMostOpsDesc').textContent = 'Sin ventas aún';
+    } else if (lautiCount === totoCount) {
+      document.getElementById('hofMostOps').textContent = 'EMPATE';
+      document.getElementById('hofMostOpsDesc').textContent = `${lautiCount} operaciones cada uno`;
+    } else if (lautiCount > totoCount) {
+      document.getElementById('hofMostOps').textContent = 'LAUTI';
+      document.getElementById('hofMostOpsDesc').textContent = `${lautiCount} operaciones · ${totoCount} de TOTO`;
+    } else {
+      document.getElementById('hofMostOps').textContent = 'TOTO';
+      document.getElementById('hofMostOpsDesc').textContent = `${totoCount} operaciones · ${lautiCount} de LAUTI`;
+    }
+
     if (state.hofPrev) {
       document.getElementById('hofPrev').textContent = state.hofPrev.name;
       document.getElementById('hofPrevDesc').textContent = `${fmtMoney(state.hofPrev.amount)} · ${state.hofPrev.label}`;
     }
+  }
+
+  function renderChannelStrip() {
+    const approved = allApproved();
+    const total = approved.reduce((s, v) => s + v.amount, 0);
+    const channels = ['Marketplace', 'WhatsApp', 'Presencial'];
+    const slugs = { 'Marketplace': 'marketplace', 'WhatsApp': 'whatsapp', 'Presencial': 'presencial' };
+
+    channels.forEach(ch => {
+      const slug = slugs[ch];
+      const list = approved.filter(s => (s.channel || 'Presencial') === ch);
+      const amount = list.reduce((s,v) => s + v.amount, 0);
+      const count = list.length;
+      const avg = count ? amount / count : 0;
+      const pct = total > 0 ? Math.round((amount / total) * 100) : 0;
+
+      document.getElementById(`amount-${slug}`).textContent = fmtMoney(amount);
+      document.getElementById(`count-${slug}`).textContent = count;
+      document.getElementById(`ticket-${slug}`).textContent = fmtMoney(avg);
+      document.getElementById(`pct-${slug}`).textContent = pct + '%';
+    });
   }
 
   function renderGlobals(c) {
@@ -1366,60 +1617,154 @@
     }
   }
 
+  function renderSaleItem(s, opts = {}) {
+    const seller = s.seller;
+    const client = s.client || '—';
+    const channel = s.channel || '—';
+    const product = s.product || '—';
+    const payment = s.paymentMethod || '—';
+    const isPending = s.status === 'pending';
+    const isCancelled = s.status === 'cancelled';
+    const isVoided = s.status === 'voided';
+    const isApproved = s.status === 'approved';
+
+    let stateBadge = '';
+    if (isPending) stateBadge = '<span class="badge pending-badge">PENDIENTE</span>';
+    else if (isCancelled) stateBadge = '<span class="badge cancelled-badge">CANCELADA</span>';
+    else if (isVoided) stateBadge = '<span class="badge voided-badge">ANULADA</span>';
+
+    let actionBtns = '';
+    if (opts.canApprove && isPending) {
+      actionBtns += `<button class="sale-btn approve" onclick="approveSale('${s.id}')" title="Aprobar">✓</button>`;
+      actionBtns += `<button class="sale-btn reject" onclick="rejectSale('${s.id}')" title="Rechazar">✕</button>`;
+    }
+    if (opts.canCancel && isPending) {
+      actionBtns += `<button class="sale-btn delete" onclick="cancelMyPending('${s.id}')" title="Cancelar">✕</button>`;
+    }
+    if (opts.canVoid && isApproved) {
+      actionBtns += `<button class="sale-btn void" onclick="openVoidModal('${s.id}')" title="Anular">⊘</button>`;
+    }
+    if (opts.canDelete && isApproved) {
+      actionBtns += `<button class="sale-btn delete" onclick="deleteSale('${s.id}')" title="Eliminar">✕</button>`;
+    }
+
+    let voidReasonRow = '';
+    if (isVoided && s.reason) {
+      voidReasonRow = `<div class="void-reason">⊘ ${s.reason}${s.voidedBy ? ' · por ' + s.voidedBy.toUpperCase() : ''}</div>`;
+    }
+    if (isCancelled && s.reason) {
+      voidReasonRow = `<div class="void-reason" style="background:#F0F0F0;color:var(--ink-3);border-color:var(--ink-3);">✕ ${s.reason}</div>`;
+    }
+
+    return `
+      <div class="sale-item ${seller} ${s.status}">
+        <div class="sale-row-top">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <span class="seller-tag">${seller.toUpperCase()}</span>
+            <span class="client">${escapeHtml(client)}</span>
+            <span class="amount">${fmtMoney(s.amount)}</span>
+            ${stateBadge}
+          </div>
+          <div class="actions">${actionBtns}</div>
+        </div>
+        <div class="sale-row-bottom">
+          <span>${s.date}</span>
+          <span class="pipe">·</span>
+          <span>${escapeHtml(channel)}</span>
+          <span class="pipe">·</span>
+          <span>${escapeHtml(product)}</span>
+          <span class="pipe">·</span>
+          <span>${escapeHtml(payment)}</span>
+          ${voidReasonRow}
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
   function renderPendingList() {
     const section = document.getElementById('pendingSection');
     const container = document.getElementById('pendingListContainer');
 
     let visible = [];
-    if (currentUser === 'admin') {
-      visible = allPending();
-    } else if (currentUser === 'lauti' || currentUser === 'toto') {
-      visible = pendingSales(currentUser);
-    }
+    if (currentUser === 'admin') visible = allPending();
+    else if (currentUser === 'lauti' || currentUser === 'toto') visible = pendingSales(currentUser);
 
     if (visible.length === 0) {
       section.style.display = 'none';
+      container.innerHTML = '';
       return;
     }
     section.style.display = 'block';
 
-    container.innerHTML = visible.sort((a,b) => b.submittedAt - a.submittedAt).map(s => `
-      <div class="sale-item ${s.seller} pending">
-        <div class="left">
-          <span class="seller-tag">${s.seller.toUpperCase()}</span>
-          <span class="amount">${fmtMoney(s.amount)}</span>
-          <span class="date">${s.date}</span>
-          <span class="pending-badge">PENDIENTE</span>
-        </div>
-        <div class="actions">
-          ${currentUser === 'admin' ? `
-            <button class="sale-btn approve" onclick="approveSale('${s.id}')" title="Aprobar">✓</button>
-            <button class="sale-btn reject" onclick="rejectSale('${s.id}')" title="Rechazar">✕</button>
-          ` : `
-            <button class="sale-btn delete" onclick="cancelMyPending('${s.id}')" title="Cancelar">✕</button>
-          `}
-        </div>
-      </div>
-    `).join('');
+    const opts = {
+      canApprove: currentUser === 'admin',
+      canCancel: currentUser === 'lauti' || currentUser === 'toto',
+    };
+
+    container.innerHTML = visible
+      .sort((a,b) => (b.submittedAt || 0) - (a.submittedAt || 0))
+      .map(s => renderSaleItem(s, opts))
+      .join('');
   }
 
   function renderSalesList() {
     const approved = state.sales.filter(s => s.status === 'approved');
     const container = document.getElementById('salesListContainer');
+    document.getElementById('approvedCount').textContent = approved.length;
+
     if (approved.length === 0) {
       container.innerHTML = '<div class="empty-msg">Sin operaciones aprobadas todavía.</div>';
       return;
     }
-    container.innerHTML = approved.sort((a,b) => (b.date + b.id).localeCompare(a.date + a.id)).map(s => `
-      <div class="sale-item ${s.seller}">
-        <div class="left">
-          <span class="seller-tag">${s.seller.toUpperCase()}</span>
-          <span class="amount">${fmtMoney(s.amount)}</span>
-          <span class="date">${s.date}</span>
-        </div>
-        ${currentUser === 'admin' ? `<button class="sale-btn delete" onclick="deleteSale('${s.id}')" title="Eliminar">✕</button>` : ''}
-      </div>
-    `).join('');
+    const opts = {
+      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'toto',
+      canDelete: false,
+    };
+    // Para vendedores: solo pueden anular sus propias
+    container.innerHTML = approved
+      .sort((a,b) => (b.date + (b.id || '')).localeCompare(a.date + (a.id || '')))
+      .map(s => {
+        const itemOpts = { ...opts };
+        if ((currentUser === 'lauti' || currentUser === 'toto') && s.seller !== currentUser) {
+          itemOpts.canVoid = false;
+        }
+        return renderSaleItem(s, itemOpts);
+      })
+      .join('');
+  }
+
+  function renderArchiveList() {
+    const archive = allArchive();
+    const container = document.getElementById('archiveListContainer');
+    if (archive.length === 0) {
+      container.innerHTML = '<div class="empty-msg">Sin operaciones canceladas ni anuladas.</div>';
+      return;
+    }
+    container.innerHTML = archive
+      .sort((a,b) => (b.voidedAt || b.cancelledAt || 0) - (a.voidedAt || a.cancelledAt || 0))
+      .map(s => renderSaleItem(s, {}))
+      .join('');
+  }
+
+  function updateTabCounts() {
+    document.getElementById('tabCountPending').textContent = allPending().filter(s => {
+      if (currentUser === 'admin') return true;
+      return s.seller === currentUser;
+    }).length;
+    document.getElementById('tabCountApproved').textContent = allApproved().length;
+    document.getElementById('tabCountArchive').textContent = allArchive().length;
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p => {
+      p.classList.toggle('active', p.id === `panel-${name}`);
+    });
   }
 
   function renderAll() {
@@ -1442,21 +1787,31 @@
 
     renderPremios(c);
     renderHOF();
+    renderChannelStrip();
     renderPendingBanner();
     renderPendingList();
     renderSalesList();
+    renderArchiveList();
+    updateTabCounts();
   }
 
   // ===== ACTIONS =====
   function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('saleDate').valueAsDate = new Date();
-    renderPendingList(); renderSalesList();
-    setTimeout(() => document.getElementById('saleAmount').focus(), 100);
+    renderPendingList(); renderSalesList(); renderArchiveList();
+    updateTabCounts();
+    // Para vendedores arranca en "aprobadas" si no hay pendientes; sino "pendientes"
+    if (currentUser === 'lauti' || currentUser === 'toto') {
+      const myPending = pendingSales(currentUser).length;
+      switchTab(myPending > 0 ? 'pending' : 'approved');
+    } else {
+      switchTab(allPending().length > 0 ? 'pending' : 'approved');
+    }
+    setTimeout(() => document.getElementById('saleClient').focus(), 100);
   }
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
-    document.getElementById('saleAmount').value = '';
   }
 
   let selectedSellerForSale = 'lauti';
@@ -1480,18 +1835,29 @@
   async function addSale() {
     const amount = parseFloat(document.getElementById('saleAmount').value);
     const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
+    const client = document.getElementById('saleClient').value.trim();
+    const channel = document.getElementById('saleChannel').value;
+    const product = document.getElementById('saleProduct').value.trim();
+    const paymentMethod = document.getElementById('salePayment').value;
+
     if (!amount || amount <= 0) { showToast('MONTO INVÁLIDO', 'warn'); return; }
+    if (!client) { showToast('FALTA EL CLIENTE', 'warn'); document.getElementById('saleClient').focus(); return; }
+    if (!product) { showToast('FALTA EL PRODUCTO', 'warn'); document.getElementById('saleProduct').focus(); return; }
 
     const before = computeAll();
     const isAdmin = currentUser === 'admin';
     const newSale = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
       seller: selectedSellerForSale,
-      amount, date,
+      amount, date, client, channel, product, paymentMethod,
       status: isAdmin ? 'approved' : 'pending',
       submittedBy: currentUser,
       submittedAt: Date.now()
     };
+    if (isAdmin) {
+      newSale.approvedBy = currentUser;
+      newSale.approvedAt = Date.now();
+    }
     state.sales.push(newSale);
     await saveState();
     renderAll();
@@ -1503,8 +1869,11 @@
       showToast(`✓ ENVIADO · ESPERA APROBACIÓN`, 'warn');
     }
 
+    // Limpiar campos pero mantener canal y método (suele ser repetitivo)
     document.getElementById('saleAmount').value = '';
-    document.getElementById('saleAmount').focus();
+    document.getElementById('saleClient').value = '';
+    document.getElementById('saleProduct').value = '';
+    document.getElementById('saleClient').focus();
   }
 
   function checkUnlocks(before, after, seller) {
@@ -1532,6 +1901,8 @@
     if (!sale) return;
     const before = computeAll();
     sale.status = 'approved';
+    sale.approvedBy = currentUser;
+    sale.approvedAt = Date.now();
     await saveState();
     renderAll();
     showToast(`✓ APROBADA · ${sale.seller.toUpperCase()} +${fmtMoney(sale.amount)}`);
@@ -1539,8 +1910,13 @@
   }
 
   async function rejectSale(id) {
-    if (!confirm('¿Rechazar esta venta? Se eliminará.')) return;
-    state.sales = state.sales.filter(s => s.id !== id);
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale) return;
+    const reason = prompt('Motivo de rechazo (opcional):') || 'Rechazada por admin';
+    sale.status = 'cancelled';
+    sale.cancelledBy = currentUser;
+    sale.cancelledAt = Date.now();
+    sale.reason = reason;
     await saveState();
     renderAll();
     showToast('✕ VENTA RECHAZADA', 'warn');
@@ -1550,10 +1926,51 @@
     const sale = state.sales.find(s => s.id === id);
     if (!sale || sale.submittedBy !== currentUser) return;
     if (!confirm('¿Cancelar esta venta pendiente?')) return;
-    state.sales = state.sales.filter(s => s.id !== id);
+    sale.status = 'cancelled';
+    sale.cancelledBy = currentUser;
+    sale.cancelledAt = Date.now();
+    sale.reason = 'Cancelada por el vendedor';
     await saveState();
     renderAll();
     showToast('✕ CANCELADA');
+  }
+
+  // Anular venta aprobada (con motivo)
+  let voidTargetSaleId = null;
+  function openVoidModal(id) {
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale) return;
+    // Vendedor solo puede anular las suyas
+    if ((currentUser === 'lauti' || currentUser === 'toto') && sale.seller !== currentUser) {
+      showToast('SOLO TUS VENTAS', 'warn'); return;
+    }
+    voidTargetSaleId = id;
+    document.getElementById('voidSaleInfo').innerHTML = `
+      <strong>${sale.seller.toUpperCase()}</strong> · ${escapeHtml(sale.client || '—')} · <strong>${fmtMoney(sale.amount)}</strong><br>
+      ${escapeHtml(sale.channel || '')} · ${escapeHtml(sale.product || '')} · ${sale.date}
+    `;
+    document.getElementById('voidReason').value = '';
+    document.getElementById('voidModalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('voidReason').focus(), 100);
+  }
+  function closeVoidModal() {
+    document.getElementById('voidModalOverlay').classList.remove('open');
+    voidTargetSaleId = null;
+  }
+  async function confirmVoid() {
+    const reason = document.getElementById('voidReason').value.trim();
+    if (!reason) { showToast('FALTA EL MOTIVO', 'warn'); return; }
+    if (reason.length < 5) { showToast('MOTIVO MUY CORTO', 'warn'); return; }
+    const sale = state.sales.find(s => s.id === voidTargetSaleId);
+    if (!sale) { closeVoidModal(); return; }
+    sale.status = 'voided';
+    sale.voidedBy = currentUser;
+    sale.voidedAt = Date.now();
+    sale.reason = reason;
+    await saveState();
+    renderAll();
+    closeVoidModal();
+    showToast(`⊘ ANULADA · ${sale.seller.toUpperCase()} -${fmtMoney(sale.amount)}`, 'warn');
   }
 
   async function deleteSale(id) {
@@ -1584,6 +2001,38 @@
     a.click();
     URL.revokeObjectURL(url);
     showToast('✓ EXPORTADO');
+  }
+
+  function exportExcel() {
+    // Export CSV (Excel lo abre nativo)
+    const headers = ['Fecha','Vendedor','Cliente','Canal','Producto','Monto','Método Pago','Estado','Motivo'];
+    const rows = state.sales
+      .sort((a,b) => (a.date + (a.id||'')).localeCompare(b.date + (b.id||'')))
+      .map(s => [
+        s.date || '',
+        (s.seller || '').toUpperCase(),
+        s.client || '',
+        s.channel || '',
+        s.product || '',
+        s.amount || 0,
+        s.paymentMethod || '',
+        (s.status || '').toUpperCase(),
+        s.reason || ''
+      ]);
+    const csv = [headers, ...rows]
+      .map(r => r.map(c => {
+        const v = String(c).replace(/"/g, '""');
+        return /[",\n;]/.test(v) ? `"${v}"` : v;
+      }).join(';'))
+      .join('\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `graziano-ventas-${periodLabel().toLowerCase().replace(' ','-')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✓ EXCEL EXPORTADO');
   }
 
   function importData() {
