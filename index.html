@@ -299,8 +299,16 @@
   .seller-rank {
     font-family: 'Anton', sans-serif; font-size: 64px; line-height: 0.8;
     color: var(--red); letter-spacing: -0.04em;
+    display: flex; align-items: baseline; gap: 4px;
   }
   .seller-rank .hash { font-size: 32px; vertical-align: top; opacity: 0.5; }
+  .rank-emoji {
+    font-size: 42px; line-height: 1;
+    display: inline-block;
+    transform: translateY(-2px);
+    margin-right: 4px;
+  }
+  .rank-emoji:empty { display: none; }
   .seller-name-block { text-align: right; }
   .seller-name {
     font-family: 'Anton', sans-serif; font-size: 44px; line-height: 0.9;
@@ -589,10 +597,11 @@
     letter-spacing: 0.25em; color: var(--ink); text-transform: uppercase;
     margin-bottom: 12px;
     display: flex; align-items: center; gap: 8px;
+    padding-right: 50px;
   }
   .channel-cell .channel-name::before {
     content: ''; display: inline-block; width: 8px; height: 8px;
-    background: var(--red); border-radius: 50%;
+    background: var(--red); border-radius: 50%; flex-shrink: 0;
   }
   .channel-cell .channel-amount {
     font-family: 'Anton', sans-serif; font-size: 30px; color: var(--ink);
@@ -738,13 +747,18 @@
     .global-cell:nth-child(2n) { border-right: none; }
     .global-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .global-cell .value { font-size: 26px; }
-    .duelo { grid-template-columns: 1fr; }
+    .duelo { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .duelo.leader-toto { flex-direction: column-reverse; }
     .vs-badge { width: auto; height: 60px; }
     .vs-text { transform: rotate(0); font-size: 36px; }
     .seller-card { padding: 24px 20px; box-shadow: 4px 4px 0 var(--ink); }
     .seller-card.leader { box-shadow: 4px 4px 0 var(--red); }
     .seller-rank { font-size: 48px; }
+    .rank-emoji { font-size: 32px; transform: translateY(-1px); }
     .seller-name { font-size: 32px; }
+    .channel-strip { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
+    .channel-cell { border-right: none; border-bottom: 1px solid var(--line-soft); }
+    .channel-cell:last-child { border-bottom: none; }
     .premios-grid { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
     .premio { border-right: none; }
     .premio:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
@@ -909,7 +923,7 @@
   <div class="duelo">
     <div class="seller-card" id="card-lauti">
       <div class="seller-header">
-        <div class="seller-rank"><span class="hash">#</span><span id="rank-lauti">—</span></div>
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-lauti"></span><span class="hash">#</span><span id="rank-lauti">—</span></div>
         <div class="seller-name-block">
           <div class="seller-name">LAUTI</div>
           <div class="seller-title">EL CAZADOR</div>
@@ -953,7 +967,7 @@
 
     <div class="seller-card" id="card-toto">
       <div class="seller-header">
-        <div class="seller-rank"><span class="hash">#</span><span id="rank-toto">—</span></div>
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-toto"></span><span class="hash">#</span><span id="rank-toto">—</span></div>
         <div class="seller-name-block">
           <div class="seller-name">TOTO</div>
           <div class="seller-title">EL CONSTANTE</div>
@@ -1777,10 +1791,20 @@
     renderSeller('lauti', c.lauti, lautiLeader);
     renderSeller('toto',  c.toto,  totoLeader);
 
+    // Ranks + Emojis + orden mobile
+    const dueloEl = document.querySelector('.duelo');
+    dueloEl.classList.remove('leader-lauti', 'leader-toto');
+    const emojiL = document.getElementById('emoji-lauti');
+    const emojiT = document.getElementById('emoji-toto');
     if (c.firstPlace) {
+      emojiL.textContent = lautiLeader ? '👑' : '🧅';
+      emojiT.textContent = totoLeader  ? '👑' : '🧅';
       document.getElementById('rank-lauti').textContent = lautiLeader ? '1' : '2';
       document.getElementById('rank-toto').textContent  = totoLeader  ? '1' : '2';
+      dueloEl.classList.add(lautiLeader ? 'leader-lauti' : 'leader-toto');
     } else {
+      emojiL.textContent = '';
+      emojiT.textContent = '';
       document.getElementById('rank-lauti').textContent = '—';
       document.getElementById('rank-toto').textContent  = '—';
     }
