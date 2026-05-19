@@ -619,6 +619,165 @@
     padding: 3px 8px; background: var(--red-tint); border: 1px solid var(--red);
   }
 
+  /* COBROS SEMANALES */
+  .cobros-wrapper { margin-bottom: 24px; }
+  .cobros-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .cobros-card {
+    background: var(--bg-card); border: 1.5px solid var(--line);
+    padding: 22px 22px 18px; box-shadow: 6px 6px 0 var(--ink);
+    display: flex; flex-direction: column; gap: 18px;
+  }
+  .cobros-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .cobros-seller-block { display: flex; align-items: baseline; gap: 8px; }
+  .cobros-emoji {
+    font-size: 28px; line-height: 1; transform: translateY(2px);
+  }
+  .cobros-emoji:empty { display: none; }
+  .cobros-name {
+    font-family: 'Anton', sans-serif; font-size: 32px;
+    color: var(--ink); letter-spacing: 0.01em; line-height: 1;
+  }
+  .cobros-total { text-align: right; }
+  .ct-label {
+    display: block; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .ct-value {
+    font-family: 'Anton', sans-serif; font-size: 22px; color: var(--green);
+    line-height: 1;
+  }
+  .weeks-timeline {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  }
+  .week-cell {
+    background: var(--bg); border: 1.5px solid var(--line);
+    padding: 10px 8px; text-align: center;
+    display: flex; flex-direction: column; gap: 4px;
+    transition: all 0.3s; cursor: default; position: relative;
+  }
+  .week-cell.admin-clickable { cursor: pointer; }
+  .week-cell.admin-clickable:hover { border-color: var(--red); transform: translateY(-1px); }
+  .week-cell .wc-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .week-cell .wc-amount {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    color: var(--ink); line-height: 1.1;
+  }
+  .week-cell .wc-state {
+    font-family: 'Helvetica', sans-serif; font-size: 16px;
+    color: var(--ink-4); line-height: 1; font-weight: 700;
+  }
+  /* States */
+  .week-cell.paid {
+    background: var(--green); border-color: var(--green);
+    box-shadow: 0 0 0 0 rgba(10, 124, 66, 0.4);
+    animation: cell-pulse 2s ease-out 1;
+  }
+  .week-cell.paid .wc-num,
+  .week-cell.paid .wc-amount,
+  .week-cell.paid .wc-state { color: white; }
+  .week-cell.paid .wc-num { opacity: 0.85; }
+  @keyframes cell-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(10, 124, 66, 0.5); transform: scale(1); }
+    40% { box-shadow: 0 0 0 12px rgba(10, 124, 66, 0); transform: scale(1.04); }
+    100% { box-shadow: 0 0 0 0 rgba(10, 124, 66, 0); transform: scale(1); }
+  }
+  .week-cell.current {
+    background: var(--red-tint); border-color: var(--red);
+  }
+  .week-cell.current .wc-num { color: var(--red); }
+  .week-cell.current .wc-state { color: var(--red); animation: blink 1.4s infinite; }
+  @keyframes blink {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+  }
+  .week-cell.future {
+    background: var(--bg-soft); opacity: 0.55;
+  }
+  .week-cell.future .wc-amount { color: var(--ink-4); }
+
+  .current-week-card {
+    background: var(--bg); border: 1.5px solid var(--line);
+    border-left: 4px solid var(--red);
+    padding: 16px 18px;
+  }
+  .cw-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 10px; gap: 8px; flex-wrap: wrap;
+  }
+  .cw-label {
+    font-family: 'Archivo Black', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--red); text-transform: uppercase;
+  }
+  .cw-range {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.1em;
+  }
+  .cw-stats {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); margin-bottom: 12px; line-height: 1.5;
+  }
+  .cw-stats strong { color: var(--ink); font-weight: 700; }
+  .cw-pipe { color: var(--ink-5); margin: 0 8px; }
+  .cw-amount-block {
+    padding: 12px 14px; background: var(--ink); color: white;
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 10px;
+  }
+  .cw-amount-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: 0.25em; color: rgba(255,255,255,0.7); text-transform: uppercase;
+  }
+  .cw-amount {
+    font-family: 'Anton', sans-serif; font-size: 28px; color: white;
+    line-height: 1;
+  }
+  .cw-btn {
+    width: 100%; margin-top: 10px; padding: 12px;
+    background: var(--green); color: white; border: 1.5px solid var(--green);
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    letter-spacing: 0.2em; cursor: pointer; text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .cw-btn:hover { background: #086336; border-color: #086336; }
+  .cw-btn.paid {
+    background: var(--bg); color: var(--green); border-color: var(--green);
+  }
+  .cw-btn.paid:hover { background: var(--red); color: white; border-color: var(--red); }
+  .cw-btn.hidden { display: none; }
+
+  .cobros-footer {
+    margin-top: 16px; padding: 14px 18px;
+    background: var(--bg-soft); border: 1px dashed var(--ink-4);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); line-height: 1.6;
+  }
+  .cf-label {
+    font-family: 'Archivo Black', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--ink); margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .cf-countdown {
+    color: var(--red); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; margin-left: 6px;
+  }
+  .cf-items strong { color: var(--ink); }
+
+  /* MODO VIEW: ocultar elementos privados de cobros */
+  body.mode-view .cobros-section-title,
+  body.mode-view .cobros-wrapper,
+  body.mode-view .earnings,
+  body.mode-view .pending-pill {
+    display: none !important;
+  }
+
   /* SALES LIST - actualizado para más detalle */
   .sales-list { margin-top: 20px; padding-top: 16px; border-top: 1.5px solid var(--line-soft); }
   .sales-list-title {
@@ -759,6 +918,15 @@
     .channel-strip { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
     .channel-cell { border-right: none; border-bottom: 1px solid var(--line-soft); }
     .channel-cell:last-child { border-bottom: none; }
+    /* COBROS mobile */
+    .cobros-grid { grid-template-columns: 1fr; }
+    .cobros-card { padding: 18px 16px 16px; box-shadow: 4px 4px 0 var(--ink); }
+    .cobros-name { font-size: 26px; }
+    .ct-value { font-size: 18px; }
+    .week-cell { padding: 8px 4px; }
+    .week-cell .wc-amount { font-size: 11px; }
+    .cw-amount { font-size: 24px; }
+    .cobros-card-header { flex-wrap: wrap; }
     .premios-grid { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
     .premio { border-right: none; }
     .premio:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
@@ -1008,8 +1176,87 @@
     </div>
   </div>
 
-  <div class="section-title">
+  <div class="section-title cobros-section-title" id="cobrosSectionTitle">
     <span class="section-title-num">/02</span>
+    <span class="section-title-text">COBROS SEMANALES</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="cobros-wrapper" id="cobrosWrapper">
+    <div class="cobros-grid">
+      <!-- LAUTI -->
+      <div class="cobros-card" id="cobros-lauti">
+        <div class="cobros-card-header">
+          <div class="cobros-seller-block">
+            <span class="cobros-emoji" id="cobros-emoji-lauti"></span>
+            <span class="cobros-name">LAUTI</span>
+          </div>
+          <div class="cobros-total">
+            <span class="ct-label">COBRADO ESTE MES</span>
+            <span class="ct-value" id="cobros-total-lauti">$0</span>
+          </div>
+        </div>
+        <div class="weeks-timeline" id="timeline-lauti"></div>
+        <div class="current-week-card">
+          <div class="cw-header">
+            <span class="cw-label">▸ ESTA SEMANA</span>
+            <span class="cw-range" id="cw-range-lauti">SEM 3 · días 15-21</span>
+          </div>
+          <div class="cw-stats">
+            <span>Facturado <strong id="cw-facturado-lauti">$0</strong></span>
+            <span class="cw-pipe">·</span>
+            <span>3% <strong id="cw-comision-lauti">$0</strong></span>
+          </div>
+          <div class="cw-amount-block">
+            <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
+            <span class="cw-amount" id="cw-amount-lauti">$0</span>
+          </div>
+          <button class="cw-btn" id="cw-btn-lauti" onclick="toggleWeekPaid('lauti', currentWeekNum())">✓ MARCAR COBRADO</button>
+        </div>
+      </div>
+
+      <!-- TOTO -->
+      <div class="cobros-card" id="cobros-toto">
+        <div class="cobros-card-header">
+          <div class="cobros-seller-block">
+            <span class="cobros-emoji" id="cobros-emoji-toto"></span>
+            <span class="cobros-name">TOTO</span>
+          </div>
+          <div class="cobros-total">
+            <span class="ct-label">COBRADO ESTE MES</span>
+            <span class="ct-value" id="cobros-total-toto">$0</span>
+          </div>
+        </div>
+        <div class="weeks-timeline" id="timeline-toto"></div>
+        <div class="current-week-card">
+          <div class="cw-header">
+            <span class="cw-label">▸ ESTA SEMANA</span>
+            <span class="cw-range" id="cw-range-toto">SEM 3 · días 15-21</span>
+          </div>
+          <div class="cw-stats">
+            <span>Facturado <strong id="cw-facturado-toto">$0</strong></span>
+            <span class="cw-pipe">·</span>
+            <span>3% <strong id="cw-comision-toto">$0</strong></span>
+          </div>
+          <div class="cw-amount-block">
+            <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
+            <span class="cw-amount" id="cw-amount-toto">$0</span>
+          </div>
+          <button class="cw-btn" id="cw-btn-toto" onclick="toggleWeekPaid('toto', currentWeekNum())">✓ MARCAR COBRADO</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cobros-footer">
+      <div class="cf-label">▸ PAGO DE FIN DE MES <span class="cf-countdown" id="cfCountdown">— días</span></div>
+      <div class="cf-items">
+        Base <strong>$300.000</strong> c/u · Bonos al cierre: <strong>$35k</strong> meta · <strong>$30k</strong> #1 · <strong>$20k</strong> equipo · % escalonado sobre excedente
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">
+    <span class="section-title-num">/03</span>
     <span class="section-title-text">VENTAS POR CANAL</span>
     <span class="section-title-line"></span>
   </div>
@@ -1042,7 +1289,7 @@
   </div>
 
   <div class="section-title">
-    <span class="section-title-num">/03</span>
+    <span class="section-title-num">/04</span>
     <span class="section-title-text">PREMIOS A DESBLOQUEAR</span>
     <span class="section-title-line"></span>
   </div>
@@ -1050,7 +1297,7 @@
   <div class="premios-grid" id="premiosGrid"></div>
 
   <div class="section-title">
-    <span class="section-title-num">/04</span>
+    <span class="section-title-num">/05</span>
     <span class="section-title-text">HALL OF FAME</span>
     <span class="section-title-line"></span>
   </div>
@@ -1235,7 +1482,8 @@
 
   let state = {
     sales: [], // {id, seller, amount, date, status: 'pending'|'approved', submittedBy, submittedAt}
-    hofPrev: { name: 'LAUTI', amount: 10000000, label: 'Abril 2026' }
+    hofPrev: { name: 'LAUTI', amount: 10000000, label: 'Abril 2026' },
+    weeklyPayments: {} // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, toto: {...} } }
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'toto' | 'admin'
@@ -1246,7 +1494,8 @@
     try {
       await stateRef.set({
         sales: state.sales || [],
-        hofPrev: state.hofPrev || null
+        hofPrev: state.hofPrev || null,
+        weeklyPayments: state.weeklyPayments || {}
       });
     } catch (e) { console.warn('Firebase save failed', e); }
   }
@@ -1263,8 +1512,10 @@
           ...s
         }));
         if (data.hofPrev) state.hofPrev = data.hofPrev;
+        state.weeklyPayments = data.weeklyPayments || {};
       } else {
         state.sales = [];
+        state.weeklyPayments = {};
       }
       if (currentUser) renderAll();
     }, (err) => { console.warn('Firebase read error', err); });
@@ -1286,6 +1537,48 @@
   function periodLabel() {
     const d = new Date();
     return `${MONTHS_ES[d.getMonth()]} ${d.getFullYear()}`;
+  }
+
+  // ===== WEEK HELPERS =====
+  function weekOfMonth(dateStr) {
+    // Recibe "YYYY-MM-DD"
+    if (!dateStr) return null;
+    const day = parseInt(dateStr.slice(8, 10), 10);
+    return Math.min(4, Math.max(1, Math.ceil(day / 7)));
+  }
+  function currentWeekNum() {
+    const d = new Date();
+    return Math.min(4, Math.max(1, Math.ceil(d.getDate() / 7)));
+  }
+  function currentPeriodKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`;
+  }
+  function weekDateRange(weekNum) {
+    if (weekNum === 4) {
+      const d = new Date();
+      const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+      return { start: 22, end: lastDay };
+    }
+    return { start: (weekNum-1)*7 + 1, end: weekNum*7 };
+  }
+  function daysUntilNextSaturday() {
+    const d = new Date();
+    const day = d.getDay(); // 0=domingo, 6=sábado
+    const days = (6 - day + 7) % 7;
+    return days === 0 ? 7 : days; // si hoy es sábado, próximo es en 7
+  }
+  function weeklySalesFor(seller, weekNum) {
+    return state.sales.filter(s =>
+      s.seller === seller &&
+      s.status === 'approved' &&
+      weekOfMonth(s.date) === weekNum
+    );
+  }
+  function weeklyCommission(seller, weekNum) {
+    const sales = weeklySalesFor(seller, weekNum);
+    const facturado = sales.reduce((sum, s) => sum + s.amount, 0);
+    return { facturado, comision: facturado * CONFIG.baseCommission };
   }
 
   // ===== LOGIN FLOW =====
@@ -1360,8 +1653,10 @@
 
     if (currentUser === 'view') {
       fab.classList.add('fab-hidden');
+      document.body.classList.add('mode-view');
     } else {
       fab.classList.remove('fab-hidden');
+      document.body.classList.remove('mode-view');
     }
 
     costCell.style.display = (currentUser === 'admin') ? '' : 'none';
@@ -1594,6 +1889,118 @@
     });
   }
 
+  function renderCobros(c) {
+    const periodKey = currentPeriodKey();
+    const curWeek = currentWeekNum();
+    const isAdmin = currentUser === 'admin';
+    const payments = state.weeklyPayments?.[periodKey] || {};
+    const lautiLeader = c.firstPlace === 'lauti';
+    const totoLeader = c.firstPlace === 'toto';
+
+    ['lauti', 'toto'].forEach(seller => {
+      const isLeader = (seller === 'lauti' ? lautiLeader : totoLeader);
+      const sellerPayments = payments[seller] || {};
+
+      // Emoji al lado del nombre
+      const emojiEl = document.getElementById(`cobros-emoji-${seller}`);
+      if (c.firstPlace) {
+        emojiEl.textContent = isLeader ? '👑' : '🧅';
+      } else {
+        emojiEl.textContent = '';
+      }
+
+      // Timeline 4 semanas
+      const timeline = document.getElementById(`timeline-${seller}`);
+      let html = '';
+      let cobradoMes = 0;
+      for (let w = 1; w <= 4; w++) {
+        const wk = weeklyCommission(seller, w);
+        const p = sellerPayments[w];
+        const isPaid = p && p.paid;
+        const isCurrent = w === curWeek;
+        const isFuture = w > curWeek;
+        let cls = 'pending';
+        let icon = '⌛';
+        if (isPaid) { cls = 'paid'; icon = '✓'; cobradoMes += (p.amount || wk.comision); }
+        else if (isCurrent) { cls = 'current'; icon = '●'; }
+        else if (isFuture) { cls = 'future'; icon = '◯'; }
+        const clickable = isAdmin && wk.facturado > 0 ? 'admin-clickable' : '';
+        const clickAttr = isAdmin && wk.facturado > 0 ? `onclick="toggleWeekPaid('${seller}', ${w})"` : '';
+        const amountShown = (isPaid && p.amount != null) ? p.amount : wk.comision;
+        const amountText = amountShown > 0 ? fmtMoney(amountShown) : '—';
+        html += `
+          <div class="week-cell ${cls} ${clickable}" ${clickAttr}>
+            <div class="wc-num">SEM ${w}</div>
+            <div class="wc-amount">${amountText}</div>
+            <div class="wc-state">${icon}</div>
+          </div>
+        `;
+      }
+      timeline.innerHTML = html;
+
+      // Total cobrado del mes
+      document.getElementById(`cobros-total-${seller}`).textContent = fmtMoney(cobradoMes);
+
+      // Detalle de la semana actual
+      const wkCur = weeklyCommission(seller, curWeek);
+      const range = weekDateRange(curWeek);
+      document.getElementById(`cw-range-${seller}`).textContent = `SEM ${curWeek} · días ${range.start}–${range.end}`;
+      document.getElementById(`cw-facturado-${seller}`).textContent = fmtMoney(wkCur.facturado);
+      document.getElementById(`cw-comision-${seller}`).textContent = fmtMoney(wkCur.comision);
+      document.getElementById(`cw-amount-${seller}`).textContent = fmtMoney(wkCur.comision);
+
+      // Botón cobrar (solo admin)
+      const btn = document.getElementById(`cw-btn-${seller}`);
+      const curPaid = sellerPayments[curWeek]?.paid;
+      if (isAdmin) {
+        btn.classList.remove('hidden');
+        if (curPaid) {
+          btn.textContent = '✕ DESMARCAR COBRADO';
+          btn.classList.add('paid');
+        } else {
+          btn.textContent = '✓ MARCAR COBRADO';
+          btn.classList.remove('paid');
+        }
+      } else {
+        btn.classList.add('hidden');
+      }
+    });
+
+    // Countdown a fin de mes
+    document.getElementById('cfCountdown').textContent = `en ${daysLeftInMonth()} días`;
+  }
+
+  async function toggleWeekPaid(seller, weekNum) {
+    if (currentUser !== 'admin') return;
+    const periodKey = currentPeriodKey();
+    if (!state.weeklyPayments) state.weeklyPayments = {};
+    if (!state.weeklyPayments[periodKey]) state.weeklyPayments[periodKey] = {};
+    if (!state.weeklyPayments[periodKey][seller]) state.weeklyPayments[periodKey][seller] = {};
+
+    const existing = state.weeklyPayments[periodKey][seller][weekNum];
+    if (existing && existing.paid) {
+      // Desmarcar
+      if (!confirm(`¿Desmarcar el cobro de SEM ${weekNum} de ${seller.toUpperCase()}?`)) return;
+      delete state.weeklyPayments[periodKey][seller][weekNum];
+      await saveState();
+      renderAll();
+      showToast(`SEM ${weekNum} · ${seller.toUpperCase()} desmarcada`, 'warn');
+    } else {
+      // Marcar como cobrado
+      const wk = weeklyCommission(seller, weekNum);
+      if (wk.comision <= 0) { showToast('SIN VENTAS EN ESA SEMANA', 'warn'); return; }
+      state.weeklyPayments[periodKey][seller][weekNum] = {
+        paid: true,
+        paidAt: Date.now(),
+        paidBy: currentUser,
+        amount: wk.comision
+      };
+      await saveState();
+      renderAll();
+      showToast(`🎉 ${seller.toUpperCase()} · SEM ${weekNum} COBRADA · ${fmtMoney(wk.comision)}`, 'unlock');
+    }
+  }
+
   function renderGlobals(c) {
     const total = c.lauti.total + c.toto.total;
     const targetTotal = CONFIG.target * 2;
@@ -1812,6 +2219,7 @@
     renderPremios(c);
     renderHOF();
     renderChannelStrip();
+    renderCobros(c);
     renderPendingBanner();
     renderPendingList();
     renderSalesList();
