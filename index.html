@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GRAZIANO · ARENA DE VENTAS</title>
+<!-- PWA -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#FF2E1F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Graziano">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32.png">
+<link rel="shortcut icon" href="./favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -506,14 +516,14 @@
   .fab-sub {
     background: var(--bg-card); color: var(--ink);
     border: 1.5px solid var(--ink);
-    padding: 12px 18px;
+    padding: 16px 22px;
     box-shadow: 4px 4px 0 var(--ink);
     cursor: pointer;
-    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
     letter-spacing: 0.18em; text-transform: uppercase;
     display: none;
-    align-items: center; gap: 10px;
-    white-space: nowrap;
+    align-items: center; gap: 12px;
+    white-space: nowrap; min-height: 52px;
     opacity: 0; transform: translateY(10px);
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
@@ -1272,6 +1282,351 @@
   }
   .budget-actions .btn-primary { flex: 1; margin-top: 0; }
 
+  /* ===== CENTRO DE OPERACIONES ===== */
+  .view-toggle {
+    display: flex; gap: 0;
+    margin-bottom: 32px;
+    border: 1.5px solid var(--ink);
+    background: var(--bg-card);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .vt-btn {
+    flex: 1; padding: 16px 24px;
+    background: var(--bg-card); border: none; border-right: 1.5px solid var(--ink);
+    cursor: pointer;
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-3); transition: all 0.2s;
+  }
+  .vt-btn:last-child { border-right: none; }
+  .vt-btn.active { background: var(--red); color: white; }
+  .vt-btn:hover:not(.active) { background: var(--red-tint); color: var(--ink); }
+
+  .ops-header { margin-bottom: 28px; padding: 0; }
+  .ops-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.3em; color: var(--ink-3); margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .ops-title {
+    font-family: 'Anton', sans-serif; font-size: 64px; line-height: 0.95;
+    color: var(--ink); letter-spacing: 0.01em; margin: 0 0 8px 0;
+  }
+  .ops-period {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: 0.2em; color: var(--red); text-transform: uppercase;
+  }
+  .ops-period-row {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px; margin-top: 6px;
+  }
+  .ops-month-selector {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ops-month-selector label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .ops-month-selector select {
+    padding: 10px 14px; border: 1.5px solid var(--ink); background: var(--bg);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    letter-spacing: 0.1em; cursor: pointer; outline: none;
+  }
+  .ops-month-selector select:focus { border-color: var(--red); }
+
+  /* KPI cards */
+  .ops-kpis {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 0;
+    margin-bottom: 32px;
+    border: 1.5px solid var(--ink);
+    background: var(--bg-card);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .kpi-card {
+    padding: 18px 16px; border-right: 1.5px solid var(--line);
+    position: relative;
+  }
+  .kpi-card:last-child { border-right: none; }
+  .kpi-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .kpi-value {
+    font-family: 'Anton', sans-serif; font-size: 30px;
+    color: var(--ink); line-height: 1; letter-spacing: -0.01em;
+  }
+  .kpi-value.red { color: var(--red); }
+  .kpi-delta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; margin-top: 6px;
+  }
+  .kpi-delta.up { color: var(--green); }
+  .kpi-delta.down { color: var(--red); }
+  .kpi-delta.flat { color: var(--ink-4); }
+  .kpi-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: 0.1em; color: var(--ink-3); margin-top: 4px;
+  }
+
+  /* Ops sections */
+  .ops-section {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    padding: 22px 24px; margin-bottom: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .ops-section-alert {
+    border-color: var(--amber);
+    box-shadow: 6px 6px 0 var(--amber);
+  }
+  .ops-section-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--line);
+  }
+  .ops-section h3 {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    letter-spacing: 0.25em; color: var(--ink); margin: 0;
+    text-transform: uppercase;
+  }
+  .ops-section-alert h3 { color: var(--amber); }
+  .ops-section-count {
+    background: var(--amber); color: white;
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    padding: 4px 12px; min-width: 32px; text-align: center;
+  }
+  .ops-section-alert.no-pending {
+    border-color: var(--green);
+    box-shadow: 6px 6px 0 var(--green);
+  }
+  .ops-section-alert.no-pending h3 { color: var(--green); }
+  .ops-section-alert.no-pending .ops-section-count {
+    background: var(--green);
+  }
+
+  .ops-grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-bottom: 0;
+  }
+  .ops-grid-2 .ops-section { margin-bottom: 24px; }
+
+  /* Pending list */
+  .ops-pending-item {
+    background: var(--bg); border: 1.5px solid var(--line);
+    border-left: 5px solid var(--amber);
+    padding: 14px 18px; margin-bottom: 10px;
+    display: grid; grid-template-columns: 1fr auto; gap: 14px;
+    align-items: center;
+  }
+  .ops-pending-info { min-width: 0; }
+  .ops-pending-top {
+    display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .ops-pending-seller {
+    font-family: 'Archivo Black', sans-serif; font-size: 11px;
+    letter-spacing: 0.2em; color: white; background: var(--red);
+    padding: 3px 8px;
+  }
+  .ops-pending-seller.toto { background: var(--ink); }
+  .ops-pending-seller.estela { background: var(--ink-3); }
+  .ops-pending-client {
+    font-family: 'Archivo', sans-serif; font-size: 16px;
+    font-weight: 700; color: var(--ink);
+  }
+  .ops-pending-amount {
+    font-family: 'Anton', sans-serif; font-size: 22px;
+    color: var(--red); margin-left: auto;
+  }
+  .ops-pending-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.05em; color: var(--ink-3); line-height: 1.6;
+  }
+  .ops-pending-actions {
+    display: flex; gap: 8px; flex-shrink: 0;
+  }
+  .ops-pending-actions button {
+    padding: 10px 18px;
+    font-family: 'Archivo Black', sans-serif; font-size: 11px;
+    letter-spacing: 0.18em; border: 1.5px solid var(--ink);
+    cursor: pointer; text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .ops-btn-approve {
+    background: var(--green); color: white;
+  }
+  .ops-btn-approve:hover { background: #1f8c3f; transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+  .ops-btn-reject {
+    background: var(--bg-card); color: var(--red);
+  }
+  .ops-btn-reject:hover { background: var(--red); color: white; }
+  .ops-empty {
+    padding: 28px 16px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-4); letter-spacing: 0.1em;
+  }
+
+  /* Top productos */
+  .ops-product-row {
+    display: grid; grid-template-columns: 28px 1fr auto auto; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--line-soft);
+    align-items: center;
+  }
+  .ops-product-row:last-child { border-bottom: none; }
+  .ops-product-rank {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--red); text-align: center;
+  }
+  .ops-product-name {
+    font-family: 'Archivo', sans-serif; font-size: 13px;
+    font-weight: 600; color: var(--ink); line-height: 1.3;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .ops-product-qty {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.05em;
+  }
+  .ops-product-amount {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    color: var(--ink); min-width: 90px; text-align: right;
+  }
+  .ops-product-margin {
+    margin-top: 3px; font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; letter-spacing: 0.05em;
+  }
+  .opt-margin-good { color: var(--green); font-weight: 700; }
+  .opt-margin-na { color: var(--ink-4); font-style: italic; }
+  .ops-sort-toggle {
+    background: var(--bg); border: 1px solid var(--ink);
+    padding: 6px 12px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; color: var(--ink);
+    text-transform: uppercase; transition: background 0.15s;
+  }
+  .ops-sort-toggle:hover { background: var(--ink); color: white; }
+
+  /* Por vendedor */
+  .ops-seller-row {
+    padding: 14px 0; border-bottom: 1px solid var(--line-soft);
+  }
+  .ops-seller-row:last-child { border-bottom: none; }
+  .ops-seller-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .ops-seller-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .ops-seller-amount {
+    font-family: 'Anton', sans-serif; font-size: 20px;
+    color: var(--ink);
+  }
+  .ops-seller-bar {
+    height: 8px; background: var(--bg-soft); border: 1px solid var(--line);
+    margin-bottom: 6px;
+  }
+  .ops-seller-fill { height: 100%; background: var(--red); transition: width 0.6s ease; }
+  .ops-seller-fill.over { background: var(--green); }
+  .ops-seller-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.05em;
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+
+  /* Distribuciones (canal, pago) */
+  .ops-dist-row {
+    display: grid; grid-template-columns: 110px 1fr auto auto; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--line-soft);
+    align-items: center;
+  }
+  .ops-dist-row:last-child { border-bottom: none; }
+  .ops-dist-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .ops-dist-bar {
+    height: 12px; background: var(--bg-soft); border: 1px solid var(--line);
+    position: relative;
+  }
+  .ops-dist-fill {
+    height: 100%; background: var(--red); transition: width 0.6s ease;
+  }
+  .ops-dist-pct {
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    color: var(--ink); min-width: 42px; text-align: right;
+  }
+  .ops-dist-amount {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink-3); min-width: 80px; text-align: right;
+    letter-spacing: 0.05em;
+  }
+
+  /* Tabla maestra */
+  .ops-filters {
+    display: grid; grid-template-columns: repeat(3, 1fr) 2fr; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .ops-filters select,
+  .ops-filters input {
+    padding: 10px 12px; border: 1.5px solid var(--line);
+    background: var(--bg); color: var(--ink);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    outline: none;
+  }
+  .ops-filters select:focus,
+  .ops-filters input:focus { border-color: var(--red); }
+
+  .ops-table-wrap {
+    overflow-x: auto; border: 1px solid var(--line);
+  }
+  .ops-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+  }
+  .ops-table thead th {
+    background: var(--ink); color: white;
+    padding: 10px 12px; text-align: left;
+    font-family: 'Archivo Black', sans-serif; font-size: 10px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .ops-table th.num { text-align: right; }
+  .ops-table tbody td {
+    padding: 10px 12px; border-bottom: 1px solid var(--line-soft);
+    color: var(--ink-2); line-height: 1.4;
+  }
+  .ops-table tbody tr:hover { background: var(--red-tint); }
+  .ops-table .td-amount {
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    color: var(--ink); text-align: right;
+  }
+  .ops-table .td-status {
+    font-family: 'Archivo Black', sans-serif; font-size: 9.5px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .ops-table .td-status.approved { color: var(--green); }
+  .ops-table .td-status.pending { color: var(--amber); }
+  .ops-table .td-status.cancelled { color: var(--ink-4); }
+  .ops-table .td-status.voided { color: var(--red); }
+  .ops-table .td-seller {
+    font-family: 'Archivo Black', sans-serif; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .ops-table .td-products {
+    max-width: 280px; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .ops-table-footer {
+    padding: 10px 14px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink-3); letter-spacing: 0.1em;
+    border: 1px solid var(--line); border-top: none;
+    background: var(--bg-soft);
+  }
+  .btn-sm {
+    padding: 8px 14px; font-size: 11px;
+  }
+
   /* MOBILE */
   @media (max-width: 900px) {
     .container { padding: 16px 14px 100px; }
@@ -1316,10 +1671,31 @@
     .estela-stat:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .es-value { font-size: 14px; }
     /* SPEED DIAL mobile */
-    .fab-group { bottom: 18px; right: 18px; gap: 10px; }
-    .fab { width: 58px; height: 58px; font-size: 32px; box-shadow: 4px 4px 0 var(--ink); }
-    .fab-sub { padding: 10px 14px; font-size: 11px; box-shadow: 3px 3px 0 var(--ink); }
-    .fab-sub-icon { font-size: 14px; }
+    .fab-group { bottom: 18px; right: 18px; gap: 14px; }
+    .fab { width: 60px; height: 60px; font-size: 32px; box-shadow: 4px 4px 0 var(--ink); }
+    .fab-sub { padding: 16px 18px; font-size: 12px; box-shadow: 3px 3px 0 var(--ink); min-height: 52px; }
+    .fab-sub-icon { font-size: 16px; }
+
+    /* OPERACIONES mobile */
+    .ops-title { font-size: 40px; }
+    .ops-kpis { grid-template-columns: 1fr 1fr; box-shadow: 4px 4px 0 var(--ink); }
+    .kpi-card { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .kpi-card:nth-child(2n) { border-right: none; }
+    .kpi-card:nth-last-child(-n+2) { border-bottom: none; }
+    .kpi-value { font-size: 22px; }
+    .kpi-label { font-size: 9px; }
+    .ops-section { padding: 16px 14px; box-shadow: 4px 4px 0 var(--ink); }
+    .ops-grid-2 { grid-template-columns: 1fr; gap: 0; }
+    .ops-pending-item { grid-template-columns: 1fr; }
+    .ops-pending-actions { width: 100%; }
+    .ops-pending-actions button { flex: 1; padding: 12px; }
+    .ops-pending-amount { font-size: 18px; }
+    .ops-filters { grid-template-columns: 1fr 1fr; }
+    .ops-filters input { grid-column: 1 / -1; }
+    .ops-table { font-size: 10.5px; }
+    .ops-table thead th, .ops-table tbody td { padding: 7px 8px; }
+    .ops-table .td-products { max-width: 160px; }
+    .vt-btn { padding: 12px 14px; font-size: 11px; letter-spacing: 0.15em; }
     .sale-modal-banner, .budget-modal-banner {
       margin-left: -20px; margin-right: -20px;
       padding-left: 20px; padding-right: 20px;
@@ -1456,6 +1832,14 @@
       <button class="user-chip" id="userChip" onclick="logout()">— · CAMBIAR</button>
     </div>
   </div>
+
+  <!-- Toggle TABLERO / OPERACIONES (solo admin) -->
+  <div class="view-toggle" id="viewToggle" style="display:none;">
+    <button class="vt-btn active" id="vt-tablero" onclick="switchView('tablero')">🏆 TABLERO</button>
+    <button class="vt-btn" id="vt-operaciones" onclick="switchView('operaciones')">⚙ OPERACIONES</button>
+  </div>
+
+  <div id="tableroView">
 
   <div class="hero">
     <div class="hero-eyebrow">— ARENA DE VENTAS —</div>
@@ -1778,7 +2162,120 @@
     <span id="lastUpdate">— SIN ACTUALIZAR —</span>
   </div>
 
-</div>
+  </div><!-- /tableroView -->
+
+  <!-- ===== CENTRO DE OPERACIONES ===== -->
+  <div id="operationsView" style="display:none;">
+    <div class="ops-header">
+      <div class="ops-eyebrow">⚙ ADMIN · GUILLE / CAMI</div>
+      <h2 class="ops-title">CENTRO DE OPERACIONES</h2>
+      <div class="ops-period-row">
+        <span class="ops-period" id="opsPeriod">JUNIO 2026 · 29 DÍAS RESTANTES</span>
+        <div class="ops-month-selector">
+          <label>VER MES:</label>
+          <select id="opsMonthSelect" onchange="onChangeOpsMonth(this.value)"></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPIs principales -->
+    <div class="ops-kpis" id="opsKpis"></div>
+
+    <!-- Pendientes -->
+    <div class="ops-section ops-section-alert" id="opsPendingSection">
+      <div class="ops-section-header">
+        <h3>⚠ PENDIENTES DE APROBACIÓN</h3>
+        <span class="ops-section-count" id="opsPendingCount">0</span>
+      </div>
+      <div id="opsPendingList"></div>
+    </div>
+
+    <!-- Grid 2 cols -->
+    <div class="ops-grid-2">
+      <div class="ops-section">
+        <div class="ops-section-header">
+          <h3>★ TOP 10 PRODUCTOS</h3>
+        </div>
+        <div id="opsTopProducts"></div>
+      </div>
+      <div class="ops-section">
+        <div class="ops-section-header">
+          <h3>▸ RENDIMIENTO POR VENDEDOR</h3>
+        </div>
+        <div id="opsBySeller"></div>
+      </div>
+    </div>
+
+    <div class="ops-grid-2">
+      <div class="ops-section">
+        <div class="ops-section-header">
+          <h3>▸ DISTRIBUCIÓN POR CANAL</h3>
+        </div>
+        <div id="opsByChannel"></div>
+      </div>
+      <div class="ops-section">
+        <div class="ops-section-header">
+          <h3>▸ FORMA DE PAGO & ENTREGA</h3>
+        </div>
+        <div id="opsByPayment"></div>
+      </div>
+    </div>
+
+    <!-- Tabla maestra -->
+    <div class="ops-section">
+      <div class="ops-section-header">
+        <h3>▦ TABLA MAESTRA DE VENTAS</h3>
+        <button class="btn-secondary btn-sm" onclick="exportOpsCSV()">⤓ EXPORTAR CSV</button>
+      </div>
+      <div class="ops-filters">
+        <select id="opsFilterSeller" onchange="renderOpsTable()">
+          <option value="">Todos los vendedores</option>
+          <option value="lauti">Lauti</option>
+          <option value="toto">Toto</option>
+          <option value="estela">Estela</option>
+        </select>
+        <select id="opsFilterStatus" onchange="renderOpsTable()">
+          <option value="">Todos los estados</option>
+          <option value="approved">Aprobadas</option>
+          <option value="pending">Pendientes</option>
+          <option value="cancelled">Canceladas</option>
+          <option value="voided">Anuladas</option>
+        </select>
+        <select id="opsFilterChannel" onchange="renderOpsTable()">
+          <option value="">Todos los canales</option>
+          <option value="Marketplace">Marketplace</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Presencial">Presencial</option>
+        </select>
+        <input type="text" id="opsFilterText" placeholder="Buscar cliente, producto..." oninput="renderOpsTable()">
+      </div>
+      <div class="ops-table-wrap">
+        <table class="ops-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Vendedor</th>
+              <th>Cliente</th>
+              <th>Productos</th>
+              <th>Canal</th>
+              <th>Modalidad</th>
+              <th class="num">Total</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="opsTableBody"></tbody>
+        </table>
+      </div>
+      <div class="ops-table-footer" id="opsTableFooter">— sin resultados —</div>
+    </div>
+
+    <div class="footer">
+      <span><strong>◢ GRAZIANO MATERIALES</strong> · CENTRO DE OPERACIONES</span>
+      <span id="opsLastUpdate">— SIN ACTUALIZAR —</span>
+    </div>
+  </div><!-- /operationsView -->
+</div><!-- /mainContainer -->
 
 <div class="fab-group fab-hidden" id="fabGroup">
   <button class="fab-sub fab-sub-budget" onclick="openFromFab('budget')">
@@ -2266,6 +2763,12 @@
     pinTargetUser = null;
   }
   document.addEventListener('DOMContentLoaded', () => {
+    // Registrar Service Worker (PWA)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+        .then(() => console.log('SW registrado'))
+        .catch(err => console.warn('SW error:', err));
+    }
     const inp = document.getElementById('pinInput');
     inp.addEventListener('input', (e) => {
       if (inp.value.length === 4) {
@@ -2369,6 +2872,11 @@
     costCell.style.display = (currentUser === 'admin') ? '' : 'none';
     adminActions.style.display = (currentUser === 'admin') ? 'flex' : 'none';
     tabsRow.style.display = (currentUser !== 'view') ? 'flex' : 'none';
+    // Toggle TABLERO/OPERACIONES solo para admin
+    const viewToggle = document.getElementById('viewToggle');
+    if (viewToggle) viewToggle.style.display = (currentUser === 'admin') ? 'flex' : 'none';
+    // Reset a tablero al cambiar de user
+    switchView('tablero');
 
     if (currentUser === 'admin') {
       modalTitle.textContent = 'PANEL ADMIN';
@@ -3303,6 +3811,8 @@
     renderSalesList();
     renderArchiveList();
     updateTabCounts();
+    // Centro de operaciones (solo admin)
+    if (currentUser === 'admin') renderOperations(c);
   }
 
   // ===== ACTIONS =====
@@ -3638,7 +4148,14 @@
       shipping, subtotal, deposit,
       balance: Math.max(0, total - deposit),
       paymentStatus, obs,
-      items: saleItems.map(b => ({ idx: b.idx, name: PRODUCTS[b.idx].n, unit: PRODUCTS[b.idx].u, qty: b.qty, price: b.p }))
+      items: saleItems.map(b => ({
+        idx: b.idx,
+        name: PRODUCTS[b.idx].n,
+        unit: PRODUCTS[b.idx].u,
+        qty: b.qty,
+        price: b.p,
+        cost: PRODUCTS[b.idx].co || 0
+      }))
     };
     if (isAdmin) {
       newSale.approvedBy = currentUser;
@@ -3674,6 +4191,515 @@
     renderSaleItems();
     updateSaleTotals();
     document.getElementById('saleClient').focus();
+  }
+
+  // ===== CENTRO DE OPERACIONES =====
+  let currentView = 'tablero';
+  let selectedOpsMonth = null; // null = mes actual
+
+  function switchView(view) {
+    currentView = view;
+    document.getElementById('tableroView').style.display = view === 'tablero' ? '' : 'none';
+    document.getElementById('operationsView').style.display = view === 'operaciones' ? '' : 'none';
+    document.getElementById('vt-tablero').classList.toggle('active', view === 'tablero');
+    document.getElementById('vt-operaciones').classList.toggle('active', view === 'operaciones');
+    if (view === 'operaciones') renderOperations(computeAll());
+    window.scrollTo(0, 0);
+  }
+
+  function availableMonthKeys() {
+    const months = new Set([currentMonthKey()]);
+    state.sales.forEach(s => {
+      if (s.date) months.add(monthKeyOf(s.date));
+    });
+    return Array.from(months).sort().reverse();
+  }
+
+  function populateOpsMonthSelect() {
+    const sel = document.getElementById('opsMonthSelect');
+    if (!sel) return;
+    const keys = availableMonthKeys();
+    const target = selectedOpsMonth || currentMonthKey();
+    sel.innerHTML = keys.map(k => {
+      const isCurrent = k === currentMonthKey();
+      const label = monthLabel(k) + (isCurrent ? ' (actual)' : '');
+      return `<option value="${k}" ${k === target ? 'selected' : ''}>${label}</option>`;
+    }).join('');
+  }
+
+  function onChangeOpsMonth(mk) {
+    selectedOpsMonth = mk;
+    renderOperations(computeAll());
+  }
+
+  function activeOpsMonth() {
+    return selectedOpsMonth || currentMonthKey();
+  }
+
+  function renderOperations(c) {
+    if (!c) c = computeAll();
+    populateOpsMonthSelect();
+    const mk = activeOpsMonth();
+    const isCurrent = mk === currentMonthKey();
+    const periodTxt = monthLabel(mk).toUpperCase() +
+      (isCurrent ? ` · ${daysLeftInMonth()} DÍAS RESTANTES` : ' · MES CERRADO');
+    document.getElementById('opsPeriod').textContent = periodTxt;
+    document.getElementById('opsLastUpdate').textContent =
+      `▸ ACTUALIZADO ${new Date().toLocaleString('es-AR')}`;
+    renderOpsKPIs(mk);
+    renderOpsPending();
+    renderOpsTopProducts(mk);
+    renderOpsBySeller(mk);
+    renderOpsByChannel(mk);
+    renderOpsByPayment(mk);
+    renderOpsTable();
+  }
+
+  function renderOpsKPIs(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const prevMk = prevMonthOf(mk);
+    const cur = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
+    const prev = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === prevMk);
+
+    const totalCur = cur.reduce((a, v) => a + v.amount, 0);
+    const totalPrev = prev.reduce((a, v) => a + v.amount, 0);
+    const ticketCur = cur.length ? totalCur / cur.length : 0;
+    const ticketPrev = prev.length ? totalPrev / prev.length : 0;
+    const pendings = allPending();
+    const envios = cur.filter(s => s.modality === 'ENVÍO').length;
+    const envPct = cur.length ? Math.round(envios / cur.length * 100) : 0;
+    const marginCur = aggregateMargin(cur);
+    const marginPrev = aggregateMargin(prev);
+
+    const delta = (now, then) => {
+      if (then === 0) return now > 0 ? { dir: 'up', val: '— nuevo' } : { dir: 'flat', val: '— sin datos' };
+      const d = ((now - then) / then) * 100;
+      if (Math.abs(d) < 0.5) return { dir: 'flat', val: '= igual' };
+      return { dir: d > 0 ? 'up' : 'down', val: `${d > 0 ? '↑' : '↓'} ${Math.abs(d).toFixed(0)}%` };
+    };
+    const dt = delta(totalCur, totalPrev);
+    const dc = delta(cur.length, prev.length);
+    const dk = delta(ticketCur, ticketPrev);
+    const dm = delta(marginCur.margin, marginPrev.margin);
+
+    // Sub para margen
+    let marginSub;
+    if (marginCur.withCost === 0) {
+      marginSub = 'sin datos de costo aún';
+    } else if (marginCur.withCost < marginCur.total) {
+      marginSub = `${marginCur.pct.toFixed(1)}% · ${marginCur.withCost}/${marginCur.total} ventas`;
+    } else {
+      marginSub = `${marginCur.pct.toFixed(1)}% promedio`;
+    }
+
+    document.getElementById('opsKpis').innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-label">Facturado mes</div>
+        <div class="kpi-value red">${fmtMoney(totalCur)}</div>
+        <div class="kpi-delta ${dt.dir}">${dt.val}</div>
+        <div class="kpi-sub">vs ${fmtMoney(totalPrev)} ${monthLabel(prevMk)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Margen bruto</div>
+        <div class="kpi-value">${marginCur.margin > 0 ? fmtMoney(marginCur.margin) : '—'}</div>
+        <div class="kpi-delta ${dm.dir}">${marginCur.withCost > 0 ? dm.val : ''}</div>
+        <div class="kpi-sub">${marginSub}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Ventas</div>
+        <div class="kpi-value">${cur.length}</div>
+        <div class="kpi-delta ${dc.dir}">${dc.val}</div>
+        <div class="kpi-sub">vs ${prev.length} mes anterior</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Ticket promedio</div>
+        <div class="kpi-value">${fmtMoney(ticketCur)}</div>
+        <div class="kpi-delta ${dk.dir}">${dk.val}</div>
+        <div class="kpi-sub">vs ${fmtMoney(ticketPrev)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Pend. aprobar</div>
+        <div class="kpi-value ${pendings.length > 0 ? 'red' : ''}">${pendings.length}</div>
+        <div class="kpi-sub">${pendings.length > 0 ? '⚠ requiere atención' : '✓ todo aprobado'}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">% Envíos</div>
+        <div class="kpi-value">${envPct}%</div>
+        <div class="kpi-sub">${envios} de ${cur.length} con envío</div>
+      </div>
+    `;
+  }
+
+  function prevMonthOf(mk) {
+    if (!mk) return previousMonthKey();
+    const [y, m] = mk.split('-').map(Number);
+    const d = new Date(y, m - 2, 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`;
+  }
+
+  // Margen bruto de una venta (suma precio*qty - costo*qty de items con costo)
+  // Devuelve null si la venta no tiene items con costo
+  function saleMargin(s) {
+    if (!s.items || !Array.isArray(s.items)) return null;
+    let revenue = 0, cost = 0, hasCost = false;
+    s.items.forEach(it => {
+      const q = it.qty || 0;
+      revenue += (it.price || 0) * q;
+      if (it.cost && it.cost > 0) { cost += it.cost * q; hasCost = true; }
+    });
+    if (!hasCost) return null;
+    // Aplicar descuento proporcional al revenue
+    const discount = s.discount || 0;
+    const netRevenue = Math.max(0, revenue - discount);
+    return { revenue: netRevenue, cost, margin: netRevenue - cost };
+  }
+
+  // Margen agregado de un set de ventas
+  function aggregateMargin(sales) {
+    let revenue = 0, cost = 0, withCost = 0;
+    sales.forEach(s => {
+      const m = saleMargin(s);
+      if (m) {
+        revenue += m.revenue;
+        cost += m.cost;
+        withCost++;
+      }
+    });
+    const margin = revenue - cost;
+    const pct = revenue > 0 ? (margin / revenue * 100) : 0;
+    return { revenue, cost, margin, pct, withCost, total: sales.length };
+  }
+
+  function renderOpsPending() {
+    const pendings = allPending();
+    const section = document.getElementById('opsPendingSection');
+    const countEl = document.getElementById('opsPendingCount');
+    const list = document.getElementById('opsPendingList');
+
+    countEl.textContent = pendings.length;
+    section.classList.toggle('no-pending', pendings.length === 0);
+
+    if (pendings.length === 0) {
+      list.innerHTML = `<div class="ops-empty">✓ No hay ventas pendientes de aprobación</div>`;
+      return;
+    }
+
+    const sorted = pendings.sort((a,b) => (b.submittedAt || 0) - (a.submittedAt || 0));
+    list.innerHTML = sorted.map(s => {
+      const items = (s.items || []).map(it => `${it.qty} ${it.name}`).join(' · ') || s.product || '—';
+      const phone = s.phone ? ` · 📞 ${s.phone}` : '';
+      const modality = s.modality ? ` · ${s.modality === 'ENVÍO' ? '🚚' : '📦'} ${s.modality}` : '';
+      const otherMonth = monthKeyOf(s.date) !== currentMonthKey()
+        ? ` · <span style="color:var(--red);font-weight:700;">[${monthLabel(monthKeyOf(s.date)).toUpperCase()}]</span>` : '';
+      return `
+        <div class="ops-pending-item">
+          <div class="ops-pending-info">
+            <div class="ops-pending-top">
+              <span class="ops-pending-seller ${s.seller}">${s.seller.toUpperCase()}</span>
+              <span class="ops-pending-client">${escapeHtml(s.client || '—')}</span>
+              <span class="ops-pending-amount">${fmtMoney(s.amount)}</span>
+            </div>
+            <div class="ops-pending-meta">
+              ${s.date}${phone}${modality}${otherMonth}<br>
+              <span style="opacity:0.85;">${escapeHtml(items)}</span>
+            </div>
+          </div>
+          <div class="ops-pending-actions">
+            <button class="ops-btn-approve" onclick="approveSale('${s.id}')">✓ Aprobar</button>
+            <button class="ops-btn-reject" onclick="rejectSale('${s.id}')">✕ Rechazar</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  let topProductsSort = 'amount'; // 'amount' o 'margin'
+
+  function toggleTopProductsSort() {
+    topProductsSort = topProductsSort === 'amount' ? 'margin' : 'amount';
+    renderOpsTopProducts();
+  }
+
+  function renderOpsTopProducts(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const sales = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
+    const products = {};
+    sales.forEach(s => {
+      if (s.items && Array.isArray(s.items) && s.items.length > 0) {
+        s.items.forEach(it => {
+          const key = it.name;
+          if (!products[key]) products[key] = { name: it.name, unit: it.unit, qty: 0, amount: 0, cost: 0, hasCost: false };
+          products[key].qty += it.qty;
+          products[key].amount += (it.price || 0) * it.qty;
+          if (it.cost && it.cost > 0) {
+            products[key].cost += it.cost * it.qty;
+            products[key].hasCost = true;
+          }
+        });
+      }
+    });
+    Object.values(products).forEach(p => {
+      p.margin = p.hasCost ? (p.amount - p.cost) : 0;
+      p.marginPct = p.hasCost && p.amount > 0 ? (p.margin / p.amount * 100) : 0;
+    });
+    const totalSales = sales.reduce((a, v) => a + v.amount, 0);
+    const sortKey = topProductsSort;
+    const sorted = Object.values(products)
+      .sort((a, b) => (b[sortKey] || 0) - (a[sortKey] || 0))
+      .slice(0, 10);
+    const list = document.getElementById('opsTopProducts');
+
+    // Header con toggle de orden
+    const sortLabel = sortKey === 'amount' ? '↓ Facturación' : '↓ Margen';
+    const toggleBtn = `<button class="ops-sort-toggle" onclick="toggleTopProductsSort()">${sortLabel} ⇅</button>`;
+    document.querySelector('#opsTopProducts').parentElement.querySelector('.ops-section-header').innerHTML =
+      `<h3>★ TOP 10 PRODUCTOS</h3>${toggleBtn}`;
+
+    if (sorted.length === 0) {
+      list.innerHTML = '<div class="ops-empty">— Sin ventas con productos detallados este mes —</div>';
+      return;
+    }
+    list.innerHTML = sorted.map((p, i) => {
+      const pct = totalSales > 0 ? (p.amount / totalSales * 100) : 0;
+      const marginInfo = p.hasCost
+        ? `<span class="opt-margin-good">${fmtMoney(p.margin)} · ${p.marginPct.toFixed(0)}%</span>`
+        : `<span class="opt-margin-na">sin costo</span>`;
+      return `
+        <div class="ops-product-row">
+          <div class="ops-product-rank">${i + 1}</div>
+          <div class="ops-product-name" title="${escapeHtml(p.name)}">
+            ${escapeHtml(p.name)}
+            <div class="ops-product-margin">${marginInfo}</div>
+          </div>
+          <div class="ops-product-qty">${p.qty} ${escapeHtml(p.unit || 'u')}<br>${pct.toFixed(1)}%</div>
+          <div class="ops-product-amount">${fmtMoney(p.amount)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderOpsBySeller(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const computeForMonth = (key) => {
+      const sales = state.sales.filter(s => s.seller === key && s.status === 'approved' && monthKeyOf(s.date) === mk);
+      const total = sales.reduce((a, v) => a + v.amount, 0);
+      const count = sales.length;
+      const ticketAvg = count ? total / count : 0;
+      const best = sales.reduce((m, v) => Math.max(m, v.amount), 0);
+      const isTracker = !CONFIG.competitiveSellers.includes(key);
+      const target = isTracker ? CONFIG.estelaTarget : CONFIG.target;
+      const pct = total / target;
+      return { total, count, ticketAvg, best, pct, target };
+    };
+    const sellers = [
+      { key: 'lauti', name: 'LAUTI', data: computeForMonth('lauti'), target: CONFIG.target },
+      { key: 'toto',  name: 'TOTO',  data: computeForMonth('toto'),  target: CONFIG.target },
+      { key: 'estela', name: 'ESTELA', data: computeForMonth('estela'), target: CONFIG.estelaTarget }
+    ];
+    document.getElementById('opsBySeller').innerHTML = sellers.map(s => {
+      const pct = Math.min(150, s.data.pct * 100);
+      const over = pct >= 100;
+      return `
+        <div class="ops-seller-row">
+          <div class="ops-seller-header">
+            <span class="ops-seller-name">${s.name}</span>
+            <span class="ops-seller-amount">${fmtMoney(s.data.total)}</span>
+          </div>
+          <div class="ops-seller-bar">
+            <div class="ops-seller-fill ${over ? 'over' : ''}" style="width:${Math.min(100, pct)}%"></div>
+          </div>
+          <div class="ops-seller-meta">
+            <span>${(s.data.pct * 100).toFixed(0)}% meta · $${fmtFull(s.target)}</span>
+            <span>${s.data.count} ventas</span>
+            <span>Ticket: ${fmtMoney(s.data.ticketAvg)}</span>
+            <span>Mejor: ${fmtMoney(s.data.best)}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderOpsByChannel(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const sales = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
+    const groups = {};
+    sales.forEach(s => {
+      const k = s.channel || 'Sin canal';
+      if (!groups[k]) groups[k] = { name: k, count: 0, amount: 0 };
+      groups[k].count++;
+      groups[k].amount += s.amount;
+    });
+    const total = sales.reduce((a, v) => a + v.amount, 0);
+    const arr = Object.values(groups).sort((a, b) => b.amount - a.amount);
+    const list = document.getElementById('opsByChannel');
+    if (arr.length === 0) {
+      list.innerHTML = '<div class="ops-empty">— Sin ventas este mes —</div>';
+      return;
+    }
+    list.innerHTML = arr.map(g => {
+      const pct = total > 0 ? g.amount / total * 100 : 0;
+      return `
+        <div class="ops-dist-row">
+          <div class="ops-dist-label">${escapeHtml(g.name)}</div>
+          <div class="ops-dist-bar"><div class="ops-dist-fill" style="width:${pct}%"></div></div>
+          <div class="ops-dist-pct">${pct.toFixed(0)}%</div>
+          <div class="ops-dist-amount">${fmtMoney(g.amount)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderOpsByPayment(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const sales = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
+    const payments = {};
+    const modalities = { 'ENVÍO': 0, 'RETIRO': 0 };
+    sales.forEach(s => {
+      const k = s.paymentMethod || 'Sin definir';
+      if (!payments[k]) payments[k] = { name: k, count: 0, amount: 0 };
+      payments[k].count++;
+      payments[k].amount += s.amount;
+      if (s.modality && modalities.hasOwnProperty(s.modality)) modalities[s.modality] += s.amount;
+    });
+    const total = sales.reduce((a, v) => a + v.amount, 0);
+    const arr = Object.values(payments).sort((a, b) => b.amount - a.amount);
+    const list = document.getElementById('opsByPayment');
+    if (arr.length === 0) {
+      list.innerHTML = '<div class="ops-empty">— Sin ventas este mes —</div>';
+      return;
+    }
+    const totalMod = modalities['ENVÍO'] + modalities['RETIRO'];
+    const envPct = totalMod > 0 ? modalities['ENVÍO'] / totalMod * 100 : 0;
+    const retPct = totalMod > 0 ? modalities['RETIRO'] / totalMod * 100 : 0;
+    list.innerHTML = arr.map(g => {
+      const pct = total > 0 ? g.amount / total * 100 : 0;
+      return `
+        <div class="ops-dist-row">
+          <div class="ops-dist-label">${escapeHtml(g.name)}</div>
+          <div class="ops-dist-bar"><div class="ops-dist-fill" style="width:${pct}%"></div></div>
+          <div class="ops-dist-pct">${pct.toFixed(0)}%</div>
+          <div class="ops-dist-amount">${fmtMoney(g.amount)}</div>
+        </div>
+      `;
+    }).join('') + (totalMod > 0 ? `
+      <div style="margin-top:14px;padding-top:14px;border-top:1.5px dashed var(--line);">
+        <div class="ops-dist-row">
+          <div class="ops-dist-label">🚚 ENVÍO</div>
+          <div class="ops-dist-bar"><div class="ops-dist-fill" style="width:${envPct}%;background:var(--ink);"></div></div>
+          <div class="ops-dist-pct">${envPct.toFixed(0)}%</div>
+          <div class="ops-dist-amount">${fmtMoney(modalities['ENVÍO'])}</div>
+        </div>
+        <div class="ops-dist-row">
+          <div class="ops-dist-label">📦 RETIRO</div>
+          <div class="ops-dist-bar"><div class="ops-dist-fill" style="width:${retPct}%;background:var(--ink);"></div></div>
+          <div class="ops-dist-pct">${retPct.toFixed(0)}%</div>
+          <div class="ops-dist-amount">${fmtMoney(modalities['RETIRO'])}</div>
+        </div>
+      </div>
+    ` : '');
+  }
+
+  function renderOpsTable() {
+    const fSeller = document.getElementById('opsFilterSeller').value;
+    const fStatus = document.getElementById('opsFilterStatus').value;
+    const fChannel = document.getElementById('opsFilterChannel').value;
+    const fText = (document.getElementById('opsFilterText').value || '').toLowerCase().trim();
+
+    let sales = state.sales.slice();
+    if (fSeller) sales = sales.filter(s => s.seller === fSeller);
+    if (fStatus) sales = sales.filter(s => s.status === fStatus);
+    if (fChannel) sales = sales.filter(s => s.channel === fChannel);
+    if (fText) {
+      sales = sales.filter(s => {
+        const hay = (s.client + ' ' + (s.product || '') + ' ' + (s.dni || '') + ' ' + (s.phone || '')).toLowerCase();
+        return hay.includes(fText);
+      });
+    }
+    sales.sort((a, b) => (b.date + (b.id || '')).localeCompare(a.date + (a.id || '')));
+
+    const body = document.getElementById('opsTableBody');
+    if (sales.length === 0) {
+      body.innerHTML = '';
+      document.getElementById('opsTableFooter').textContent = '— sin resultados —';
+      return;
+    }
+    body.innerHTML = sales.slice(0, 200).map(s => {
+      const items = (s.items && s.items.length > 0)
+        ? s.items.map(it => `${it.qty} ${it.name}`).join(' · ')
+        : (s.product || '—');
+      const statusLabel = { approved: 'Aprob.', pending: 'Pend.', cancelled: 'Canc.', voided: 'Anul.' }[s.status] || s.status;
+      const modIcon = s.modality === 'ENVÍO' ? '🚚' : (s.modality === 'RETIRO' ? '📦' : '—');
+      let action = '';
+      if (s.status === 'pending') {
+        action = `<button class="ops-btn-approve" style="padding:4px 10px;font-size:9.5px;" onclick="approveSale('${s.id}')">✓</button>`;
+      }
+      return `
+        <tr>
+          <td>${s.date}</td>
+          <td class="td-seller">${s.seller}</td>
+          <td>${escapeHtml(s.client || '—')}</td>
+          <td class="td-products" title="${escapeHtml(items)}">${escapeHtml(items)}</td>
+          <td>${escapeHtml(s.channel || '—')}</td>
+          <td>${modIcon}</td>
+          <td class="td-amount">${fmtMoney(s.amount)}</td>
+          <td class="td-status ${s.status}">${statusLabel}</td>
+          <td>${action}</td>
+        </tr>
+      `;
+    }).join('');
+    document.getElementById('opsTableFooter').textContent =
+      `${sales.length} resultados${sales.length > 200 ? ' · mostrando los primeros 200' : ''}`;
+  }
+
+  function exportOpsCSV() {
+    const fSeller = document.getElementById('opsFilterSeller').value;
+    const fStatus = document.getElementById('opsFilterStatus').value;
+    const fChannel = document.getElementById('opsFilterChannel').value;
+    const fText = (document.getElementById('opsFilterText').value || '').toLowerCase().trim();
+
+    let sales = state.sales.slice();
+    if (fSeller) sales = sales.filter(s => s.seller === fSeller);
+    if (fStatus) sales = sales.filter(s => s.status === fStatus);
+    if (fChannel) sales = sales.filter(s => s.channel === fChannel);
+    if (fText) {
+      sales = sales.filter(s => {
+        const hay = (s.client + ' ' + (s.product || '') + ' ' + (s.dni || '') + ' ' + (s.phone || '')).toLowerCase();
+        return hay.includes(fText);
+      });
+    }
+    sales.sort((a, b) => (b.date + (b.id || '')).localeCompare(a.date + (a.id || '')));
+
+    const headers = ['Fecha', 'Vendedor', 'Cliente', 'DNI', 'Telefono', 'Factura', 'Productos',
+                     'Canal', 'Modalidad', 'Direccion', 'Localidad', 'Subtotal', 'Descuento',
+                     'Envio', 'Total', 'Seña', 'Saldo', 'MedioPago', 'EstadoPago', 'Estado',
+                     'Observaciones', 'Fecha_Carga'];
+    const esc = (v) => {
+      if (v === null || v === undefined) return '';
+      const s = String(v).replace(/"/g, '""');
+      return /[",\n]/.test(s) ? `"${s}"` : s;
+    };
+    const rows = sales.map(s => {
+      const items = (s.items && s.items.length > 0)
+        ? s.items.map(it => `${it.qty} ${it.name}`).join(' | ')
+        : (s.product || '');
+      const submitted = s.submittedAt ? new Date(s.submittedAt).toLocaleString('es-AR') : '';
+      return [
+        s.date, s.seller, s.client || '', s.dni || '', s.phone || '', s.invoice || '',
+        items, s.channel || '', s.modality || '', s.address || '', s.city || '',
+        s.subtotal || '', s.discount || '0', s.shipping || '0', s.amount,
+        s.deposit || '0', s.balance || '', s.paymentMethod || '', s.paymentStatus || '',
+        s.status, s.obs || '', submitted
+      ].map(esc).join(',');
+    });
+    const csv = '\ufeff' + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `graziano-ventas-${periodLabel().toLowerCase().replace(' ','-')}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast(`📥 CSV EXPORTADO · ${sales.length} ventas`);
   }
 
   function checkUnlocks(before, after, seller) {
