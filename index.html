@@ -496,6 +496,18 @@
   }
   .fab-hidden { display: none; }
 
+  /* FAB secundario - Presupuestador */
+  .fab-budget {
+    bottom: 28px; right: 108px; /* a la izquierda del FAB principal */
+    background: var(--ink); color: white;
+    width: 56px; height: 56px;
+    font-family: 'Archivo Black', sans-serif; font-size: 24px;
+  }
+  .fab-budget:hover { background: #2a2a2a; }
+  .fab-budget-icon {
+    font-family: 'Archivo Black', sans-serif; font-size: 24px; line-height: 1;
+  }
+
   /* MODAL */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.6);
@@ -550,7 +562,7 @@
   @media (max-width: 600px) {
     .form-grid-2 { grid-template-columns: 1fr; }
   }
-  .seller-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .seller-toggle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .seller-toggle button {
     padding: 14px; background: var(--bg); border: 1.5px solid var(--line);
     color: var(--ink); font-family: 'Archivo Black', sans-serif;
@@ -579,6 +591,88 @@
   .actions-row {
     display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px;
     padding-top: 20px; border-top: 1.5px solid var(--line-soft);
+  }
+
+  /* ESTELA · TRACKER */
+  .estela-card {
+    background: var(--bg-card);
+    border: 1.5px solid var(--ink);
+    border-left: 8px solid var(--ink);
+    padding: 22px 26px;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+    position: relative;
+  }
+  .estela-card::before {
+    content: '';
+    position: absolute; top: -1.5px; left: -8px; right: -1.5px; height: 4px;
+    background: repeating-linear-gradient(90deg, var(--ink) 0 12px, transparent 12px 18px);
+    opacity: 0.4;
+  }
+  .estela-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 16px;
+  }
+  .estela-left { display: flex; flex-direction: column; gap: 4px; }
+  .estela-badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.3em; color: white;
+    background: var(--ink); padding: 4px 10px;
+    align-self: flex-start; margin-bottom: 6px;
+  }
+  .estela-name {
+    font-family: 'Anton', sans-serif; font-size: 44px;
+    color: var(--ink); line-height: 1; letter-spacing: 0.01em;
+  }
+  .estela-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .estela-amount {
+    font-family: 'Anton', sans-serif; font-size: 48px;
+    color: var(--ink); line-height: 1; letter-spacing: -0.02em;
+  }
+  .estela-amount .currency {
+    font-size: 28px; color: var(--ink-3); margin-right: 4px; vertical-align: top;
+  }
+  .estela-progress { margin-bottom: 16px; }
+  .estela-progress-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .estela-prog-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .estela-prog-pct {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    color: var(--ink);
+  }
+  .estela-progress-track {
+    height: 8px; background: var(--bg-soft); border: 1px solid var(--line);
+  }
+  .estela-progress-fill {
+    height: 100%; background: var(--ink); transition: width 0.6s ease;
+  }
+  .estela-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    border: 1px solid var(--line); background: var(--bg);
+  }
+  .estela-stat {
+    padding: 12px 14px; border-right: 1px solid var(--line-soft);
+    text-align: center;
+  }
+  .estela-stat:last-child { border-right: none; }
+  .es-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--ink-3); margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .es-value {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    color: var(--ink); line-height: 1;
   }
 
   /* CHANNEL STRIP */
@@ -894,6 +988,170 @@
   }
   .footer strong { color: var(--ink); }
 
+  /* PRESUPUESTADOR */
+  .budget-modal { max-width: 720px; }
+  .budget-search-section {
+    margin-bottom: 18px;
+    position: relative;
+  }
+  .budget-search-section label {
+    display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .budget-search-section input {
+    width: 100%; padding: 14px 16px;
+    background: var(--bg); border: 1.5px solid var(--line);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    transition: border-color 0.2s; outline: none;
+  }
+  .budget-search-section input:focus { border-color: var(--red); }
+  .budget-results {
+    margin-top: 4px; max-height: 280px; overflow-y: auto;
+    border: 1.5px solid var(--line); background: var(--bg-card);
+    display: none;
+  }
+  .budget-results.visible { display: block; }
+  .budget-result {
+    padding: 10px 14px; cursor: pointer; border-bottom: 1px solid var(--line-soft);
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 8px; transition: background 0.15s;
+  }
+  .budget-result:hover { background: var(--red-tint); }
+  .budget-result:last-child { border-bottom: none; }
+  .br-info { flex: 1; min-width: 0; }
+  .br-name {
+    font-family: 'Archivo', sans-serif; font-size: 13px; color: var(--ink);
+    font-weight: 600; line-height: 1.3; margin-bottom: 2px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .br-meta {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    color: var(--ink-3); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .br-cat-tag {
+    display: inline-block; background: var(--ink); color: white;
+    padding: 1px 6px; font-size: 8.5px; margin-right: 6px; letter-spacing: 0.15em;
+  }
+  .br-type-stock { color: var(--green); }
+  .br-type-pasamanos { color: var(--amber); }
+  .br-type-encargue { color: var(--red); }
+  .br-price {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px; color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  .budget-items-block {
+    border: 1.5px solid var(--ink); background: var(--bg);
+    margin-bottom: 14px;
+  }
+  .budget-items-header {
+    background: var(--ink); color: white;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .bi-count {
+    background: var(--red); padding: 2px 8px; font-size: 10px;
+  }
+  .budget-empty {
+    padding: 24px 14px; text-align: center; color: var(--ink-4);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  }
+  .budget-item {
+    display: grid; grid-template-columns: 1fr auto auto auto auto;
+    align-items: center; gap: 10px;
+    padding: 10px 14px; border-bottom: 1px solid var(--line-soft);
+  }
+  .budget-item:last-child { border-bottom: none; }
+  .bi-name {
+    font-family: 'Archivo', sans-serif; font-size: 13px; color: var(--ink);
+    font-weight: 600; line-height: 1.3;
+  }
+  .bi-name .bi-unit {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    color: var(--ink-3); letter-spacing: 0.15em; margin-left: 6px;
+  }
+  .bi-name .bi-type {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; margin-left: 6px; opacity: 0.85;
+  }
+  .bi-qty-control {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .bi-qty-btn {
+    width: 26px; height: 26px; background: var(--bg); border: 1px solid var(--line);
+    cursor: pointer; font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); display: flex; align-items: center; justify-content: center;
+  }
+  .bi-qty-btn:hover { background: var(--red); color: white; border-color: var(--red); }
+  .bi-qty-input {
+    width: 50px; padding: 4px 6px; text-align: center;
+    border: 1px solid var(--line); background: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--ink); font-weight: 700;
+  }
+  .bi-price {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); text-align: right; min-width: 80px;
+  }
+  .bi-subtotal {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    color: var(--ink); text-align: right; min-width: 90px;
+  }
+  .bi-remove {
+    background: transparent; border: 1px solid var(--line); color: var(--ink-4);
+    width: 26px; height: 26px; cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .bi-remove:hover { background: var(--red); color: white; border-color: var(--red); }
+
+  .discount-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  }
+  .discount-row select, .discount-row input { padding: 12px 14px; }
+
+  .budget-totals {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    padding: 14px 18px; margin-bottom: 18px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .bt-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--ink-2);
+  }
+  .bt-row span:first-child {
+    font-size: 10px; letter-spacing: 0.25em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .bt-row span:last-child {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px; color: var(--ink);
+  }
+  .bt-row.discount span:last-child { color: var(--red); }
+  .bt-row.total {
+    border-top: 1.5px dashed var(--line); padding-top: 8px; margin-top: 4px;
+  }
+  .bt-row.total span:first-child {
+    font-size: 12px; color: var(--ink); font-weight: 700;
+  }
+  .bt-row.total span:last-child {
+    font-family: 'Anton', sans-serif; font-size: 26px; color: var(--red);
+    line-height: 1;
+  }
+
+  #budgetPreview {
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    line-height: 1.55; background: var(--bg-soft); color: var(--ink);
+    border: 1.5px solid var(--ink); padding: 14px 16px;
+    resize: vertical;
+  }
+
+  .budget-actions {
+    display: flex; gap: 10px; margin-top: 4px;
+  }
+  .budget-actions .btn-primary { flex: 1; margin-top: 0; }
+
   /* MOBILE */
   @media (max-width: 900px) {
     .container { padding: 16px 14px 100px; }
@@ -927,6 +1185,29 @@
     .week-cell .wc-amount { font-size: 11px; }
     .cw-amount { font-size: 24px; }
     .cobros-card-header { flex-wrap: wrap; }
+    /* ESTELA mobile */
+    .estela-card { padding: 18px 18px; box-shadow: 4px 4px 0 var(--ink); }
+    .estela-header { flex-direction: column; gap: 8px; }
+    .estela-name { font-size: 32px; }
+    .estela-amount { font-size: 36px; }
+    .estela-amount .currency { font-size: 22px; }
+    .estela-stats { grid-template-columns: 1fr 1fr; }
+    .estela-stat:nth-child(2n) { border-right: none; }
+    .estela-stat:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
+    .es-value { font-size: 14px; }
+    /* PRESUPUESTADOR mobile */
+    .fab-budget { right: 90px; width: 50px; height: 50px; bottom: 18px; }
+    .fab-budget-icon { font-size: 22px; }
+    .budget-item {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: "name remove" "qty subtotal";
+      gap: 8px;
+    }
+    .bi-name { grid-area: name; font-size: 12px; }
+    .bi-remove { grid-area: remove; align-self: start; }
+    .bi-qty-control { grid-area: qty; }
+    .bi-subtotal { grid-area: subtotal; }
+    .bi-price { display: none; }
     .premios-grid { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
     .premio { border-right: none; }
     .premio:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
@@ -984,6 +1265,10 @@
         <button class="login-btn" onclick="askPin('toto')">
           TOTO
           <span class="role">Cargar mis ventas</span>
+        </button>
+        <button class="login-btn" onclick="askPin('estela')" style="grid-column:1/-1;">
+          ESTELA
+          <span class="role">Cargar mis ventas — Dueña / Tracker</span>
         </button>
         <button class="login-btn" style="grid-column:1/-1;" onclick="askPin('admin')">
           ADMIN
@@ -1067,13 +1352,13 @@
     </div>
     <div class="global-cell">
       <span class="label">Meta Equipo</span>
-      <span class="value" id="globalTarget">$27M</span>
+      <span class="value" id="globalTarget">$30M</span>
       <span class="sub">13,5M por vendedor</span>
     </div>
     <div class="global-cell">
       <span class="label">Cumplimiento</span>
       <span class="value" id="globalPct">0%</span>
-      <span class="sub" id="globalGap">faltan $27M</span>
+      <span class="sub" id="globalGap">faltan $30M</span>
     </div>
     <div class="global-cell" id="globalCostCell">
       <span class="label">Proyección Costo</span>
@@ -1172,6 +1457,47 @@
       </div>
       <div class="pending-pill" id="pending-toto" style="display:none;">
         <span class="num" id="pending-num-toto">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-toto">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESTELA · TRACKER (dueña) -->
+  <div class="estela-card" id="card-estela">
+    <div class="estela-header">
+      <div class="estela-left">
+        <div class="estela-badge">TRACKER · DUEÑA</div>
+        <div class="estela-name">ESTELA</div>
+        <div class="estela-title">EL FRENTE DEL LOCAL</div>
+      </div>
+      <div class="estela-amount">
+        <span class="currency">$</span><span id="amount-estela">0</span>
+      </div>
+    </div>
+    <div class="estela-progress">
+      <div class="estela-progress-header">
+        <span class="estela-prog-label">Tracking · meta $4M</span>
+        <span class="estela-prog-pct" id="pct-estela">0%</span>
+      </div>
+      <div class="estela-progress-track">
+        <div class="estela-progress-fill" id="bar-estela" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="estela-stats">
+      <div class="estela-stat">
+        <div class="es-label">Operaciones</div>
+        <div class="es-value" id="count-estela">0</div>
+      </div>
+      <div class="estela-stat">
+        <div class="es-label">Ticket prom.</div>
+        <div class="es-value" id="ticket-estela">$0</div>
+      </div>
+      <div class="estela-stat">
+        <div class="es-label">Mejor venta</div>
+        <div class="es-value" id="best-estela">$0</div>
+      </div>
+      <div class="estela-stat">
+        <div class="es-label">Pendientes</div>
+        <div class="es-value" id="pending-num-estela">0</div>
       </div>
     </div>
   </div>
@@ -1331,6 +1657,76 @@
   +<span class="fab-badge" id="fabBadge" style="display:none;">0</span>
 </button>
 
+<button class="fab fab-budget fab-hidden" id="fabBudget" onclick="openBudget()" title="Nuevo presupuesto">
+  <span class="fab-budget-icon">$</span>
+</button>
+
+<!-- ===== MODAL PRESUPUESTO ===== -->
+<div class="modal-overlay" id="budgetOverlay">
+  <div class="modal budget-modal">
+    <button class="modal-close" onclick="closeBudget()">✕</button>
+    <h2>NUEVO PRESUPUESTO</h2>
+    <div class="modal-sub" id="budgetSub">— ARMALO Y COPIALO PARA WHATSAPP —</div>
+
+    <div class="form-row">
+      <label>Cliente (opcional)</label>
+      <input type="text" id="budgetClient" placeholder="Nombre del cliente" autocomplete="off">
+    </div>
+
+    <div class="budget-search-section">
+      <label>Agregar producto</label>
+      <input type="text" id="budgetSearch" placeholder="Buscar... ej: cemento, hierro 8, arena, perfil" autocomplete="off">
+      <div class="budget-results" id="budgetResults"></div>
+    </div>
+
+    <div class="budget-items-block">
+      <div class="budget-items-header">
+        <span>PRODUCTOS DEL PRESUPUESTO</span>
+        <span class="bi-count" id="bi-count">0</span>
+      </div>
+      <div id="budgetItemsList">
+        <div class="budget-empty">Sin productos. Buscá uno arriba y agregalo.</div>
+      </div>
+    </div>
+
+    <div class="form-grid-2">
+      <div class="form-row compact">
+        <label>Descuento</label>
+        <div class="discount-row">
+          <select id="discountType" onchange="renderBudget()">
+            <option value="none">Sin descuento</option>
+            <option value="pct">% Porcentaje</option>
+            <option value="amt">$ Monto fijo</option>
+          </select>
+          <input type="number" id="discountValue" placeholder="0" min="0" step="any" oninput="renderBudget()">
+        </div>
+      </div>
+      <div class="form-row compact">
+        <label>Validez (días, opcional)</label>
+        <input type="number" id="budgetValidity" placeholder="ej: 7" min="0" oninput="renderBudget()">
+      </div>
+    </div>
+
+    <div class="budget-totals">
+      <div class="bt-row"><span>SUBTOTAL</span><span id="budgetSubtotal">$0</span></div>
+      <div class="bt-row discount" id="budgetDiscountRow" style="display:none;">
+        <span id="budgetDiscountLabel">DESCUENTO</span><span id="budgetDiscountAmount">-$0</span>
+      </div>
+      <div class="bt-row total"><span>TOTAL</span><span id="budgetTotal">$0</span></div>
+    </div>
+
+    <div class="form-row">
+      <label>Vista previa · texto a copiar</label>
+      <textarea id="budgetPreview" rows="11" readonly></textarea>
+    </div>
+
+    <div class="budget-actions">
+      <button class="btn-primary" onclick="copyBudget()">📋 COPIAR PRESUPUESTO</button>
+      <button class="btn-secondary" onclick="clearBudget()" style="flex-shrink:0;">LIMPIAR TODO</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== MODAL CARGA ===== -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
@@ -1343,6 +1739,7 @@
       <div class="seller-toggle">
         <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI</button>
         <button id="btn-toto" onclick="selectSeller('toto')">TOTO</button>
+        <button id="btn-estela" onclick="selectSeller('estela')">ESTELA</button>
       </div>
     </div>
 
@@ -1452,18 +1849,22 @@
   const CONFIG = {
     baseSalary: 300000,
     baseCommission: 0.03,
-    target: 13500000,
+    target: 13500000,            // donde arranca el escalonado
+    finalTarget: 17000000,       // objetivo máximo personal
+    teamTarget: 30000000,        // meta empresa (Lauti + Toto, sin Estela)
     bonusOnTarget: 35000,
     tiers: [
-      { from: 1.00, to: 1.10, rate: 0.005 },
-      { from: 1.10, to: 1.25, rate: 0.01  },
-      { from: 1.25, to: 99,   rate: 0.015 }
+      { from: 13500000, to: 14500000, rate: 0.005 },  // 13,5 → 14,5M : +0,5%
+      { from: 14500000, to: 15500000, rate: 0.01  },  // 14,5 → 15,5M : +1%
+      { from: 15500000, to: Infinity, rate: 0.015 }   // 15,5M+      : +1,5%
     ],
     bonusFirstPlace: 30000,
-    bonusTeamGoal: 20000
+    bonusTeamGoal: 20000,
+    competitiveSellers: ['lauti', 'toto'],  // los que entran en bonos/competencia
+    estelaTarget: 4000000  // meta tracking de Estela (dueña, no compite)
   };
 
-  const PINS = { lauti: '1111', toto: '2222', admin: '0000' };
+  const PINS = { lauti: '1111', toto: '2222', estela: '3333', admin: '0000' };
   const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
   // ===== FIREBASE =====
@@ -1627,6 +2028,26 @@
     document.getElementById('voidModalOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'voidModalOverlay') closeVoidModal();
     });
+    // Presupuestador
+    const budgetSearch = document.getElementById('budgetSearch');
+    if (budgetSearch) {
+      budgetSearch.addEventListener('input', (e) => renderSearchResults(e.target.value));
+      budgetSearch.addEventListener('focus', (e) => {
+        if (e.target.value.trim().length >= 2) renderSearchResults(e.target.value);
+      });
+    }
+    const budgetClient = document.getElementById('budgetClient');
+    if (budgetClient) budgetClient.addEventListener('input', () => renderBudget());
+    document.getElementById('budgetOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'budgetOverlay') closeBudget();
+    });
+    // Cerrar resultados al clickear fuera
+    document.addEventListener('click', (e) => {
+      const sec = document.querySelector('.budget-search-section');
+      if (sec && !sec.contains(e.target)) {
+        document.getElementById('budgetResults')?.classList.remove('visible');
+      }
+    });
   });
 
   function logout() {
@@ -1645,17 +2066,20 @@
     const modalSub = document.getElementById('modalSub');
     const btnLauti = document.getElementById('btn-lauti');
     const btnToto = document.getElementById('btn-toto');
+    const btnEstela = document.getElementById('btn-estela');
     const tabsRow = document.getElementById('tabsRow');
 
-    const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', toto: '👤 TOTO', admin: '★ ADMIN' };
+    const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', toto: '👤 TOTO', estela: '👤 ESTELA', admin: '★ ADMIN' };
     chip.textContent = labels[currentUser] + ' · CAMBIAR';
     chip.classList.toggle('viewer', currentUser === 'view');
 
     if (currentUser === 'view') {
       fab.classList.add('fab-hidden');
+      document.getElementById('fabBudget').classList.add('fab-hidden');
       document.body.classList.add('mode-view');
     } else {
       fab.classList.remove('fab-hidden');
+      document.getElementById('fabBudget').classList.remove('fab-hidden');
       document.body.classList.remove('mode-view');
     }
 
@@ -1666,17 +2090,229 @@
     if (currentUser === 'admin') {
       modalTitle.textContent = 'PANEL ADMIN';
       modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
-      btnLauti.disabled = false; btnToto.disabled = false;
-    } else if (currentUser === 'lauti' || currentUser === 'toto') {
+      btnLauti.disabled = false; btnToto.disabled = false; btnEstela.disabled = false;
+    } else if (currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela') {
       modalTitle.textContent = 'CARGAR MI VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
-      if (currentUser === 'lauti') {
-        btnLauti.disabled = false; btnToto.disabled = true;
-        selectSeller('lauti');
-      } else {
-        btnLauti.disabled = true; btnToto.disabled = false;
-        selectSeller('toto');
-      }
+      // Bloquear todos menos el actual
+      btnLauti.disabled = currentUser !== 'lauti';
+      btnToto.disabled = currentUser !== 'toto';
+      btnEstela.disabled = currentUser !== 'estela';
+      selectSeller(currentUser);
+    }
+  }
+
+
+  // ===== PRODUCTOS (lista de precios) =====
+  const PRODUCTS = [{"n":"Cemento Loma Negra 25kg","c":"CEMENTOS","u":"Bolsa","p":8000,"m":7840,"t":"STOCK"},{"n":"Plásticor Loma Negra 25kg","c":"CEMENTOS","u":"Bolsa","p":7700,"m":7546,"t":"STOCK"},{"n":"Cemento Holcim 25kg","c":"CEMENTOS","u":"Bolsa","p":7500,"m":7350,"t":"STOCK"},{"n":"Plásticor Holcim 25kg","c":"CEMENTOS","u":"Bolsa","p":7300,"m":7154,"t":"STOCK"},{"n":"Cal hidratada 25kg","c":"CEMENTOS","u":"Bolsa","p":7919,"m":7761,"t":"STOCK"},{"n":"Cal viva 25kg","c":"CEMENTOS","u":"Bolsa","p":11060,"m":10838,"t":"STOCK"},{"n":"Pegamento Cerámica Mapei Mapeset 25kg","c":"CEMENTOS","u":"Bolsa","p":10074,"m":9872,"t":"STOCK"},{"n":"Pegamento Porcelanato Mapei Kerabond Plus 25kg","c":"CEMENTOS","u":"Bolsa","p":19019,"m":18639,"t":"STOCK"},{"n":"Revoque Fino Exterior","c":"CEMENTOS","u":"Bolsa","p":11432,"m":11204,"t":"STOCK"},{"n":"Revoque Fino Interior","c":"CEMENTOS","u":"Bolsa","p":11432,"m":11204,"t":"STOCK"},{"n":"Pastina Gris Medio","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Blanca","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Beige","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Marron","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Arena","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Cemento","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Arena","c":"ÁRIDOS","u":"Bolson","p":33499,"m":32829,"t":"STOCK"},{"n":"Piedra","c":"ÁRIDOS","u":"Bolson","p":99142,"m":97159,"t":"STOCK"},{"n":"Escombro","c":"ÁRIDOS","u":"Bolson","p":48050,"m":47089,"t":"STOCK"},{"n":"Metro Arena Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":30000,"m":29400,"t":"STOCK"},{"n":"Metro Piedra Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":95004,"m":93103,"t":"STOCK"},{"n":"Metro Escombro Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":48000,"m":47040,"t":"STOCK"},{"n":"Camionada Arena Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":115625,"m":113312,"t":"PASAMANOS"},{"n":"Camionada Arena Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":131250,"m":128625,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":125000,"m":122500,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":122500,"m":120050,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":127500,"m":124950,"t":"PASAMANOS"},{"n":"Camionada Piedra Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":443750,"m":434875,"t":"PASAMANOS"},{"n":"Camionada Piedra Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":462500,"m":453250,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":450000,"m":441000,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":455000,"m":445900,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":455000,"m":445900,"t":"PASAMANOS"},{"n":"Camionada Escombro Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":206250,"m":202125,"t":"PASAMANOS"},{"n":"Camionada Escombro Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":225000,"m":220500,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":212500,"m":208250,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":218750,"m":214375,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":218750,"m":214375,"t":"PASAMANOS"},{"n":"Ladrillo hueco 8x18x33 (198)","c":"LADRILLOS","u":"Pallet","p":145187,"m":142283,"t":"PASAMANOS"},{"n":"Ladrillo hueco 12x18x33 (144)","c":"LADRILLOS","u":"Pallet","p":122625,"m":120172,"t":"STOCK"},{"n":"Ladrillo hueco 18x18x33 (90)","c":"LADRILLOS","u":"Pallet","p":107625,"m":105472,"t":"PASAMANOS"},{"n":"Ladrillo hueco 8 Unidad","c":"LADRILLOS","u":"Unidad","p":775,"m":759,"t":"STOCK"},{"n":"Ladrillo hueco 12 Unidad","c":"LADRILLOS","u":"Unidad","p":899,"m":881,"t":"STOCK"},{"n":"Ladrillo hueco 18 Unidad","c":"LADRILLOS","u":"Unidad","p":1264,"m":1238,"t":"STOCK"},{"n":"Hierro 6mm x 12m","c":"HIERROS","u":"Barra","p":6270,"m":6144,"t":"PASAMANOS"},{"n":"Hierro 8mm x 12m","c":"HIERROS","u":"Barra","p":11522,"m":11291,"t":"PASAMANOS"},{"n":"Hierro 10mm x 12m","c":"HIERROS","u":"Barra","p":16686,"m":16352,"t":"PASAMANOS"},{"n":"Hierro 12mm x 12m","c":"HIERROS","u":"Barra","p":25669,"m":25155,"t":"PASAMANOS"},{"n":"Hierro 16mm x 12m","c":"HIERROS","u":"Barra","p":47375,"m":46428,"t":"PASAMANOS"},{"n":"Malla SIMA 3x2 4,2mm","c":"HIERROS","u":"Panel","p":23378,"m":22910,"t":"STOCK"},{"n":"Alambre de Atar N*16","c":"HIERROS","u":"Kilo","p":5719,"m":5605,"t":"STOCK"},{"n":"Alambre de Arrienda N*9","c":"HIERROS","u":"Kilo","p":5721,"m":5606,"t":"STOCK"},{"n":"Chapa galvanizada Cincalum","c":"CHAPAS","u":"Metro","p":15000,"m":14700,"t":"ENCARGUE"},{"n":"Perfil C (80)","c":"CHAPAS","u":"Metro","p":97020,"m":95079,"t":"ENCARGUE"},{"n":"Perfil C (100)","c":"CHAPAS","u":"Unidad","p":102500,"m":100450,"t":"ENCARGUE"},{"n":"Perfil C (120)","c":"CHAPAS","u":"Unidad","p":119700,"m":117306,"t":"ENCARGUE"},{"n":"Membrana Isolan 10mm/1capa aluminio","c":"CHAPAS","u":"Unidad","p":52920,"m":51861,"t":"ENCARGUE"},{"n":"Tornillos Autoperforantes","c":"CHAPAS","u":"Unidad","p":200,"m":196,"t":"ENCARGUE"},{"n":"Clavo Punta Paris 2,5\"","c":"CHAPAS","u":"Kilo","p":2974,"m":2914,"t":"STOCK"},{"n":"Clavo Punta Paris 2\"","c":"CHAPAS","u":"Kilo","p":3042,"m":2981,"t":"STOCK"},{"n":"Caño PVC 40mm x 4m","c":"CAÑOS","u":"Caño","p":8500,"m":8330,"t":"STOCK"},{"n":"Caño PVC 63mm x 4m","c":"CAÑOS","u":"Caño","p":15600,"m":15288,"t":"STOCK"},{"n":"Caño PVC 110mm x 4m","c":"CAÑOS","u":"Caño","p":22100,"m":21658,"t":"STOCK"},{"n":"Hidrófugo Ceresita 1kg","c":"VARIOS","u":"Unidad","p":4737,"m":4642,"t":"STOCK"},{"n":"Hidrófugo Ceresita 4kg","c":"VARIOS","u":"Unidad","p":16938,"m":16600,"t":"STOCK"},{"n":"Hidrófugo Cerecita 20kg","c":"VARIOS","u":"Unidad","p":59793,"m":58597,"t":"STOCK"},{"n":"Hidrófugo Mapei 5 litros","c":"VARIOS","u":"Unidad","p":8200,"m":8200,"t":"STOCK"},{"n":"Hidrófugo Mapei 20 kg","c":"VARIOS","u":"Unidad","p":61250,"m":61250,"t":"STOCK"},{"n":"Ligante Tacurú 1 Litro","c":"VARIOS","u":"Unidad","p":19662,"m":19269,"t":"STOCK"},{"n":"Ligante Tacurú 4 Litros","c":"VARIOS","u":"Unidad","p":70685,"m":69271,"t":"STOCK"},{"n":"Algarrobo Ventiluz 50x40","c":"ABERT. ALGARROBO","u":"Unidad","p":55100,"m":53998,"t":"STOCK"},{"n":"Algarrobo Ventiluz 60x40","c":"ABERT. ALGARROBO","u":"Unidad","p":55100,"m":53998,"t":"STOCK"},{"n":"Algarrobo Puerta 2,84x0,85 Derecha","c":"ABERT. ALGARROBO","u":"Unidad","p":171100,"m":167678,"t":"STOCK"},{"n":"Algarrobo Puerta 2,84x0,85 Izquierda","c":"ABERT. ALGARROBO","u":"Unidad","p":171100,"m":167678,"t":"STOCK"},{"n":"Algarrobo Ventana C/C 1x1","c":"ABERT. ALGARROBO","u":"Unidad","p":163850,"m":160573,"t":"STOCK"},{"n":"Algarrobo Ventana C/C 1x1,20","c":"ABERT. ALGARROBO","u":"Unidad","p":196620,"m":192687,"t":"STOCK"},{"n":"Algarrobo Ventana Campera 1x1","c":"ABERT. ALGARROBO","u":"Unidad","p":65250,"m":63945,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Derecha 70","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Izquierda 70","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Derecha 80","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Izquierda 80","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Acana. 25mm V/Lateral 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":179258,"m":175673,"t":"STOCK"},{"n":"Puerta Acana. 25mm V/Lateral 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":179258,"m":175673,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/4 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":186535,"m":182804,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/4 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":186535,"m":182804,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/2 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":187950,"m":184191,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/2 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":187950,"m":184191,"t":"STOCK"},{"n":"Puerta Acana. 25mm Ciega 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":192103,"m":188261,"t":"STOCK"},{"n":"Puerta Acana. 25mm Ciega 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":192103,"m":188261,"t":"STOCK"},{"n":"Puerta 36mm Tobular V/Lateral 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":263598,"m":258326,"t":"STOCK"},{"n":"Puerta 36mm Tobular V/Lateral 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":263598,"m":258326,"t":"STOCK"},{"n":"Puerta 36mm Tobular 1/4 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":256864,"m":251727,"t":"STOCK"},{"n":"Puerta 36mm Tobular 1/4 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":256864,"m":251727,"t":"STOCK"},{"n":"Ventana C/Celosia 1x1 V/Entero","c":"ABERT. ALUMINIO","u":"Unidad","p":195819,"m":191903,"t":"STOCK"},{"n":"Ventana C/Celosia 150x1 V/Entero","c":"ABERT. ALUMINIO","u":"Unidad","p":255326,"m":250219,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 100x100","c":"ABERT. ALUMINIO","u":"Unidad","p":77132,"m":75590,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x1","c":"ABERT. ALUMINIO","u":"Unidad","p":89456,"m":87667,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x1","c":"ABERT. ALUMINIO","u":"Unidad","p":101736,"m":99701,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 1x60","c":"ABERT. ALUMINIO","u":"Unidad","p":56446,"m":55317,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x60","c":"ABERT. ALUMINIO","u":"Unidad","p":65079,"m":63777,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x60","c":"ABERT. ALUMINIO","u":"Unidad","p":75221,"m":73717,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 60x40","c":"ABERT. ALUMINIO","u":"Unidad","p":35916,"m":35198,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 80x40","c":"ABERT. ALUMINIO","u":"Unidad","p":42118,"m":41276,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x40","c":"ABERT. ALUMINIO","u":"Unidad","p":54148,"m":53065,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x40","c":"ABERT. ALUMINIO","u":"Unidad","p":63354,"m":62087,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x200","c":"ABERT. ALUMINIO","u":"Unidad","p":182744,"m":179090,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Repartido 100x100","c":"ABERT. ALUMINIO","u":"Unidad","p":113145,"m":110882,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Repartido 150x100","c":"ABERT. ALUMINIO","u":"Unidad","p":147681,"m":144727,"t":"STOCK"},{"n":"1 mts","c":"VIGUETAS","u":"Unidad","p":4025,"m":3945,"t":"PASAMANOS"},{"n":"1,20 mts","c":"VIGUETAS","u":"Unidad","p":4836,"m":4739,"t":"PASAMANOS"},{"n":"1,40 mts","c":"VIGUETAS","u":"Unidad","p":5636,"m":5523,"t":"PASAMANOS"},{"n":"1,60 mts","c":"VIGUETAS","u":"Unidad","p":6448,"m":6319,"t":"PASAMANOS"},{"n":"1,80 mts","c":"VIGUETAS","u":"Unidad","p":7261,"m":7116,"t":"PASAMANOS"},{"n":"2 mts","c":"VIGUETAS","u":"Unidad","p":8061,"m":7900,"t":"PASAMANOS"},{"n":"2,20 mts","c":"VIGUETAS","u":"Unidad","p":8871,"m":8693,"t":"PASAMANOS"},{"n":"2,40 mts","c":"VIGUETAS","u":"Unidad","p":9672,"m":9479,"t":"PASAMANOS"},{"n":"2,60 mts","c":"VIGUETAS","u":"Unidad","p":10475,"m":10265,"t":"PASAMANOS"},{"n":"2,80 mts","c":"VIGUETAS","u":"Unidad","p":11298,"m":11072,"t":"PASAMANOS"},{"n":"3 mts","c":"VIGUETAS","u":"Unidad","p":12092,"m":11850,"t":"PASAMANOS"},{"n":"3,20 mts","c":"VIGUETAS","u":"Unidad","p":12940,"m":12681,"t":"PASAMANOS"},{"n":"3,40 mts","c":"VIGUETAS","u":"Unidad","p":13737,"m":13462,"t":"PASAMANOS"},{"n":"3,60 mts","c":"VIGUETAS","u":"Unidad","p":14895,"m":14597,"t":"PASAMANOS"},{"n":"3,80 mts","c":"VIGUETAS","u":"Unidad","p":15728,"m":15414,"t":"PASAMANOS"},{"n":"4 mts","c":"VIGUETAS","u":"Unidad","p":17326,"m":16979,"t":"PASAMANOS"},{"n":"4,20 mts","c":"VIGUETAS","u":"Unidad","p":18223,"m":17859,"t":"PASAMANOS"},{"n":"4,40 mts","c":"VIGUETAS","u":"Unidad","p":21221,"m":20796,"t":"PASAMANOS"},{"n":"4,60 mts","c":"VIGUETAS","u":"Unidad","p":22170,"m":21726,"t":"PASAMANOS"},{"n":"4,80 mts","c":"VIGUETAS","u":"Unidad","p":26167,"m":25644,"t":"PASAMANOS"},{"n":"5 mts","c":"VIGUETAS","u":"Unidad","p":27245,"m":26700,"t":"PASAMANOS"},{"n":"5,20 mts","c":"VIGUETAS","u":"Unidad","p":28316,"m":27749,"t":"PASAMANOS"},{"n":"5,40 mts","c":"VIGUETAS","u":"Unidad","p":29402,"m":28814,"t":"PASAMANOS"},{"n":"5,60 mts","c":"VIGUETAS","u":"Unidad","p":37080,"m":36338,"t":"PASAMANOS"},{"n":"5,80 mts","c":"VIGUETAS","u":"Unidad","p":38416,"m":37647,"t":"PASAMANOS"},{"n":"6 mts","c":"VIGUETAS","u":"Unidad","p":39811,"m":39015,"t":"PASAMANOS"},{"n":"6,20 mts","c":"VIGUETAS","u":"Unidad","p":41120,"m":40297,"t":"PASAMANOS"},{"n":"6,40 mts","c":"VIGUETAS","u":"Unidad","p":51758,"m":50723,"t":"PASAMANOS"},{"n":"6,60 mts","c":"VIGUETAS","u":"Unidad","p":53340,"m":52273,"t":"PASAMANOS"},{"n":"6,80 mts","c":"VIGUETAS","u":"Unidad","p":54993,"m":53893,"t":"PASAMANOS"},{"n":"7 mts","c":"VIGUETAS","u":"Unidad","p":56503,"m":55373,"t":"PASAMANOS"},{"n":"7,20 mts","c":"VIGUETAS","u":"Unidad","p":58085,"m":56923,"t":"PASAMANOS"},{"n":"12x42x1 mts","c":"TELGOPOR","u":"Unidad","p":5527,"m":5416,"t":"PASAMANOS"},{"n":"16x42x1 mts","c":"TELGOPOR","u":"Unidad","p":7696,"m":7542,"t":"PASAMANOS"}];
+
+  // ===== PRESUPUESTADOR =====
+  let budgetItems = []; // { idx, qty, p (price snapshot) }
+
+  function openBudget() {
+    document.getElementById('budgetOverlay').classList.add('open');
+    if (budgetItems.length === 0) renderBudget();
+    setTimeout(() => document.getElementById('budgetSearch').focus(), 100);
+  }
+  function closeBudget() {
+    document.getElementById('budgetOverlay').classList.remove('open');
+    document.getElementById('budgetResults').classList.remove('visible');
+  }
+  function clearBudget() {
+    if (budgetItems.length === 0) { showToast('NO HAY NADA QUE LIMPIAR', 'warn'); return; }
+    if (!confirm('¿Limpiar todo el presupuesto?')) return;
+    budgetItems = [];
+    document.getElementById('budgetClient').value = '';
+    document.getElementById('budgetSearch').value = '';
+    document.getElementById('discountType').value = 'none';
+    document.getElementById('discountValue').value = '';
+    document.getElementById('budgetValidity').value = '';
+    renderBudget();
+  }
+
+  function searchProducts(q) {
+    if (!q || q.trim().length < 2) return [];
+    const qNorm = q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const terms = qNorm.split(/\s+/).filter(Boolean);
+    const results = [];
+    PRODUCTS.forEach((p, idx) => {
+      const txt = (p.n + ' ' + p.c).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const score = terms.every(t => txt.includes(t)) ? 1 : 0;
+      if (score) results.push({ ...p, idx });
+    });
+    return results.slice(0, 30);
+  }
+
+  function renderSearchResults(q) {
+    const box = document.getElementById('budgetResults');
+    const list = searchProducts(q);
+    if (list.length === 0) {
+      box.classList.remove('visible');
+      box.innerHTML = '';
+      return;
+    }
+    box.classList.add('visible');
+    box.innerHTML = list.map(p => {
+      const typeCls = 'br-type-' + (p.t || 'STOCK').toLowerCase();
+      return `
+        <div class="budget-result" onclick="addProduct(${p.idx})">
+          <div class="br-info">
+            <div class="br-name">${escapeHtml(p.n)}</div>
+            <div class="br-meta">
+              <span class="br-cat-tag">${escapeHtml(p.c)}</span>
+              ${escapeHtml(p.u)} · <span class="${typeCls}">${escapeHtml(p.t || '—')}</span>
+            </div>
+          </div>
+          <div class="br-price">$${fmt(p.p)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function addProduct(idx) {
+    const p = PRODUCTS[idx];
+    if (!p) return;
+    const existing = budgetItems.find(b => b.idx === idx);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      budgetItems.push({ idx, qty: 1, p: p.p });
+    }
+    document.getElementById('budgetSearch').value = '';
+    document.getElementById('budgetResults').classList.remove('visible');
+    renderBudget();
+    showToast(`+ ${p.n}`);
+  }
+
+  function changeQty(idx, delta) {
+    const it = budgetItems.find(b => b.idx === idx);
+    if (!it) return;
+    it.qty = Math.max(1, it.qty + delta);
+    renderBudget();
+  }
+  function setQty(idx, val) {
+    const it = budgetItems.find(b => b.idx === idx);
+    if (!it) return;
+    const n = parseInt(val, 10);
+    it.qty = isNaN(n) || n < 1 ? 1 : n;
+    renderBudget();
+  }
+  function removeProductFromBudget(idx) {
+    budgetItems = budgetItems.filter(b => b.idx !== idx);
+    renderBudget();
+  }
+
+  function computeBudgetTotals() {
+    const subtotal = budgetItems.reduce((s, b) => s + (b.p * b.qty), 0);
+    const discType = document.getElementById('discountType').value;
+    const discVal = parseFloat(document.getElementById('discountValue').value) || 0;
+    let discount = 0;
+    if (discType === 'pct' && discVal > 0) discount = subtotal * Math.min(100, discVal) / 100;
+    else if (discType === 'amt' && discVal > 0) discount = Math.min(subtotal, discVal);
+    const total = Math.max(0, subtotal - discount);
+    return { subtotal, discount, total, discType, discVal };
+  }
+
+  function renderBudget() {
+    // Lista de items
+    const list = document.getElementById('budgetItemsList');
+    if (budgetItems.length === 0) {
+      list.innerHTML = '<div class="budget-empty">Sin productos. Buscá uno arriba y agregalo.</div>';
+    } else {
+      list.innerHTML = budgetItems.map(b => {
+        const p = PRODUCTS[b.idx];
+        const sub = b.p * b.qty;
+        const typeTxt = p.t ? `· ${p.t}` : '';
+        return `
+          <div class="budget-item">
+            <div class="bi-name">
+              ${escapeHtml(p.n)}
+              <span class="bi-unit">${escapeHtml(p.u)}</span>
+              <span class="bi-type">${escapeHtml(typeTxt)}</span>
+            </div>
+            <div class="bi-qty-control">
+              <button class="bi-qty-btn" onclick="changeQty(${b.idx}, -1)">−</button>
+              <input type="number" class="bi-qty-input" value="${b.qty}" min="1"
+                     oninput="setQty(${b.idx}, this.value)">
+              <button class="bi-qty-btn" onclick="changeQty(${b.idx}, 1)">+</button>
+            </div>
+            <div class="bi-price">$${fmt(b.p)}</div>
+            <div class="bi-subtotal">$${fmt(sub)}</div>
+            <button class="bi-remove" onclick="removeProductFromBudget(${b.idx})" title="Quitar">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+    document.getElementById('bi-count').textContent = budgetItems.length;
+
+    // Totales
+    const t = computeBudgetTotals();
+    document.getElementById('budgetSubtotal').textContent = `$${fmt(t.subtotal)}`;
+    const discRow = document.getElementById('budgetDiscountRow');
+    if (t.discount > 0) {
+      discRow.style.display = 'flex';
+      const lbl = t.discType === 'pct' ? `DESCUENTO ${t.discVal}%` : 'DESCUENTO';
+      document.getElementById('budgetDiscountLabel').textContent = lbl;
+      document.getElementById('budgetDiscountAmount').textContent = `-$${fmt(t.discount)}`;
+    } else {
+      discRow.style.display = 'none';
+    }
+    document.getElementById('budgetTotal').textContent = `$${fmt(t.total)}`;
+
+    // Preview WhatsApp
+    document.getElementById('budgetPreview').value = buildBudgetText(t);
+  }
+
+  function buildBudgetText(totals) {
+    const clientName = document.getElementById('budgetClient').value.trim();
+    const validity = parseInt(document.getElementById('budgetValidity').value, 10);
+    const today = new Date().toLocaleDateString('es-AR');
+    const vendorName = (currentUser && currentUser !== 'view' && currentUser !== 'admin')
+      ? currentUser.charAt(0).toUpperCase() + currentUser.slice(1)
+      : 'Graziano Materiales';
+
+    let txt = '*GRAZIANO MATERIALES*\n';
+    txt += '_Presupuesto_\n';
+    txt += `📅 ${today}\n`;
+    if (clientName) txt += `👤 Cliente: ${clientName}\n`;
+    txt += `🛒 Vendedor: ${vendorName}\n`;
+    txt += '\n────────────\n\n';
+
+    if (budgetItems.length === 0) {
+      txt += '_(sin productos agregados)_\n';
+    } else {
+      budgetItems.forEach(b => {
+        const p = PRODUCTS[b.idx];
+        const sub = b.p * b.qty;
+        txt += `• ${b.qty} x ${p.n} (${p.u}) — $${fmt(b.p)} c/u  =  *$${fmt(sub)}*\n`;
+      });
+      txt += '\n';
+    }
+
+    txt += '────────────\n';
+    txt += `Subtotal: $${fmt(totals.subtotal)}\n`;
+    if (totals.discount > 0) {
+      const lbl = totals.discType === 'pct' ? `Descuento ${totals.discVal}%` : 'Descuento';
+      txt += `${lbl}: -$${fmt(totals.discount)}\n`;
+    }
+    txt += `\n*TOTAL:  $${fmt(totals.total)}*\n`;
+    if (validity > 0) txt += `\n⏰ _Validez: ${validity} días_`;
+    return txt;
+  }
+
+  async function copyBudget() {
+    if (budgetItems.length === 0) { showToast('AGREGÁ AL MENOS UN PRODUCTO', 'warn'); return; }
+    const text = document.getElementById('budgetPreview').value;
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('📋 PRESUPUESTO COPIADO');
+    } catch (e) {
+      // Fallback
+      const ta = document.getElementById('budgetPreview');
+      ta.select();
+      ta.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      showToast('📋 PRESUPUESTO COPIADO');
     }
   }
 
@@ -1707,30 +2343,34 @@
     const total = sales.reduce((a, v) => a + v.amount, 0);
     const count = sales.length;
     const ticketAvg = count ? total / count : 0;
-    const pct = total / CONFIG.target;
-    const excess = Math.max(0, total - CONFIG.target);
+    const isTracker = !CONFIG.competitiveSellers.includes(key);
+    const seller_target = isTracker ? CONFIG.estelaTarget : CONFIG.target;
+    const pct = total / seller_target;
+    const excess = Math.max(0, total - seller_target);
     const best = sales.reduce((m, v) => Math.max(m, v.amount), 0);
 
-    const baseSalary = CONFIG.baseSalary;
-    const baseComm = total * CONFIG.baseCommission;
-    const bonusTarget = total >= CONFIG.target ? CONFIG.bonusOnTarget : 0;
+    const baseSalary = isTracker ? 0 : CONFIG.baseSalary;
+    const baseComm = isTracker ? 0 : (total * CONFIG.baseCommission);
+    const bonusTarget = (!isTracker && total >= CONFIG.target) ? CONFIG.bonusOnTarget : 0;
 
     let extraComm = 0;
-    for (const tier of CONFIG.tiers) {
-      const tierStart = CONFIG.target * tier.from;
-      const tierEnd = CONFIG.target * tier.to;
-      if (total > tierStart) {
-        const inTier = Math.min(total, tierEnd) - tierStart;
-        extraComm += inTier * tier.rate;
+    if (!isTracker) {
+      for (const tier of CONFIG.tiers) {
+        if (total > tier.from) {
+          const inTier = Math.min(total, tier.to) - tier.from;
+          extraComm += inTier * tier.rate;
+        }
       }
     }
 
-    return { total, count, ticketAvg, pct, excess, best, baseSalary, baseComm, bonusTarget, extraComm };
+    return { total, count, ticketAvg, pct, excess, best, baseSalary, baseComm, bonusTarget, extraComm, isTracker, seller_target };
   }
 
   function computeAll() {
-    const lauti = computeSeller('lauti');
-    const toto  = computeSeller('toto');
+    const lauti  = computeSeller('lauti');
+    const toto   = computeSeller('toto');
+    const estela = computeSeller('estela');
+    // bothMet y firstPlace SOLO Lauti + Toto (Estela no compite)
     const bothMet = lauti.total >= CONFIG.target && toto.total >= CONFIG.target;
     const teamBonus = bothMet ? CONFIG.bonusTeamGoal : 0;
 
@@ -1739,12 +2379,15 @@
     else if (toto.total > lauti.total && toto.total > 0) firstPlace = 'toto';
 
     lauti.teamBonus = teamBonus; toto.teamBonus = teamBonus;
+    estela.teamBonus = 0;
     lauti.firstBonus = firstPlace === 'lauti' ? CONFIG.bonusFirstPlace : 0;
     toto.firstBonus  = firstPlace === 'toto'  ? CONFIG.bonusFirstPlace : 0;
+    estela.firstBonus = 0;
     lauti.totalEarn = lauti.baseSalary + lauti.baseComm + lauti.bonusTarget + lauti.extraComm + lauti.teamBonus + lauti.firstBonus;
     toto.totalEarn  = toto.baseSalary  + toto.baseComm  + toto.bonusTarget  + toto.extraComm  + toto.teamBonus  + toto.firstBonus;
+    estela.totalEarn = 0; // no cobra del sistema
 
-    return { lauti, toto, bothMet, firstPlace };
+    return { lauti, toto, estela, bothMet, firstPlace };
   }
 
   // ===== RENDER =====
@@ -1780,6 +2423,17 @@
     }
   }
 
+  function renderEstela(data) {
+    document.getElementById('amount-estela').textContent = fmtFull(data.total);
+    document.getElementById('count-estela').textContent = data.count;
+    document.getElementById('ticket-estela').textContent = fmtMoney(data.ticketAvg);
+    document.getElementById('best-estela').textContent = fmtMoney(data.best);
+    document.getElementById('pct-estela').textContent = Math.round(data.pct * 100) + '%';
+    document.getElementById('bar-estela').style.width = Math.min(100, data.pct * 100) + '%';
+    const pending = pendingSales('estela');
+    document.getElementById('pending-num-estela').textContent = pending.length;
+  }
+
   function renderPremios(c) {
     const items = [
       {
@@ -1789,22 +2443,22 @@
         unlocked: c.lauti.bonusTarget > 0 || c.toto.bonusTarget > 0
       },
       {
-        icon: '▲', title: 'Superar 110% (14,85M)', desc: 'Comisión extra sobre el excedente · ',
+        icon: '▲', title: 'Superar 14,5M', desc: 'Comisión extra sobre el excedente · ',
         reward: '+0,5%',
-        unlockedBy: (c.lauti.total > CONFIG.target * 1.10 ? 'LAUTI' : '') + (c.toto.total > CONFIG.target * 1.10 ? (c.lauti.total > CONFIG.target * 1.10 ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.total > CONFIG.target * 1.10 || c.toto.total > CONFIG.target * 1.10
+        unlockedBy: (c.lauti.total > 14500000 ? 'LAUTI' : '') + (c.toto.total > 14500000 ? (c.lauti.total > 14500000 ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.total > 14500000 || c.toto.total > 14500000
       },
       {
-        icon: '▲▲', title: 'Superar 125% (16,875M)', desc: 'Comisión extra sobre el excedente · ',
+        icon: '▲▲', title: 'Superar 15,5M', desc: 'Comisión extra sobre el excedente · ',
         reward: '+1%',
-        unlockedBy: (c.lauti.total > CONFIG.target * 1.25 ? 'LAUTI' : '') + (c.toto.total > CONFIG.target * 1.25 ? (c.lauti.total > CONFIG.target * 1.25 ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.total > CONFIG.target * 1.25 || c.toto.total > CONFIG.target * 1.25
+        unlockedBy: (c.lauti.total > 15500000 ? 'LAUTI' : '') + (c.toto.total > 15500000 ? (c.lauti.total > 15500000 ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.total > 15500000 || c.toto.total > 15500000
       },
       {
-        icon: '▲▲▲', title: 'Zona élite (+17,55M)', desc: 'Máxima comisión sobre excedente · ',
+        icon: '▲▲▲', title: 'Llegar al objetivo final $17M', desc: 'Máxima comisión sobre excedente · ',
         reward: '+1,5%',
-        unlockedBy: (c.lauti.total > CONFIG.target * 1.30 ? 'LAUTI' : '') + (c.toto.total > CONFIG.target * 1.30 ? (c.lauti.total > CONFIG.target * 1.30 ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.total > CONFIG.target * 1.30 || c.toto.total > CONFIG.target * 1.30
+        unlockedBy: (c.lauti.total >= CONFIG.finalTarget ? 'LAUTI' : '') + (c.toto.total >= CONFIG.finalTarget ? (c.lauti.total >= CONFIG.finalTarget ? ' · ' : '') + 'TOTO' : ''),
+        unlocked: c.lauti.total >= CONFIG.finalTarget || c.toto.total >= CONFIG.finalTarget
       },
       {
         icon: '♛', title: '#1 del mes', desc: 'Premio físico al líder absoluto · ',
@@ -2003,7 +2657,7 @@
 
   function renderGlobals(c) {
     const total = c.lauti.total + c.toto.total;
-    const targetTotal = CONFIG.target * 2;
+    const targetTotal = CONFIG.teamTarget;
     const pct = total / targetTotal;
     const gap = Math.max(0, targetTotal - total);
     const totalCount = c.lauti.count + c.toto.count;
@@ -2011,7 +2665,7 @@
 
     document.getElementById('globalTotal').textContent = fmtMoney(total);
     document.getElementById('globalCount').textContent = `${totalCount} operaciones`;
-    document.getElementById('globalTarget').textContent = '$27M';
+    document.getElementById('globalTarget').textContent = '$30M';
     document.getElementById('globalPct').textContent = Math.round(pct * 100) + '%';
     document.getElementById('globalGap').textContent = gap > 0 ? `faltan $${fmt(gap)}` : `excedente $${fmt(total - targetTotal)}`;
     document.getElementById('globalCost').textContent = fmtMoney(totalCost);
@@ -2197,6 +2851,7 @@
     const totoLeader  = c.firstPlace === 'toto';
     renderSeller('lauti', c.lauti, lautiLeader);
     renderSeller('toto',  c.toto,  totoLeader);
+    renderEstela(c.estela);
 
     // Ranks + Emojis + orden mobile
     const dueloEl = document.querySelector('.duelo');
@@ -2309,19 +2964,21 @@
   }
 
   function checkUnlocks(before, after, seller) {
+    // Estela no compite ni desbloquea premios
+    if (seller === 'estela') return;
     const prev = before[seller], curr = after[seller];
     let delay = 600;
     if (prev.bonusTarget === 0 && curr.bonusTarget > 0) {
       setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} DESBLOQUEÓ META 13,5M`, 'unlock'), delay); delay += 700;
     }
-    if (prev.total <= CONFIG.target * 1.10 && curr.total > CONFIG.target * 1.10) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 110%`, 'unlock'), delay); delay += 700;
+    if (prev.total <= 14500000 && curr.total > 14500000) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 14,5M`, 'unlock'), delay); delay += 700;
     }
-    if (prev.total <= CONFIG.target * 1.25 && curr.total > CONFIG.target * 1.25) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 125%`, 'unlock'), delay); delay += 700;
+    if (prev.total <= 15500000 && curr.total > 15500000) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 15,5M`, 'unlock'), delay); delay += 700;
     }
-    if (prev.total <= CONFIG.target * 1.30 && curr.total > CONFIG.target * 1.30) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} ZONA ÉLITE`, 'unlock'), delay); delay += 700;
+    if (prev.total < CONFIG.finalTarget && curr.total >= CONFIG.finalTarget) {
+      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} LLEGÓ AL OBJETIVO FINAL · $17M`, 'unlock'), delay); delay += 700;
     }
     if (!before.bothMet && after.bothMet) {
       setTimeout(() => showToast(`🔓 EQUIPO COMPLETO · BONUS`, 'unlock'), delay);
