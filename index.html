@@ -474,18 +474,25 @@
   .hof-value { font-family: 'Anton', sans-serif; font-size: 30px; color: var(--ink); line-height: 1; margin-bottom: 8px; }
   .hof-desc { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-3); }
 
-  /* FAB */
-  .fab {
+  /* FAB GROUP (Speed dial) */
+  .fab-group {
     position: fixed; bottom: 28px; right: 28px; z-index: 100;
+    display: flex; flex-direction: column; align-items: flex-end;
+    gap: 12px;
+  }
+  .fab {
     width: 64px; height: 64px; background: var(--red); color: white;
     border: 1.5px solid var(--ink); cursor: pointer;
     font-family: 'Anton', sans-serif; font-size: 36px;
     box-shadow: 6px 6px 0 var(--ink);
     transition: all 0.2s;
     display: flex; align-items: center; justify-content: center;
+    position: relative;
   }
   .fab:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
   .fab:active { transform: translate(2px, 2px); box-shadow: 4px 4px 0 var(--ink); }
+  .fab-icon { transition: transform 0.25s ease; display: inline-block; line-height: 1; }
+  .fab-group.open .fab-icon { transform: rotate(45deg); }
   .fab-badge {
     position: absolute; top: -8px; right: -8px;
     background: var(--ink); color: white;
@@ -495,18 +502,29 @@
     border: 1.5px solid var(--ink);
   }
   .fab-hidden { display: none; }
-
-  /* FAB secundario - Presupuestador */
-  .fab-budget {
-    bottom: 28px; right: 108px; /* a la izquierda del FAB principal */
-    background: var(--ink); color: white;
-    width: 56px; height: 56px;
-    font-family: 'Archivo Black', sans-serif; font-size: 24px;
+  /* Sub-botones */
+  .fab-sub {
+    background: var(--bg-card); color: var(--ink);
+    border: 1.5px solid var(--ink);
+    padding: 12px 18px;
+    box-shadow: 4px 4px 0 var(--ink);
+    cursor: pointer;
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    display: none;
+    align-items: center; gap: 10px;
+    white-space: nowrap;
+    opacity: 0; transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
-  .fab-budget:hover { background: #2a2a2a; }
-  .fab-budget-icon {
-    font-family: 'Archivo Black', sans-serif; font-size: 24px; line-height: 1;
+  .fab-group.open .fab-sub {
+    display: inline-flex; opacity: 1; transform: translateY(0);
   }
+  .fab-sub-sale { background: var(--red); color: white; }
+  .fab-sub-budget { background: var(--ink); color: white; }
+  .fab-sub:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+  .fab-sub-icon { font-size: 16px; line-height: 1; }
+  .fab-sub-label { line-height: 1; }
 
   /* MODAL */
   .modal-overlay {
@@ -1098,13 +1116,16 @@
     letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 6px;
     text-transform: uppercase;
   }
-  .budget-search-section input {
-    width: 100%; padding: 14px 16px;
+  .budget-search-section input,
+  .sale-search-section input {
+    width: 100%; padding: 18px 20px;
     background: var(--bg); border: 1.5px solid var(--line);
-    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    color: var(--ink); font-family: 'JetBrains Mono', monospace; font-size: 15px;
     transition: border-color 0.2s; outline: none;
+    box-sizing: border-box;
   }
-  .budget-search-section input:focus { border-color: var(--red); }
+  .budget-search-section input:focus,
+  .sale-search-section input:focus { border-color: var(--red); }
   .budget-results {
     margin-top: 4px; max-height: 280px; overflow-y: auto;
     border: 1.5px solid var(--line); background: var(--bg-card);
@@ -1294,10 +1315,11 @@
     .estela-stat:nth-child(2n) { border-right: none; }
     .estela-stat:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .es-value { font-size: 14px; }
-    /* PRESUPUESTADOR mobile */
-    .fab { bottom: 18px; right: 18px; width: 56px; height: 56px; font-size: 30px; box-shadow: 4px 4px 0 var(--ink); }
-    .fab-budget { right: 18px; bottom: 88px; width: 52px; height: 52px; }
-    .fab-budget-icon { font-size: 22px; }
+    /* SPEED DIAL mobile */
+    .fab-group { bottom: 18px; right: 18px; gap: 10px; }
+    .fab { width: 58px; height: 58px; font-size: 32px; box-shadow: 4px 4px 0 var(--ink); }
+    .fab-sub { padding: 10px 14px; font-size: 11px; box-shadow: 3px 3px 0 var(--ink); }
+    .fab-sub-icon { font-size: 14px; }
     .sale-modal-banner, .budget-modal-banner {
       margin-left: -20px; margin-right: -20px;
       padding-left: 20px; padding-right: 20px;
@@ -1758,13 +1780,19 @@
 
 </div>
 
-<button class="fab fab-hidden" id="fab" onclick="openModal()">
-  +<span class="fab-badge" id="fabBadge" style="display:none;">0</span>
-</button>
-
-<button class="fab fab-budget fab-hidden" id="fabBudget" onclick="openBudget()" title="Nuevo presupuesto">
-  <span class="fab-budget-icon">$</span>
-</button>
+<div class="fab-group fab-hidden" id="fabGroup">
+  <button class="fab-sub fab-sub-budget" onclick="openFromFab('budget')">
+    <span class="fab-sub-icon">📋</span>
+    <span class="fab-sub-label">PRESUPUESTO</span>
+  </button>
+  <button class="fab-sub fab-sub-sale" onclick="openFromFab('sale')">
+    <span class="fab-sub-icon">💰</span>
+    <span class="fab-sub-label">CARGAR VENTA</span>
+  </button>
+  <button class="fab" id="fab" onclick="toggleFab()">
+    <span class="fab-icon">+</span><span class="fab-badge" id="fabBadge" style="display:none;">0</span>
+  </button>
+</div>
 
 <!-- ===== MODAL PRESUPUESTO ===== -->
 <div class="modal-overlay" id="budgetOverlay">
@@ -1783,7 +1811,7 @@
 
     <div class="budget-search-section">
       <label>Agregar producto</label>
-      <input type="text" id="budgetSearch" placeholder="Buscar... ej: cemento, hierro 8, arena, perfil" autocomplete="off">
+      <input type="text" id="budgetSearch" placeholder="Buscar producto..." autocomplete="off">
       <div class="budget-results" id="budgetResults"></div>
     </div>
 
@@ -1895,7 +1923,7 @@
     <div class="form-section">
       <h3>▸ PRODUCTOS</h3>
       <div class="sale-search-section">
-        <input type="text" id="saleSearch" placeholder="Buscar... ej: cemento, hierro 8, arena" autocomplete="off">
+        <input type="text" id="saleSearch" placeholder="Buscar producto..." autocomplete="off">
         <div class="sale-results" id="saleResults"></div>
       </div>
       <div class="budget-items-block">
@@ -2278,6 +2306,11 @@
       if (sec && !sec.contains(e.target)) {
         document.getElementById('saleResults')?.classList.remove('visible');
       }
+      // Cerrar speed dial si click fuera
+      const fg = document.getElementById('fabGroup');
+      if (fg && !fg.contains(e.target) && fg.classList.contains('open')) {
+        fg.classList.remove('open');
+      }
     });
     // Presupuestador
     const budgetSearch = document.getElementById('budgetSearch');
@@ -2310,7 +2343,7 @@
 
   function applyUserMode() {
     const chip = document.getElementById('userChip');
-    const fab = document.getElementById('fab');
+    const fabGroup = document.getElementById('fabGroup');
     const costCell = document.getElementById('globalCostCell');
     const adminActions = document.getElementById('adminActions');
     const modalTitle = document.getElementById('modalTitle');
@@ -2325,12 +2358,11 @@
     chip.classList.toggle('viewer', currentUser === 'view');
 
     if (currentUser === 'view') {
-      fab.classList.add('fab-hidden');
-      document.getElementById('fabBudget').classList.add('fab-hidden');
+      fabGroup.classList.add('fab-hidden');
+      fabGroup.classList.remove('open');
       document.body.classList.add('mode-view');
     } else {
-      fab.classList.remove('fab-hidden');
-      document.getElementById('fabBudget').classList.remove('fab-hidden');
+      fabGroup.classList.remove('fab-hidden');
       document.body.classList.remove('mode-view');
     }
 
@@ -2343,9 +2375,8 @@
       modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
       btnLauti.disabled = false; btnToto.disabled = false; btnEstela.disabled = false;
     } else if (currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela') {
-      modalTitle.textContent = 'CARGAR MI VENTA';
+      modalTitle.textContent = 'CARGAR VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
-      // Bloquear todos menos el actual
       btnLauti.disabled = currentUser !== 'lauti';
       btnToto.disabled = currentUser !== 'toto';
       btnEstela.disabled = currentUser !== 'estela';
@@ -3316,6 +3347,19 @@
     if (type) t.classList.add(type);
     setTimeout(() => t.classList.add('show'), 10);
     setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // ===== SPEED DIAL FAB =====
+  function toggleFab() {
+    document.getElementById('fabGroup').classList.toggle('open');
+  }
+  function closeFab() {
+    document.getElementById('fabGroup').classList.remove('open');
+  }
+  function openFromFab(which) {
+    closeFab();
+    if (which === 'sale') openModal();
+    else if (which === 'budget') openBudget();
   }
 
   // ===== NUEVO FORMULARIO DE VENTA =====
