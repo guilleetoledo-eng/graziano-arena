@@ -993,14 +993,85 @@
   .footer strong { color: var(--ink); }
 
   /* PRESUPUESTADOR */
-  .budget-modal { max-width: 720px; }
+  .budget-modal {
+    max-width: 720px;
+    border-top: 6px solid var(--ink);
+    padding-top: 0 !important;
+  }
+  .budget-modal-banner {
+    background: var(--ink); color: white;
+    margin: 0 -32px 24px -32px;
+    padding: 12px 32px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+  }
+  .sale-modal {
+    max-width: 720px;
+    border-top: 6px solid var(--red);
+    padding-top: 0 !important;
+  }
+  .sale-modal-banner {
+    background: var(--red); color: white;
+    margin: 0 -32px 24px -32px;
+    padding: 12px 32px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    font-weight: 700;
+  }
+  .sale-modal h2 { color: var(--red); }
+  .budget-modal h2 { color: var(--ink); }
+  .form-section {
+    border: 1.5px solid var(--line); background: var(--bg-card);
+    padding: 16px 18px; margin-bottom: 14px;
+  }
+  .form-section h3 {
+    font-family: 'Archivo Black', sans-serif; font-size: 11px;
+    letter-spacing: 0.25em; color: var(--red); margin-bottom: 14px;
+    text-transform: uppercase;
+    padding-bottom: 6px; border-bottom: 1.5px solid var(--line-soft);
+  }
+  .modality-toggle {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--ink);
+  }
+  .modality-toggle button {
+    padding: 14px; background: var(--bg); border: none;
+    color: var(--ink); font-family: 'Archivo Black', sans-serif;
+    font-size: 13px; letter-spacing: 0.2em; cursor: pointer;
+    transition: all 0.2s; text-transform: uppercase;
+    border-right: 1.5px solid var(--ink);
+  }
+  .modality-toggle button:last-child { border-right: none; }
+  .modality-toggle button.active { background: var(--red); color: white; }
+  .modality-toggle button:hover:not(.active) { background: var(--red-tint); }
+  .sale-totals {
+    background: var(--bg); border: 1px solid var(--line);
+    padding: 12px 14px; margin-bottom: 14px;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  #salePreview {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    line-height: 1.55; background: var(--bg-soft); color: var(--ink);
+    border: 1.5px solid var(--ink); padding: 12px 14px;
+    resize: vertical;
+  }
+  .sale-search-section { position: relative; }
+  .sale-results {
+    margin-top: 4px; max-height: 240px; overflow-y: auto;
+    border: 1.5px solid var(--line); background: var(--bg-card);
+    display: none;
+  }
+  .sale-results.visible { display: block; }
   .budget-sync {
     margin-bottom: 14px; padding: 8px 12px;
     font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
     letter-spacing: 0.1em; border-left: 3px solid var(--ink-4);
     background: var(--bg-soft); color: var(--ink-3);
     display: flex; align-items: center; gap: 8px;
+    cursor: pointer; transition: background 0.15s;
   }
+  .budget-sync:hover { background: var(--bg-card); }
   .budget-sync.syncing {
     border-left-color: var(--amber); color: var(--amber);
     animation: pulse-fade 1s infinite;
@@ -1224,8 +1295,14 @@
     .estela-stat:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .es-value { font-size: 14px; }
     /* PRESUPUESTADOR mobile */
-    .fab-budget { right: 90px; width: 50px; height: 50px; bottom: 18px; }
+    .fab { bottom: 18px; right: 18px; width: 56px; height: 56px; font-size: 30px; box-shadow: 4px 4px 0 var(--ink); }
+    .fab-budget { right: 18px; bottom: 88px; width: 52px; height: 52px; }
     .fab-budget-icon { font-size: 22px; }
+    .sale-modal-banner, .budget-modal-banner {
+      margin-left: -20px; margin-right: -20px;
+      padding-left: 20px; padding-right: 20px;
+      font-size: 9px; letter-spacing: 0.22em;
+    }
     .budget-item {
       grid-template-columns: 1fr auto;
       grid-template-areas: "name remove" "qty subtotal";
@@ -1692,11 +1769,12 @@
 <!-- ===== MODAL PRESUPUESTO ===== -->
 <div class="modal-overlay" id="budgetOverlay">
   <div class="modal budget-modal">
+    <div class="budget-modal-banner">▸ PRESUPUESTO · SOLO COTIZACIÓN</div>
     <button class="modal-close" onclick="closeBudget()">✕</button>
     <h2>NUEVO PRESUPUESTO</h2>
     <div class="modal-sub" id="budgetSub">— ARMALO Y COPIALO PARA WHATSAPP —</div>
 
-    <div class="budget-sync" id="budgetSyncIndicator">⟳ actualizando precios...</div>
+    <div class="budget-sync" id="budgetSyncIndicator" onclick="refreshPrices(true)" title="Click para refrescar">⟳ actualizando precios...</div>
 
     <div class="form-row">
       <label>Cliente (opcional)</label>
@@ -1759,7 +1837,8 @@
 
 <!-- ===== MODAL CARGA ===== -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
+  <div class="modal sale-modal">
+    <div class="sale-modal-banner">▸ TIRAR VENTA · CARGA AL SISTEMA + WHATSAPP</div>
     <button class="modal-close" onclick="closeModal()">✕</button>
     <h2 id="modalTitle">CARGAR VENTA</h2>
     <div class="modal-sub" id="modalSub">— PANEL —</div>
@@ -1773,49 +1852,170 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <label>Cliente</label>
-      <input type="text" id="saleClient" placeholder="Nombre del cliente" autocomplete="off">
+    <!-- CLIENTE -->
+    <div class="form-section">
+      <h3>▸ CLIENTE</h3>
+      <div class="form-row">
+        <label>Nombre</label>
+        <input type="text" id="saleClient" placeholder="Nombre del cliente" autocomplete="off">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row compact">
+          <label>DNI / CUIT</label>
+          <input type="text" id="saleDni" placeholder="ej: 35.705.846" autocomplete="off">
+        </div>
+        <div class="form-row compact">
+          <label>Teléfono</label>
+          <input type="text" id="salePhone" placeholder="ej: 3424483022" autocomplete="off">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row compact">
+          <label>Tipo de factura</label>
+          <select id="saleInvoice">
+            <option value="">— No aplica —</option>
+            <option value="A">A</option>
+            <option value="B" selected>B</option>
+            <option value="C">C</option>
+            <option value="Consumidor final">Consumidor final</option>
+          </select>
+        </div>
+        <div class="form-row compact">
+          <label>Canal</label>
+          <select id="saleChannel">
+            <option value="Marketplace">Marketplace</option>
+            <option value="WhatsApp">WhatsApp</option>
+            <option value="Presencial" selected>Presencial</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <div class="form-grid-2">
-      <div class="form-row compact">
-        <label>Canal</label>
-        <select id="saleChannel">
-          <option value="Marketplace">Marketplace</option>
-          <option value="WhatsApp">WhatsApp</option>
-          <option value="Presencial">Presencial</option>
-        </select>
+    <!-- PRODUCTOS -->
+    <div class="form-section">
+      <h3>▸ PRODUCTOS</h3>
+      <div class="sale-search-section">
+        <input type="text" id="saleSearch" placeholder="Buscar... ej: cemento, hierro 8, arena" autocomplete="off">
+        <div class="sale-results" id="saleResults"></div>
       </div>
-      <div class="form-row compact">
-        <label>Método de pago</label>
-        <select id="salePayment">
-          <option value="Transferencia">Transferencia</option>
-          <option value="Efectivo">Efectivo</option>
-          <option value="Tarjeta">Tarjeta</option>
-          <option value="Débito">Débito</option>
-          <option value="Mixto">Mixto</option>
-        </select>
+      <div class="budget-items-block">
+        <div class="budget-items-header">
+          <span>ITEMS</span>
+          <span class="bi-count" id="sale-bi-count">0</span>
+        </div>
+        <div id="saleItemsList">
+          <div class="budget-empty">Sin productos. Buscá uno arriba.</div>
+        </div>
       </div>
     </div>
 
-    <div class="form-row">
-      <label>Producto</label>
-      <input type="text" id="saleProduct" placeholder="Ej: Cemento + Plasticor" autocomplete="off">
+    <!-- ENTREGA -->
+    <div class="form-section">
+      <h3>▸ ENTREGA</h3>
+      <div class="modality-toggle">
+        <button id="mod-envio" class="active" onclick="setModality('ENVÍO')">🚚 ENVÍO</button>
+        <button id="mod-retiro" onclick="setModality('RETIRO')">📦 RETIRO</button>
+      </div>
+      <div id="deliveryFields">
+        <div class="form-row">
+          <label>Dirección</label>
+          <input type="text" id="saleAddress" placeholder="ej: Centenario 4247" autocomplete="off">
+        </div>
+        <div class="form-grid-2">
+          <div class="form-row compact">
+            <label>Localidad</label>
+            <input type="text" id="saleCity" placeholder="ej: Santo Tomé" autocomplete="off">
+          </div>
+          <div class="form-row compact">
+            <label>Costo de envío $</label>
+            <input type="number" id="saleShipping" min="0" step="100" placeholder="0" oninput="updateSaleTotals()">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Referencias del lugar</label>
+          <input type="text" id="saleRefs" placeholder="ej: Esquina, casa de rejas" autocomplete="off">
+        </div>
+        <div class="form-row">
+          <label>Día y horario de entrega</label>
+          <input type="text" id="saleDelivery" placeholder="ej: Lunes o martes en la tarde" autocomplete="off">
+        </div>
+      </div>
+      <div id="pickupFields" style="display:none;">
+        <div class="form-row">
+          <label>Día y horario de retiro</label>
+          <input type="text" id="salePickup" placeholder="ej: Sábado 6 por la mañana" autocomplete="off">
+        </div>
+      </div>
     </div>
 
-    <div class="form-grid-2">
-      <div class="form-row compact">
-        <label>Monto (ARS)</label>
-        <input type="number" id="saleAmount" placeholder="Ej: 850000" min="0" step="1000">
+    <!-- PAGO -->
+    <div class="form-section">
+      <h3>▸ PAGO</h3>
+      <div class="sale-totals">
+        <div class="bt-row"><span>SUBTOTAL PRODUCTOS</span><span id="sale-subtotal">$0</span></div>
+        <div class="bt-row discount" id="sale-discount-row" style="display:none;"><span>DESCUENTO</span><span id="sale-discount-display">-$0</span></div>
+        <div class="bt-row" id="sale-shipping-row" style="display:none;"><span>ENVÍO</span><span id="sale-shipping-display">$0</span></div>
+        <div class="bt-row total"><span>TOTAL</span><span id="sale-total">$0</span></div>
       </div>
-      <div class="form-row compact">
-        <label>Fecha</label>
+      <div class="form-grid-2">
+        <div class="form-row compact">
+          <label>Descuento $ (opcional)</label>
+          <input type="number" id="saleDiscount" min="0" step="100" placeholder="0" oninput="updateSaleTotals()">
+        </div>
+        <div class="form-row compact">
+          <label>Seña $ (opcional)</label>
+          <input type="number" id="saleDeposit" min="0" step="100" placeholder="0" oninput="updateSaleTotals()">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Saldo a pagar</label>
+        <input type="text" id="saleBalance" readonly placeholder="$0">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row compact">
+          <label>Medio de pago</label>
+          <select id="salePayment">
+            <option value="Transferencia">Transferencia</option>
+            <option value="Efectivo" selected>Efectivo</option>
+            <option value="Tarjeta">Tarjeta</option>
+            <option value="Débito">Débito</option>
+            <option value="Mixto">Mixto</option>
+          </select>
+        </div>
+        <div class="form-row compact">
+          <label>Estado</label>
+          <select id="saleStatus">
+            <option value="PAGO CONCRETADO" selected>PAGO CONCRETADO</option>
+            <option value="SEÑADO">SEÑADO</option>
+            <option value="PENDIENTE">PENDIENTE</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- OBSERVACIONES + FECHA -->
+    <div class="form-section">
+      <h3>▸ DETALLES</h3>
+      <div class="form-row">
+        <label>Observaciones</label>
+        <textarea id="saleObs" rows="2" placeholder="Notas adicionales..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>Fecha de la venta</label>
         <input type="date" id="saleDate">
       </div>
     </div>
 
-    <button class="btn-primary" onclick="addSale()" id="submitBtn">REGISTRAR VENTA</button>
+    <!-- Preview WhatsApp -->
+    <div class="form-row">
+      <label>Vista previa para WhatsApp</label>
+      <textarea id="salePreview" rows="14" readonly></textarea>
+    </div>
+
+    <div class="budget-actions">
+      <button class="btn-primary" onclick="submitSale()" id="submitBtn">✓ REGISTRAR Y COPIAR</button>
+      <button class="btn-secondary" onclick="copySaleText()" style="flex-shrink:0;">📋 SOLO COPIAR</button>
+    </div>
 
     <!-- Tabs (solo admin: pendientes / aprobadas / canceladas-anuladas) -->
     <div class="tabs" id="tabsRow" style="display:none;">
@@ -2050,14 +2250,34 @@
         }
       }
     });
-    document.getElementById('saleAmount').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') addSale();
-    });
     document.getElementById('modalOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'modalOverlay') closeModal();
     });
     document.getElementById('voidModalOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'voidModalOverlay') closeVoidModal();
+    });
+    // Buscador de productos en VENTA
+    const saleSearch = document.getElementById('saleSearch');
+    if (saleSearch) {
+      saleSearch.addEventListener('input', (e) => renderSaleSearchResults(e.target.value));
+      saleSearch.addEventListener('focus', (e) => {
+        if (e.target.value.trim().length >= 2) renderSaleSearchResults(e.target.value);
+      });
+    }
+    // Inputs del form que actualizan preview en vivo
+    ['saleClient','saleDni','salePhone','saleInvoice','saleAddress','saleCity',
+     'saleRefs','saleDelivery','salePayment','saleStatus','saleObs','saleDate']
+      .forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', updateSalePreview);
+        if (el && el.tagName === 'SELECT') el.addEventListener('change', updateSalePreview);
+      });
+    // Cerrar resultados al clickear fuera (sale search)
+    document.addEventListener('click', (e) => {
+      const sec = document.querySelector('.sale-search-section');
+      if (sec && !sec.contains(e.target)) {
+        document.getElementById('saleResults')?.classList.remove('visible');
+      }
     });
     // Presupuestador
     const budgetSearch = document.getElementById('budgetSearch');
@@ -2150,12 +2370,15 @@
   async function fetchLatestPrices() {
     if (!PRICES_ENDPOINT_URL) return null;
     try {
-      const res = await fetch(PRICES_ENDPOINT_URL, { method: 'GET', mode: 'cors' });
+      // Cache buster + GET simple sin headers raros que disparen preflight CORS
+      const url = PRICES_ENDPOINT_URL + (PRICES_ENDPOINT_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+      const res = await fetch(url);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       if (data && data.ok && Array.isArray(data.products) && data.products.length > 0) {
         return data;
       }
+      if (data && data.error) console.warn('Apps Script error:', data.error);
       return null;
     } catch (e) {
       console.warn('No se pudo actualizar precios:', e.message);
@@ -3055,10 +3278,13 @@
   function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('saleDate').valueAsDate = new Date();
+    saleItems = [];
+    renderSaleItems();
+    setModality('ENVÍO');
+    updateSaleTotals();
     renderPendingList(); renderSalesList(); renderArchiveList();
     updateTabCounts();
-    // Para vendedores arranca en "aprobadas" si no hay pendientes; sino "pendientes"
-    if (currentUser === 'lauti' || currentUser === 'toto') {
+    if (currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela') {
       const myPending = pendingSales(currentUser).length;
       switchTab(myPending > 0 ? 'pending' : 'approved');
     } else {
@@ -3068,15 +3294,19 @@
   }
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
+    document.getElementById('saleResults')?.classList.remove('visible');
   }
 
   let selectedSellerForSale = 'lauti';
   function selectSeller(s) {
     if (currentUser === 'lauti' && s !== 'lauti') return;
     if (currentUser === 'toto' && s !== 'toto') return;
+    if (currentUser === 'estela' && s !== 'estela') return;
     selectedSellerForSale = s;
     document.getElementById('btn-lauti').classList.toggle('active', s === 'lauti');
     document.getElementById('btn-toto').classList.toggle('active', s === 'toto');
+    document.getElementById('btn-estela').classList.toggle('active', s === 'estela');
+    updateSalePreview();
   }
 
   function showToast(msg, type) {
@@ -3088,27 +3318,283 @@
     setTimeout(() => t.classList.remove('show'), 3200);
   }
 
-  async function addSale() {
-    const amount = parseFloat(document.getElementById('saleAmount').value);
-    const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
-    const client = document.getElementById('saleClient').value.trim();
-    const channel = document.getElementById('saleChannel').value;
-    const product = document.getElementById('saleProduct').value.trim();
-    const paymentMethod = document.getElementById('salePayment').value;
+  // ===== NUEVO FORMULARIO DE VENTA =====
+  let saleItems = []; // { idx, qty, p }
+  let saleModality = 'ENVÍO';
 
-    if (!amount || amount <= 0) { showToast('MONTO INVÁLIDO', 'warn'); return; }
+  function setModality(mod) {
+    saleModality = mod;
+    document.getElementById('mod-envio').classList.toggle('active', mod === 'ENVÍO');
+    document.getElementById('mod-retiro').classList.toggle('active', mod === 'RETIRO');
+    document.getElementById('deliveryFields').style.display = mod === 'ENVÍO' ? '' : 'none';
+    document.getElementById('pickupFields').style.display = mod === 'RETIRO' ? '' : 'none';
+    if (mod === 'RETIRO') {
+      document.getElementById('saleShipping').value = '';
+    }
+    updateSaleTotals();
+  }
+
+  function searchSaleProducts(q) {
+    return searchProducts(q); // reusa la función del presupuestador
+  }
+
+  function renderSaleSearchResults(q) {
+    const box = document.getElementById('saleResults');
+    const list = searchSaleProducts(q);
+    if (list.length === 0) { box.classList.remove('visible'); box.innerHTML = ''; return; }
+    box.classList.add('visible');
+    box.innerHTML = list.map(p => {
+      const typeCls = 'br-type-' + (p.t || 'STOCK').toLowerCase();
+      return `
+        <div class="budget-result" onclick="addSaleProduct(${p.idx})">
+          <div class="br-info">
+            <div class="br-name">${escapeHtml(p.n)}</div>
+            <div class="br-meta">
+              <span class="br-cat-tag">${escapeHtml(p.c)}</span>
+              ${escapeHtml(p.u)} · <span class="${typeCls}">${escapeHtml(p.t || '—')}</span>
+            </div>
+          </div>
+          <div class="br-price">$${fmtFull(p.p)}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function addSaleProduct(idx) {
+    const p = PRODUCTS[idx];
+    if (!p) return;
+    const existing = saleItems.find(b => b.idx === idx);
+    if (existing) existing.qty += 1;
+    else saleItems.push({ idx, qty: 1, p: p.p });
+    document.getElementById('saleSearch').value = '';
+    document.getElementById('saleResults').classList.remove('visible');
+    renderSaleItems();
+    updateSaleTotals();
+    showToast(`+ ${p.n}`);
+  }
+  function changeSaleQty(idx, delta) {
+    const it = saleItems.find(b => b.idx === idx);
+    if (!it) return;
+    it.qty = Math.max(1, it.qty + delta);
+    renderSaleItems(); updateSaleTotals();
+  }
+  function setSaleQty(idx, val) {
+    const it = saleItems.find(b => b.idx === idx);
+    if (!it) return;
+    const n = parseInt(val, 10);
+    it.qty = isNaN(n) || n < 1 ? 1 : n;
+    renderSaleItems(); updateSaleTotals();
+  }
+  function removeSaleProduct(idx) {
+    saleItems = saleItems.filter(b => b.idx !== idx);
+    renderSaleItems(); updateSaleTotals();
+  }
+  function renderSaleItems() {
+    const list = document.getElementById('saleItemsList');
+    if (saleItems.length === 0) {
+      list.innerHTML = '<div class="budget-empty">Sin productos. Buscá uno arriba.</div>';
+    } else {
+      list.innerHTML = saleItems.map(b => {
+        const p = PRODUCTS[b.idx];
+        const sub = b.p * b.qty;
+        return `
+          <div class="budget-item">
+            <div class="bi-name">
+              ${escapeHtml(p.n)}
+              <span class="bi-unit">${escapeHtml(p.u)}</span>
+            </div>
+            <div class="bi-qty-control">
+              <button class="bi-qty-btn" onclick="changeSaleQty(${b.idx}, -1)">−</button>
+              <input type="number" class="bi-qty-input" value="${b.qty}" min="1"
+                     oninput="setSaleQty(${b.idx}, this.value)">
+              <button class="bi-qty-btn" onclick="changeSaleQty(${b.idx}, 1)">+</button>
+            </div>
+            <div class="bi-price">$${fmtFull(b.p)}</div>
+            <div class="bi-subtotal">$${fmtFull(sub)}</div>
+            <button class="bi-remove" onclick="removeSaleProduct(${b.idx})" title="Quitar">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+    document.getElementById('sale-bi-count').textContent = saleItems.length;
+  }
+
+  function updateSaleTotals() {
+    const subtotal = saleItems.reduce((s, b) => s + (b.p * b.qty), 0);
+    const shipping = parseFloat(document.getElementById('saleShipping').value) || 0;
+    const discount = parseFloat(document.getElementById('saleDiscount').value) || 0;
+    const totalRaw = subtotal - discount + shipping;
+    const total = Math.max(0, totalRaw);
+    const deposit = parseFloat(document.getElementById('saleDeposit').value) || 0;
+    const balance = Math.max(0, total - deposit);
+
+    document.getElementById('sale-subtotal').textContent = '$' + fmtFull(subtotal);
+    const discRow = document.getElementById('sale-discount-row');
+    if (discount > 0) {
+      discRow.style.display = 'flex';
+      document.getElementById('sale-discount-display').textContent = '-$' + fmtFull(discount);
+    } else {
+      discRow.style.display = 'none';
+    }
+    const shipRow = document.getElementById('sale-shipping-row');
+    if (shipping > 0) {
+      shipRow.style.display = 'flex';
+      document.getElementById('sale-shipping-display').textContent = '$' + fmtFull(shipping);
+    } else {
+      shipRow.style.display = 'none';
+    }
+    document.getElementById('sale-total').textContent = '$' + fmtFull(total);
+    document.getElementById('saleBalance').value = '$' + fmtFull(balance);
+
+    updateSalePreview();
+  }
+
+  function buildSaleText() {
+    const client = document.getElementById('saleClient').value.trim();
+    const dni = document.getElementById('saleDni').value.trim();
+    const phone = document.getElementById('salePhone').value.trim();
+    const invoice = document.getElementById('saleInvoice').value;
+    const address = document.getElementById('saleAddress').value.trim();
+    const city = document.getElementById('saleCity').value.trim();
+    const refs = document.getElementById('saleRefs').value.trim();
+    const delivery = document.getElementById('saleDelivery').value.trim();
+    const pickup = document.getElementById('salePickup').value.trim();
+    const shipping = parseFloat(document.getElementById('saleShipping').value) || 0;
+    const discount = parseFloat(document.getElementById('saleDiscount').value) || 0;
+    const deposit = parseFloat(document.getElementById('saleDeposit').value) || 0;
+    const paymentMethod = document.getElementById('salePayment').value;
+    const status = document.getElementById('saleStatus').value;
+    const obs = document.getElementById('saleObs').value.trim();
+    const subtotal = saleItems.reduce((s, b) => s + (b.p * b.qty), 0);
+    const total = Math.max(0, subtotal - discount + shipping);
+    const balance = Math.max(0, total - deposit);
+    const vendor = selectedSellerForSale.charAt(0).toUpperCase() + selectedSellerForSale.slice(1);
+
+    let txt = '🏗️ VENTA - GRAZIANO MATERIALES\n\n';
+
+    // Cliente (bloque)
+    txt += `Cliente: ${client}\n`;
+    if (phone) txt += `Teléfono: ${phone}\n`;
+    if (dni) txt += `DNI: ${dni}\n`;
+    if (invoice) txt += `Tipo de factura: ${invoice}\n`;
+    txt += '\n';
+
+    // Productos (bloque)
+    txt += '📦 Productos:\n';
+    if (saleItems.length > 0) {
+      saleItems.forEach(b => {
+        const p = PRODUCTS[b.idx];
+        const sub = b.p * b.qty;
+        const prefix = b.qty > 1 ? `${b.qty} ` : '';
+        txt += `${prefix}${p.n}: $${fmtFull(sub)}\n`;
+      });
+    }
+    txt += '\n';
+
+    // Modalidad (solo la elegida)
+    txt += `🚚 Modalidad: ${saleModality}\n\n`;
+    if (saleModality === 'ENVÍO') {
+      txt += '— ENVÍO —\n';
+      txt += `Dirección: ${address}\n`;
+      txt += `Localidad: ${city}\n`;
+      if (refs) txt += `Referencias del lugar: ${refs}\n`;
+      txt += `Día y horario de entrega:\n${delivery}\n\n`;
+    } else {
+      txt += '— RETIRO —\n';
+      txt += `Día y horario de retiro: ${pickup}\n\n`;
+    }
+
+    // Pago (bloque)
+    txt += '💰 Pago\n';
+    txt += `Total: $${fmtFull(total)}\n`;
+    if (deposit > 0) {
+      txt += `Seña: $${fmtFull(deposit)}\n`;
+      txt += `Saldo a pagar: $${fmtFull(balance)}\n`;
+    }
+    txt += `Medio de pago: ${paymentMethod}\n`;
+    txt += `Estado: ${status}\n\n`;
+
+    // Flete y descuentos (solo si aplica)
+    if (saleModality === 'ENVÍO') {
+      txt += `💲 Precio flete: $${fmtFull(shipping)}\n`;
+    }
+    txt += `💲 Total descuentos: $${fmtFull(discount)}\n\n`;
+
+    // Vendedor + Observaciones
+    txt += `Vendedor: ${vendor}\n`;
+    txt += `Observaciones: ${obs}`;
+    return txt;
+  }
+
+  function updateSalePreview() {
+    const el = document.getElementById('salePreview');
+    if (el) el.value = buildSaleText();
+  }
+
+  async function copySaleText() {
+    const text = document.getElementById('salePreview').value;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('📋 TEXTO COPIADO');
+    } catch (e) {
+      const ta = document.getElementById('salePreview');
+      ta.select();
+      ta.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      showToast('📋 TEXTO COPIADO');
+    }
+  }
+
+  async function submitSale() {
+    const client = document.getElementById('saleClient').value.trim();
     if (!client) { showToast('FALTA EL CLIENTE', 'warn'); document.getElementById('saleClient').focus(); return; }
-    if (!product) { showToast('FALTA EL PRODUCTO', 'warn'); document.getElementById('saleProduct').focus(); return; }
+    if (saleItems.length === 0) { showToast('AGREGÁ AL MENOS UN PRODUCTO', 'warn'); return; }
+
+    const shipping = parseFloat(document.getElementById('saleShipping').value) || 0;
+    const subtotal = saleItems.reduce((s, b) => s + (b.p * b.qty), 0);
+    const total = subtotal + shipping;
+    if (total <= 0) { showToast('TOTAL INVÁLIDO', 'warn'); return; }
+
+    const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
+    const channel = document.getElementById('saleChannel').value;
+    const paymentMethod = document.getElementById('salePayment').value;
+    const paymentStatus = document.getElementById('saleStatus').value;
+    const dni = document.getElementById('saleDni').value.trim();
+    const phone = document.getElementById('salePhone').value.trim();
+    const invoice = document.getElementById('saleInvoice').value;
+    const address = document.getElementById('saleAddress').value.trim();
+    const city = document.getElementById('saleCity').value.trim();
+    const refs = document.getElementById('saleRefs').value.trim();
+    const delivery = document.getElementById('saleDelivery').value.trim();
+    const deposit = parseFloat(document.getElementById('saleDeposit').value) || 0;
+    const obs = document.getElementById('saleObs').value.trim();
+
+    // Resumen del producto para mostrar en lista
+    const productSummary = saleItems
+      .map(b => `${b.qty} ${PRODUCTS[b.idx].n}`)
+      .join(' · ');
 
     const before = computeAll();
     const isAdmin = currentUser === 'admin';
     const newSale = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
       seller: selectedSellerForSale,
-      amount, date, client, channel, product, paymentMethod,
+      amount: total,
+      date, client, channel,
+      product: productSummary,
+      paymentMethod,
       status: isAdmin ? 'approved' : 'pending',
       submittedBy: currentUser,
-      submittedAt: Date.now()
+      submittedAt: Date.now(),
+      // Datos extendidos
+      dni, phone, invoice,
+      modality: saleModality,
+      address, city, refs, deliveryTime: delivery,
+      shipping, subtotal, deposit,
+      balance: Math.max(0, total - deposit),
+      paymentStatus, obs,
+      items: saleItems.map(b => ({ idx: b.idx, name: PRODUCTS[b.idx].n, unit: PRODUCTS[b.idx].u, qty: b.qty, price: b.p }))
     };
     if (isAdmin) {
       newSale.approvedBy = currentUser;
@@ -3118,17 +3604,31 @@
     await saveState();
     renderAll();
 
+    // Copiar texto al portapapeles
+    const text = buildSaleText();
+    try { await navigator.clipboard.writeText(text); } catch(e) {}
+
     if (isAdmin) {
-      showToast(`✓ ${selectedSellerForSale.toUpperCase()} +${fmtMoney(amount)}`);
+      showToast(`✓ REGISTRADA Y COPIADA · ${selectedSellerForSale.toUpperCase()} +${fmtMoney(total)}`);
       checkUnlocks(before, computeAll(), selectedSellerForSale);
     } else {
-      showToast(`✓ ENVIADO · ESPERA APROBACIÓN`, 'warn');
+      showToast(`✓ ENVIADA Y COPIADA · ESPERA APROBACIÓN`, 'warn');
     }
 
-    // Limpiar campos pero mantener canal y método (suele ser repetitivo)
-    document.getElementById('saleAmount').value = '';
+    // Limpiar form para próxima venta
     document.getElementById('saleClient').value = '';
-    document.getElementById('saleProduct').value = '';
+    document.getElementById('saleDni').value = '';
+    document.getElementById('salePhone').value = '';
+    document.getElementById('saleAddress').value = '';
+    document.getElementById('saleCity').value = '';
+    document.getElementById('saleRefs').value = '';
+    document.getElementById('saleDelivery').value = '';
+    document.getElementById('saleShipping').value = '';
+    document.getElementById('saleDeposit').value = '';
+    document.getElementById('saleObs').value = '';
+    saleItems = [];
+    renderSaleItems();
+    updateSaleTotals();
     document.getElementById('saleClient').focus();
   }
 
