@@ -924,6 +924,10 @@
   .sale-item .pending-badge { background: var(--amber); color: white; }
   .sale-item .cancelled-badge { background: var(--ink-4); color: white; }
   .sale-item .voided-badge { background: var(--red); color: white; }
+  .sale-item .other-month-badge {
+    background: var(--bg-card); color: var(--ink); border: 1.5px dashed var(--ink);
+    font-size: 8.5px; letter-spacing: 0.18em;
+  }
   .sale-item .actions { display: flex; gap: 4px; }
   .sale-btn {
     background: transparent; border: 1.5px solid var(--line); color: var(--ink);
@@ -1819,7 +1823,6 @@
       <button class="btn-secondary" onclick="exportData()">EXPORTAR JSON</button>
       <button class="btn-secondary" onclick="exportExcel()">EXPORTAR EXCEL</button>
       <button class="btn-secondary" onclick="importData()">IMPORTAR</button>
-      <button class="btn-secondary" onclick="resetMonth()" style="margin-left:auto;">RESET MES</button>
     </div>
   </div>
 </div>
@@ -1970,9 +1973,11 @@
     return days === 0 ? 7 : days; // si hoy es sábado, próximo es en 7
   }
   function weeklySalesFor(seller, weekNum) {
+    const mk = currentMonthKey();
     return state.sales.filter(s =>
       s.seller === seller &&
       s.status === 'approved' &&
+      monthKeyOf(s.date) === mk &&
       weekOfMonth(s.date) === weekNum
     );
   }
@@ -2316,21 +2321,52 @@
     }
   }
 
+  // ===== MONTH HELPERS =====
+  function monthKeyOf(dateStr) {
+    // "2026-05-15" → "2026-05"
+    return dateStr ? String(dateStr).slice(0, 7) : currentMonthKey();
+  }
+  function currentMonthKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`;
+  }
+  function previousMonthKey() {
+    const d = new Date();
+    d.setDate(1); // evita problemas de fin de mes
+    d.setMonth(d.getMonth() - 1);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2, '0')}`;
+  }
+  function monthLabel(monthKey) {
+    if (!monthKey) return '';
+    const [y, m] = monthKey.split('-');
+    return `${MONTHS_ES[parseInt(m, 10) - 1]} ${y}`;
+  }
+
   // ===== CÁLCULO =====
-  function approvedSales(seller) {
-    return state.sales.filter(s => s.seller === seller && s.status === 'approved');
+  function approvedSales(seller, monthKey = currentMonthKey()) {
+    return state.sales.filter(s =>
+      s.seller === seller &&
+      s.status === 'approved' &&
+      monthKeyOf(s.date) === monthKey
+    );
   }
   function pendingSales(seller) {
+    // pendientes son universales (no filtramos por mes)
     return state.sales.filter(s => s.seller === seller && s.status === 'pending');
   }
   function allPending() {
     return state.sales.filter(s => s.status === 'pending');
   }
-  function allApproved() {
-    return state.sales.filter(s => s.status === 'approved');
+  function allApproved(monthKey = currentMonthKey()) {
+    return state.sales.filter(s =>
+      s.status === 'approved' && monthKeyOf(s.date) === monthKey
+    );
   }
-  function allArchive() {
-    return state.sales.filter(s => s.status === 'cancelled' || s.status === 'voided');
+  function allArchive(monthKey = currentMonthKey()) {
+    return state.sales.filter(s =>
+      (s.status === 'cancelled' || s.status === 'voided') &&
+      monthKeyOf(s.date) === monthKey
+    );
   }
   function visibleSalesFor(role) {
     if (role === 'admin') return state.sales;
@@ -2487,8 +2523,10 @@
   }
 
   function renderHOF() {
-    const all = state.sales.filter(s => s.status === 'approved');
-    // Récord ticket
+    const mk = currentMonthKey();
+    const all = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
+
+    // Récord ticket (mes actual)
     if (all.length) {
       const top = all.reduce((m, v) => v.amount > m.amount ? v : m, all[0]);
       document.getElementById('hofTicket').textContent = fmtMoney(top.amount);
@@ -2499,7 +2537,7 @@
       document.getElementById('hofTicketDesc').textContent = 'Cargá la primera venta';
     }
 
-    // Más operaciones (el vendedor con más ventas aprobadas)
+    // Más operaciones (mes actual, solo Lauti vs Toto)
     const lautiCount = all.filter(s => s.seller === 'lauti').length;
     const totoCount  = all.filter(s => s.seller === 'toto').length;
     if (lautiCount === 0 && totoCount === 0) {
@@ -2516,9 +2554,30 @@
       document.getElementById('hofMostOpsDesc').textContent = `${totoCount} operaciones · ${lautiCount} de LAUTI`;
     }
 
-    if (state.hofPrev) {
+    // Vendedor del mes anterior (calculado automáticamente)
+    const prevMk = previousMonthKey();
+    const prevSales = state.sales.filter(s =>
+      s.status === 'approved' && monthKeyOf(s.date) === prevMk &&
+      CONFIG.competitiveSellers.includes(s.seller)
+    );
+    if (prevSales.length > 0) {
+      const totals = {};
+      prevSales.forEach(s => { totals[s.seller] = (totals[s.seller] || 0) + s.amount; });
+      let winner = null, maxAmt = 0;
+      Object.entries(totals).forEach(([k, v]) => {
+        if (v > maxAmt) { maxAmt = v; winner = k; }
+      });
+      if (winner) {
+        document.getElementById('hofPrev').textContent = winner.toUpperCase();
+        document.getElementById('hofPrevDesc').textContent = `${fmtMoney(maxAmt)} · ${monthLabel(prevMk)}`;
+      }
+    } else if (state.hofPrev) {
+      // Fallback al hofPrev manual si no hay datos del mes anterior
       document.getElementById('hofPrev').textContent = state.hofPrev.name;
       document.getElementById('hofPrevDesc').textContent = `${fmtMoney(state.hofPrev.amount)} · ${state.hofPrev.label}`;
+    } else {
+      document.getElementById('hofPrev').textContent = '—';
+      document.getElementById('hofPrevDesc').textContent = 'Sin datos del mes anterior';
     }
   }
 
@@ -2708,6 +2767,14 @@
     else if (isCancelled) stateBadge = '<span class="badge cancelled-badge">CANCELADA</span>';
     else if (isVoided) stateBadge = '<span class="badge voided-badge">ANULADA</span>';
 
+    // Indicador si la venta es de un mes distinto al actual
+    let monthBadge = '';
+    const saleMonth = monthKeyOf(s.date);
+    const curMonth = currentMonthKey();
+    if (saleMonth !== curMonth) {
+      monthBadge = `<span class="badge other-month-badge">${monthLabel(saleMonth).toUpperCase()}</span>`;
+    }
+
     let actionBtns = '';
     if (opts.canApprove && isPending) {
       actionBtns += `<button class="sale-btn approve" onclick="approveSale('${s.id}')" title="Aprobar">✓</button>`;
@@ -2739,6 +2806,7 @@
             <span class="client">${escapeHtml(client)}</span>
             <span class="amount">${fmtMoney(s.amount)}</span>
             ${stateBadge}
+            ${monthBadge}
           </div>
           <div class="actions">${actionBtns}</div>
         </div>
@@ -2788,24 +2856,23 @@
   }
 
   function renderSalesList() {
-    const approved = state.sales.filter(s => s.status === 'approved');
+    const approved = allApproved();
     const container = document.getElementById('salesListContainer');
     document.getElementById('approvedCount').textContent = approved.length;
 
     if (approved.length === 0) {
-      container.innerHTML = '<div class="empty-msg">Sin operaciones aprobadas todavía.</div>';
+      container.innerHTML = '<div class="empty-msg">Sin operaciones aprobadas este mes.</div>';
       return;
     }
     const opts = {
-      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'toto',
+      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela',
       canDelete: false,
     };
-    // Para vendedores: solo pueden anular sus propias
     container.innerHTML = approved
       .sort((a,b) => (b.date + (b.id || '')).localeCompare(a.date + (a.id || '')))
       .map(s => {
         const itemOpts = { ...opts };
-        if ((currentUser === 'lauti' || currentUser === 'toto') && s.seller !== currentUser) {
+        if (currentUser !== 'admin' && s.seller !== currentUser) {
           itemOpts.canVoid = false;
         }
         return renderSaleItem(s, itemOpts);
