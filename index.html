@@ -994,6 +994,30 @@
 
   /* PRESUPUESTADOR */
   .budget-modal { max-width: 720px; }
+  .budget-sync {
+    margin-bottom: 14px; padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.1em; border-left: 3px solid var(--ink-4);
+    background: var(--bg-soft); color: var(--ink-3);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .budget-sync.syncing {
+    border-left-color: var(--amber); color: var(--amber);
+    animation: pulse-fade 1s infinite;
+  }
+  .budget-sync.synced {
+    border-left-color: var(--green); color: var(--green);
+  }
+  .budget-sync.synced strong { color: var(--ink); font-weight: 700; }
+  .budget-sync.cached {
+    border-left-color: var(--ink-4); color: var(--ink-3);
+  }
+  .budget-sync.error {
+    border-left-color: var(--red); color: var(--red);
+  }
+  @keyframes pulse-fade {
+    0%, 100% { opacity: 1; } 50% { opacity: 0.55; }
+  }
   .budget-search-section {
     margin-bottom: 18px;
     position: relative;
@@ -1672,6 +1696,8 @@
     <h2>NUEVO PRESUPUESTO</h2>
     <div class="modal-sub" id="budgetSub">— ARMALO Y COPIALO PARA WHATSAPP —</div>
 
+    <div class="budget-sync" id="budgetSyncIndicator">⟳ actualizando precios...</div>
+
     <div class="form-row">
       <label>Cliente (opcional)</label>
       <input type="text" id="budgetClient" placeholder="Nombre del cliente" autocomplete="off">
@@ -2108,16 +2134,92 @@
   }
 
 
-  // ===== PRODUCTOS (lista de precios) =====
-  const PRODUCTS = [{"n":"Cemento Loma Negra 25kg","c":"CEMENTOS","u":"Bolsa","p":8000,"m":7840,"t":"STOCK"},{"n":"Plásticor Loma Negra 25kg","c":"CEMENTOS","u":"Bolsa","p":7700,"m":7546,"t":"STOCK"},{"n":"Cemento Holcim 25kg","c":"CEMENTOS","u":"Bolsa","p":7500,"m":7350,"t":"STOCK"},{"n":"Plásticor Holcim 25kg","c":"CEMENTOS","u":"Bolsa","p":7300,"m":7154,"t":"STOCK"},{"n":"Cal hidratada 25kg","c":"CEMENTOS","u":"Bolsa","p":7919,"m":7761,"t":"STOCK"},{"n":"Cal viva 25kg","c":"CEMENTOS","u":"Bolsa","p":11060,"m":10838,"t":"STOCK"},{"n":"Pegamento Cerámica Mapei Mapeset 25kg","c":"CEMENTOS","u":"Bolsa","p":10074,"m":9872,"t":"STOCK"},{"n":"Pegamento Porcelanato Mapei Kerabond Plus 25kg","c":"CEMENTOS","u":"Bolsa","p":19019,"m":18639,"t":"STOCK"},{"n":"Revoque Fino Exterior","c":"CEMENTOS","u":"Bolsa","p":11432,"m":11204,"t":"STOCK"},{"n":"Revoque Fino Interior","c":"CEMENTOS","u":"Bolsa","p":11432,"m":11204,"t":"STOCK"},{"n":"Pastina Gris Medio","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Blanca","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Beige","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Marron","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Arena","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Cemento","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Arena","c":"ÁRIDOS","u":"Bolson","p":33499,"m":32829,"t":"STOCK"},{"n":"Piedra","c":"ÁRIDOS","u":"Bolson","p":99142,"m":97159,"t":"STOCK"},{"n":"Escombro","c":"ÁRIDOS","u":"Bolson","p":48050,"m":47089,"t":"STOCK"},{"n":"Metro Arena Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":30000,"m":29400,"t":"STOCK"},{"n":"Metro Piedra Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":95004,"m":93103,"t":"STOCK"},{"n":"Metro Escombro Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":48000,"m":47040,"t":"STOCK"},{"n":"Camionada Arena Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":115625,"m":113312,"t":"PASAMANOS"},{"n":"Camionada Arena Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":131250,"m":128625,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":125000,"m":122500,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":122500,"m":120050,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":127500,"m":124950,"t":"PASAMANOS"},{"n":"Camionada Piedra Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":443750,"m":434875,"t":"PASAMANOS"},{"n":"Camionada Piedra Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":462500,"m":453250,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":450000,"m":441000,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":455000,"m":445900,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":455000,"m":445900,"t":"PASAMANOS"},{"n":"Camionada Escombro Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":206250,"m":202125,"t":"PASAMANOS"},{"n":"Camionada Escombro Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":225000,"m":220500,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":212500,"m":208250,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":218750,"m":214375,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":218750,"m":214375,"t":"PASAMANOS"},{"n":"Ladrillo hueco 8x18x33 (198)","c":"LADRILLOS","u":"Pallet","p":145187,"m":142283,"t":"PASAMANOS"},{"n":"Ladrillo hueco 12x18x33 (144)","c":"LADRILLOS","u":"Pallet","p":122625,"m":120172,"t":"STOCK"},{"n":"Ladrillo hueco 18x18x33 (90)","c":"LADRILLOS","u":"Pallet","p":107625,"m":105472,"t":"PASAMANOS"},{"n":"Ladrillo hueco 8 Unidad","c":"LADRILLOS","u":"Unidad","p":775,"m":759,"t":"STOCK"},{"n":"Ladrillo hueco 12 Unidad","c":"LADRILLOS","u":"Unidad","p":899,"m":881,"t":"STOCK"},{"n":"Ladrillo hueco 18 Unidad","c":"LADRILLOS","u":"Unidad","p":1264,"m":1238,"t":"STOCK"},{"n":"Hierro 6mm x 12m","c":"HIERROS","u":"Barra","p":6270,"m":6144,"t":"PASAMANOS"},{"n":"Hierro 8mm x 12m","c":"HIERROS","u":"Barra","p":11522,"m":11291,"t":"PASAMANOS"},{"n":"Hierro 10mm x 12m","c":"HIERROS","u":"Barra","p":16686,"m":16352,"t":"PASAMANOS"},{"n":"Hierro 12mm x 12m","c":"HIERROS","u":"Barra","p":25669,"m":25155,"t":"PASAMANOS"},{"n":"Hierro 16mm x 12m","c":"HIERROS","u":"Barra","p":47375,"m":46428,"t":"PASAMANOS"},{"n":"Malla SIMA 3x2 4,2mm","c":"HIERROS","u":"Panel","p":23378,"m":22910,"t":"STOCK"},{"n":"Alambre de Atar N*16","c":"HIERROS","u":"Kilo","p":5719,"m":5605,"t":"STOCK"},{"n":"Alambre de Arrienda N*9","c":"HIERROS","u":"Kilo","p":5721,"m":5606,"t":"STOCK"},{"n":"Chapa galvanizada Cincalum","c":"CHAPAS","u":"Metro","p":15000,"m":14700,"t":"ENCARGUE"},{"n":"Perfil C (80)","c":"CHAPAS","u":"Metro","p":97020,"m":95079,"t":"ENCARGUE"},{"n":"Perfil C (100)","c":"CHAPAS","u":"Unidad","p":102500,"m":100450,"t":"ENCARGUE"},{"n":"Perfil C (120)","c":"CHAPAS","u":"Unidad","p":119700,"m":117306,"t":"ENCARGUE"},{"n":"Membrana Isolan 10mm/1capa aluminio","c":"CHAPAS","u":"Unidad","p":52920,"m":51861,"t":"ENCARGUE"},{"n":"Tornillos Autoperforantes","c":"CHAPAS","u":"Unidad","p":200,"m":196,"t":"ENCARGUE"},{"n":"Clavo Punta Paris 2,5\"","c":"CHAPAS","u":"Kilo","p":2974,"m":2914,"t":"STOCK"},{"n":"Clavo Punta Paris 2\"","c":"CHAPAS","u":"Kilo","p":3042,"m":2981,"t":"STOCK"},{"n":"Caño PVC 40mm x 4m","c":"CAÑOS","u":"Caño","p":8500,"m":8330,"t":"STOCK"},{"n":"Caño PVC 63mm x 4m","c":"CAÑOS","u":"Caño","p":15600,"m":15288,"t":"STOCK"},{"n":"Caño PVC 110mm x 4m","c":"CAÑOS","u":"Caño","p":22100,"m":21658,"t":"STOCK"},{"n":"Hidrófugo Ceresita 1kg","c":"VARIOS","u":"Unidad","p":4737,"m":4642,"t":"STOCK"},{"n":"Hidrófugo Ceresita 4kg","c":"VARIOS","u":"Unidad","p":16938,"m":16600,"t":"STOCK"},{"n":"Hidrófugo Cerecita 20kg","c":"VARIOS","u":"Unidad","p":59793,"m":58597,"t":"STOCK"},{"n":"Hidrófugo Mapei 5 litros","c":"VARIOS","u":"Unidad","p":8200,"m":8200,"t":"STOCK"},{"n":"Hidrófugo Mapei 20 kg","c":"VARIOS","u":"Unidad","p":61250,"m":61250,"t":"STOCK"},{"n":"Ligante Tacurú 1 Litro","c":"VARIOS","u":"Unidad","p":19662,"m":19269,"t":"STOCK"},{"n":"Ligante Tacurú 4 Litros","c":"VARIOS","u":"Unidad","p":70685,"m":69271,"t":"STOCK"},{"n":"Algarrobo Ventiluz 50x40","c":"ABERT. ALGARROBO","u":"Unidad","p":55100,"m":53998,"t":"STOCK"},{"n":"Algarrobo Ventiluz 60x40","c":"ABERT. ALGARROBO","u":"Unidad","p":55100,"m":53998,"t":"STOCK"},{"n":"Algarrobo Puerta 2,84x0,85 Derecha","c":"ABERT. ALGARROBO","u":"Unidad","p":171100,"m":167678,"t":"STOCK"},{"n":"Algarrobo Puerta 2,84x0,85 Izquierda","c":"ABERT. ALGARROBO","u":"Unidad","p":171100,"m":167678,"t":"STOCK"},{"n":"Algarrobo Ventana C/C 1x1","c":"ABERT. ALGARROBO","u":"Unidad","p":163850,"m":160573,"t":"STOCK"},{"n":"Algarrobo Ventana C/C 1x1,20","c":"ABERT. ALGARROBO","u":"Unidad","p":196620,"m":192687,"t":"STOCK"},{"n":"Algarrobo Ventana Campera 1x1","c":"ABERT. ALGARROBO","u":"Unidad","p":65250,"m":63945,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Derecha 70","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Izquierda 70","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Derecha 80","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Izquierda 80","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Acana. 25mm V/Lateral 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":179258,"m":175673,"t":"STOCK"},{"n":"Puerta Acana. 25mm V/Lateral 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":179258,"m":175673,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/4 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":186535,"m":182804,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/4 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":186535,"m":182804,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/2 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":187950,"m":184191,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/2 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":187950,"m":184191,"t":"STOCK"},{"n":"Puerta Acana. 25mm Ciega 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":192103,"m":188261,"t":"STOCK"},{"n":"Puerta Acana. 25mm Ciega 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":192103,"m":188261,"t":"STOCK"},{"n":"Puerta 36mm Tobular V/Lateral 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":263598,"m":258326,"t":"STOCK"},{"n":"Puerta 36mm Tobular V/Lateral 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":263598,"m":258326,"t":"STOCK"},{"n":"Puerta 36mm Tobular 1/4 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":256864,"m":251727,"t":"STOCK"},{"n":"Puerta 36mm Tobular 1/4 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":256864,"m":251727,"t":"STOCK"},{"n":"Ventana C/Celosia 1x1 V/Entero","c":"ABERT. ALUMINIO","u":"Unidad","p":195819,"m":191903,"t":"STOCK"},{"n":"Ventana C/Celosia 150x1 V/Entero","c":"ABERT. ALUMINIO","u":"Unidad","p":255326,"m":250219,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 100x100","c":"ABERT. ALUMINIO","u":"Unidad","p":77132,"m":75590,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x1","c":"ABERT. ALUMINIO","u":"Unidad","p":89456,"m":87667,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x1","c":"ABERT. ALUMINIO","u":"Unidad","p":101736,"m":99701,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 1x60","c":"ABERT. ALUMINIO","u":"Unidad","p":56446,"m":55317,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x60","c":"ABERT. ALUMINIO","u":"Unidad","p":65079,"m":63777,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x60","c":"ABERT. ALUMINIO","u":"Unidad","p":75221,"m":73717,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 60x40","c":"ABERT. ALUMINIO","u":"Unidad","p":35916,"m":35198,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 80x40","c":"ABERT. ALUMINIO","u":"Unidad","p":42118,"m":41276,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x40","c":"ABERT. ALUMINIO","u":"Unidad","p":54148,"m":53065,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x40","c":"ABERT. ALUMINIO","u":"Unidad","p":63354,"m":62087,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x200","c":"ABERT. ALUMINIO","u":"Unidad","p":182744,"m":179090,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Repartido 100x100","c":"ABERT. ALUMINIO","u":"Unidad","p":113145,"m":110882,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Repartido 150x100","c":"ABERT. ALUMINIO","u":"Unidad","p":147681,"m":144727,"t":"STOCK"},{"n":"1 mts","c":"VIGUETAS","u":"Unidad","p":4025,"m":3945,"t":"PASAMANOS"},{"n":"1,20 mts","c":"VIGUETAS","u":"Unidad","p":4836,"m":4739,"t":"PASAMANOS"},{"n":"1,40 mts","c":"VIGUETAS","u":"Unidad","p":5636,"m":5523,"t":"PASAMANOS"},{"n":"1,60 mts","c":"VIGUETAS","u":"Unidad","p":6448,"m":6319,"t":"PASAMANOS"},{"n":"1,80 mts","c":"VIGUETAS","u":"Unidad","p":7261,"m":7116,"t":"PASAMANOS"},{"n":"2 mts","c":"VIGUETAS","u":"Unidad","p":8061,"m":7900,"t":"PASAMANOS"},{"n":"2,20 mts","c":"VIGUETAS","u":"Unidad","p":8871,"m":8693,"t":"PASAMANOS"},{"n":"2,40 mts","c":"VIGUETAS","u":"Unidad","p":9672,"m":9479,"t":"PASAMANOS"},{"n":"2,60 mts","c":"VIGUETAS","u":"Unidad","p":10475,"m":10265,"t":"PASAMANOS"},{"n":"2,80 mts","c":"VIGUETAS","u":"Unidad","p":11298,"m":11072,"t":"PASAMANOS"},{"n":"3 mts","c":"VIGUETAS","u":"Unidad","p":12092,"m":11850,"t":"PASAMANOS"},{"n":"3,20 mts","c":"VIGUETAS","u":"Unidad","p":12940,"m":12681,"t":"PASAMANOS"},{"n":"3,40 mts","c":"VIGUETAS","u":"Unidad","p":13737,"m":13462,"t":"PASAMANOS"},{"n":"3,60 mts","c":"VIGUETAS","u":"Unidad","p":14895,"m":14597,"t":"PASAMANOS"},{"n":"3,80 mts","c":"VIGUETAS","u":"Unidad","p":15728,"m":15414,"t":"PASAMANOS"},{"n":"4 mts","c":"VIGUETAS","u":"Unidad","p":17326,"m":16979,"t":"PASAMANOS"},{"n":"4,20 mts","c":"VIGUETAS","u":"Unidad","p":18223,"m":17859,"t":"PASAMANOS"},{"n":"4,40 mts","c":"VIGUETAS","u":"Unidad","p":21221,"m":20796,"t":"PASAMANOS"},{"n":"4,60 mts","c":"VIGUETAS","u":"Unidad","p":22170,"m":21726,"t":"PASAMANOS"},{"n":"4,80 mts","c":"VIGUETAS","u":"Unidad","p":26167,"m":25644,"t":"PASAMANOS"},{"n":"5 mts","c":"VIGUETAS","u":"Unidad","p":27245,"m":26700,"t":"PASAMANOS"},{"n":"5,20 mts","c":"VIGUETAS","u":"Unidad","p":28316,"m":27749,"t":"PASAMANOS"},{"n":"5,40 mts","c":"VIGUETAS","u":"Unidad","p":29402,"m":28814,"t":"PASAMANOS"},{"n":"5,60 mts","c":"VIGUETAS","u":"Unidad","p":37080,"m":36338,"t":"PASAMANOS"},{"n":"5,80 mts","c":"VIGUETAS","u":"Unidad","p":38416,"m":37647,"t":"PASAMANOS"},{"n":"6 mts","c":"VIGUETAS","u":"Unidad","p":39811,"m":39015,"t":"PASAMANOS"},{"n":"6,20 mts","c":"VIGUETAS","u":"Unidad","p":41120,"m":40297,"t":"PASAMANOS"},{"n":"6,40 mts","c":"VIGUETAS","u":"Unidad","p":51758,"m":50723,"t":"PASAMANOS"},{"n":"6,60 mts","c":"VIGUETAS","u":"Unidad","p":53340,"m":52273,"t":"PASAMANOS"},{"n":"6,80 mts","c":"VIGUETAS","u":"Unidad","p":54993,"m":53893,"t":"PASAMANOS"},{"n":"7 mts","c":"VIGUETAS","u":"Unidad","p":56503,"m":55373,"t":"PASAMANOS"},{"n":"7,20 mts","c":"VIGUETAS","u":"Unidad","p":58085,"m":56923,"t":"PASAMANOS"},{"n":"12x42x1 mts","c":"TELGOPOR","u":"Unidad","p":5527,"m":5416,"t":"PASAMANOS"},{"n":"16x42x1 mts","c":"TELGOPOR","u":"Unidad","p":7696,"m":7542,"t":"PASAMANOS"}];
+  // ===== PRODUCTOS (fallback embebido · se actualiza desde Sheets via Apps Script) =====
+  // Pegar acá la URL del Apps Script desplegado (deploy "Aplicación web")
+  // Si queda vacío, usa los productos embebidos
+  const PRICES_ENDPOINT_URL = '';
+
+  let PRODUCTS = [{"n":"Cemento Loma Negra 25kg","c":"CEMENTOS","u":"Bolsa","p":8000,"m":7840,"t":"STOCK"},{"n":"Plásticor Loma Negra 25kg","c":"CEMENTOS","u":"Bolsa","p":7700,"m":7546,"t":"STOCK"},{"n":"Cemento Holcim 25kg","c":"CEMENTOS","u":"Bolsa","p":7500,"m":7350,"t":"STOCK"},{"n":"Plásticor Holcim 25kg","c":"CEMENTOS","u":"Bolsa","p":7300,"m":7154,"t":"STOCK"},{"n":"Cal hidratada 25kg","c":"CEMENTOS","u":"Bolsa","p":7919,"m":7761,"t":"STOCK"},{"n":"Cal viva 25kg","c":"CEMENTOS","u":"Bolsa","p":11060,"m":10838,"t":"STOCK"},{"n":"Pegamento Cerámica Mapei Mapeset 25kg","c":"CEMENTOS","u":"Bolsa","p":10074,"m":9872,"t":"STOCK"},{"n":"Pegamento Porcelanato Mapei Kerabond Plus 25kg","c":"CEMENTOS","u":"Bolsa","p":19019,"m":18639,"t":"STOCK"},{"n":"Revoque Fino Exterior","c":"CEMENTOS","u":"Bolsa","p":11432,"m":11204,"t":"STOCK"},{"n":"Revoque Fino Interior","c":"CEMENTOS","u":"Bolsa","p":11432,"m":11204,"t":"STOCK"},{"n":"Pastina Gris Medio","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Blanca","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Beige","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Marron","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Arena","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Pastina Cemento","c":"CEMENTOS","u":"Bolsa","p":3120,"m":3057,"t":"STOCK"},{"n":"Arena","c":"ÁRIDOS","u":"Bolson","p":33499,"m":32829,"t":"STOCK"},{"n":"Piedra","c":"ÁRIDOS","u":"Bolson","p":99142,"m":97159,"t":"STOCK"},{"n":"Escombro","c":"ÁRIDOS","u":"Bolson","p":48050,"m":47089,"t":"STOCK"},{"n":"Metro Arena Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":30000,"m":29400,"t":"STOCK"},{"n":"Metro Piedra Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":95004,"m":93103,"t":"STOCK"},{"n":"Metro Escombro Santo Tome/Sauce Viejo","c":"ÁRIDOS","u":"Metro","p":48000,"m":47040,"t":"STOCK"},{"n":"Camionada Arena Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":115625,"m":113312,"t":"PASAMANOS"},{"n":"Camionada Arena Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":131250,"m":128625,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":125000,"m":122500,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":122500,"m":120050,"t":"PASAMANOS"},{"n":"Camionada Arena Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":127500,"m":124950,"t":"PASAMANOS"},{"n":"Camionada Piedra Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":443750,"m":434875,"t":"PASAMANOS"},{"n":"Camionada Piedra Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":462500,"m":453250,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":450000,"m":441000,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":455000,"m":445900,"t":"PASAMANOS"},{"n":"Camionada Piedra Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":455000,"m":445900,"t":"PASAMANOS"},{"n":"Camionada Escombro Santo Tomé/Sauce Viejo","c":"ÁRIDOS","u":"5 m","p":206250,"m":202125,"t":"PASAMANOS"},{"n":"Camionada Escombro Desvío/Caima","c":"ÁRIDOS","u":"5 m","p":225000,"m":220500,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Sur)","c":"ÁRIDOS","u":"5 m","p":212500,"m":208250,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Norte)","c":"ÁRIDOS","u":"5 m","p":218750,"m":214375,"t":"PASAMANOS"},{"n":"Camionada Escombro Santa Fe (Country)","c":"ÁRIDOS","u":"5 m","p":218750,"m":214375,"t":"PASAMANOS"},{"n":"Ladrillo hueco 8x18x33 (198)","c":"LADRILLOS","u":"Pallet","p":145187,"m":142283,"t":"PASAMANOS"},{"n":"Ladrillo hueco 12x18x33 (144)","c":"LADRILLOS","u":"Pallet","p":122625,"m":120172,"t":"STOCK"},{"n":"Ladrillo hueco 18x18x33 (90)","c":"LADRILLOS","u":"Pallet","p":107625,"m":105472,"t":"PASAMANOS"},{"n":"Ladrillo hueco 8 Unidad","c":"LADRILLOS","u":"Unidad","p":775,"m":759,"t":"STOCK"},{"n":"Ladrillo hueco 12 Unidad","c":"LADRILLOS","u":"Unidad","p":899,"m":881,"t":"STOCK"},{"n":"Ladrillo hueco 18 Unidad","c":"LADRILLOS","u":"Unidad","p":1264,"m":1238,"t":"STOCK"},{"n":"Hierro 6mm x 12m","c":"HIERROS","u":"Barra","p":6270,"m":6144,"t":"PASAMANOS"},{"n":"Hierro 8mm x 12m","c":"HIERROS","u":"Barra","p":11522,"m":11291,"t":"PASAMANOS"},{"n":"Hierro 10mm x 12m","c":"HIERROS","u":"Barra","p":16686,"m":16352,"t":"PASAMANOS"},{"n":"Hierro 12mm x 12m","c":"HIERROS","u":"Barra","p":25669,"m":25155,"t":"PASAMANOS"},{"n":"Hierro 16mm x 12m","c":"HIERROS","u":"Barra","p":47375,"m":46428,"t":"PASAMANOS"},{"n":"Malla SIMA 3x2 4,2mm","c":"HIERROS","u":"Panel","p":23378,"m":22910,"t":"STOCK"},{"n":"Alambre de Atar N*16","c":"HIERROS","u":"Kilo","p":5719,"m":5605,"t":"STOCK"},{"n":"Alambre de Arrienda N*9","c":"HIERROS","u":"Kilo","p":5721,"m":5606,"t":"STOCK"},{"n":"Chapa galvanizada Cincalum","c":"CHAPAS","u":"Metro","p":15000,"m":14700,"t":"ENCARGUE"},{"n":"Perfil C (80)","c":"CHAPAS","u":"Metro","p":97020,"m":95079,"t":"ENCARGUE"},{"n":"Perfil C (100)","c":"CHAPAS","u":"Unidad","p":102500,"m":100450,"t":"ENCARGUE"},{"n":"Perfil C (120)","c":"CHAPAS","u":"Unidad","p":119700,"m":117306,"t":"ENCARGUE"},{"n":"Membrana Isolan 10mm/1capa aluminio","c":"CHAPAS","u":"Unidad","p":52920,"m":51861,"t":"ENCARGUE"},{"n":"Tornillos Autoperforantes","c":"CHAPAS","u":"Unidad","p":200,"m":196,"t":"ENCARGUE"},{"n":"Clavo Punta Paris 2,5\"","c":"CHAPAS","u":"Kilo","p":2974,"m":2914,"t":"STOCK"},{"n":"Clavo Punta Paris 2\"","c":"CHAPAS","u":"Kilo","p":3042,"m":2981,"t":"STOCK"},{"n":"Caño PVC 40mm x 4m","c":"CAÑOS","u":"Caño","p":8500,"m":8330,"t":"STOCK"},{"n":"Caño PVC 63mm x 4m","c":"CAÑOS","u":"Caño","p":15600,"m":15288,"t":"STOCK"},{"n":"Caño PVC 110mm x 4m","c":"CAÑOS","u":"Caño","p":22100,"m":21658,"t":"STOCK"},{"n":"Hidrófugo Ceresita 1kg","c":"VARIOS","u":"Unidad","p":4737,"m":4642,"t":"STOCK"},{"n":"Hidrófugo Ceresita 4kg","c":"VARIOS","u":"Unidad","p":16938,"m":16600,"t":"STOCK"},{"n":"Hidrófugo Cerecita 20kg","c":"VARIOS","u":"Unidad","p":59793,"m":58597,"t":"STOCK"},{"n":"Hidrófugo Mapei 5 litros","c":"VARIOS","u":"Unidad","p":8200,"m":8200,"t":"STOCK"},{"n":"Hidrófugo Mapei 20 kg","c":"VARIOS","u":"Unidad","p":61250,"m":61250,"t":"STOCK"},{"n":"Ligante Tacurú 1 Litro","c":"VARIOS","u":"Unidad","p":19662,"m":19269,"t":"STOCK"},{"n":"Ligante Tacurú 4 Litros","c":"VARIOS","u":"Unidad","p":70685,"m":69271,"t":"STOCK"},{"n":"Algarrobo Ventiluz 50x40","c":"ABERT. ALGARROBO","u":"Unidad","p":55100,"m":53998,"t":"STOCK"},{"n":"Algarrobo Ventiluz 60x40","c":"ABERT. ALGARROBO","u":"Unidad","p":55100,"m":53998,"t":"STOCK"},{"n":"Algarrobo Puerta 2,84x0,85 Derecha","c":"ABERT. ALGARROBO","u":"Unidad","p":171100,"m":167678,"t":"STOCK"},{"n":"Algarrobo Puerta 2,84x0,85 Izquierda","c":"ABERT. ALGARROBO","u":"Unidad","p":171100,"m":167678,"t":"STOCK"},{"n":"Algarrobo Ventana C/C 1x1","c":"ABERT. ALGARROBO","u":"Unidad","p":163850,"m":160573,"t":"STOCK"},{"n":"Algarrobo Ventana C/C 1x1,20","c":"ABERT. ALGARROBO","u":"Unidad","p":196620,"m":192687,"t":"STOCK"},{"n":"Algarrobo Ventana Campera 1x1","c":"ABERT. ALGARROBO","u":"Unidad","p":65250,"m":63945,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Derecha 70","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Izquierda 70","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Derecha 80","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Placa M/Aluminio Izquierda 80","c":"ABERT. ALUMINIO","u":"Unidad","p":67021,"m":65680,"t":"STOCK"},{"n":"Puerta Acana. 25mm V/Lateral 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":179258,"m":175673,"t":"STOCK"},{"n":"Puerta Acana. 25mm V/Lateral 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":179258,"m":175673,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/4 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":186535,"m":182804,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/4 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":186535,"m":182804,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/2 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":187950,"m":184191,"t":"STOCK"},{"n":"Puerta Acana. 25mm 1/2 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":187950,"m":184191,"t":"STOCK"},{"n":"Puerta Acana. 25mm Ciega 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":192103,"m":188261,"t":"STOCK"},{"n":"Puerta Acana. 25mm Ciega 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":192103,"m":188261,"t":"STOCK"},{"n":"Puerta 36mm Tobular V/Lateral 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":263598,"m":258326,"t":"STOCK"},{"n":"Puerta 36mm Tobular V/Lateral 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":263598,"m":258326,"t":"STOCK"},{"n":"Puerta 36mm Tobular 1/4 Vidrio 80x200 Derecha","c":"ABERT. ALUMINIO","u":"Unidad","p":256864,"m":251727,"t":"STOCK"},{"n":"Puerta 36mm Tobular 1/4 Vidrio 80x200 Izquierda","c":"ABERT. ALUMINIO","u":"Unidad","p":256864,"m":251727,"t":"STOCK"},{"n":"Ventana C/Celosia 1x1 V/Entero","c":"ABERT. ALUMINIO","u":"Unidad","p":195819,"m":191903,"t":"STOCK"},{"n":"Ventana C/Celosia 150x1 V/Entero","c":"ABERT. ALUMINIO","u":"Unidad","p":255326,"m":250219,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 100x100","c":"ABERT. ALUMINIO","u":"Unidad","p":77132,"m":75590,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x1","c":"ABERT. ALUMINIO","u":"Unidad","p":89456,"m":87667,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x1","c":"ABERT. ALUMINIO","u":"Unidad","p":101736,"m":99701,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 1x60","c":"ABERT. ALUMINIO","u":"Unidad","p":56446,"m":55317,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x60","c":"ABERT. ALUMINIO","u":"Unidad","p":65079,"m":63777,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x60","c":"ABERT. ALUMINIO","u":"Unidad","p":75221,"m":73717,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 60x40","c":"ABERT. ALUMINIO","u":"Unidad","p":35916,"m":35198,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 80x40","c":"ABERT. ALUMINIO","u":"Unidad","p":42118,"m":41276,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 120x40","c":"ABERT. ALUMINIO","u":"Unidad","p":54148,"m":53065,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x40","c":"ABERT. ALUMINIO","u":"Unidad","p":63354,"m":62087,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Entero 150x200","c":"ABERT. ALUMINIO","u":"Unidad","p":182744,"m":179090,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Repartido 100x100","c":"ABERT. ALUMINIO","u":"Unidad","p":113145,"m":110882,"t":"STOCK"},{"n":"Ventana Corrediza Simple V/Repartido 150x100","c":"ABERT. ALUMINIO","u":"Unidad","p":147681,"m":144727,"t":"STOCK"},{"n":"1 mts","c":"VIGUETAS","u":"Unidad","p":4025,"m":3945,"t":"PASAMANOS"},{"n":"1,20 mts","c":"VIGUETAS","u":"Unidad","p":4836,"m":4739,"t":"PASAMANOS"},{"n":"1,40 mts","c":"VIGUETAS","u":"Unidad","p":5636,"m":5523,"t":"PASAMANOS"},{"n":"1,60 mts","c":"VIGUETAS","u":"Unidad","p":6448,"m":6319,"t":"PASAMANOS"},{"n":"1,80 mts","c":"VIGUETAS","u":"Unidad","p":7261,"m":7116,"t":"PASAMANOS"},{"n":"2 mts","c":"VIGUETAS","u":"Unidad","p":8061,"m":7900,"t":"PASAMANOS"},{"n":"2,20 mts","c":"VIGUETAS","u":"Unidad","p":8871,"m":8693,"t":"PASAMANOS"},{"n":"2,40 mts","c":"VIGUETAS","u":"Unidad","p":9672,"m":9479,"t":"PASAMANOS"},{"n":"2,60 mts","c":"VIGUETAS","u":"Unidad","p":10475,"m":10265,"t":"PASAMANOS"},{"n":"2,80 mts","c":"VIGUETAS","u":"Unidad","p":11298,"m":11072,"t":"PASAMANOS"},{"n":"3 mts","c":"VIGUETAS","u":"Unidad","p":12092,"m":11850,"t":"PASAMANOS"},{"n":"3,20 mts","c":"VIGUETAS","u":"Unidad","p":12940,"m":12681,"t":"PASAMANOS"},{"n":"3,40 mts","c":"VIGUETAS","u":"Unidad","p":13737,"m":13462,"t":"PASAMANOS"},{"n":"3,60 mts","c":"VIGUETAS","u":"Unidad","p":14895,"m":14597,"t":"PASAMANOS"},{"n":"3,80 mts","c":"VIGUETAS","u":"Unidad","p":15728,"m":15414,"t":"PASAMANOS"},{"n":"4 mts","c":"VIGUETAS","u":"Unidad","p":17326,"m":16979,"t":"PASAMANOS"},{"n":"4,20 mts","c":"VIGUETAS","u":"Unidad","p":18223,"m":17859,"t":"PASAMANOS"},{"n":"4,40 mts","c":"VIGUETAS","u":"Unidad","p":21221,"m":20796,"t":"PASAMANOS"},{"n":"4,60 mts","c":"VIGUETAS","u":"Unidad","p":22170,"m":21726,"t":"PASAMANOS"},{"n":"4,80 mts","c":"VIGUETAS","u":"Unidad","p":26167,"m":25644,"t":"PASAMANOS"},{"n":"5 mts","c":"VIGUETAS","u":"Unidad","p":27245,"m":26700,"t":"PASAMANOS"},{"n":"5,20 mts","c":"VIGUETAS","u":"Unidad","p":28316,"m":27749,"t":"PASAMANOS"},{"n":"5,40 mts","c":"VIGUETAS","u":"Unidad","p":29402,"m":28814,"t":"PASAMANOS"},{"n":"5,60 mts","c":"VIGUETAS","u":"Unidad","p":37080,"m":36338,"t":"PASAMANOS"},{"n":"5,80 mts","c":"VIGUETAS","u":"Unidad","p":38416,"m":37647,"t":"PASAMANOS"},{"n":"6 mts","c":"VIGUETAS","u":"Unidad","p":39811,"m":39015,"t":"PASAMANOS"},{"n":"6,20 mts","c":"VIGUETAS","u":"Unidad","p":41120,"m":40297,"t":"PASAMANOS"},{"n":"6,40 mts","c":"VIGUETAS","u":"Unidad","p":51758,"m":50723,"t":"PASAMANOS"},{"n":"6,60 mts","c":"VIGUETAS","u":"Unidad","p":53340,"m":52273,"t":"PASAMANOS"},{"n":"6,80 mts","c":"VIGUETAS","u":"Unidad","p":54993,"m":53893,"t":"PASAMANOS"},{"n":"7 mts","c":"VIGUETAS","u":"Unidad","p":56503,"m":55373,"t":"PASAMANOS"},{"n":"7,20 mts","c":"VIGUETAS","u":"Unidad","p":58085,"m":56923,"t":"PASAMANOS"},{"n":"12x42x1 mts","c":"TELGOPOR","u":"Unidad","p":5527,"m":5416,"t":"PASAMANOS"},{"n":"16x42x1 mts","c":"TELGOPOR","u":"Unidad","p":7696,"m":7542,"t":"PASAMANOS"}];
 
   // ===== PRESUPUESTADOR =====
   let budgetItems = []; // { idx, qty, p (price snapshot) }
+  let LAST_SYNC_AT = 0;
+  let LAST_SYNC_OK = false;
+  const SYNC_TTL_MS = 30 * 1000; // 30 segundos de cache entre llamadas
 
-  function openBudget() {
+  async function fetchLatestPrices() {
+    if (!PRICES_ENDPOINT_URL) return null;
+    try {
+      const res = await fetch(PRICES_ENDPOINT_URL, { method: 'GET', mode: 'cors' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (data && data.ok && Array.isArray(data.products) && data.products.length > 0) {
+        return data;
+      }
+      return null;
+    } catch (e) {
+      console.warn('No se pudo actualizar precios:', e.message);
+      return null;
+    }
+  }
+
+  async function refreshPrices(force = false) {
+    const now = Date.now();
+    if (!force && (now - LAST_SYNC_AT) < SYNC_TTL_MS && LAST_SYNC_OK) {
+      updateSyncIndicator('cached');
+      return;
+    }
+    updateSyncIndicator('syncing');
+    const data = await fetchLatestPrices();
+    if (data) {
+      PRODUCTS = data.products;
+      LAST_SYNC_AT = now;
+      LAST_SYNC_OK = true;
+      updateSyncIndicator('ok', data.updated, data.count);
+    } else {
+      LAST_SYNC_OK = false;
+      updateSyncIndicator('error');
+    }
+    // Si el search tiene texto, refrescar resultados con los nuevos precios
+    const sv = document.getElementById('budgetSearch')?.value;
+    if (sv && sv.trim().length >= 2) renderSearchResults(sv);
+    // Actualizar precios snapshots de items ya cargados? NO — mantenemos snapshot del momento de agregar
+    renderBudget();
+  }
+
+  function updateSyncIndicator(state, updatedAt, count) {
+    const el = document.getElementById('budgetSyncIndicator');
+    if (!el) return;
+    el.classList.remove('syncing', 'synced', 'error', 'cached');
+    if (!PRICES_ENDPOINT_URL) {
+      el.classList.add('error');
+      el.innerHTML = '⚠ Precios embebidos (configurar endpoint)';
+      return;
+    }
+    if (state === 'syncing') {
+      el.classList.add('syncing');
+      el.innerHTML = '⟳ actualizando precios...';
+    } else if (state === 'ok') {
+      const fecha = updatedAt
+        ? new Date(updatedAt).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})
+        : '';
+      el.classList.add('synced');
+      el.innerHTML = `✓ precios actualizados · <strong>${count || PRODUCTS.length}</strong> productos · ${fecha}`;
+    } else if (state === 'cached') {
+      el.classList.add('synced');
+      el.innerHTML = `✓ precios al día · <strong>${PRODUCTS.length}</strong> productos`;
+    } else if (state === 'error') {
+      el.classList.add('error');
+      el.innerHTML = '⚠ sin conexión · usando última versión';
+    }
+  }
+
+  async function openBudget() {
     document.getElementById('budgetOverlay').classList.add('open');
     if (budgetItems.length === 0) renderBudget();
     setTimeout(() => document.getElementById('budgetSearch').focus(), 100);
+    // Refresh precios al abrir
+    await refreshPrices();
   }
   function closeBudget() {
     document.getElementById('budgetOverlay').classList.remove('open');
@@ -2168,7 +2270,7 @@
               ${escapeHtml(p.u)} · <span class="${typeCls}">${escapeHtml(p.t || '—')}</span>
             </div>
           </div>
-          <div class="br-price">$${fmt(p.p)}</div>
+          <div class="br-price">$${fmtFull(p.p)}</div>
         </div>
       `;
     }).join('');
@@ -2241,8 +2343,8 @@
                      oninput="setQty(${b.idx}, this.value)">
               <button class="bi-qty-btn" onclick="changeQty(${b.idx}, 1)">+</button>
             </div>
-            <div class="bi-price">$${fmt(b.p)}</div>
-            <div class="bi-subtotal">$${fmt(sub)}</div>
+            <div class="bi-price">$${fmtFull(b.p)}</div>
+            <div class="bi-subtotal">$${fmtFull(sub)}</div>
             <button class="bi-remove" onclick="removeProductFromBudget(${b.idx})" title="Quitar">✕</button>
           </div>
         `;
@@ -2252,17 +2354,17 @@
 
     // Totales
     const t = computeBudgetTotals();
-    document.getElementById('budgetSubtotal').textContent = `$${fmt(t.subtotal)}`;
+    document.getElementById('budgetSubtotal').textContent = `$${fmtFull(t.subtotal)}`;
     const discRow = document.getElementById('budgetDiscountRow');
     if (t.discount > 0) {
       discRow.style.display = 'flex';
       const lbl = t.discType === 'pct' ? `DESCUENTO ${t.discVal}%` : 'DESCUENTO';
       document.getElementById('budgetDiscountLabel').textContent = lbl;
-      document.getElementById('budgetDiscountAmount').textContent = `-$${fmt(t.discount)}`;
+      document.getElementById('budgetDiscountAmount').textContent = `-$${fmtFull(t.discount)}`;
     } else {
       discRow.style.display = 'none';
     }
-    document.getElementById('budgetTotal').textContent = `$${fmt(t.total)}`;
+    document.getElementById('budgetTotal').textContent = `$${fmtFull(t.total)}`;
 
     // Preview WhatsApp
     document.getElementById('budgetPreview').value = buildBudgetText(t);
@@ -2289,18 +2391,18 @@
       budgetItems.forEach(b => {
         const p = PRODUCTS[b.idx];
         const sub = b.p * b.qty;
-        txt += `• ${b.qty} x ${p.n} (${p.u}) — $${fmt(b.p)} c/u  =  *$${fmt(sub)}*\n`;
+        txt += `• ${b.qty} x ${p.n} (${p.u}) — $${fmtFull(b.p)} c/u  =  *$${fmtFull(sub)}*\n`;
       });
       txt += '\n';
     }
 
     txt += '────────────\n';
-    txt += `Subtotal: $${fmt(totals.subtotal)}\n`;
+    txt += `Subtotal: $${fmtFull(totals.subtotal)}\n`;
     if (totals.discount > 0) {
       const lbl = totals.discType === 'pct' ? `Descuento ${totals.discVal}%` : 'Descuento';
-      txt += `${lbl}: -$${fmt(totals.discount)}\n`;
+      txt += `${lbl}: -$${fmtFull(totals.discount)}\n`;
     }
-    txt += `\n*TOTAL:  $${fmt(totals.total)}*\n`;
+    txt += `\n*TOTAL:  $${fmtFull(totals.total)}*\n`;
     if (validity > 0) txt += `\n⏰ _Validez: ${validity} días_`;
     return txt;
   }
@@ -2437,11 +2539,11 @@
     document.getElementById(`best-${key}`).textContent = fmtMoney(data.best);
     document.getElementById(`earn-${key}`).textContent = fmtMoney(data.totalEarn);
 
-    const parts = [`Base $${fmt(data.baseSalary)}`, `3% $${fmt(data.baseComm)}`];
-    if (data.bonusTarget) parts.push(`<span class="plus">+meta $${fmt(data.bonusTarget)}</span>`);
-    if (data.extraComm)   parts.push(`<span class="plus">+extra $${fmt(data.extraComm)}</span>`);
-    if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmt(data.firstBonus)}</span>`);
-    if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmt(data.teamBonus)}</span>`);
+    const parts = [`Base $${fmtFull(data.baseSalary)}`, `3% $${fmtFull(data.baseComm)}`];
+    if (data.bonusTarget) parts.push(`<span class="plus">+meta $${fmtFull(data.bonusTarget)}</span>`);
+    if (data.extraComm)   parts.push(`<span class="plus">+extra $${fmtFull(data.extraComm)}</span>`);
+    if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
+    if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
     document.getElementById(`breakdown-${key}`).innerHTML = parts.join(' · ');
 
     document.getElementById(`card-${key}`).classList.toggle('leader', isLeader);
@@ -2726,7 +2828,7 @@
     document.getElementById('globalCount').textContent = `${totalCount} operaciones`;
     document.getElementById('globalTarget').textContent = '$30M';
     document.getElementById('globalPct').textContent = Math.round(pct * 100) + '%';
-    document.getElementById('globalGap').textContent = gap > 0 ? `faltan $${fmt(gap)}` : `excedente $${fmt(total - targetTotal)}`;
+    document.getElementById('globalGap').textContent = gap > 0 ? `faltan $${fmtFull(gap)}` : `excedente $${fmtFull(total - targetTotal)}`;
     document.getElementById('globalCost').textContent = fmtMoney(totalCost);
   }
 
