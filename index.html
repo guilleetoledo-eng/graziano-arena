@@ -2368,6 +2368,8 @@
     <h2 id="modalTitle">CARGAR VENTA</h2>
     <div class="modal-sub" id="modalSub">— PANEL —</div>
 
+    <div class="budget-sync" id="saleSyncIndicator" onclick="refreshPrices(true)" title="Click para refrescar">⟳ actualizando precios...</div>
+
     <div class="form-row">
       <label>Vendedor</label>
       <div class="seller-toggle">
@@ -2945,43 +2947,47 @@
     // Si el search tiene texto, refrescar resultados con los nuevos precios
     const sv = document.getElementById('budgetSearch')?.value;
     if (sv && sv.trim().length >= 2) renderSearchResults(sv);
+    const ssv = document.getElementById('saleSearch')?.value;
+    if (ssv && ssv.trim().length >= 2) renderSaleSearchResults(ssv);
     // Actualizar precios snapshots de items ya cargados? NO — mantenemos snapshot del momento de agregar
     renderBudget();
   }
 
   function updateSyncIndicator(state, updatedAt, count) {
-    const el = document.getElementById('budgetSyncIndicator');
-    if (!el) return;
-    el.classList.remove('syncing', 'synced', 'error', 'cached');
-    if (!PRICES_ENDPOINT_URL) {
-      el.classList.add('error');
-      el.innerHTML = '⚠ Precios embebidos (configurar endpoint)';
-      return;
-    }
-    if (state === 'syncing') {
-      el.classList.add('syncing');
-      el.innerHTML = '⟳ actualizando precios...';
-    } else if (state === 'ok') {
-      const fecha = updatedAt
-        ? new Date(updatedAt).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})
-        : '';
-      el.classList.add('synced');
-      el.innerHTML = `✓ precios actualizados · <strong>${count || PRODUCTS.length}</strong> productos · ${fecha}`;
-    } else if (state === 'cached') {
-      el.classList.add('synced');
-      el.innerHTML = `✓ precios al día · <strong>${PRODUCTS.length}</strong> productos`;
-    } else if (state === 'error') {
-      el.classList.add('error');
-      el.innerHTML = '⚠ sin conexión · usando última versión';
-    }
+    const els = document.querySelectorAll('.budget-sync');
+    if (!els.length) return;
+    els.forEach(el => {
+      el.classList.remove('syncing', 'synced', 'error', 'cached');
+      if (!PRICES_ENDPOINT_URL) {
+        el.classList.add('error');
+        el.innerHTML = '⚠ Precios embebidos (configurar endpoint)';
+        return;
+      }
+      if (state === 'syncing') {
+        el.classList.add('syncing');
+        el.innerHTML = '⟳ actualizando precios...';
+      } else if (state === 'ok') {
+        const fecha = updatedAt
+          ? new Date(updatedAt).toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'})
+          : '';
+        el.classList.add('synced');
+        el.innerHTML = `✓ precios actualizados · <strong>${count || PRODUCTS.length}</strong> productos · ${fecha}`;
+      } else if (state === 'cached') {
+        el.classList.add('synced');
+        el.innerHTML = `✓ precios al día · <strong>${PRODUCTS.length}</strong> productos`;
+      } else if (state === 'error') {
+        el.classList.add('error');
+        el.innerHTML = '⚠ sin conexión · usando última versión';
+      }
+    });
   }
 
   async function openBudget() {
     document.getElementById('budgetOverlay').classList.add('open');
+    // Refresh INMEDIATO de precios (force=true para ignorar cache)
+    refreshPrices(true);
     if (budgetItems.length === 0) renderBudget();
     setTimeout(() => document.getElementById('budgetSearch').focus(), 100);
-    // Refresh precios al abrir
-    await refreshPrices();
   }
   function closeBudget() {
     document.getElementById('budgetOverlay').classList.remove('open');
@@ -3041,6 +3047,11 @@
   function addProduct(idx) {
     const p = PRODUCTS[idx];
     if (!p) return;
+    const indicator = document.getElementById('budgetSyncIndicator');
+    if (indicator && indicator.classList.contains('syncing')) {
+      showToast('⚠ ESPERÁ · PRECIOS ACTUALIZÁNDOSE', 'warn');
+      return;
+    }
     const existing = budgetItems.find(b => b.idx === idx);
     if (existing) {
       existing.qty += 1;
@@ -3816,8 +3827,10 @@
   }
 
   // ===== ACTIONS =====
-  function openModal() {
+  async function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
+    // Refresh INMEDIATO de precios (force=true para ignorar cache)
+    refreshPrices(true);
     document.getElementById('saleDate').valueAsDate = new Date();
     saleItems = [];
     renderSaleItems();
@@ -3917,6 +3930,12 @@
   function addSaleProduct(idx) {
     const p = PRODUCTS[idx];
     if (!p) return;
+    // Si todavía no terminó la actualización, advertir
+    const indicator = document.getElementById('saleSyncIndicator');
+    if (indicator && indicator.classList.contains('syncing')) {
+      showToast('⚠ ESPERÁ · PRECIOS ACTUALIZÁNDOSE', 'warn');
+      return;
+    }
     const existing = saleItems.find(b => b.idx === idx);
     if (existing) existing.qty += 1;
     else saleItems.push({ idx, qty: 1, p: p.p });
