@@ -920,7 +920,7 @@
     transition: all 0.15s;
   }
   .sale-item.lauti { border-left-color: var(--red); }
-  .sale-item.toto { border-left-color: var(--ink); }
+  .sale-item.bauti { border-left-color: var(--ink); }
   .sale-item.pending { background: #FFF8E5; border-left-color: var(--amber); }
   .sale-item.cancelled { background: #F5F5F5; opacity: 0.65; }
   .sale-item.cancelled .amount, .sale-item.voided .amount { text-decoration: line-through; }
@@ -943,7 +943,7 @@
     font-family: 'Archivo Black', sans-serif; font-size: 10px; letter-spacing: 0.1em;
   }
   .sale-item.lauti .seller-tag { color: var(--red); }
-  .sale-item.toto .seller-tag { color: var(--ink); }
+  .sale-item.bauti .seller-tag { color: var(--ink); }
   .sale-item .amount { color: var(--ink); font-weight: 700; font-size: 13px; }
   .sale-item .client { color: var(--ink); font-weight: 700; }
   .sale-item .badge {
@@ -1037,6 +1037,19 @@
     max-width: 720px;
     border-top: 6px solid var(--red);
     padding-top: 0 !important;
+  }
+  /* MODO ESTELA · simplificado */
+  .estela-only { display: none; }
+  .modal.estela-mode .non-estela { display: none !important; }
+  .modal.estela-mode .estela-only { display: block; }
+  .estela-hint {
+    margin-top: 12px; padding: 10px 12px;
+    background: #FFF7E0; border-left: 3px solid #E5A800;
+    font-size: 11px; color: #6B5400; line-height: 1.5;
+  }
+  #saleEstelaAmount {
+    font-family: 'Archivo Black', sans-serif; font-size: 22px;
+    text-align: right; letter-spacing: 0.02em;
   }
   .sale-modal-banner {
     background: var(--red); color: white;
@@ -1428,7 +1441,7 @@
     letter-spacing: 0.2em; color: white; background: var(--red);
     padding: 3px 8px;
   }
-  .ops-pending-seller.toto { background: var(--ink); }
+  .ops-pending-seller.bauti { background: var(--ink); }
   .ops-pending-seller.estela { background: var(--ink-3); }
   .ops-pending-client {
     font-family: 'Archivo', sans-serif; font-size: 16px;
@@ -1640,7 +1653,7 @@
     .global-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .global-cell .value { font-size: 26px; }
     .duelo { grid-template-columns: 1fr; display: flex; flex-direction: column; }
-    .duelo.leader-toto { flex-direction: column-reverse; }
+    .duelo.leader-bauti { flex-direction: column-reverse; }
     .vs-badge { width: auto; height: 60px; }
     .vs-text { transform: rotate(0); font-size: 36px; }
     .seller-card { padding: 24px 20px; box-shadow: 4px 4px 0 var(--ink); }
@@ -1765,8 +1778,8 @@
           LAUTI
           <span class="role">Cargar mis ventas</span>
         </button>
-        <button class="login-btn" onclick="askPin('toto')">
-          TOTO
+        <button class="login-btn" onclick="askPin('bauti')">
+          BAUTI
           <span class="role">Cargar mis ventas</span>
         </button>
         <button class="login-btn" onclick="askPin('estela')" style="grid-column:1/-1;">
@@ -1929,45 +1942,45 @@
 
     <div class="vs-badge"><div class="vs-text">VS</div></div>
 
-    <div class="seller-card" id="card-toto">
+    <div class="seller-card" id="card-bauti">
       <div class="seller-header">
-        <div class="seller-rank"><span class="rank-emoji" id="emoji-toto"></span><span class="hash">#</span><span id="rank-toto">—</span></div>
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-bauti"></span><span class="hash">#</span><span id="rank-bauti">—</span></div>
         <div class="seller-name-block">
-          <div class="seller-name">TOTO</div>
+          <div class="seller-name">BAUTI</div>
           <div class="seller-title">EL CONSTANTE</div>
         </div>
       </div>
-      <div class="seller-amount"><span class="currency">$</span><span id="amount-toto">0</span></div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-bauti">0</span></div>
       <div class="seller-meta-line">
-        <span class="val" id="count-toto">0</span> OPERACIONES <span class="sep">·</span>
-        TICKET PROM. <span class="val" id="ticket-toto">$0</span>
+        <span class="val" id="count-bauti">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-bauti">$0</span>
       </div>
       <div class="progress-block">
         <div class="progress-header">
           <span class="progress-label">Meta · $13,5M</span>
-          <span class="progress-pct" id="pct-toto">0%</span>
+          <span class="progress-pct" id="pct-bauti">0%</span>
         </div>
         <div class="progress-track">
-          <div class="progress-fill" id="bar-toto" style="width:0%"></div>
+          <div class="progress-fill" id="bar-bauti" style="width:0%"></div>
         </div>
       </div>
       <div class="seller-stats">
         <div class="stat-cell">
           <div class="stat-label">Excedente</div>
-          <div class="stat-value" id="excess-toto">$0</div>
+          <div class="stat-value" id="excess-bauti">$0</div>
         </div>
         <div class="stat-cell">
           <div class="stat-label">Mejor venta</div>
-          <div class="stat-value" id="best-toto">$0</div>
+          <div class="stat-value" id="best-bauti">$0</div>
         </div>
       </div>
       <div class="earnings">
         <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
-        <div class="earnings-amount" id="earn-toto">$300.000</div>
-        <div class="earnings-breakdown" id="breakdown-toto">Base $250k</div>
+        <div class="earnings-amount" id="earn-bauti">$300.000</div>
+        <div class="earnings-breakdown" id="breakdown-bauti">Base $250k</div>
       </div>
-      <div class="pending-pill" id="pending-toto" style="display:none;">
-        <span class="num" id="pending-num-toto">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-toto">$0</span>
+      <div class="pending-pill" id="pending-bauti" style="display:none;">
+        <span class="num" id="pending-num-bauti">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-bauti">$0</span>
       </div>
     </div>
   </div>
@@ -2052,34 +2065,34 @@
         </div>
       </div>
 
-      <!-- TOTO -->
-      <div class="cobros-card" id="cobros-toto">
+      <!-- BAUTI -->
+      <div class="cobros-card" id="cobros-bauti">
         <div class="cobros-card-header">
           <div class="cobros-seller-block">
-            <span class="cobros-emoji" id="cobros-emoji-toto"></span>
-            <span class="cobros-name">TOTO</span>
+            <span class="cobros-emoji" id="cobros-emoji-bauti"></span>
+            <span class="cobros-name">BAUTI</span>
           </div>
           <div class="cobros-total">
             <span class="ct-label">COBRADO ESTE MES</span>
-            <span class="ct-value" id="cobros-total-toto">$0</span>
+            <span class="ct-value" id="cobros-total-bauti">$0</span>
           </div>
         </div>
-        <div class="weeks-timeline" id="timeline-toto"></div>
+        <div class="weeks-timeline" id="timeline-bauti"></div>
         <div class="current-week-card">
           <div class="cw-header">
             <span class="cw-label">▸ ESTA SEMANA</span>
-            <span class="cw-range" id="cw-range-toto">SEM 3 · días 15-21</span>
+            <span class="cw-range" id="cw-range-bauti">SEM 3 · días 15-21</span>
           </div>
           <div class="cw-stats">
-            <span>Facturado <strong id="cw-facturado-toto">$0</strong></span>
+            <span>Facturado <strong id="cw-facturado-bauti">$0</strong></span>
             <span class="cw-pipe">·</span>
-            <span>3% <strong id="cw-comision-toto">$0</strong></span>
+            <span>3% <strong id="cw-comision-bauti">$0</strong></span>
           </div>
           <div class="cw-amount-block">
             <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
-            <span class="cw-amount" id="cw-amount-toto">$0</span>
+            <span class="cw-amount" id="cw-amount-bauti">$0</span>
           </div>
-          <button class="cw-btn" id="cw-btn-toto" onclick="toggleWeekPaid('toto', currentWeekNum())">✓ MARCAR COBRADO</button>
+          <button class="cw-btn" id="cw-btn-bauti" onclick="toggleWeekPaid('bauti', currentWeekNum())">✓ MARCAR COBRADO</button>
         </div>
       </div>
     </div>
@@ -2231,7 +2244,7 @@
         <select id="opsFilterSeller" onchange="renderOpsTable()">
           <option value="">Todos los vendedores</option>
           <option value="lauti">Lauti</option>
-          <option value="toto">Toto</option>
+          <option value="bauti">Bauti</option>
           <option value="estela">Estela</option>
         </select>
         <select id="opsFilterStatus" onchange="renderOpsTable()">
@@ -2362,7 +2375,7 @@
 
 <!-- ===== MODAL CARGA ===== -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal sale-modal">
+  <div class="modal sale-modal" id="saleModal">
     <div class="sale-modal-banner">▸ TIRAR VENTA · CARGA AL SISTEMA + WHATSAPP</div>
     <button class="modal-close" onclick="closeModal()">✕</button>
     <h2 id="modalTitle">CARGAR VENTA</h2>
@@ -2374,7 +2387,7 @@
       <label>Vendedor</label>
       <div class="seller-toggle">
         <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI</button>
-        <button id="btn-toto" onclick="selectSeller('toto')">TOTO</button>
+        <button id="btn-bauti" onclick="selectSeller('bauti')">BAUTI</button>
         <button id="btn-estela" onclick="selectSeller('estela')">ESTELA</button>
       </div>
     </div>
@@ -2386,7 +2399,7 @@
         <label>Nombre</label>
         <input type="text" id="saleClient" placeholder="Nombre del cliente" autocomplete="off">
       </div>
-      <div class="form-grid-2">
+      <div class="form-grid-2 non-estela">
         <div class="form-row compact">
           <label>DNI / CUIT</label>
           <input type="text" id="saleDni" placeholder="ej: 35.705.846" autocomplete="off">
@@ -2396,7 +2409,7 @@
           <input type="text" id="salePhone" placeholder="ej: 3424483022" autocomplete="off">
         </div>
       </div>
-      <div class="form-grid-2">
+      <div class="form-grid-2 non-estela">
         <div class="form-row compact">
           <label>Tipo de factura</label>
           <select id="saleInvoice">
@@ -2418,8 +2431,18 @@
       </div>
     </div>
 
+    <!-- MONTO (solo Estela) -->
+    <div class="form-section estela-only">
+      <h3>▸ MONTO DE LA VENTA</h3>
+      <div class="form-row">
+        <label>Monto total ($)</label>
+        <input type="number" id="saleEstelaAmount" placeholder="ej: 350000" min="0" step="100" autocomplete="off">
+      </div>
+      <div class="estela-hint">↳ Modo simplificado · solo cliente + monto. La venta queda aprobada automáticamente.</div>
+    </div>
+
     <!-- PRODUCTOS -->
-    <div class="form-section">
+    <div class="form-section non-estela">
       <h3>▸ PRODUCTOS</h3>
       <div class="sale-search-section">
         <input type="text" id="saleSearch" placeholder="Buscar producto..." autocomplete="off">
@@ -2437,7 +2460,7 @@
     </div>
 
     <!-- ENTREGA -->
-    <div class="form-section">
+    <div class="form-section non-estela">
       <h3>▸ ENTREGA</h3>
       <div class="modality-toggle">
         <button id="mod-envio" class="active" onclick="setModality('ENVÍO')">🚚 ENVÍO</button>
@@ -2476,7 +2499,7 @@
     </div>
 
     <!-- PAGO -->
-    <div class="form-section">
+    <div class="form-section non-estela">
       <h3>▸ PAGO</h3>
       <div class="sale-totals">
         <div class="bt-row"><span>SUBTOTAL PRODUCTOS</span><span id="sale-subtotal">$0</span></div>
@@ -2521,7 +2544,7 @@
     </div>
 
     <!-- OBSERVACIONES + FECHA -->
-    <div class="form-section">
+    <div class="form-section non-estela">
       <h3>▸ DETALLES</h3>
       <div class="form-row">
         <label>Observaciones</label>
@@ -2534,14 +2557,14 @@
     </div>
 
     <!-- Preview WhatsApp -->
-    <div class="form-row">
+    <div class="form-row non-estela">
       <label>Vista previa para WhatsApp</label>
       <textarea id="salePreview" rows="14" readonly></textarea>
     </div>
 
     <div class="budget-actions">
       <button class="btn-primary" onclick="submitSale()" id="submitBtn">✓ REGISTRAR Y COPIAR</button>
-      <button class="btn-secondary" onclick="copySaleText()" style="flex-shrink:0;">📋 SOLO COPIAR</button>
+      <button class="btn-secondary non-estela" onclick="copySaleText()" style="flex-shrink:0;">📋 SOLO COPIAR</button>
     </div>
 
     <!-- Tabs (solo admin: pendientes / aprobadas / canceladas-anuladas) -->
@@ -2607,7 +2630,7 @@
     baseCommission: 0.03,
     target: 13500000,            // donde arranca el escalonado
     finalTarget: 17000000,       // objetivo máximo personal
-    teamTarget: 30000000,        // meta empresa (Lauti + Toto, sin Estela)
+    teamTarget: 30000000,        // meta empresa (Lauti + Bauti, sin Estela)
     bonusOnTarget: 35000,
     tiers: [
       { from: 13500000, to: 14500000, rate: 0.005 },  // 13,5 → 14,5M : +0,5%
@@ -2616,11 +2639,11 @@
     ],
     bonusFirstPlace: 30000,
     bonusTeamGoal: 20000,
-    competitiveSellers: ['lauti', 'toto'],  // los que entran en bonos/competencia
+    competitiveSellers: ['lauti', 'bauti'],  // los que entran en bonos/competencia
     estelaTarget: 4000000  // meta tracking de Estela (dueña, no compite)
   };
 
-  const PINS = { lauti: '1111', toto: '2222', estela: '3333', admin: '0000' };
+  const PINS = { lauti: '1111', bauti: '2222', estela: '3333', admin: '0000' };
   const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
   // ===== FIREBASE =====
@@ -2640,10 +2663,10 @@
   let state = {
     sales: [], // {id, seller, amount, date, status: 'pending'|'approved', submittedBy, submittedAt}
     hofPrev: { name: 'LAUTI', amount: 10000000, label: 'Abril 2026' },
-    weeklyPayments: {} // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, toto: {...} } }
+    weeklyPayments: {} // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, bauti: {...} } }
   };
 
-  let currentUser = null; // 'view' | 'lauti' | 'toto' | 'admin'
+  let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
   let pinTargetUser = null;
 
   // ===== STORAGE (Firebase) =====
@@ -2854,11 +2877,11 @@
     const modalTitle = document.getElementById('modalTitle');
     const modalSub = document.getElementById('modalSub');
     const btnLauti = document.getElementById('btn-lauti');
-    const btnToto = document.getElementById('btn-toto');
+    const btnBauti = document.getElementById('btn-bauti');
     const btnEstela = document.getElementById('btn-estela');
     const tabsRow = document.getElementById('tabsRow');
 
-    const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', toto: '👤 TOTO', estela: '👤 ESTELA', admin: '★ ADMIN' };
+    const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', bauti: '👤 BAUTI', estela: '👤 ESTELA', admin: '★ ADMIN' };
     chip.textContent = labels[currentUser] + ' · CAMBIAR';
     chip.classList.toggle('viewer', currentUser === 'view');
 
@@ -2883,12 +2906,12 @@
     if (currentUser === 'admin') {
       modalTitle.textContent = 'PANEL ADMIN';
       modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
-      btnLauti.disabled = false; btnToto.disabled = false; btnEstela.disabled = false;
-    } else if (currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela') {
+      btnLauti.disabled = false; btnBauti.disabled = false; btnEstela.disabled = false;
+    } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'estela') {
       modalTitle.textContent = 'CARGAR VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
       btnLauti.disabled = currentUser !== 'lauti';
-      btnToto.disabled = currentUser !== 'toto';
+      btnBauti.disabled = currentUser !== 'bauti';
       btnEstela.disabled = currentUser !== 'estela';
       selectSeller(currentUser);
     }
@@ -3245,7 +3268,7 @@
   }
   function visibleSalesFor(role) {
     if (role === 'admin') return state.sales;
-    if (role === 'lauti' || role === 'toto') return state.sales;
+    if (role === 'lauti' || role === 'bauti') return state.sales;
     return state.sales;
   }
 
@@ -3279,26 +3302,26 @@
 
   function computeAll() {
     const lauti  = computeSeller('lauti');
-    const toto   = computeSeller('toto');
+    const bauti   = computeSeller('bauti');
     const estela = computeSeller('estela');
-    // bothMet y firstPlace SOLO Lauti + Toto (Estela no compite)
-    const bothMet = lauti.total >= CONFIG.target && toto.total >= CONFIG.target;
+    // bothMet y firstPlace SOLO Lauti + Bauti (Estela no compite)
+    const bothMet = lauti.total >= CONFIG.target && bauti.total >= CONFIG.target;
     const teamBonus = bothMet ? CONFIG.bonusTeamGoal : 0;
 
     let firstPlace = null;
-    if (lauti.total > toto.total && lauti.total > 0) firstPlace = 'lauti';
-    else if (toto.total > lauti.total && toto.total > 0) firstPlace = 'toto';
+    if (lauti.total > bauti.total && lauti.total > 0) firstPlace = 'lauti';
+    else if (bauti.total > lauti.total && bauti.total > 0) firstPlace = 'bauti';
 
-    lauti.teamBonus = teamBonus; toto.teamBonus = teamBonus;
+    lauti.teamBonus = teamBonus; bauti.teamBonus = teamBonus;
     estela.teamBonus = 0;
     lauti.firstBonus = firstPlace === 'lauti' ? CONFIG.bonusFirstPlace : 0;
-    toto.firstBonus  = firstPlace === 'toto'  ? CONFIG.bonusFirstPlace : 0;
+    bauti.firstBonus  = firstPlace === 'bauti'  ? CONFIG.bonusFirstPlace : 0;
     estela.firstBonus = 0;
     lauti.totalEarn = lauti.baseSalary + lauti.baseComm + lauti.bonusTarget + lauti.extraComm + lauti.teamBonus + lauti.firstBonus;
-    toto.totalEarn  = toto.baseSalary  + toto.baseComm  + toto.bonusTarget  + toto.extraComm  + toto.teamBonus  + toto.firstBonus;
+    bauti.totalEarn  = bauti.baseSalary  + bauti.baseComm  + bauti.bonusTarget  + bauti.extraComm  + bauti.teamBonus  + bauti.firstBonus;
     estela.totalEarn = 0; // no cobra del sistema
 
-    return { lauti, toto, estela, bothMet, firstPlace };
+    return { lauti, bauti, estela, bothMet, firstPlace };
   }
 
   // ===== RENDER =====
@@ -3350,26 +3373,26 @@
       {
         icon: '◆', title: 'Cumplir meta de 13,5M', desc: 'Bonus fijo al cruzar la línea · ',
         reward: '+$35.000 c/u',
-        unlockedBy: (c.lauti.bonusTarget > 0 ? 'LAUTI' : '') + (c.toto.bonusTarget > 0 ? (c.lauti.bonusTarget > 0 ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.bonusTarget > 0 || c.toto.bonusTarget > 0
+        unlockedBy: (c.lauti.bonusTarget > 0 ? 'LAUTI' : '') + (c.bauti.bonusTarget > 0 ? (c.lauti.bonusTarget > 0 ? ' · ' : '') + 'BAUTI' : ''),
+        unlocked: c.lauti.bonusTarget > 0 || c.bauti.bonusTarget > 0
       },
       {
         icon: '▲', title: 'Superar 14,5M', desc: 'Comisión extra sobre el excedente · ',
         reward: '+0,5%',
-        unlockedBy: (c.lauti.total > 14500000 ? 'LAUTI' : '') + (c.toto.total > 14500000 ? (c.lauti.total > 14500000 ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.total > 14500000 || c.toto.total > 14500000
+        unlockedBy: (c.lauti.total > 14500000 ? 'LAUTI' : '') + (c.bauti.total > 14500000 ? (c.lauti.total > 14500000 ? ' · ' : '') + 'BAUTI' : ''),
+        unlocked: c.lauti.total > 14500000 || c.bauti.total > 14500000
       },
       {
         icon: '▲▲', title: 'Superar 15,5M', desc: 'Comisión extra sobre el excedente · ',
         reward: '+1%',
-        unlockedBy: (c.lauti.total > 15500000 ? 'LAUTI' : '') + (c.toto.total > 15500000 ? (c.lauti.total > 15500000 ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.total > 15500000 || c.toto.total > 15500000
+        unlockedBy: (c.lauti.total > 15500000 ? 'LAUTI' : '') + (c.bauti.total > 15500000 ? (c.lauti.total > 15500000 ? ' · ' : '') + 'BAUTI' : ''),
+        unlocked: c.lauti.total > 15500000 || c.bauti.total > 15500000
       },
       {
         icon: '▲▲▲', title: 'Llegar al objetivo final $17M', desc: 'Máxima comisión sobre excedente · ',
         reward: '+1,5%',
-        unlockedBy: (c.lauti.total >= CONFIG.finalTarget ? 'LAUTI' : '') + (c.toto.total >= CONFIG.finalTarget ? (c.lauti.total >= CONFIG.finalTarget ? ' · ' : '') + 'TOTO' : ''),
-        unlocked: c.lauti.total >= CONFIG.finalTarget || c.toto.total >= CONFIG.finalTarget
+        unlockedBy: (c.lauti.total >= CONFIG.finalTarget ? 'LAUTI' : '') + (c.bauti.total >= CONFIG.finalTarget ? (c.lauti.total >= CONFIG.finalTarget ? ' · ' : '') + 'BAUTI' : ''),
+        unlocked: c.lauti.total >= CONFIG.finalTarget || c.bauti.total >= CONFIG.finalTarget
       },
       {
         icon: '♛', title: '#1 del mes', desc: 'Premio físico al líder absoluto · ',
@@ -3412,21 +3435,21 @@
       document.getElementById('hofTicketDesc').textContent = 'Cargá la primera venta';
     }
 
-    // Más operaciones (mes actual, solo Lauti vs Toto)
+    // Más operaciones (mes actual, solo Lauti vs Bauti)
     const lautiCount = all.filter(s => s.seller === 'lauti').length;
-    const totoCount  = all.filter(s => s.seller === 'toto').length;
-    if (lautiCount === 0 && totoCount === 0) {
+    const bautiCount  = all.filter(s => s.seller === 'bauti').length;
+    if (lautiCount === 0 && bautiCount === 0) {
       document.getElementById('hofMostOps').textContent = '—';
       document.getElementById('hofMostOpsDesc').textContent = 'Sin ventas aún';
-    } else if (lautiCount === totoCount) {
+    } else if (lautiCount === bautiCount) {
       document.getElementById('hofMostOps').textContent = 'EMPATE';
       document.getElementById('hofMostOpsDesc').textContent = `${lautiCount} operaciones cada uno`;
-    } else if (lautiCount > totoCount) {
+    } else if (lautiCount > bautiCount) {
       document.getElementById('hofMostOps').textContent = 'LAUTI';
-      document.getElementById('hofMostOpsDesc').textContent = `${lautiCount} operaciones · ${totoCount} de TOTO`;
+      document.getElementById('hofMostOpsDesc').textContent = `${lautiCount} operaciones · ${bautiCount} de BAUTI`;
     } else {
-      document.getElementById('hofMostOps').textContent = 'TOTO';
-      document.getElementById('hofMostOpsDesc').textContent = `${totoCount} operaciones · ${lautiCount} de LAUTI`;
+      document.getElementById('hofMostOps').textContent = 'BAUTI';
+      document.getElementById('hofMostOpsDesc').textContent = `${bautiCount} operaciones · ${lautiCount} de LAUTI`;
     }
 
     // Vendedor del mes anterior (calculado automáticamente)
@@ -3483,10 +3506,10 @@
     const isAdmin = currentUser === 'admin';
     const payments = state.weeklyPayments?.[periodKey] || {};
     const lautiLeader = c.firstPlace === 'lauti';
-    const totoLeader = c.firstPlace === 'toto';
+    const bautiLeader = c.firstPlace === 'bauti';
 
-    ['lauti', 'toto'].forEach(seller => {
-      const isLeader = (seller === 'lauti' ? lautiLeader : totoLeader);
+    ['lauti', 'bauti'].forEach(seller => {
+      const isLeader = (seller === 'lauti' ? lautiLeader : bautiLeader);
       const sellerPayments = payments[seller] || {};
 
       // Emoji al lado del nombre
@@ -3590,12 +3613,12 @@
   }
 
   function renderGlobals(c) {
-    const total = c.lauti.total + c.toto.total;
+    const total = c.lauti.total + c.bauti.total;
     const targetTotal = CONFIG.teamTarget;
     const pct = total / targetTotal;
     const gap = Math.max(0, targetTotal - total);
-    const totalCount = c.lauti.count + c.toto.count;
-    const totalCost = (c.lauti.totalEarn - CONFIG.baseSalary) + (c.toto.totalEarn - CONFIG.baseSalary);
+    const totalCount = c.lauti.count + c.bauti.count;
+    const totalCost = (c.lauti.totalEarn - CONFIG.baseSalary) + (c.bauti.totalEarn - CONFIG.baseSalary);
 
     document.getElementById('globalTotal').textContent = fmtMoney(total);
     document.getElementById('globalCount').textContent = `${totalCount} operaciones`;
@@ -3710,7 +3733,7 @@
 
     let visible = [];
     if (currentUser === 'admin') visible = allPending();
-    else if (currentUser === 'lauti' || currentUser === 'toto') visible = pendingSales(currentUser);
+    else if (currentUser === 'lauti' || currentUser === 'bauti') visible = pendingSales(currentUser);
 
     if (visible.length === 0) {
       section.style.display = 'none';
@@ -3721,7 +3744,7 @@
 
     const opts = {
       canApprove: currentUser === 'admin',
-      canCancel: currentUser === 'lauti' || currentUser === 'toto',
+      canCancel: currentUser === 'lauti' || currentUser === 'bauti',
     };
 
     container.innerHTML = visible
@@ -3740,7 +3763,7 @@
       return;
     }
     const opts = {
-      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela',
+      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'estela',
       canDelete: false,
     };
     container.innerHTML = approved
@@ -3790,27 +3813,27 @@
     renderTopBar();
     renderGlobals(c);
     const lautiLeader = c.firstPlace === 'lauti';
-    const totoLeader  = c.firstPlace === 'toto';
+    const bautiLeader  = c.firstPlace === 'bauti';
     renderSeller('lauti', c.lauti, lautiLeader);
-    renderSeller('toto',  c.toto,  totoLeader);
+    renderSeller('bauti',  c.bauti,  bautiLeader);
     renderEstela(c.estela);
 
     // Ranks + Emojis + orden mobile
     const dueloEl = document.querySelector('.duelo');
-    dueloEl.classList.remove('leader-lauti', 'leader-toto');
+    dueloEl.classList.remove('leader-lauti', 'leader-bauti');
     const emojiL = document.getElementById('emoji-lauti');
-    const emojiT = document.getElementById('emoji-toto');
+    const emojiT = document.getElementById('emoji-bauti');
     if (c.firstPlace) {
       emojiL.textContent = lautiLeader ? '👑' : '🧅';
-      emojiT.textContent = totoLeader  ? '👑' : '🧅';
+      emojiT.textContent = bautiLeader  ? '👑' : '🧅';
       document.getElementById('rank-lauti').textContent = lautiLeader ? '1' : '2';
-      document.getElementById('rank-toto').textContent  = totoLeader  ? '1' : '2';
-      dueloEl.classList.add(lautiLeader ? 'leader-lauti' : 'leader-toto');
+      document.getElementById('rank-bauti').textContent  = bautiLeader  ? '1' : '2';
+      dueloEl.classList.add(lautiLeader ? 'leader-lauti' : 'leader-bauti');
     } else {
       emojiL.textContent = '';
       emojiT.textContent = '';
       document.getElementById('rank-lauti').textContent = '—';
-      document.getElementById('rank-toto').textContent  = '—';
+      document.getElementById('rank-bauti').textContent  = '—';
     }
 
     renderPremios(c);
@@ -3838,7 +3861,16 @@
     updateSaleTotals();
     renderPendingList(); renderSalesList(); renderArchiveList();
     updateTabCounts();
-    if (currentUser === 'lauti' || currentUser === 'toto' || currentUser === 'estela') {
+    // Si el usuario es Estela, forzar selección de Estela y activar modo simplificado
+    if (currentUser === 'estela') {
+      selectSeller('estela');
+    } else if (currentUser === 'lauti' || currentUser === 'bauti') {
+      selectSeller(currentUser);
+    } else {
+      // Admin: estado por defecto
+      document.getElementById('saleModal').classList.remove('estela-mode');
+    }
+    if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'estela') {
       const myPending = pendingSales(currentUser).length;
       switchTab(myPending > 0 ? 'pending' : 'approved');
     } else {
@@ -3854,12 +3886,17 @@
   let selectedSellerForSale = 'lauti';
   function selectSeller(s) {
     if (currentUser === 'lauti' && s !== 'lauti') return;
-    if (currentUser === 'toto' && s !== 'toto') return;
+    if (currentUser === 'bauti' && s !== 'bauti') return;
     if (currentUser === 'estela' && s !== 'estela') return;
     selectedSellerForSale = s;
     document.getElementById('btn-lauti').classList.toggle('active', s === 'lauti');
-    document.getElementById('btn-toto').classList.toggle('active', s === 'toto');
+    document.getElementById('btn-bauti').classList.toggle('active', s === 'bauti');
     document.getElementById('btn-estela').classList.toggle('active', s === 'estela');
+    // Modo simplificado para Estela
+    document.getElementById('saleModal').classList.toggle('estela-mode', s === 'estela');
+    if (s === 'estela') {
+      setTimeout(() => document.getElementById('saleEstelaAmount')?.focus(), 50);
+    }
     updateSalePreview();
   }
 
@@ -4122,12 +4159,53 @@
   async function submitSale() {
     const client = document.getElementById('saleClient').value.trim();
     if (!client) { showToast('FALTA EL CLIENTE', 'warn'); document.getElementById('saleClient').focus(); return; }
+    const isEstela = currentUser === 'estela' || selectedSellerForSale === 'estela';
+
+    // === ESTELA: flujo simplificado ===
+    if (isEstela) {
+      const manualAmount = parseFloat(document.getElementById('saleEstelaAmount').value) || 0;
+      if (manualAmount <= 0) { showToast('MONTO INVÁLIDO', 'warn'); document.getElementById('saleEstelaAmount').focus(); return; }
+      const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
+      const before = computeAll();
+      const isAdmin = currentUser === 'admin';
+      const newSale = {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+        seller: 'estela',
+        amount: manualAmount,
+        date, client,
+        channel: 'Presencial',
+        product: '—',
+        paymentMethod: '—',
+        status: (isAdmin || currentUser === 'estela') ? 'approved' : 'pending',
+        submittedBy: currentUser,
+        submittedAt: Date.now()
+      };
+      if (newSale.status === 'approved') {
+        newSale.approvedBy = currentUser;
+        newSale.approvedAt = Date.now();
+      }
+      state.sales.push(newSale);
+      await saveState();
+      renderAll();
+      showToast(`✓ ESTELA · ${fmtMoney(manualAmount)} · ${client}`);
+      // Limpiar y cerrar
+      document.getElementById('saleClient').value = '';
+      document.getElementById('saleEstelaAmount').value = '';
+      document.getElementById('saleClient').focus();
+      return;
+    }
+
+    // === Flujo normal (Lauti / Bauti / Admin) ===
     if (saleItems.length === 0) { showToast('AGREGÁ AL MENOS UN PRODUCTO', 'warn'); return; }
 
     const shipping = parseFloat(document.getElementById('saleShipping').value) || 0;
+    const discount = parseFloat(document.getElementById('saleDiscount').value) || 0;
     const subtotal = saleItems.reduce((s, b) => s + (b.p * b.qty), 0);
-    const total = subtotal + shipping;
-    if (total <= 0) { showToast('TOTAL INVÁLIDO', 'warn'); return; }
+    // amount = lo que cuenta para comisión/ranking (SIN flete, ya con descuento)
+    const amount = Math.max(0, subtotal - discount);
+    // totalCharged = lo que paga el cliente (CON flete)
+    const totalCharged = amount + shipping;
+    if (amount <= 0) { showToast('TOTAL INVÁLIDO', 'warn'); return; }
 
     const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
     const channel = document.getElementById('saleChannel').value;
@@ -4140,10 +4218,10 @@
     const city = document.getElementById('saleCity').value.trim();
     const refs = document.getElementById('saleRefs').value.trim();
     const delivery = document.getElementById('saleDelivery').value.trim();
+    const pickup = document.getElementById('salePickup').value.trim();
     const deposit = parseFloat(document.getElementById('saleDeposit').value) || 0;
     const obs = document.getElementById('saleObs').value.trim();
 
-    // Resumen del producto para mostrar en lista
     const productSummary = saleItems
       .map(b => `${b.qty} ${PRODUCTS[b.idx].n}`)
       .join(' · ');
@@ -4153,19 +4231,22 @@
     const newSale = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
       seller: selectedSellerForSale,
-      amount: total,
+      amount: amount,           // SIN flete · cuenta para comisión
       date, client, channel,
       product: productSummary,
       paymentMethod,
       status: isAdmin ? 'approved' : 'pending',
       submittedBy: currentUser,
       submittedAt: Date.now(),
-      // Datos extendidos
       dni, phone, invoice,
       modality: saleModality,
-      address, city, refs, deliveryTime: delivery,
-      shipping, subtotal, deposit,
-      balance: Math.max(0, total - deposit),
+      address, city, refs, deliveryTime: delivery, pickupTime: pickup,
+      shipping,                 // separado, NO comisiona
+      subtotal,
+      discount,
+      totalCharged,             // lo que paga el cliente (con flete)
+      deposit,
+      balance: Math.max(0, totalCharged - deposit),
       paymentStatus, obs,
       items: saleItems.map(b => ({
         idx: b.idx,
@@ -4512,7 +4593,7 @@
     };
     const sellers = [
       { key: 'lauti', name: 'LAUTI', data: computeForMonth('lauti'), target: CONFIG.target },
-      { key: 'toto',  name: 'TOTO',  data: computeForMonth('toto'),  target: CONFIG.target },
+      { key: 'bauti',  name: 'BAUTI',  data: computeForMonth('bauti'),  target: CONFIG.target },
       { key: 'estela', name: 'ESTELA', data: computeForMonth('estela'), target: CONFIG.estelaTarget }
     ];
     document.getElementById('opsBySeller').innerHTML = sellers.map(s => {
@@ -4788,7 +4869,7 @@
     const sale = state.sales.find(s => s.id === id);
     if (!sale) return;
     // Vendedor solo puede anular las suyas
-    if ((currentUser === 'lauti' || currentUser === 'toto') && sale.seller !== currentUser) {
+    if ((currentUser === 'lauti' || currentUser === 'bauti') && sale.seller !== currentUser) {
       showToast('SOLO TUS VENTAS', 'warn'); return;
     }
     voidTargetSaleId = id;
