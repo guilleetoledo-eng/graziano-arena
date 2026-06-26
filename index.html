@@ -101,8 +101,9 @@
     text-transform: uppercase;
   }
   .login-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
   }
+  .login-btn.primary { grid-column: 1 / -1; }
   .login-btn {
     padding: 28px 20px; border: 1.5px solid var(--line);
     background: var(--bg-card); cursor: pointer;
@@ -289,6 +290,7 @@
 
   /* ==== DUELO ==== */
   .duelo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
+  .duelo.trio { grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
   .seller-card {
     position: relative; padding: 32px 28px;
     background: var(--bg-card);
@@ -394,6 +396,14 @@
   }
   .earnings-breakdown .plus { color: var(--red); font-weight: 700; }
   .seller-card.leader .earnings-breakdown .plus { color: var(--ink); }
+  .scheme-tag {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; font-weight: 700; margin-right: 4px;
+  }
+  .scheme-tag.new { background: var(--red); color: white; }
+  .scheme-tag.old { background: #888; color: white; }
+  .seller-card.leader .scheme-tag.new { background: var(--ink); color: white; }
 
   /* PENDIENTE pill */
   .pending-pill {
@@ -590,7 +600,7 @@
   @media (max-width: 600px) {
     .form-grid-2 { grid-template-columns: 1fr; }
   }
-  .seller-toggle { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .seller-toggle { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .seller-toggle button {
     padding: 14px; background: var(--bg); border: 1.5px solid var(--line);
     color: var(--ink); font-family: 'Archivo Black', sans-serif;
@@ -742,9 +752,87 @@
   }
 
   /* COBROS SEMANALES */
+  /* MI SUELDO PROYECTADO · card vendedor */
+  .mysalary-card {
+    background: linear-gradient(135deg, var(--ink) 0%, #1a1a1a 100%);
+    color: white;
+    padding: 28px 32px 24px;
+    border: 1.5px solid var(--ink);
+    box-shadow: 8px 8px 0 var(--red);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .mysalary-card::before {
+    content: ''; position: absolute; top: 0; right: 0; width: 180px; height: 180px;
+    background: radial-gradient(circle at top right, rgba(255,46,31,0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .ms-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px;
+  }
+  .ms-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.3em; color: var(--red); text-transform: uppercase;
+  }
+  .ms-period {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: rgba(255,255,255,0.5);
+  }
+  .ms-name {
+    font-family: 'Anton', sans-serif; font-size: 34px;
+    letter-spacing: 0.02em; margin-bottom: 18px; line-height: 1;
+  }
+  .ms-facturado-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 16px; margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .ms-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; color: rgba(255,255,255,0.6);
+  }
+  .ms-facturado {
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    font-size: 18px; color: white;
+  }
+  .ms-breakdown {
+    display: grid; grid-template-columns: 1fr auto; gap: 8px 16px;
+    margin-bottom: 18px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .ms-breakdown .ms-line { color: rgba(255,255,255,0.85); }
+  .ms-breakdown .ms-amt { font-weight: 700; color: white; text-align: right; }
+  .ms-breakdown .ms-line.plus { color: var(--red); }
+  .ms-breakdown .ms-amt.plus { color: var(--red); }
+  .ms-total-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 18px 0 14px;
+    border-top: 2px solid var(--red);
+  }
+  .ms-total-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.25em; color: var(--red); font-weight: 700;
+  }
+  .ms-total {
+    font-family: 'Archivo Black', sans-serif; font-size: 36px;
+    color: white; letter-spacing: 0.01em; line-height: 1;
+  }
+  .ms-tier {
+    background: rgba(255,46,31,0.1); border-left: 3px solid var(--red);
+    padding: 10px 14px; margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: white; letter-spacing: 0.05em;
+  }
+  .ms-next {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.55); letter-spacing: 0.05em;
+  }
   .cobros-wrapper { margin-bottom: 24px; }
   .cobros-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
   }
   .cobros-card {
     background: var(--bg-card); border: 1.5px solid var(--line);
@@ -1422,6 +1510,45 @@
     margin-bottom: 0;
   }
   .ops-grid-2 .ops-section { margin-bottom: 24px; }
+  .ops-section-full { margin-top: 32px; }
+  .ops-section-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .ops-salaries-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .ops-salaries-table th {
+    background: var(--bg-soft); color: var(--ink-3);
+    padding: 12px 14px; text-align: left;
+    font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; font-weight: 700;
+    border-bottom: 2px solid var(--ink);
+  }
+  .ops-salaries-table td {
+    padding: 14px 14px; border-bottom: 1px solid var(--line-soft);
+    vertical-align: top;
+  }
+  .ops-salaries-table tfoot td {
+    background: var(--ink); color: white;
+    padding: 16px 14px; border: none;
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    letter-spacing: 0.1em;
+  }
+  .ops-total-cell { color: var(--red); font-size: 16px; }
+  .ops-salaries-table tfoot .ops-total-cell { color: white; }
+  .ops-scheme-tag {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.15em; font-weight: 700; margin-top: 4px;
+  }
+  .ops-scheme-tag.new { background: var(--red); color: white; }
+  .ops-scheme-tag.old { background: #888; color: white; }
+  .ops-sub {
+    font-size: 10px; color: var(--ink-3); font-weight: normal;
+  }
 
   /* Pending list */
   .ops-pending-item {
@@ -1652,7 +1779,15 @@
     .global-cell:nth-child(2n) { border-right: none; }
     .global-cell:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .global-cell .value { font-size: 26px; }
+    /* Mi sueldo proyectado · mobile */
+    .mysalary-card { padding: 20px 18px 18px; box-shadow: 5px 5px 0 var(--red); }
+    .ms-name { font-size: 26px; }
+    .ms-total { font-size: 28px; }
+    .ms-facturado { font-size: 16px; }
+    /* Cobros mobile */
+    .cobros-grid { grid-template-columns: 1fr; }
     .duelo { grid-template-columns: 1fr; display: flex; flex-direction: column; }
+    .duelo.trio { gap: 12px; }
     .duelo.leader-bauti { flex-direction: column-reverse; }
     .vs-badge { width: auto; height: 60px; }
     .vs-text { transform: rotate(0); font-size: 36px; }
@@ -1775,16 +1910,20 @@
           <span class="role">Solo mirar — sin login</span>
         </button>
         <button class="login-btn" onclick="askPin('lauti')">
-          LAUTI
-          <span class="role">Cargar mis ventas</span>
+          LAUTI 🎯
+          <span class="role">El Cazador — Cargar mis ventas</span>
         </button>
         <button class="login-btn" onclick="askPin('bauti')">
-          BAUTI
-          <span class="role">Cargar mis ventas</span>
+          BAUTI 🧱
+          <span class="role">El Constante — Cargar mis ventas</span>
+        </button>
+        <button class="login-btn" onclick="askPin('leo')">
+          LEO 🦴
+          <span class="role">La Hiena — Cargar mis ventas</span>
         </button>
         <button class="login-btn" onclick="askPin('estela')" style="grid-column:1/-1;">
-          ESTELA
-          <span class="role">Cargar mis ventas — Dueña / Tracker</span>
+          ESTELA 🏪
+          <span class="role">La Dueña — Cargar mis ventas / Tracker</span>
         </button>
         <button class="login-btn" style="grid-column:1/-1;" onclick="askPin('admin')">
           ADMIN
@@ -1891,13 +2030,33 @@
     </div>
   </div>
 
+  <!-- MI SUELDO PROYECTADO · solo vendedores -->
+  <div class="mysalary-card" id="mySalaryCard" style="display:none;">
+    <div class="ms-header">
+      <div class="ms-eyebrow">▸ TU SUELDO PROYECTADO</div>
+      <div class="ms-period" id="msPeriod">JUNIO 2026</div>
+    </div>
+    <div class="ms-name" id="msName">VENDEDOR</div>
+    <div class="ms-facturado-row">
+      <span class="ms-label">FACTURADO HASTA HOY</span>
+      <span class="ms-facturado" id="msFacturado">$0</span>
+    </div>
+    <div class="ms-breakdown" id="msBreakdown"></div>
+    <div class="ms-total-row">
+      <span class="ms-total-label">COBRÁS HOY</span>
+      <span class="ms-total" id="msTotal">$0</span>
+    </div>
+    <div class="ms-tier" id="msTier"></div>
+    <div class="ms-next" id="msNext"></div>
+  </div>
+
   <div class="section-title">
     <span class="section-title-num">/01</span>
     <span class="section-title-text">CARA A CARA</span>
     <span class="section-title-line"></span>
   </div>
 
-  <div class="duelo">
+  <div class="duelo trio">
     <div class="seller-card" id="card-lauti">
       <div class="seller-header">
         <div class="seller-rank"><span class="rank-emoji" id="emoji-lauti"></span><span class="hash">#</span><span id="rank-lauti">—</span></div>
@@ -1940,8 +2099,6 @@
       </div>
     </div>
 
-    <div class="vs-badge"><div class="vs-text">VS</div></div>
-
     <div class="seller-card" id="card-bauti">
       <div class="seller-header">
         <div class="seller-rank"><span class="rank-emoji" id="emoji-bauti"></span><span class="hash">#</span><span id="rank-bauti">—</span></div>
@@ -1976,11 +2133,53 @@
       </div>
       <div class="earnings">
         <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
-        <div class="earnings-amount" id="earn-bauti">$300.000</div>
-        <div class="earnings-breakdown" id="breakdown-bauti">Base $250k</div>
+        <div class="earnings-amount" id="earn-bauti">$0</div>
+        <div class="earnings-breakdown" id="breakdown-bauti">—</div>
       </div>
       <div class="pending-pill" id="pending-bauti" style="display:none;">
         <span class="num" id="pending-num-bauti">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-bauti">$0</span>
+      </div>
+    </div>
+
+    <div class="seller-card" id="card-leo">
+      <div class="seller-header">
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-leo"></span><span class="hash">#</span><span id="rank-leo">—</span></div>
+        <div class="seller-name-block">
+          <div class="seller-name">LEO</div>
+          <div class="seller-title">LA HIENA</div>
+        </div>
+      </div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-leo">0</span></div>
+      <div class="seller-meta-line">
+        <span class="val" id="count-leo">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-leo">$0</span>
+      </div>
+      <div class="progress-block">
+        <div class="progress-header">
+          <span class="progress-label">Meta · $13,5M</span>
+          <span class="progress-pct" id="pct-leo">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bar-leo" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="stat-cell">
+          <div class="stat-label">Excedente</div>
+          <div class="stat-value" id="excess-leo">$0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Mejor venta</div>
+          <div class="stat-value" id="best-leo">$0</div>
+        </div>
+      </div>
+      <div class="earnings">
+        <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
+        <div class="earnings-amount" id="earn-leo">$0</div>
+        <div class="earnings-breakdown" id="breakdown-leo">—</div>
+      </div>
+      <div class="pending-pill" id="pending-leo" style="display:none;">
+        <span class="num" id="pending-num-leo">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-leo">$0</span>
       </div>
     </div>
   </div>
@@ -2086,7 +2285,7 @@
           <div class="cw-stats">
             <span>Facturado <strong id="cw-facturado-bauti">$0</strong></span>
             <span class="cw-pipe">·</span>
-            <span>3% <strong id="cw-comision-bauti">$0</strong></span>
+            <span>Com. <strong id="cw-comision-bauti">$0</strong></span>
           </div>
           <div class="cw-amount-block">
             <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
@@ -2095,12 +2294,43 @@
           <button class="cw-btn" id="cw-btn-bauti" onclick="toggleWeekPaid('bauti', currentWeekNum())">✓ MARCAR COBRADO</button>
         </div>
       </div>
+
+      <!-- LEO -->
+      <div class="cobros-card" id="cobros-leo">
+        <div class="cobros-card-header">
+          <div class="cobros-seller-block">
+            <span class="cobros-emoji" id="cobros-emoji-leo"></span>
+            <span class="cobros-name">LEO</span>
+          </div>
+          <div class="cobros-total">
+            <span class="ct-label">COBRADO ESTE MES</span>
+            <span class="ct-value" id="cobros-total-leo">$0</span>
+          </div>
+        </div>
+        <div class="weeks-timeline" id="timeline-leo"></div>
+        <div class="current-week-card">
+          <div class="cw-header">
+            <span class="cw-label">▸ ESTA SEMANA</span>
+            <span class="cw-range" id="cw-range-leo">SEM 3 · días 15-21</span>
+          </div>
+          <div class="cw-stats">
+            <span>Facturado <strong id="cw-facturado-leo">$0</strong></span>
+            <span class="cw-pipe">·</span>
+            <span>Com. <strong id="cw-comision-leo">$0</strong></span>
+          </div>
+          <div class="cw-amount-block">
+            <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
+            <span class="cw-amount" id="cw-amount-leo">$0</span>
+          </div>
+          <button class="cw-btn" id="cw-btn-leo" onclick="toggleWeekPaid('leo', currentWeekNum())">✓ MARCAR COBRADO</button>
+        </div>
+      </div>
     </div>
 
     <div class="cobros-footer">
       <div class="cf-label">▸ PAGO DE FIN DE MES <span class="cf-countdown" id="cfCountdown">— días</span></div>
       <div class="cf-items">
-        Base <strong>$300.000</strong> c/u · Bonos al cierre: <strong>$35k</strong> meta · <strong>$30k</strong> #1 · <strong>$20k</strong> equipo · % escalonado sobre excedente
+        <strong>Lauti</strong> (esquema viejo hasta junio): base $300k + 3% + escalonado · <strong>Bauti</strong> y <strong>Leo</strong> (esquema nuevo): 5/6/7/8 + arena + viático
       </div>
     </div>
   </div>
@@ -2217,6 +2447,15 @@
         </div>
         <div id="opsBySeller"></div>
       </div>
+    </div>
+
+    <!-- SUELDOS PROYECTADOS -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>💰 SUELDOS PROYECTADOS</h3>
+        <span class="ops-section-sub">según facturación del mes y esquema vigente por vendedor</span>
+      </div>
+      <div id="opsSalaries"></div>
     </div>
 
     <div class="ops-grid-2">
@@ -2386,8 +2625,9 @@
     <div class="form-row">
       <label>Vendedor</label>
       <div class="seller-toggle">
-        <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI</button>
-        <button id="btn-bauti" onclick="selectSeller('bauti')">BAUTI</button>
+        <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI 🎯</button>
+        <button id="btn-bauti" onclick="selectSeller('bauti')">BAUTI 🧱</button>
+        <button id="btn-leo" onclick="selectSeller('leo')">LEO 🦴</button>
         <button id="btn-estela" onclick="selectSeller('estela')">ESTELA</button>
       </div>
     </div>
@@ -2626,24 +2866,51 @@
 <script>
   // ===== CONFIG =====
   const CONFIG = {
+    // Sistema VIEJO (Lauti hasta junio 2026)
     baseSalary: 300000,
     baseCommission: 0.03,
     target: 13500000,            // donde arranca el escalonado
     finalTarget: 17000000,       // objetivo máximo personal
-    teamTarget: 30000000,        // meta empresa (Lauti + Bauti, sin Estela)
+    teamTarget: 30000000,        // meta empresa
     bonusOnTarget: 35000,
     tiers: [
-      { from: 13500000, to: 14500000, rate: 0.005 },  // 13,5 → 14,5M : +0,5%
-      { from: 14500000, to: 15500000, rate: 0.01  },  // 14,5 → 15,5M : +1%
-      { from: 15500000, to: Infinity, rate: 0.015 }   // 15,5M+      : +1,5%
+      { from: 13500000, to: 14500000, rate: 0.005 },  // +0,5%
+      { from: 14500000, to: 15500000, rate: 0.01  },  // +1%
+      { from: 15500000, to: Infinity, rate: 0.015 }   // +1,5%
     ],
     bonusFirstPlace: 30000,
     bonusTeamGoal: 20000,
-    competitiveSellers: ['lauti', 'bauti'],  // los que entran en bonos/competencia
-    estelaTarget: 4000000  // meta tracking de Estela (dueña, no compite)
+    // Sistema NUEVO (Bauti y Leo desde ya · Lauti desde 1 julio 2026)
+    newScheme: {
+      tiers: [
+        { from: 0,        to: 6000000,   rate: 0.05 },   // tier 1: 5%
+        { from: 6000000,  to: 10000000,  rate: 0.06 },   // tier 2: 6%
+        { from: 10000000, to: 15000000,  rate: 0.07 },   // tier 3: 7%
+        { from: 15000000, to: Infinity,  rate: 0.08 }    // tier 4: 8%
+      ],
+      arena: [
+        { from: 13500000, to: 14500000, rate: 0.005 },   // +0,5%
+        { from: 14500000, to: 15500000, rate: 0.010 },   // +1,0%
+        { from: 15500000, to: Infinity, rate: 0.015 }    // +1,5%
+      ],
+      viatico: 100000,           // flat si factura > $7M
+      viaticoThreshold: 7000000
+    },
+    newSchemeStartLauti: '2026-07',  // Lauti pasa al nuevo desde julio 2026
+    competitiveSellers: ['lauti', 'bauti', 'leo'],  // los que compiten
+    estelaTarget: 4000000  // tracking Estela (dueña, no compite)
   };
 
-  const PINS = { lauti: '1111', bauti: '2222', estela: '3333', admin: '0000' };
+  const PINS = { lauti: '1111', bauti: '2222', leo: '4444', estela: '3333', admin: '0000' };
+  const SELLER_META = {
+    lauti:  { name: 'LAUTI',  title: 'EL CAZADOR',   emoji: '🎯' },
+    bauti:  { name: 'BAUTI',  title: 'EL CONSTANTE', emoji: '🧱' },
+    leo:    { name: 'LEO',    title: 'LA HIENA',     emoji: '🦴' },
+    estela: { name: 'ESTELA', title: 'LA DUEÑA',     emoji: '🏪' }
+  };
+  // Emojis por POSICIÓN en el ranking (dinámicos, no identidad fija)
+  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺' };
+  function positionEmoji(rank) { return RANK_EMOJI[rank] || ''; }
   const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
   // ===== FIREBASE =====
@@ -2691,6 +2958,15 @@
           paymentMethod: '',
           ...s
         }));
+        // MIGRACIÓN AUTOMÁTICA: ventas viejas con seller='toto' → 'bauti'
+        let migrated = 0;
+        state.sales.forEach(s => {
+          if (s.seller === 'toto') { s.seller = 'bauti'; migrated++; }
+        });
+        if (migrated > 0) {
+          console.log(`Migradas ${migrated} ventas de toto → bauti`);
+          saveState();  // persistir el cambio
+        }
         if (data.hofPrev) state.hofPrev = data.hofPrev;
         state.weeklyPayments = data.weeklyPayments || {};
       } else {
@@ -2760,7 +3036,36 @@
   function weeklyCommission(seller, weekNum) {
     const sales = weeklySalesFor(seller, weekNum);
     const facturado = sales.reduce((sum, s) => sum + s.amount, 0);
-    return { facturado, comision: facturado * CONFIG.baseCommission };
+    // Para el cálculo de comisión semanal usamos el esquema vigente
+    // Esquema NUEVO: proporcional sobre el total del mes (escalonado)
+    // Esquema VIEJO: simple 3% directo (más fácil de explicar)
+    const scheme = getCommissionScheme(seller, currentMonthKey());
+    if (scheme === 'new') {
+      // Acumulado del mes hasta esta semana inclusive
+      let monthSoFar = 0;
+      for (let w = 1; w <= weekNum; w++) {
+        const wsales = weeklySalesFor(seller, w);
+        monthSoFar += wsales.reduce((sum, s) => sum + s.amount, 0);
+      }
+      // Acumulado del mes hasta la semana anterior
+      let prevSoFar = monthSoFar - facturado;
+      // Comisión = lo que se "gana" en este tramo del acumulado
+      const commNow = calcCommissionNew(monthSoFar);
+      const commPrev = calcCommissionNew(prevSoFar);
+      // El viático se prorratea: solo aparece una vez al pasar el umbral en el mes
+      // Lo simplificamos: 1/4 del viático por semana si el total mensual lo dispara
+      const monthTotal = state.sales
+        .filter(s => s.seller === seller && s.status === 'approved' && monthKeyOf(s.date) === currentMonthKey())
+        .reduce((a, v) => a + v.amount, 0);
+      const monthlyViatico = monthTotal > CONFIG.newScheme.viaticoThreshold ? CONFIG.newScheme.viatico : 0;
+      const weekViatico = monthlyViatico / 4;
+      const commission = (commNow.base + commNow.arena) - (commPrev.base + commPrev.arena) + weekViatico;
+      return { facturado, comision: Math.round(commission) };
+    } else if (scheme === 'old') {
+      return { facturado, comision: facturado * CONFIG.baseCommission };
+    } else {
+      return { facturado: 0, comision: 0 };
+    }
   }
 
   // ===== LOGIN FLOW =====
@@ -3302,26 +3607,110 @@
 
   function computeAll() {
     const lauti  = computeSeller('lauti');
-    const bauti   = computeSeller('bauti');
+    const bauti  = computeSeller('bauti');
+    const leo    = computeSeller('leo');
     const estela = computeSeller('estela');
-    // bothMet y firstPlace SOLO Lauti + Bauti (Estela no compite)
-    const bothMet = lauti.total >= CONFIG.target && bauti.total >= CONFIG.target;
-    const teamBonus = bothMet ? CONFIG.bonusTeamGoal : 0;
+    // Tercia: si los 3 vendedores online llegan a la meta
+    const allMet = lauti.total >= CONFIG.target && bauti.total >= CONFIG.target && leo.total >= CONFIG.target;
+    const teamBonus = allMet ? CONFIG.bonusTeamGoal : 0;
 
-    let firstPlace = null;
-    if (lauti.total > bauti.total && lauti.total > 0) firstPlace = 'lauti';
-    else if (bauti.total > lauti.total && bauti.total > 0) firstPlace = 'bauti';
+    // Primer puesto entre los 3 vendedores online
+    const totals = [
+      { key: 'lauti', total: lauti.total },
+      { key: 'bauti', total: bauti.total },
+      { key: 'leo',   total: leo.total }
+    ].sort((a, b) => b.total - a.total);
+    let firstPlace = (totals[0].total > 0 && totals[0].total > totals[1].total) ? totals[0].key : null;
 
-    lauti.teamBonus = teamBonus; bauti.teamBonus = teamBonus;
-    estela.teamBonus = 0;
-    lauti.firstBonus = firstPlace === 'lauti' ? CONFIG.bonusFirstPlace : 0;
-    bauti.firstBonus  = firstPlace === 'bauti'  ? CONFIG.bonusFirstPlace : 0;
-    estela.firstBonus = 0;
+    [lauti, bauti, leo].forEach(s => { s.teamBonus = teamBonus; s.firstBonus = 0; });
+    estela.teamBonus = 0; estela.firstBonus = 0;
+    if (firstPlace === 'lauti') lauti.firstBonus = CONFIG.bonusFirstPlace;
+    if (firstPlace === 'bauti') bauti.firstBonus = CONFIG.bonusFirstPlace;
+    if (firstPlace === 'leo')   leo.firstBonus   = CONFIG.bonusFirstPlace;
+
     lauti.totalEarn = lauti.baseSalary + lauti.baseComm + lauti.bonusTarget + lauti.extraComm + lauti.teamBonus + lauti.firstBonus;
-    bauti.totalEarn  = bauti.baseSalary  + bauti.baseComm  + bauti.bonusTarget  + bauti.extraComm  + bauti.teamBonus  + bauti.firstBonus;
-    estela.totalEarn = 0; // no cobra del sistema
+    bauti.totalEarn = bauti.baseSalary + bauti.baseComm + bauti.bonusTarget + bauti.extraComm + bauti.teamBonus + bauti.firstBonus;
+    leo.totalEarn   = leo.baseSalary   + leo.baseComm   + leo.bonusTarget   + leo.extraComm   + leo.teamBonus   + leo.firstBonus;
+    estela.totalEarn = 0;
 
-    return { lauti, bauti, estela, bothMet, firstPlace };
+    return { lauti, bauti, leo, estela, bothMet: allMet, allMet, firstPlace };
+  }
+
+  // ===== COMISIÓN: ESQUEMA POR VENDEDOR + MES =====
+  // Lauti: viejo hasta junio 2026, nuevo desde julio 2026
+  // Bauti, Leo: nuevo siempre
+  // Estela: no aplica
+  function getCommissionScheme(seller, monthKey) {
+    if (seller === 'estela') return 'none';
+    if (seller === 'lauti') {
+      // Compara strings 'YYYY-MM'
+      return monthKey >= CONFIG.newSchemeStartLauti ? 'new' : 'old';
+    }
+    return 'new';  // bauti, leo
+  }
+
+  // Cálculo escalonado de comisión NUEVA (tiers + arena + viático)
+  function calcCommissionNew(facturado) {
+    const N = CONFIG.newScheme;
+    let base = 0;
+    for (const t of N.tiers) {
+      if (facturado <= t.from) break;
+      const piece = Math.min(facturado, t.to) - t.from;
+      base += piece * t.rate;
+    }
+    let arena = 0;
+    for (const t of N.arena) {
+      if (facturado <= t.from) break;
+      const piece = Math.min(facturado, t.to) - t.from;
+      arena += piece * t.rate;
+    }
+    const viatico = facturado > N.viaticoThreshold ? N.viatico : 0;
+    return {
+      scheme: 'new',
+      base: Math.round(base),
+      arena: Math.round(arena),
+      viatico,
+      total: Math.round(base + arena + viatico),
+      tierName: tierNameFor(facturado),
+      facturado
+    };
+  }
+
+  function tierNameFor(f) {
+    if (f >= 15000000) return 'TIER 4 · CRACK (8%)';
+    if (f >= 10000000) return 'TIER 3 · CRECIMIENTO (7%)';
+    if (f >= 6000000)  return 'TIER 2 · SUBIDA (6%)';
+    return 'TIER 1 · BASE (5%)';
+  }
+
+  // Cálculo VIEJO (3% + base $300k + escalonado desde $13,5M + viático >$7M)
+  function calcCommissionOld(facturado) {
+    const baseComm = facturado * CONFIG.baseCommission;
+    let extra = 0;
+    for (const t of CONFIG.tiers) {
+      if (facturado <= t.from) break;
+      const piece = Math.min(facturado, t.to) - t.from;
+      extra += piece * t.rate;
+    }
+    const bonusTarget = facturado >= CONFIG.target ? CONFIG.bonusOnTarget : 0;
+    const viatico = facturado > 7000000 ? CONFIG.newScheme.viatico : 0;
+    return {
+      scheme: 'old',
+      baseSalary: CONFIG.baseSalary,
+      base: Math.round(baseComm),
+      arena: Math.round(extra),
+      bonusTarget,
+      viatico,
+      total: Math.round(CONFIG.baseSalary + baseComm + extra + bonusTarget + viatico),
+      facturado
+    };
+  }
+
+  function calcCommission(seller, facturado, monthKey) {
+    const scheme = getCommissionScheme(seller, monthKey || currentMonthKey());
+    if (scheme === 'none') return null;
+    if (scheme === 'new')  return calcCommissionNew(facturado);
+    return calcCommissionOld(facturado);
   }
 
   // ===== RENDER =====
@@ -3333,14 +3722,36 @@
     document.getElementById(`bar-${key}`).style.width = Math.min(100, data.pct * 100) + '%';
     document.getElementById(`excess-${key}`).textContent = data.excess > 0 ? '+' + fmtMoney(data.excess) : '$0';
     document.getElementById(`best-${key}`).textContent = fmtMoney(data.best);
-    document.getElementById(`earn-${key}`).textContent = fmtMoney(data.totalEarn);
 
-    const parts = [`Base $${fmtFull(data.baseSalary)}`, `3% $${fmtFull(data.baseComm)}`];
-    if (data.bonusTarget) parts.push(`<span class="plus">+meta $${fmtFull(data.bonusTarget)}</span>`);
-    if (data.extraComm)   parts.push(`<span class="plus">+extra $${fmtFull(data.extraComm)}</span>`);
-    if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
-    if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
-    document.getElementById(`breakdown-${key}`).innerHTML = parts.join(' · ');
+    // Cálculo de comisión según esquema vigente (nuevo o viejo)
+    const comm = calcCommission(key, data.total);
+    const earnEl = document.getElementById(`earn-${key}`);
+    const breakdownEl = document.getElementById(`breakdown-${key}`);
+    let totalEarn = 0;
+    let parts = [];
+    if (comm && comm.scheme === 'new') {
+      // Esquema NUEVO: 5/6/7/8 + arena + viático
+      totalEarn = comm.total;
+      parts.push(`<span class="scheme-tag new">NUEVO</span>`);
+      parts.push(`Base $${fmtFull(comm.base)}`);
+      if (comm.arena)   parts.push(`<span class="plus">+arena $${fmtFull(comm.arena)}</span>`);
+      if (comm.viatico) parts.push(`<span class="plus">+viático $${fmtFull(comm.viatico)}</span>`);
+      if (data.firstBonus) { totalEarn += data.firstBonus; parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`); }
+      if (data.teamBonus)  { totalEarn += data.teamBonus;  parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`); }
+    } else if (comm && comm.scheme === 'old') {
+      // Esquema VIEJO: 3% + base + escalonado + viático
+      totalEarn = comm.total;
+      parts.push(`<span class="scheme-tag old">VIEJO</span>`);
+      parts.push(`Base $${fmtFull(comm.baseSalary)}`);
+      parts.push(`3% $${fmtFull(comm.base)}`);
+      if (comm.bonusTarget) parts.push(`<span class="plus">+meta $${fmtFull(comm.bonusTarget)}</span>`);
+      if (comm.arena)       parts.push(`<span class="plus">+extra $${fmtFull(comm.arena)}</span>`);
+      if (comm.viatico)     parts.push(`<span class="plus">+viático $${fmtFull(comm.viatico)}</span>`);
+      if (data.firstBonus) { totalEarn += data.firstBonus; parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`); }
+      if (data.teamBonus)  { totalEarn += data.teamBonus;  parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`); }
+    }
+    earnEl.textContent = fmtMoney(totalEarn);
+    breakdownEl.innerHTML = parts.join(' · ');
 
     document.getElementById(`card-${key}`).classList.toggle('leader', isLeader);
 
@@ -3505,19 +3916,21 @@
     const curWeek = currentWeekNum();
     const isAdmin = currentUser === 'admin';
     const payments = state.weeklyPayments?.[periodKey] || {};
-    const lautiLeader = c.firstPlace === 'lauti';
-    const bautiLeader = c.firstPlace === 'bauti';
 
-    ['lauti', 'bauti'].forEach(seller => {
-      const isLeader = (seller === 'lauti' ? lautiLeader : bautiLeader);
+    ['lauti', 'bauti', 'leo'].forEach(seller => {
+      const isLeader = c.firstPlace === seller;
       const sellerPayments = payments[seller] || {};
 
-      // Emoji al lado del nombre
+      // Emoji al lado del nombre (por posición dinámica)
       const emojiEl = document.getElementById(`cobros-emoji-${seller}`);
-      if (c.firstPlace) {
-        emojiEl.textContent = isLeader ? '👑' : '🧅';
-      } else {
-        emojiEl.textContent = '';
+      if (emojiEl) {
+        // Calcular rank actual de este seller
+        const ranking = ['lauti', 'bauti', 'leo']
+          .map(k => ({ key: k, total: c[k].total }))
+          .sort((a, b) => b.total - a.total);
+        const rank = ranking.findIndex(r => r.key === seller) + 1;
+        const someoneHasSales = ranking[0].total > 0;
+        emojiEl.textContent = (someoneHasSales && c[seller].total > 0) ? positionEmoji(rank) : '';
       }
 
       // Timeline 4 semanas
@@ -3807,34 +4220,118 @@
     });
   }
 
+  function renderMySalary(c) {
+    const card = document.getElementById('mySalaryCard');
+    if (!card) return;
+    const isSeller = ['lauti', 'bauti', 'leo'].includes(currentUser);
+    if (!isSeller) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = '';
+    const meta = SELLER_META[currentUser];
+    const data = c[currentUser];
+    const comm = calcCommission(currentUser, data.total);
+
+    document.getElementById('msName').textContent = `${meta.emoji}  ${meta.name}`;
+    document.getElementById('msPeriod').textContent = periodLabel().toUpperCase();
+    document.getElementById('msFacturado').textContent = fmtMoney(data.total);
+
+    let breakdown = '';
+    let total = 0;
+    let tierInfo = '';
+    let nextInfo = '';
+
+    if (comm.scheme === 'new') {
+      total = comm.total;
+      breakdown += `<span class="ms-line">Comisión base (5/6/7/8)</span><span class="ms-amt">${fmtMoney(comm.base)}</span>`;
+      breakdown += `<span class="ms-line ${comm.arena ? 'plus' : ''}">Bonus Arena</span><span class="ms-amt ${comm.arena ? 'plus' : ''}">${comm.arena ? fmtMoney(comm.arena) : '—'}</span>`;
+      breakdown += `<span class="ms-line ${comm.viatico ? 'plus' : ''}">Viático</span><span class="ms-amt ${comm.viatico ? 'plus' : ''}">${comm.viatico ? fmtMoney(comm.viatico) : '—'}</span>`;
+      // Bonos competitivos
+      if (data.firstBonus) {
+        total += data.firstBonus;
+        breakdown += `<span class="ms-line plus">Bonus #1</span><span class="ms-amt plus">${fmtMoney(data.firstBonus)}</span>`;
+      }
+      if (data.teamBonus) {
+        total += data.teamBonus;
+        breakdown += `<span class="ms-line plus">Bonus equipo</span><span class="ms-amt plus">${fmtMoney(data.teamBonus)}</span>`;
+      }
+      tierInfo = `▸ Estás en <strong>${comm.tierName}</strong>`;
+      // Próximo tier
+      const next = nextTierTarget(data.total);
+      if (next) {
+        const falta = next.target - data.total;
+        nextInfo = `Te faltan <strong style="color:white;">${fmtMoney(falta)}</strong> para ${next.label}`;
+      } else {
+        nextInfo = `🚀 Estás en el tier máximo. Cada peso suma al 8% + bonus arena.`;
+      }
+    } else if (comm.scheme === 'old') {
+      total = comm.total;
+      breakdown += `<span class="ms-line">Sueldo base</span><span class="ms-amt">${fmtMoney(comm.baseSalary)}</span>`;
+      breakdown += `<span class="ms-line">Comisión 3%</span><span class="ms-amt">${fmtMoney(comm.base)}</span>`;
+      if (comm.bonusTarget) breakdown += `<span class="ms-line plus">Bonus meta</span><span class="ms-amt plus">${fmtMoney(comm.bonusTarget)}</span>`;
+      if (comm.arena)   breakdown += `<span class="ms-line plus">Extra escalonado</span><span class="ms-amt plus">${fmtMoney(comm.arena)}</span>`;
+      if (comm.viatico) breakdown += `<span class="ms-line plus">Viático</span><span class="ms-amt plus">${fmtMoney(comm.viatico)}</span>`;
+      if (data.firstBonus) { total += data.firstBonus; breakdown += `<span class="ms-line plus">Bonus #1</span><span class="ms-amt plus">${fmtMoney(data.firstBonus)}</span>`; }
+      if (data.teamBonus)  { total += data.teamBonus;  breakdown += `<span class="ms-line plus">Bonus equipo</span><span class="ms-amt plus">${fmtMoney(data.teamBonus)}</span>`; }
+      tierInfo = `▸ Esquema viejo · hasta junio 2026`;
+      nextInfo = `Desde el 1° de julio pasás al esquema nuevo (5/6/7/8 + arena + viático)`;
+    }
+
+    document.getElementById('msBreakdown').innerHTML = breakdown;
+    document.getElementById('msTotal').textContent = fmtMoney(total);
+    document.getElementById('msTier').innerHTML = tierInfo;
+    document.getElementById('msNext').innerHTML = nextInfo;
+  }
+
+  function nextTierTarget(facturado) {
+    if (facturado < 6000000)  return { target: 6000000,  label: 'tier 2 (6%)' };
+    if (facturado < 10000000) return { target: 10000000, label: 'tier 3 (7%)' };
+    if (facturado < 13500000) return { target: 13500000, label: 'arena +0,5%' };
+    if (facturado < 14500000) return { target: 14500000, label: 'arena +1,0%' };
+    if (facturado < 15000000) return { target: 15000000, label: 'tier 4 crack (8%)' };
+    if (facturado < 15500000) return { target: 15500000, label: 'arena +1,5%' };
+    return null;
+  }
+
   function renderAll() {
     if (!currentUser) return;
     const c = computeAll();
     renderTopBar();
     renderGlobals(c);
-    const lautiLeader = c.firstPlace === 'lauti';
-    const bautiLeader  = c.firstPlace === 'bauti';
-    renderSeller('lauti', c.lauti, lautiLeader);
-    renderSeller('bauti',  c.bauti,  bautiLeader);
+    renderMySalary(c);
+
+    // Ranking entre los 3 vendedores online
+    const ranking = ['lauti', 'bauti', 'leo']
+      .map(k => ({ key: k, total: c[k].total }))
+      .sort((a, b) => b.total - a.total);
+    const rankMap = {};
+    ranking.forEach((r, i) => { rankMap[r.key] = r.total > 0 ? (i + 1) : null; });
+    const someoneHasSales = ranking[0].total > 0;
+
+    renderSeller('lauti', c.lauti, c.firstPlace === 'lauti');
+    renderSeller('bauti', c.bauti, c.firstPlace === 'bauti');
+    renderSeller('leo',   c.leo,   c.firstPlace === 'leo');
     renderEstela(c.estela);
 
-    // Ranks + Emojis + orden mobile
+    // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🥺 #3)
+    ['lauti', 'bauti', 'leo'].forEach(k => {
+      const r = rankMap[k];
+      const rankEl = document.getElementById('rank-' + k);
+      const emojiEl = document.getElementById('emoji-' + k);
+      if (someoneHasSales && r) {
+        rankEl.textContent = String(r);
+        emojiEl.textContent = positionEmoji(r);
+      } else {
+        rankEl.textContent = '—';
+        emojiEl.textContent = '';
+      }
+    });
+
+    // Marcar visualmente el líder en el duelo
     const dueloEl = document.querySelector('.duelo');
-    dueloEl.classList.remove('leader-lauti', 'leader-bauti');
-    const emojiL = document.getElementById('emoji-lauti');
-    const emojiT = document.getElementById('emoji-bauti');
-    if (c.firstPlace) {
-      emojiL.textContent = lautiLeader ? '👑' : '🧅';
-      emojiT.textContent = bautiLeader  ? '👑' : '🧅';
-      document.getElementById('rank-lauti').textContent = lautiLeader ? '1' : '2';
-      document.getElementById('rank-bauti').textContent  = bautiLeader  ? '1' : '2';
-      dueloEl.classList.add(lautiLeader ? 'leader-lauti' : 'leader-bauti');
-    } else {
-      emojiL.textContent = '';
-      emojiT.textContent = '';
-      document.getElementById('rank-lauti').textContent = '—';
-      document.getElementById('rank-bauti').textContent  = '—';
-    }
+    dueloEl.classList.remove('leader-lauti', 'leader-bauti', 'leader-leo');
+    if (c.firstPlace) dueloEl.classList.add('leader-' + c.firstPlace);
 
     renderPremios(c);
     renderHOF();
@@ -3887,11 +4384,12 @@
   function selectSeller(s) {
     if (currentUser === 'lauti' && s !== 'lauti') return;
     if (currentUser === 'bauti' && s !== 'bauti') return;
+    if (currentUser === 'leo' && s !== 'leo') return;
     if (currentUser === 'estela' && s !== 'estela') return;
     selectedSellerForSale = s;
-    document.getElementById('btn-lauti').classList.toggle('active', s === 'lauti');
-    document.getElementById('btn-bauti').classList.toggle('active', s === 'bauti');
-    document.getElementById('btn-estela').classList.toggle('active', s === 'estela');
+    ['lauti', 'bauti', 'leo', 'estela'].forEach(k => {
+      document.getElementById('btn-' + k).classList.toggle('active', s === k);
+    });
     // Modo simplificado para Estela
     document.getElementById('saleModal').classList.toggle('estela-mode', s === 'estela');
     if (s === 'estela') {
@@ -4350,6 +4848,7 @@
     renderOpsPending();
     renderOpsTopProducts(mk);
     renderOpsBySeller(mk);
+    renderOpsSalaries(mk);
     renderOpsByChannel(mk);
     renderOpsByPayment(mk);
     renderOpsTable();
@@ -4592,9 +5091,10 @@
       return { total, count, ticketAvg, best, pct, target };
     };
     const sellers = [
-      { key: 'lauti', name: 'LAUTI', data: computeForMonth('lauti'), target: CONFIG.target },
-      { key: 'bauti',  name: 'BAUTI',  data: computeForMonth('bauti'),  target: CONFIG.target },
-      { key: 'estela', name: 'ESTELA', data: computeForMonth('estela'), target: CONFIG.estelaTarget }
+      { key: 'lauti',  name: `LAUTI ${SELLER_META.lauti.emoji}`,   data: computeForMonth('lauti'),  target: CONFIG.target },
+      { key: 'bauti',  name: `BAUTI ${SELLER_META.bauti.emoji}`,   data: computeForMonth('bauti'),  target: CONFIG.target },
+      { key: 'leo',    name: `LEO ${SELLER_META.leo.emoji}`,       data: computeForMonth('leo'),    target: CONFIG.target },
+      { key: 'estela', name: 'ESTELA',                              data: computeForMonth('estela'), target: CONFIG.estelaTarget }
     ];
     document.getElementById('opsBySeller').innerHTML = sellers.map(s => {
       const pct = Math.min(150, s.data.pct * 100);
@@ -4617,6 +5117,73 @@
         </div>
       `;
     }).join('');
+  }
+
+  // SUELDOS PROYECTADOS · admin only
+  function renderOpsSalaries(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const container = document.getElementById('opsSalaries');
+    if (!container) return;
+    const sellers = ['lauti', 'bauti', 'leo'];
+    const rows = sellers.map(key => {
+      const sales = state.sales.filter(s => s.seller === key && s.status === 'approved' && monthKeyOf(s.date) === mk);
+      const facturado = sales.reduce((a, v) => a + v.amount, 0);
+      const comm = calcCommission(key, facturado, mk);
+      if (!comm) return '';
+      const meta = SELLER_META[key];
+      if (comm.scheme === 'new') {
+        return `
+          <tr>
+            <td><strong>${meta.emoji} ${meta.name}</strong><br><span class="ops-scheme-tag new">NUEVO</span></td>
+            <td>${fmtMoney(facturado)}</td>
+            <td>${fmtMoney(comm.base)}</td>
+            <td>${comm.arena ? fmtMoney(comm.arena) : '—'}</td>
+            <td>${comm.viatico ? fmtMoney(comm.viatico) : '—'}</td>
+            <td class="ops-total-cell"><strong>${fmtMoney(comm.total)}</strong></td>
+          </tr>
+        `;
+      } else {
+        const baseAndComm = comm.baseSalary + comm.base;
+        const extras = comm.bonusTarget + comm.arena + comm.viatico;
+        return `
+          <tr>
+            <td><strong>${meta.emoji} ${meta.name}</strong><br><span class="ops-scheme-tag old">VIEJO</span></td>
+            <td>${fmtMoney(facturado)}</td>
+            <td>${fmtMoney(baseAndComm)}<br><span class="ops-sub">base+3%</span></td>
+            <td>${comm.arena ? fmtMoney(comm.arena) : '—'}</td>
+            <td>${comm.viatico ? fmtMoney(comm.viatico) : '—'}</td>
+            <td class="ops-total-cell"><strong>${fmtMoney(comm.total)}</strong></td>
+          </tr>
+        `;
+      }
+    }).join('');
+    const totalEquipo = sellers.reduce((sum, key) => {
+      const sales = state.sales.filter(s => s.seller === key && s.status === 'approved' && monthKeyOf(s.date) === mk);
+      const facturado = sales.reduce((a, v) => a + v.amount, 0);
+      const comm = calcCommission(key, facturado, mk);
+      return sum + (comm ? comm.total : 0);
+    }, 0);
+    container.innerHTML = `
+      <table class="ops-salaries-table">
+        <thead>
+          <tr>
+            <th>Vendedor</th>
+            <th>Facturado</th>
+            <th>Comisión</th>
+            <th>Arena</th>
+            <th>Viático</th>
+            <th>Cobra</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5"><strong>TOTAL EQUIPO</strong></td>
+            <td class="ops-total-cell"><strong>${fmtMoney(totalEquipo)}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    `;
   }
 
   function renderOpsByChannel(mk) {
