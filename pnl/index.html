@@ -1,0 +1,2512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graziano · P&L Operativo · v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F7F4EE;
+    --paper-warm: #EFEBE0;
+    --paper-dim: #E5E1D6;
+    --ink: #1A1A1A;
+    --ink-soft: #3A3A3A;
+    --muted: #8E8E8E;
+    --muted-light: #B5B0A4;
+    --rule: #D8D3C8;
+    --rule-soft: #E8E4D9;
+    --red: #E52521;
+    --red-deep: #B81E1A;
+    --red-soft: #FDE8E6;
+    --red-glow: rgba(229, 37, 33, 0.08);
+    --good: #16A34A;
+    --good-soft: #DCFCE7;
+    --warn: #CA8A04;
+    --blue: #2563EB;
+    --blue-soft: #DBEAFE;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-feature-settings: "tnum";
+  }
+
+  .top-rule { height: 5px; background: var(--red); }
+
+  /* ============ HEADER ============ */
+  .header {
+    padding: 36px 48px 28px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .header-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    gap: 24px;
+  }
+
+  .brand-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand-mark::before {
+    content: "";
+    width: 18px; height: 2px; background: var(--red);
+  }
+
+  .brand-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 0.88;
+    letter-spacing: -0.005em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .brand-title .accent { color: var(--red); }
+
+  .brand-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 12px;
+    max-width: 540px;
+    line-height: 1.6;
+  }
+
+  .ref-box {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-align: right;
+    line-height: 1.9;
+  }
+  .ref-line {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 16px;
+    justify-content: end;
+  }
+  .ref-label { color: var(--muted); }
+  .ref-val { color: var(--ink); }
+
+  /* ============ MES BANNER ============ */
+  .month-banner {
+    padding: 14px 48px;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .mb-block {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mb-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+
+  .mb-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+
+  .mb-value.compare-tag {
+    color: var(--red);
+  }
+
+  .mb-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--muted-light);
+    opacity: 0.4;
+  }
+
+  /* ============ METADATA ============ */
+  .metadata {
+    padding: 18px 48px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-warm);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .meta-cell {
+    padding: 0 24px;
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .meta-cell:first-child { padding-left: 0; }
+  .meta-cell:last-child { border-right: none; padding-right: 0; }
+
+  .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .meta-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+
+  /* ============ CONSOLA ============ */
+  .console {
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+  }
+
+  .console-header {
+    padding: 18px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+  .console-header:hover { background: var(--paper-warm); }
+
+  .console-title { display: flex; align-items: baseline; gap: 12px; }
+  .console-title .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.15em;
+  }
+  .console-title .text {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .console-title .hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .console-toggle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .console-toggle::after {
+    content: "▼";
+    transition: transform 0.3s;
+    font-size: 8px;
+  }
+  .console.collapsed .console-toggle::after {
+    transform: rotate(-90deg);
+  }
+
+  .console-body {
+    padding: 0 48px 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px 24px;
+    max-height: 1800px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+  .console.collapsed .console-body {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .console-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .console-group.wide {
+    grid-column: span 2;
+  }
+
+  .console-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--red);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .console-field {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .console-field label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .console-field input,
+  .console-field select {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    padding: 8px 10px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+    width: 100%;
+    transition: border 0.2s, background 0.2s;
+    text-align: right;
+  }
+  .console-field select { text-align: left; }
+  .console-field input:focus,
+  .console-field select:focus {
+    outline: none;
+    border-color: var(--red);
+    background: var(--paper-warm);
+  }
+  .console-field input:hover,
+  .console-field select:hover {
+    border-color: var(--muted-light);
+  }
+
+  /* ============ MES MANAGER ============ */
+  .month-manager {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mm-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .mm-row input,
+  .mm-row select {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .btn-mini {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-mini:hover { background: var(--ink); color: var(--paper); }
+  .btn-mini.primary {
+    background: var(--red);
+    color: var(--paper);
+    border-color: var(--red);
+  }
+  .btn-mini.primary:hover { background: var(--red-deep); border-color: var(--red-deep); }
+  .btn-mini.icon {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .snapshot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 140px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .snapshot-list::-webkit-scrollbar { width: 4px; }
+  .snapshot-list::-webkit-scrollbar-thumb { background: var(--rule); }
+
+  .snapshot-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--rule);
+    background: var(--paper-warm);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .snapshot-item .name { color: var(--ink); font-weight: 500; }
+  .snapshot-item.active {
+    border-color: var(--red);
+    background: var(--red-soft);
+  }
+
+  .snapshot-empty {
+    text-align: center;
+    padding: 16px 10px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    border: 1px dashed var(--rule);
+    background: var(--paper-warm);
+  }
+
+  .console-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: var(--ink); color: var(--paper); }
+  .btn.danger {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .btn.danger:hover { background: var(--red); color: var(--paper); }
+
+  .save-indicator {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--good);
+    margin-right: auto;
+    align-self: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .save-indicator.visible { opacity: 1; }
+
+  /* ============ TABS ============ */
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .tab {
+    background: var(--paper);
+    color: var(--muted);
+    border: none;
+    border-right: 1px solid var(--rule);
+    padding: 26px 32px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+  }
+  .tab:last-child { border-right: none; }
+  .tab:hover { background: var(--paper-warm); color: var(--ink-soft); }
+  .tab.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tab.active::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--red);
+  }
+
+  .tab-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .tab-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .tab-desc {
+    font-size: 12px;
+    margin-top: 4px;
+    opacity: 0.75;
+  }
+
+  /* ============ SECCIONES ============ */
+  .section {
+    padding: 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--rule);
+    flex-wrap: wrap;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.15em;
+  }
+
+  .section-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 30px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .section-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: auto;
+    letter-spacing: 0.05em;
+  }
+
+  /* ============ KPIs ============ */
+  .kpis { display: grid; gap: 0; }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .kpi-row:last-child { border-bottom: none; }
+
+  .kpi-row.total {
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    margin-top: 12px;
+    padding: 26px 16px;
+    background: var(--paper-warm);
+  }
+
+  .kpi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .kpi-row.total .kpi-label { color: var(--ink); font-weight: 700; }
+
+  .kpi-leader {
+    border-bottom: 1px dotted var(--rule);
+    transform: translateY(-4px);
+  }
+
+  .kpi-value-block {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .kpi-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .kpi-value.negative { color: var(--red); }
+  .kpi-value.positive { color: var(--good); }
+
+  .kpi-row.total .kpi-value { font-size: 62px; }
+
+  .kpi-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-left: 12px;
+  }
+
+  .kpi-delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    margin-top: 4px;
+    letter-spacing: 0.04em;
+    text-align: right;
+  }
+  .kpi-delta.up { color: var(--good); }
+  .kpi-delta.down { color: var(--red); }
+  .kpi-delta.neutral { color: var(--muted); }
+  .kpi-delta::before {
+    margin-right: 4px;
+    font-weight: 700;
+  }
+  .kpi-delta.up::before { content: "▲"; }
+  .kpi-delta.down::before { content: "▼"; }
+  .kpi-delta.neutral::before { content: "■"; }
+
+  /* ============ TABLA VENDEDORES ============ */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .table thead th {
+    text-align: right;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--ink);
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .table thead th:first-child { text-align: left; }
+
+  .table tbody td {
+    padding: 18px 16px;
+    border-bottom: 1px dashed var(--rule);
+    text-align: right;
+    color: var(--ink);
+    vertical-align: top;
+  }
+
+  .table tbody td:first-child {
+    text-align: left;
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .cell-delta {
+    display: block;
+    font-size: 10px;
+    margin-top: 4px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .cell-delta.up { color: var(--good); }
+  .cell-delta.down { color: var(--red); }
+  .cell-delta.neutral { color: var(--muted); }
+
+  .table tbody tr.total { background: var(--paper-warm); }
+  .table tbody tr.total td {
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .seller-emoji { display: inline-block; margin-right: 8px; }
+
+  .seller-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    margin-left: 10px;
+    padding: 2px 8px;
+    border: 1px solid var(--rule);
+    letter-spacing: 0.1em;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+
+  .roas-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border: 1px solid currentColor;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+  }
+  .roas-pill.good { color: var(--good); background: var(--good-soft); }
+  .roas-pill.warn { color: var(--warn); }
+  .roas-pill.bad { color: var(--red); background: var(--red-soft); }
+
+  .neto-cell { font-weight: 700; }
+  .neto-cell.positive { color: var(--good); }
+  .neto-cell.negative { color: var(--red); }
+
+  /* ============ WATERFALL ============ */
+  .waterfall { display: flex; flex-direction: column; }
+
+  .wf-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 220px;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  .wf-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .wf-row.minus .wf-label {
+    color: var(--muted);
+    padding-left: 18px;
+    position: relative;
+  }
+  .wf-row.minus .wf-label::before {
+    content: "−";
+    position: absolute;
+    left: 0;
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .wf-bar-container {
+    height: 28px;
+    background: var(--paper-warm);
+    position: relative;
+    border-left: 2px solid var(--ink);
+  }
+
+  .wf-bar {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .wf-row.minus .wf-bar { background: var(--red); opacity: 0.85; }
+  .wf-row.subtotal .wf-bar { background: var(--ink); }
+  .wf-row.final .wf-bar { background: var(--red); }
+
+  .wf-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    text-align: right;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .wf-row.minus .wf-value { color: var(--red); }
+  .wf-row.minus .wf-value::before { content: "−"; margin-right: 4px; }
+  .wf-row.subtotal .wf-value { color: var(--ink); }
+  .wf-row.final .wf-value { color: var(--red); font-size: 32px; }
+
+  .wf-row.subtotal {
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    background: var(--paper-warm);
+    padding: 18px 0;
+    margin: 4px 0;
+  }
+  .wf-row.subtotal .wf-label { color: var(--ink); font-weight: 700; }
+
+  .wf-row.final {
+    border-top: 3px solid var(--red);
+    border-bottom: 3px solid var(--red);
+    background: var(--red-soft);
+    padding: 24px 0;
+    margin-top: 12px;
+  }
+  .wf-row.final .wf-label { color: var(--red); font-weight: 700; }
+
+  /* ============ ESTRUCTURA ============ */
+  .struct { display: grid; gap: 14px; }
+
+  .struct-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 160px;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .struct-label {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .struct-bar-container {
+    height: 8px;
+    background: var(--paper-warm);
+    overflow: hidden;
+  }
+
+  .struct-bar {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.6s ease;
+  }
+
+  .struct-row[data-type="alquiler"] .struct-bar { background: var(--red); }
+  .struct-row[data-type="services"] .struct-bar { background: var(--muted); }
+
+  .struct-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    text-align: right;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .struct-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  /* ============ ADS ============ */
+  .ads-hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ads-hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 5px;
+    background: var(--red);
+  }
+
+  .ads-hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .ads-hero-number {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(80px, 14vw, 180px);
+    line-height: 0.85;
+    color: var(--paper);
+    letter-spacing: -0.01em;
+  }
+  .ads-hero-number .x { color: var(--red); }
+
+  .ads-hero-sub {
+    font-size: 16px;
+    color: var(--muted-light);
+    margin-top: 16px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ads-hero-sub strong { color: var(--paper); font-weight: 600; }
+
+  .ads-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+
+  .ads-card {
+    border: 1px solid var(--rule);
+    padding: 28px;
+    background: var(--paper);
+  }
+
+  .ads-card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .ads-card-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .ads-card-rows { display: grid; gap: 10px; }
+
+  .ads-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .ads-card-row.highlight {
+    border-bottom: 2px solid var(--ink);
+    padding-top: 12px;
+    margin-top: 8px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .ads-card-row .label { color: var(--ink-soft); }
+  .ads-card-row .val { color: var(--ink); }
+  .ads-card-row.highlight .val.negative { color: var(--red); }
+  .ads-card-row.highlight .val.positive { color: var(--good); }
+
+  .ads-counter {
+    background: var(--paper-warm);
+    border: 1px solid var(--rule);
+    padding: 32px;
+    margin-bottom: 32px;
+  }
+
+  .ads-counter-question {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .ads-counter-explainer {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+
+  .ads-slider-block { display: flex; flex-direction: column; gap: 10px; }
+
+  .ads-slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .ads-slider-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ads-slider-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: var(--red);
+    letter-spacing: 0.02em;
+  }
+
+  .ads-verdict {
+    background: var(--red);
+    color: var(--paper);
+    padding: 24px 32px;
+    text-align: center;
+    margin-top: 24px;
+  }
+
+  .ads-verdict-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--paper);
+    opacity: 0.8;
+    margin-bottom: 8px;
+  }
+
+  .ads-verdict-text {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(20px, 3vw, 28px);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .ads-arguments {
+    margin-top: 32px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .ads-arg {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--paper-warm);
+    border-left: 3px solid var(--red);
+  }
+
+  .ads-arg-marker {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    color: var(--red);
+    line-height: 1.2;
+  }
+
+  .ads-arg-text {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .ads-arg-text strong {
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  /* ============ COMPARACIÓN ============ */
+  .compare-section {
+    background: var(--paper-warm);
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--rule);
+    margin-bottom: 32px;
+  }
+
+  .compare-col {
+    padding: 28px;
+    background: var(--paper);
+  }
+  .compare-col:first-child {
+    border-right: 1px solid var(--rule);
+  }
+
+  .compare-col-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .compare-col.b .compare-col-header { color: var(--red); }
+
+  .compare-col-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .compare-mini-wf {
+    display: grid;
+    gap: 8px;
+  }
+
+  .cmwf-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px dotted var(--rule);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .cmwf-row.subtotal {
+    font-weight: 700;
+    border-bottom: 1px solid var(--ink);
+    padding-top: 10px;
+  }
+  .cmwf-row.final {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    color: var(--red);
+    border-top: 2px solid var(--red);
+    border-bottom: none;
+    padding-top: 12px;
+    margin-top: 4px;
+  }
+
+  .cmwf-row .label { color: var(--ink-soft); }
+  .cmwf-row.minus .label { padding-left: 10px; position: relative; }
+  .cmwf-row.minus .label::before {
+    content: "−";
+    position: absolute;
+    left: 0;
+    color: var(--red);
+  }
+
+  .changes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .changes-table thead th {
+    text-align: right;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--ink);
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .changes-table thead th:first-child { text-align: left; }
+
+  .changes-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px dashed var(--rule);
+    text-align: right;
+    color: var(--ink);
+  }
+  .changes-table tbody td:first-child {
+    text-align: left;
+    color: var(--ink-soft);
+  }
+
+  .changes-table .delta-cell { font-weight: 700; }
+  .changes-table .delta-cell.up { color: var(--good); }
+  .changes-table .delta-cell.down { color: var(--red); }
+  .changes-table .delta-cell.neutral { color: var(--muted); }
+
+  /* ============ SIMULADOR ============ */
+  .simulator {
+    background: var(--paper-warm);
+    padding: 48px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .sim-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 16px;
+  }
+
+  .sim-controls { display: flex; flex-direction: column; gap: 24px; }
+
+  .slider-block { display: flex; flex-direction: column; gap: 8px; }
+
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .slider-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .slider-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    color: var(--red);
+    letter-spacing: 0.02em;
+  }
+
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--rule);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--red);
+    border: 2px solid var(--paper);
+    cursor: pointer;
+    border-radius: 0;
+    box-shadow: 0 0 0 1px var(--ink);
+  }
+  input[type=range]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--red);
+    border: 2px solid var(--paper);
+    cursor: pointer;
+    border-radius: 0;
+  }
+
+  .sim-output {
+    background: var(--paper);
+    border: 1px solid var(--ink);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .sim-output-block {
+    border-bottom: 1px dashed var(--rule);
+    padding-bottom: 20px;
+  }
+  .sim-output-block:last-child { border-bottom: none; padding-bottom: 0; }
+
+  .sim-block-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .sim-block-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 54px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .sim-block-value.negative { color: var(--red); }
+  .sim-block-value.positive { color: var(--good); }
+
+  .sim-block-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ============ DIAGNÓSTICO ============ */
+  .diagnosis { padding: 48px; }
+  .diag-list { display: grid; gap: 16px; margin-top: 4px; }
+
+  .diag-item {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 24px;
+    padding: 26px;
+    background: var(--paper-warm);
+    border-left: 3px solid var(--red);
+  }
+
+  .diag-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 48px;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .diag-content { display: flex; flex-direction: column; gap: 8px; }
+
+  .diag-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .diag-body {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+
+  .diag-body strong {
+    color: var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    padding: 32px 48px;
+    text-align: center;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ============ ANIM ============ */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hidden { display: none !important; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 900px) {
+    .header, .section, .simulator, .diagnosis { padding: 28px 20px; }
+    .console-header, .console-body { padding-left: 20px; padding-right: 20px; }
+    .month-banner { padding: 14px 20px; gap: 16px; }
+    .mb-divider { display: none; }
+    .metadata { grid-template-columns: repeat(2, 1fr); padding: 18px 20px; }
+    .meta-cell { padding: 12px; border-right: none; border-bottom: 1px solid var(--rule); }
+    .meta-cell:nth-child(odd) { border-right: 1px solid var(--rule); }
+    .meta-cell:nth-last-child(-n+2) { border-bottom: none; }
+    .header-grid { grid-template-columns: 1fr; }
+    .ref-box { text-align: left; }
+    .ref-line { justify-content: start; }
+    .console-body { grid-template-columns: 1fr; gap: 24px; }
+    .console-group.wide { grid-column: span 1; }
+    .console-field { grid-template-columns: 100px 1fr; }
+    .wf-row { grid-template-columns: 1fr auto; gap: 12px; }
+    .wf-bar-container { display: none; }
+    .wf-value { font-size: 20px !important; }
+    .sim-grid { grid-template-columns: 1fr; gap: 24px; }
+    .ads-grid { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .compare-col:first-child { border-right: none; border-bottom: 1px solid var(--rule); }
+    .table tbody td:first-child { font-size: 16px; }
+    .struct-row { grid-template-columns: 110px 1fr 100px; gap: 12px; }
+    .tabs { grid-template-columns: 1fr; }
+    .tab { border-right: none; border-bottom: 1px solid var(--rule); }
+    .tab:last-child { border-bottom: none; }
+    .brand-title { font-size: 56px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-rule"></div>
+
+<header class="header">
+  <div class="header-grid">
+    <div>
+      <div class="brand-mark">Graziano · Arena Financiera</div>
+      <h1 class="brand-title">P&L<br><span class="accent">OPERATIVO</span></h1>
+      <div class="brand-sub">Proyección mensual con escenarios y comparación entre meses. Editá parámetros en vivo, guardá snapshots para comparar evolución.</div>
+    </div>
+    <div class="ref-box">
+      <div class="ref-line"><span class="ref-label">DOC</span><span class="ref-val">PNL-GRZ</span></div>
+      <div class="ref-line"><span class="ref-label">PARA</span><span class="ref-val">CARLOS · GUILLE</span></div>
+      <div class="ref-line"><span class="ref-label">VERSIÓN</span><span class="ref-val">3.0 · multi-mes</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== MES BANNER ====== -->
+<div class="month-banner">
+  <div class="mb-block">
+    <div class="mb-label">Mes Activo</div>
+    <div class="mb-value" id="mb-active">Junio 2026</div>
+  </div>
+  <div class="mb-divider"></div>
+  <div class="mb-block" id="mb-compare-block" style="display: none;">
+    <div class="mb-label">Comparado vs</div>
+    <div class="mb-value compare-tag" id="mb-compare">—</div>
+  </div>
+  <div class="mb-block" id="mb-snapshots-block">
+    <div class="mb-label">Snapshots</div>
+    <div class="mb-value" id="mb-snapshots-count" style="font-size: 14px;">0 guardados</div>
+  </div>
+</div>
+
+<div class="metadata">
+  <div class="meta-cell">
+    <div class="meta-label">Margen Bruto</div>
+    <div class="meta-value" id="meta-margin">22.0 %</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Ads (USD/día)</div>
+    <div class="meta-value" id="meta-ads">USD 15 c/u</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Cotización</div>
+    <div class="meta-value" id="meta-coti">USD 1.540</div>
+  </div>
+  <div class="meta-cell">
+    <div class="meta-label">Estructura Fija</div>
+    <div class="meta-value" id="meta-fixed">$4.861.000</div>
+  </div>
+</div>
+
+<!-- ====== CONSOLA ====== -->
+<section class="console" id="console">
+  <div class="console-header" id="console-toggle">
+    <div class="console-title">
+      <span class="num">00 ·</span>
+      <span class="text">Parámetros & Meses</span>
+      <span class="hint">→ editá valores · guardá snapshots · compará meses</span>
+    </div>
+    <div class="console-toggle">configurar</div>
+  </div>
+
+  <div class="console-body">
+
+    <!-- MES MANAGER -->
+    <div class="console-group wide">
+      <div class="console-group-title">Gestión de meses</div>
+      <div class="month-manager">
+
+        <div class="console-field">
+          <label>Nombre</label>
+          <input type="text" id="month-name" placeholder="Junio 2026">
+        </div>
+
+        <div class="mm-row">
+          <button class="btn-mini primary" id="btn-save-snapshot">💾 Guardar como snapshot</button>
+          <button class="btn-mini" id="btn-new-month">+ Nuevo mes vacío</button>
+        </div>
+
+        <div class="console-field" style="margin-top: 6px;">
+          <label>Comparar</label>
+          <select id="compare-select">
+            <option value="">— ninguno —</option>
+          </select>
+        </div>
+
+        <div style="margin-top: 8px;">
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px;">Snapshots guardados</div>
+          <div class="snapshot-list" id="snapshot-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENERALES -->
+    <div class="console-group">
+      <div class="console-group-title">Generales</div>
+      <div class="console-field"><label>Cotiz USD</label><input type="number" data-state="cotizacion" step="1"></div>
+      <div class="console-field"><label>Margen %</label><input type="number" data-state="margin" step="0.5"></div>
+    </div>
+
+    <!-- ADS -->
+    <div class="console-group">
+      <div class="console-group-title">Ads (USD/día)</div>
+      <div class="console-field"><label>Lauti</label><input type="number" data-state="ads.lauti" step="1"></div>
+      <div class="console-field"><label>Bauti</label><input type="number" data-state="ads.bauti" step="1"></div>
+      <div class="console-field"><label>Leo</label><input type="number" data-state="ads.leo" step="1"></div>
+      <div class="console-field"><label>Estela</label><input type="number" data-state="ads.estela" step="1"></div>
+    </div>
+
+    <!-- VENTAS -->
+    <div class="console-group">
+      <div class="console-group-title">Ventas mensuales</div>
+      <div class="console-field"><label>Lauti</label><input type="number" data-state="ventas.lauti" step="100000"></div>
+      <div class="console-field"><label>Bauti</label><input type="number" data-state="ventas.bauti" step="100000"></div>
+      <div class="console-field"><label>Leo</label><input type="number" data-state="ventas.leo" step="100000"></div>
+      <div class="console-field"><label>Estela</label><input type="number" data-state="ventas.estela" step="100000"></div>
+    </div>
+
+    <!-- ESTRUCTURA -->
+    <div class="console-group">
+      <div class="console-group-title">Estructura</div>
+      <div class="console-field"><label>S. Lauti</label><input type="number" data-state="base.lauti" step="100000"></div>
+      <div class="console-field"><label>Alquiler</label><input type="number" data-state="fixed.alquiler" step="50000"></div>
+      <div class="console-field"><label>Emi</label><input type="number" data-state="fixed.emi" step="50000"></div>
+      <div class="console-field"><label>Facu</label><input type="number" data-state="fixed.facu" step="50000"></div>
+      <div class="console-field"><label>Cami</label><input type="number" data-state="fixed.cami" step="50000"></div>
+      <div class="console-field"><label>Servicios</label><input type="number" data-state="fixed.servicios" step="10000"></div>
+      <div class="console-field"><label>Contador</label><input type="number" data-state="fixed.contador" step="10000"></div>
+    </div>
+
+    <div class="console-actions">
+      <span class="save-indicator" id="save-indicator">✓ guardado</span>
+      <button class="btn danger" id="btn-reset">Restaurar defaults</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====== TABS ====== -->
+<div class="tabs">
+  <button class="tab active" data-view="A">
+    <div class="tab-num">ESCENARIO · A</div>
+    <div class="tab-title">2 Vendedores</div>
+    <div class="tab-desc">Lauti · Bauti · Estela</div>
+  </button>
+  <button class="tab" data-view="B">
+    <div class="tab-num">ESCENARIO · B</div>
+    <div class="tab-title">3 Vendedores</div>
+    <div class="tab-desc">Lauti · Bauti · Leo · Estela</div>
+  </button>
+</div>
+
+<!-- ====== 01 · KPIs ====== -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">01 ·</span>
+    <h2 class="section-title">Resumen Financiero</h2>
+    <span class="section-hint">→ líneas de balance</span>
+  </div>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<!-- ====== 02 · VENDEDORES ====== -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">02 ·</span>
+    <h2 class="section-title">Performance por Vendedor</h2>
+    <span class="section-hint">→ ROAS = ventas / inversión publicitaria</span>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Vendedor</th><th>Ventas</th><th>Margen</th><th>Ads</th>
+        <th>Comisión</th><th>ROAS</th><th>Aporte Neto</th>
+      </tr>
+    </thead>
+    <tbody id="sellers-table"></tbody>
+  </table>
+</section>
+
+<!-- ====== 03 · WATERFALL ====== -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">03 ·</span>
+    <h2 class="section-title">Cascada del Margen</h2>
+    <span class="section-hint">→ cómo se evapora el bruto hasta el neto</span>
+  </div>
+  <div class="waterfall" id="waterfall"></div>
+</section>
+
+<!-- ====== 04 · ESTRUCTURA ====== -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">04 ·</span>
+    <h2 class="section-title">Estructura Fija Mensual</h2>
+    <span class="section-hint" id="struct-hint">→ total: $4.861.000</span>
+  </div>
+  <div class="struct" id="struct-table"></div>
+</section>
+
+<!-- ====== 05 · RENTABILIDAD ADS ====== -->
+<section class="section">
+  <div class="section-head">
+    <span class="section-num">05 ·</span>
+    <h2 class="section-title">¿Las Ads son Rentables?</h2>
+    <span class="section-hint">→ el caso para Carlos</span>
+  </div>
+
+  <div class="ads-hero">
+    <div class="ads-hero-eyebrow">Por cada $1 invertido en ads</div>
+    <div class="ads-hero-number" id="ads-roas-hero">$4.03<span class="x">×</span></div>
+    <div class="ads-hero-sub">vuelven en <strong>margen bruto</strong>. El break-even teórico está en 4.55×, pero el ROAS de facturación es <strong id="ads-roas-fact">18.3×</strong>: ads no es un gasto, es la palanca que sostiene el flujo de leads.</div>
+  </div>
+
+  <div class="ads-counter">
+    <div class="ads-counter-question">¿Qué pasaría si apagáramos las ads?</div>
+    <div class="ads-counter-explainer">La empresa es nueva. Las ads son la fuente principal de leads para los vendedores online. Si las apagamos, asumimos que se perdería un alto porcentaje de las ventas atribuibles a ese canal (Lauti, Bauti, Leo). Estela (presencial) no se ve afectada.</div>
+
+    <div class="ads-slider-block">
+      <div class="ads-slider-header">
+        <span class="ads-slider-label">% de ventas perdidas sin ads</span>
+        <span class="ads-slider-value" id="ads-loss-val">85 %</span>
+      </div>
+      <input type="range" id="ads-loss" min="30" max="100" step="5" value="85">
+    </div>
+
+    <div class="ads-grid" style="margin-top: 28px;">
+      <div class="ads-card">
+        <div class="ads-card-label">Hoy · CON ads</div>
+        <div class="ads-card-title">Realidad</div>
+        <div class="ads-card-rows" id="ads-with"></div>
+      </div>
+      <div class="ads-card">
+        <div class="ads-card-label">Hipótesis · SIN ads</div>
+        <div class="ads-card-title">Contrafactual</div>
+        <div class="ads-card-rows" id="ads-without"></div>
+      </div>
+    </div>
+
+    <div class="ads-verdict">
+      <div class="ads-verdict-label">Veredicto</div>
+      <div class="ads-verdict-text" id="ads-verdict-text">Apagar ads empeora el neto en $2.341.674 mensuales</div>
+    </div>
+  </div>
+
+  <div class="ads-arguments">
+    <div class="ads-arg">
+      <div class="ads-arg-marker">▸</div>
+      <div class="ads-arg-text"><strong>El verdadero problema no son las ads.</strong> Las ads cuestan ~$2M/mes. La estructura fija cuesta ~$7.8M. Cortar ads ahorra poco y mata el motor de leads.</div>
+    </div>
+    <div class="ads-arg">
+      <div class="ads-arg-marker">▸</div>
+      <div class="ads-arg-text"><strong>ROAS por encima del break-even teórico.</strong> A margen 22%, el umbral mínimo para que ads pague su propio costo es 4.55×. El ROAS de facturación actual lo supera ampliamente.</div>
+    </div>
+    <div class="ads-arg">
+      <div class="ads-arg-marker">▸</div>
+      <div class="ads-arg-text"><strong>Sin ads, no hay tracción de marca.</strong> Graziano no es Easy ni Mardi. La memoria de marca todavía no compensa apagar el canal pago. En 12-18 meses el orgánico va a ganar peso. Hoy, no.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 06 · COMPARACIÓN (solo si hay compareWith) ====== -->
+<section class="section compare-section hidden" id="compare-section">
+  <div class="section-head">
+    <span class="section-num">06 ·</span>
+    <h2 class="section-title" id="compare-title">Comparación de Meses</h2>
+    <span class="section-hint">→ side by side · tabla de cambios</span>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-col" id="compare-col-a">
+      <div class="compare-col-header">MES A</div>
+      <div class="compare-col-name" id="compare-name-a">—</div>
+      <div class="compare-mini-wf" id="compare-wf-a"></div>
+    </div>
+    <div class="compare-col b" id="compare-col-b">
+      <div class="compare-col-header">MES B</div>
+      <div class="compare-col-name" id="compare-name-b">—</div>
+      <div class="compare-mini-wf" id="compare-wf-b"></div>
+    </div>
+  </div>
+
+  <h3 style="font-family: 'Anton', sans-serif; font-size: 22px; letter-spacing: 0.03em; text-transform: uppercase; margin-bottom: 16px; color: var(--ink);">Tabla de cambios</h3>
+  <table class="changes-table">
+    <thead>
+      <tr>
+        <th>Concepto</th>
+        <th id="changes-head-a">—</th>
+        <th id="changes-head-b">—</th>
+        <th>Δ Absoluto</th>
+        <th>Δ %</th>
+      </tr>
+    </thead>
+    <tbody id="changes-tbody"></tbody>
+  </table>
+</section>
+
+<!-- ====== 07 · SIMULADOR ====== -->
+<section class="simulator">
+  <div class="section-head">
+    <span class="section-num">07 ·</span>
+    <h2 class="section-title">Simulador de Break-Even</h2>
+    <span class="section-hint">→ mové las palancas para ver qué hace falta</span>
+  </div>
+
+  <div class="sim-grid">
+    <div class="sim-controls">
+      <div class="slider-block">
+        <div class="slider-header">
+          <span class="slider-label">Facturación total mensual</span>
+          <span class="slider-value" id="sim-ventas-val">$38.063.000</span>
+        </div>
+        <input type="range" id="sim-ventas" min="20000000" max="80000000" step="500000" value="38063000">
+      </div>
+      <div class="slider-block">
+        <div class="slider-header">
+          <span class="slider-label">Margen bruto</span>
+          <span class="slider-value" id="sim-margin-val">22.0 %</span>
+        </div>
+        <input type="range" id="sim-margin" min="15" max="35" step="0.5" value="22">
+      </div>
+      <div class="slider-block">
+        <div class="slider-header">
+          <span class="slider-label">Comisión efectiva</span>
+          <span class="slider-value" id="sim-comm-val">3.5 %</span>
+        </div>
+        <input type="range" id="sim-comm" min="0" max="10" step="0.5" value="3.5">
+      </div>
+      <div class="slider-block">
+        <div class="slider-header">
+          <span class="slider-label">Vendedores con ads</span>
+          <span class="slider-value" id="sim-sellers-val">3</span>
+        </div>
+        <input type="range" id="sim-sellers" min="1" max="5" step="1" value="3">
+      </div>
+      <div class="slider-block">
+        <div class="slider-header">
+          <span class="slider-label">Ads por vendedor (USD/día)</span>
+          <span class="slider-value" id="sim-ads-val">USD 15</span>
+        </div>
+        <input type="range" id="sim-ads" min="0" max="50" step="1" value="15">
+      </div>
+    </div>
+
+    <div class="sim-output">
+      <div class="sim-output-block">
+        <div class="sim-block-label">Resultado Neto Mensual</div>
+        <div class="sim-block-value" id="sim-neto">−$3.148.030</div>
+        <div class="sim-block-sub" id="sim-neto-sub">déficit operativo</div>
+      </div>
+      <div class="sim-output-block">
+        <div class="sim-block-label">Facturación para Break-Even</div>
+        <div class="sim-block-value" id="sim-be" style="font-size: 40px;">$52.800.000</div>
+        <div class="sim-block-sub" id="sim-be-sub">faltan ventas adicionales</div>
+      </div>
+      <div class="sim-output-block">
+        <div class="sim-block-label">Margen Requerido a Ventas Actuales</div>
+        <div class="sim-block-value" id="sim-margin-be" style="font-size: 40px;">30.5 %</div>
+        <div class="sim-block-sub">si mantenés la facturación actual</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====== 08 · DIAGNÓSTICO ====== -->
+<section class="diagnosis">
+  <div class="section-head">
+    <span class="section-num">08 ·</span>
+    <h2 class="section-title">Lectura del Mes</h2>
+    <span class="section-hint">→ tres palancas</span>
+  </div>
+
+  <div class="diag-list">
+    <div class="diag-item">
+      <div class="diag-num">01</div>
+      <div class="diag-content">
+        <div class="diag-title">Volumen — palanca fría</div>
+        <div class="diag-body">A margen 22% el break-even mensual está en <strong>~$52.8M</strong>. Hoy se proyectan <strong>$38M</strong>. Subir ticket promedio (más bolsones, fletes grandes, combos de obra) cierra brecha sin tocar costos.</div>
+      </div>
+    </div>
+    <div class="diag-item">
+      <div class="diag-num">02</div>
+      <div class="diag-content">
+        <div class="diag-title">Margen — palanca caliente</div>
+        <div class="diag-body">Cada punto de margen al alza inyecta <strong>~$380k netos</strong> al mes. Llegar a 26-28% promedio cerraría el déficit sin vender un peso más.</div>
+      </div>
+    </div>
+    <div class="diag-item">
+      <div class="diag-num">03</div>
+      <div class="diag-content">
+        <div class="diag-title">Estructura — palanca menos elegante</div>
+        <div class="diag-body">El alquiler (<strong>$2.4M</strong>) representa el 30% de la estructura. Es el ítem más renegociable. Cortar ads NO es palanca, es autogol.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  GRAZIANO MATERIALES · DOCUMENTO INTERNO · v3.0 MULTI-MES
+</div>
+
+<script>
+  // ============ STATE ============
+  const DEFAULT_DATA = {
+    cotizacion: 1540,
+    margin: 22,
+    ads: { lauti: 15, bauti: 15, leo: 15, estela: 0 },
+    ventas: { lauti: 13063000, bauti: 9500000, leo: 8500000, estela: 7000000 },
+    base: { lauti: 3000000 },
+    fixed: { alquiler: 2400000, emi: 800000, facu: 800000, cami: 500000, servicios: 281000, contador: 80000 }
+  };
+
+  const STORAGE_KEY = 'graziano-pnl-v3';
+
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  function deepMerge(target, source) {
+    for (const k in source) {
+      if (typeof source[k] === 'object' && source[k] !== null && !Array.isArray(source[k])) {
+        target[k] = deepMerge(target[k] || {}, source[k]);
+      } else { target[k] = source[k]; }
+    }
+    return target;
+  }
+
+  function defaultState() {
+    return {
+      activeName: 'Junio 2026',
+      activeData: clone(DEFAULT_DATA),
+      snapshots: {},  // id => { name, createdAt, data }
+      compareWith: null  // snapshot id
+    };
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      // backwards compat migration if needed
+      if (!parsed.activeData) {
+        // viene del v2 (state plano)
+        const migrated = defaultState();
+        migrated.activeData = deepMerge(clone(DEFAULT_DATA), parsed);
+        return migrated;
+      }
+      // ensure structure
+      const merged = defaultState();
+      merged.activeName = parsed.activeName || merged.activeName;
+      merged.activeData = deepMerge(clone(DEFAULT_DATA), parsed.activeData || {});
+      merged.snapshots = parsed.snapshots || {};
+      merged.compareWith = parsed.compareWith || null;
+      return merged;
+    } catch(e) { return defaultState(); }
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    showSaveIndicator();
+  }
+
+  let saveTimer;
+  function showSaveIndicator() {
+    const el = document.getElementById('save-indicator');
+    el.classList.add('visible');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => el.classList.remove('visible'), 1500);
+  }
+
+  let state = loadState();
+  let currentView = 'A';
+  let adsLossPercent = 85;
+
+  // Shortcut to active data
+  function data() { return state.activeData; }
+
+  // ============ CALC ============
+  function adsMonthly(usdDay, d) {
+    return Math.round(usdDay * 30 * (d || data()).cotizacion);
+  }
+
+  function calcCommNew(ventas) {
+    const tiers = [
+      {from: 0, to: 6000000, rate: 0.05},
+      {from: 6000000, to: 10000000, rate: 0.06},
+      {from: 10000000, to: 15000000, rate: 0.07},
+      {from: 15000000, to: Infinity, rate: 0.08}
+    ];
+    const arenaBonus = [
+      {from: 13500000, to: 14500000, rate: 0.005},
+      {from: 14500000, to: 15500000, rate: 0.01},
+      {from: 15500000, to: Infinity, rate: 0.015}
+    ];
+    let com = 0;
+    for (const t of tiers) if (ventas > t.from) com += (Math.min(ventas, t.to) - t.from) * t.rate;
+    for (const t of arenaBonus) if (ventas > t.from) com += (Math.min(ventas, t.to) - t.from) * t.rate;
+    return com;
+  }
+
+  function calcCommOld(ventas) {
+    let com = ventas * 0.03;
+    const arenaBonus = [
+      {from: 13500000, to: 14500000, rate: 0.005},
+      {from: 14500000, to: 15500000, rate: 0.01},
+      {from: 15500000, to: Infinity, rate: 0.015}
+    ];
+    for (const t of arenaBonus) if (ventas > t.from) com += (Math.min(ventas, t.to) - t.from) * t.rate;
+    return com;
+  }
+
+  function getViatico(ventas, scheme) {
+    return scheme === 'new' && ventas >= 7000000 ? 100000 : 0;
+  }
+
+  function getSellersFrom(d) {
+    return {
+      lauti: { emoji: '🎯', name: 'Lauti', tag: 'SIST. VIEJO', ventas: d.ventas.lauti, scheme: 'old', adsUsd: d.ads.lauti, base: d.base.lauti, bonusFirst: 30000 },
+      bauti: { emoji: '🧱', name: 'Bauti', tag: 'SIST. NUEVO', ventas: d.ventas.bauti, scheme: 'new', adsUsd: d.ads.bauti, base: 0, bonusFirst: 0 },
+      leo:   { emoji: '🦴', name: 'Leo',   tag: 'SIST. NUEVO', ventas: d.ventas.leo,   scheme: 'new', adsUsd: d.ads.leo,   base: 0, bonusFirst: 0 },
+      estela:{ emoji: '🏪', name: 'Estela',tag: 'PRESENCIAL',  ventas: d.ventas.estela,scheme: 'none',adsUsd: d.ads.estela,base: 0, bonusFirst: 0 }
+    };
+  }
+
+  const SCENARIOS = { A: ['lauti', 'bauti', 'estela'], B: ['lauti', 'bauti', 'leo', 'estela'] };
+
+  function fixedTotalOf(d) { return Object.values(d.fixed).reduce((a,b) => a+b, 0); }
+
+  function buildScenarioFrom(d, view, overrideVentas = null, overrideAds = null) {
+    const ids = SCENARIOS[view];
+    const sellers = getSellersFrom(d);
+    const margin = d.margin / 100;
+
+    const rows = ids.map(id => {
+      const s = sellers[id];
+      const ventasActual = overrideVentas ? overrideVentas[id] : s.ventas;
+      const adsUsd = overrideAds ? overrideAds[id] : s.adsUsd;
+      const ads = Math.round(adsUsd * 30 * d.cotizacion);
+      let com = 0, viatico = 0;
+      if (s.scheme === 'old') com = calcCommOld(ventasActual);
+      else if (s.scheme === 'new') com = calcCommNew(ventasActual);
+      if (s.scheme === 'new') viatico = getViatico(ventasActual, 'new');
+      const margenBruto = ventasActual * margin;
+      const totalCost = ads + com + viatico + s.base;
+      return { id, ...s, ventas: ventasActual, ads, com, viatico, bonus: 0, margen: margenBruto, totalCost };
+    });
+
+    // bonus 1er puesto a lauti si efectivamente es 1ro
+    const ranked = [...rows].sort((a,b) => b.ventas - a.ventas);
+    if (ranked.length && ranked[0].id === 'lauti') {
+      const winner = rows.find(r => r.id === 'lauti');
+      if (winner.bonusFirst) {
+        winner.bonus = 30000;
+        winner.totalCost += 30000;
+      }
+    }
+
+    const totalVentas = rows.reduce((a,r) => a + r.ventas, 0);
+    const totalMargen = rows.reduce((a,r) => a + r.margen, 0);
+    const totalAds = rows.reduce((a,r) => a + r.ads, 0);
+    const totalCom = rows.reduce((a,r) => a + r.com + r.viatico + r.bonus, 0);
+    const totalBase = rows.reduce((a,r) => a + r.base, 0);
+    const aporteOperativo = totalMargen - totalAds - totalCom - totalBase;
+    const fix = fixedTotalOf(d);
+    const neto = aporteOperativo - fix;
+    return { rows, totalVentas, totalMargen, totalAds, totalCom, totalBase, aporteOperativo, neto, fixedTotal: fix };
+  }
+
+  function buildScenario(view) {
+    return buildScenarioFrom(data(), view);
+  }
+
+  function getCompareData() {
+    if (!state.compareWith || !state.snapshots[state.compareWith]) return null;
+    return state.snapshots[state.compareWith];
+  }
+
+  // ============ FORMAT ============
+  function fmt(n) {
+    if (n === null || n === undefined || isNaN(n)) return '—';
+    const sign = n < 0 ? '−' : '';
+    return sign + '$' + Math.abs(Math.round(n)).toLocaleString('es-AR');
+  }
+  function fmtPct(n, d = 1) { return n.toFixed(d) + '%'; }
+  function fmtRoas(n) { return (n === null || !isFinite(n)) ? '—' : n.toFixed(1) + '×'; }
+  function fmtDelta(curr, prev) {
+    if (prev === 0) return null;
+    const diff = curr - prev;
+    const pct = (diff / Math.abs(prev)) * 100;
+    return { diff, pct, abs: Math.abs(diff) };
+  }
+
+  function deltaClass(curr, prev, invert = false) {
+    if (curr === prev) return 'neutral';
+    const better = (curr > prev) !== invert;
+    return better ? 'up' : 'down';
+  }
+
+  function renderDelta(curr, prev, opts = {}) {
+    if (prev === undefined || prev === null) return '';
+    if (Math.abs(prev) < 0.01) return '';
+    const diff = curr - prev;
+    const pct = (diff / Math.abs(prev)) * 100;
+    const cls = opts.invert ? deltaClass(curr, prev, true) : deltaClass(curr, prev);
+    const sign = diff >= 0 ? '+' : '−';
+    if (opts.short) {
+      return `<span class="cell-delta ${cls}">${sign}${pct.toFixed(1)}%</span>`;
+    }
+    return `<div class="kpi-delta ${cls}">${sign}${fmt(Math.abs(diff)).replace('−','').replace('$','$')} · ${sign}${pct.toFixed(1)}%</div>`;
+  }
+
+  // ============ RENDER METADATA ============
+  function renderMeta() {
+    const d = data();
+    document.getElementById('meta-margin').textContent = fmtPct(d.margin, 1);
+    document.getElementById('meta-coti').textContent = 'USD ' + d.cotizacion.toLocaleString('es-AR');
+    const adsVals = Object.values(d.ads).filter(v => v > 0);
+    const allSame = adsVals.length > 0 && adsVals.every(v => v === adsVals[0]);
+    document.getElementById('meta-ads').textContent = allSame
+      ? `USD ${adsVals[0]} c/u`
+      : 'USD variable';
+    document.getElementById('meta-fixed').textContent = fmt(fixedTotalOf(d));
+
+    document.getElementById('mb-active').textContent = state.activeName;
+    const snapCount = Object.keys(state.snapshots).length;
+    document.getElementById('mb-snapshots-count').textContent = snapCount + ' guardado' + (snapCount === 1 ? '' : 's');
+
+    const compareData = getCompareData();
+    if (compareData) {
+      document.getElementById('mb-compare-block').style.display = 'flex';
+      document.getElementById('mb-compare').textContent = compareData.name;
+    } else {
+      document.getElementById('mb-compare-block').style.display = 'none';
+    }
+  }
+
+  // ============ RENDER KPIS (con deltas) ============
+  function renderKpis(s) {
+    const el = document.getElementById('kpis');
+    const totalCostos = s.totalAds + s.totalCom + s.totalBase + s.fixedTotal;
+
+    const compareData = getCompareData();
+    let cs = null;
+    if (compareData) cs = buildScenarioFrom(compareData.data, currentView);
+
+    const items = [
+      { label: 'Facturación Bruta', val: s.totalVentas, pct: null, prev: cs?.totalVentas },
+      { label: `Margen Bruto · ${fmtPct(data().margin)}`, val: s.totalMargen, pct: (s.totalMargen/s.totalVentas)*100, prev: cs?.totalMargen },
+      { label: 'Costos Totales', val: totalCostos, pct: (totalCostos/s.totalVentas)*100, prev: cs ? (cs.totalAds + cs.totalCom + cs.totalBase + cs.fixedTotal) : undefined, invert: true },
+      { label: 'Resultado Neto', val: s.neto, pct: (s.neto/s.totalVentas)*100, prev: cs?.neto, isTotal: true }
+    ];
+
+    let html = '';
+    items.forEach(it => {
+      const cls = it.isTotal ? 'total' : '';
+      const valClass = it.val < 0 ? 'negative' : it.isTotal ? 'positive' : '';
+      html += `
+        <div class="kpi-row ${cls}">
+          <span class="kpi-label">${it.label}</span>
+          <div class="kpi-leader" ${it.isTotal ? 'style="border-color: var(--ink);"' : ''}></div>
+          <div class="kpi-value-block">
+            <span class="kpi-value ${valClass}">${fmt(it.val)}${it.pct !== null ? `<span class="kpi-pct">${fmtPct(it.pct)}</span>` : ''}</span>
+            ${cs ? renderDelta(it.val, it.prev, { invert: it.invert }) : ''}
+          </div>
+        </div>
+      `;
+    });
+    el.innerHTML = html;
+  }
+
+  // ============ RENDER VENDEDORES ============
+  function renderSellers(s) {
+    const el = document.getElementById('sellers-table');
+    let html = '';
+    const compareData = getCompareData();
+    let cs = null;
+    if (compareData) cs = buildScenarioFrom(compareData.data, currentView);
+
+    s.rows.forEach(r => {
+      const roas = r.ads > 0 ? r.ventas / r.ads : null;
+      const roasClass = roas === null ? '' : roas >= 10 ? 'good' : roas >= 5 ? 'warn' : 'bad';
+      const totalSellerCost = r.ads + r.com + r.viatico + r.bonus + r.base;
+      const netoSeller = r.margen - totalSellerCost;
+
+      let prev = null;
+      if (cs) prev = cs.rows.find(x => x.id === r.id);
+      const prevNeto = prev ? prev.margen - (prev.ads + prev.com + prev.viatico + prev.bonus + prev.base) : null;
+
+      html += `
+        <tr>
+          <td><span class="seller-emoji">${r.emoji}</span>${r.name}<span class="seller-tag">${r.tag}</span></td>
+          <td>${fmt(r.ventas)}${prev ? renderDelta(r.ventas, prev.ventas, { short: true }) : ''}</td>
+          <td>${fmt(r.margen)}</td>
+          <td>${fmt(r.ads)}</td>
+          <td>${fmt(r.com + r.viatico + r.bonus + r.base)}</td>
+          <td>${roas === null ? '<span style="color:var(--muted)">—</span>' : `<span class="roas-pill ${roasClass}">${fmtRoas(roas)}</span>`}</td>
+          <td class="neto-cell ${netoSeller < 0 ? 'negative' : 'positive'}">${fmt(netoSeller)}${prev ? renderDelta(netoSeller, prevNeto, { short: true }) : ''}</td>
+        </tr>
+      `;
+    });
+
+    const totalRoas = s.totalAds > 0 ? s.totalVentas / s.totalAds : null;
+    html += `
+      <tr class="total">
+        <td>TOTAL</td>
+        <td>${fmt(s.totalVentas)}${cs ? renderDelta(s.totalVentas, cs.totalVentas, { short: true }) : ''}</td>
+        <td>${fmt(s.totalMargen)}</td>
+        <td>${fmt(s.totalAds)}</td>
+        <td>${fmt(s.totalCom + s.totalBase)}</td>
+        <td>${fmtRoas(totalRoas)}</td>
+        <td class="${s.aporteOperativo < 0 ? 'negative' : 'positive'}">${fmt(s.aporteOperativo)}${cs ? renderDelta(s.aporteOperativo, cs.aporteOperativo, { short: true }) : ''}</td>
+      </tr>
+    `;
+    el.innerHTML = html;
+  }
+
+  // ============ WATERFALL ============
+  function renderWaterfall(s) {
+    const el = document.getElementById('waterfall');
+    const max = Math.max(s.totalVentas, 1);
+    const items = [
+      { label: 'Facturación Bruta', value: s.totalVentas, type: '' },
+      { label: `Margen Bruto (${fmtPct(data().margin)})`, value: s.totalMargen, type: 'subtotal' },
+      { label: 'Ads (Meta)', value: s.totalAds, type: 'minus' },
+      { label: 'Comisiones · Viáticos · Bonos', value: s.totalCom, type: 'minus' },
+      { label: 'Sueldo base Lauti', value: s.totalBase, type: 'minus' },
+      { label: 'Aporte Operativo', value: s.aporteOperativo, type: 'subtotal' },
+      { label: 'Estructura Fija', value: s.fixedTotal, type: 'minus' },
+      { label: 'Resultado Neto', value: s.neto, type: 'final' }
+    ];
+    let html = '';
+    items.forEach(it => {
+      const w = Math.min(100, Math.abs(it.value) / max * 100);
+      html += `
+        <div class="wf-row ${it.type}">
+          <div class="wf-label">${it.label}</div>
+          <div class="wf-bar-container"><div class="wf-bar" style="width: ${w}%"></div></div>
+          <div class="wf-value">${fmt(it.value).replace('−', '')}</div>
+        </div>
+      `;
+    });
+    el.innerHTML = html;
+  }
+
+  // ============ ESTRUCTURA ============
+  function renderStruct() {
+    const el = document.getElementById('struct-table');
+    const fix = data().fixed;
+    const total = fixedTotalOf(data());
+    const items = [
+      { key: 'alquiler', label: 'Alquiler', type: 'alquiler' },
+      { key: 'emi', label: 'Emi · Depósito', type: 'people' },
+      { key: 'facu', label: 'Facu · Chofer', type: 'people' },
+      { key: 'cami', label: 'Cami · Admin', type: 'people' },
+      { key: 'servicios', label: 'Servicios', type: 'services' },
+      { key: 'contador', label: 'Contador', type: 'services' }
+    ];
+    const max = Math.max(...Object.values(fix));
+    let html = '';
+    items.forEach(it => {
+      const v = fix[it.key];
+      const w = (v / max) * 100;
+      const pct = (v / total) * 100;
+      html += `
+        <div class="struct-row" data-type="${it.type}">
+          <div class="struct-label">${it.label}</div>
+          <div class="struct-bar-container"><div class="struct-bar" style="width: ${w}%"></div></div>
+          <div class="struct-value">${fmt(v)}<span class="struct-pct">· ${fmtPct(pct)}</span></div>
+        </div>
+      `;
+    });
+    el.innerHTML = html;
+    document.getElementById('struct-hint').textContent = `→ total: ${fmt(total)}`;
+  }
+
+  // ============ ADS ============
+  function renderAdsSection(scenarioWith) {
+    const roasMargen = scenarioWith.totalAds > 0 ? scenarioWith.totalMargen / scenarioWith.totalAds : 0;
+    const roasFact = scenarioWith.totalAds > 0 ? scenarioWith.totalVentas / scenarioWith.totalAds : 0;
+    document.getElementById('ads-roas-hero').innerHTML = `${roasMargen.toFixed(2)}<span class="x">×</span>`;
+    document.getElementById('ads-roas-fact').textContent = roasFact.toFixed(1) + '×';
+
+    // Contrafactual
+    const loss = adsLossPercent / 100;
+    const sellers = getSellersFrom(data());
+    const sellersWithAds = ['lauti', 'bauti', 'leo'].filter(id => SCENARIOS[currentView].includes(id) && sellers[id].adsUsd > 0);
+    const ventasSinAds = {};
+    SCENARIOS[currentView].forEach(id => {
+      if (sellersWithAds.includes(id)) {
+        ventasSinAds[id] = sellers[id].ventas * (1 - loss);
+      } else {
+        ventasSinAds[id] = sellers[id].ventas;
+      }
+    });
+    const adsZero = { lauti: 0, bauti: 0, leo: 0, estela: 0 };
+    const scenarioWithout = buildScenarioFrom(data(), currentView, ventasSinAds, adsZero);
+
+    const adsW = document.getElementById('ads-with');
+    adsW.innerHTML = `
+      <div class="ads-card-row"><span class="label">Facturación</span><span class="val">${fmt(scenarioWith.totalVentas)}</span></div>
+      <div class="ads-card-row"><span class="label">Margen bruto</span><span class="val">${fmt(scenarioWith.totalMargen)}</span></div>
+      <div class="ads-card-row"><span class="label">− Ads</span><span class="val">${fmt(scenarioWith.totalAds)}</span></div>
+      <div class="ads-card-row"><span class="label">− Comisiones</span><span class="val">${fmt(scenarioWith.totalCom)}</span></div>
+      <div class="ads-card-row"><span class="label">− Sueldo + Estructura</span><span class="val">${fmt(scenarioWith.totalBase + scenarioWith.fixedTotal)}</span></div>
+      <div class="ads-card-row highlight"><span class="label">Resultado Neto</span><span class="val ${scenarioWith.neto < 0 ? 'negative' : 'positive'}">${fmt(scenarioWith.neto)}</span></div>
+    `;
+
+    const adsWo = document.getElementById('ads-without');
+    adsWo.innerHTML = `
+      <div class="ads-card-row"><span class="label">Facturación</span><span class="val">${fmt(scenarioWithout.totalVentas)}</span></div>
+      <div class="ads-card-row"><span class="label">Margen bruto</span><span class="val">${fmt(scenarioWithout.totalMargen)}</span></div>
+      <div class="ads-card-row"><span class="label">− Ads</span><span class="val">$0</span></div>
+      <div class="ads-card-row"><span class="label">− Comisiones</span><span class="val">${fmt(scenarioWithout.totalCom)}</span></div>
+      <div class="ads-card-row"><span class="label">− Sueldo + Estructura</span><span class="val">${fmt(scenarioWithout.totalBase + scenarioWithout.fixedTotal)}</span></div>
+      <div class="ads-card-row highlight"><span class="label">Resultado Neto</span><span class="val ${scenarioWithout.neto < 0 ? 'negative' : 'positive'}">${fmt(scenarioWithout.neto)}</span></div>
+    `;
+
+    const delta = scenarioWith.neto - scenarioWithout.neto;
+    const verdict = document.getElementById('ads-verdict-text');
+    if (delta > 0) {
+      verdict.textContent = `Apagar ads empeora el neto en ${fmt(delta)} mensuales`;
+      document.querySelector('.ads-verdict').style.background = 'var(--red)';
+    } else {
+      verdict.textContent = `Apagar ads mejoraría el neto en ${fmt(-delta)} mensuales`;
+      document.querySelector('.ads-verdict').style.background = 'var(--good)';
+    }
+  }
+
+  // ============ COMPARACIÓN ============
+  function renderCompare(scenarioActive) {
+    const compareData = getCompareData();
+    const section = document.getElementById('compare-section');
+    if (!compareData) {
+      section.classList.add('hidden');
+      return;
+    }
+    section.classList.remove('hidden');
+
+    const cs = buildScenarioFrom(compareData.data, currentView);
+
+    document.getElementById('compare-title').textContent = `Comparación · ${state.activeName} vs ${compareData.name}`;
+    document.getElementById('compare-name-a').textContent = state.activeName;
+    document.getElementById('compare-name-b').textContent = compareData.name;
+    document.getElementById('changes-head-a').textContent = state.activeName;
+    document.getElementById('changes-head-b').textContent = compareData.name;
+
+    // Mini waterfalls
+    const wfData = [
+      { label: 'Facturación', value: 'totalVentas', type: '' },
+      { label: 'Margen Bruto', value: 'totalMargen', type: 'subtotal' },
+      { label: 'Ads', value: 'totalAds', type: 'minus' },
+      { label: 'Comisiones', value: 'totalCom', type: 'minus' },
+      { label: 'Sueldo base', value: 'totalBase', type: 'minus' },
+      { label: 'Aporte Op.', value: 'aporteOperativo', type: 'subtotal' },
+      { label: 'Estructura', value: 'fixedTotal', type: 'minus' },
+      { label: 'Neto', value: 'neto', type: 'final' }
+    ];
+
+    function renderMiniWf(scenario) {
+      let html = '';
+      wfData.forEach(it => {
+        html += `<div class="cmwf-row ${it.type}"><span class="label">${it.label}</span><span class="val">${fmt(scenario[it.value])}</span></div>`;
+      });
+      return html;
+    }
+
+    document.getElementById('compare-wf-a').innerHTML = renderMiniWf(scenarioActive);
+    document.getElementById('compare-wf-b').innerHTML = renderMiniWf(cs);
+
+    // Changes table
+    const changesData = [
+      { label: 'Facturación bruta', a: scenarioActive.totalVentas, b: cs.totalVentas },
+      { label: 'Margen bruto', a: scenarioActive.totalMargen, b: cs.totalMargen },
+      { label: 'Ads (Meta)', a: scenarioActive.totalAds, b: cs.totalAds, invert: true },
+      { label: 'Comisiones + viáticos', a: scenarioActive.totalCom, b: cs.totalCom, invert: true },
+      { label: 'Sueldo base Lauti', a: scenarioActive.totalBase, b: cs.totalBase, invert: true },
+      { label: 'Aporte operativo', a: scenarioActive.aporteOperativo, b: cs.aporteOperativo },
+      { label: 'Estructura fija', a: scenarioActive.fixedTotal, b: cs.fixedTotal, invert: true },
+      { label: 'Resultado neto', a: scenarioActive.neto, b: cs.neto, bold: true }
+    ];
+
+    let html = '';
+    changesData.forEach(it => {
+      const diff = it.a - it.b;
+      const pct = it.b !== 0 ? (diff / Math.abs(it.b)) * 100 : 0;
+      const cls = Math.abs(it.b) < 0.01 ? 'neutral' : deltaClass(it.a, it.b, it.invert);
+      const sign = diff >= 0 ? '+' : '−';
+      const boldStyle = it.bold ? 'style="font-weight:700; background: var(--paper-warm);"' : '';
+      html += `
+        <tr ${boldStyle}>
+          <td>${it.label}</td>
+          <td>${fmt(it.a)}</td>
+          <td>${fmt(it.b)}</td>
+          <td class="delta-cell ${cls}">${sign}${fmt(Math.abs(diff)).replace('−','').replace('$','$')}</td>
+          <td class="delta-cell ${cls}">${it.b !== 0 ? `${sign}${pct.toFixed(1)}%` : '—'}</td>
+        </tr>
+      `;
+    });
+    document.getElementById('changes-tbody').innerHTML = html;
+  }
+
+  // ============ SIMULADOR ============
+  function updateSimulator() {
+    const ventas = parseInt(document.getElementById('sim-ventas').value);
+    const margin = parseFloat(document.getElementById('sim-margin').value) / 100;
+    const comm = parseFloat(document.getElementById('sim-comm').value) / 100;
+    const sellers = parseInt(document.getElementById('sim-sellers').value);
+    const adsUsd = parseInt(document.getElementById('sim-ads').value);
+
+    const adsTotalMonth = sellers * adsUsd * 30 * data().cotizacion;
+    const margenBruto = ventas * margin;
+    const comTotal = ventas * comm;
+    const fix = fixedTotalOf(data());
+    const aporteOp = margenBruto - adsTotalMonth - comTotal;
+    const neto = aporteOp - fix - data().base.lauti;
+
+    const fixedSum = fix + data().base.lauti + adsTotalMonth;
+    const effMargin = margin - comm;
+    const beVentas = effMargin > 0 ? fixedSum / effMargin : Infinity;
+    const marginRequired = ((fix + data().base.lauti + adsTotalMonth) / ventas + comm) * 100;
+
+    document.getElementById('sim-ventas-val').textContent = fmt(ventas);
+    document.getElementById('sim-margin-val').textContent = (margin*100).toFixed(1) + ' %';
+    document.getElementById('sim-comm-val').textContent = (comm*100).toFixed(1) + ' %';
+    document.getElementById('sim-sellers-val').textContent = sellers;
+    document.getElementById('sim-ads-val').textContent = 'USD ' + adsUsd;
+
+    const netoEl = document.getElementById('sim-neto');
+    netoEl.textContent = fmt(neto);
+    netoEl.className = 'sim-block-value ' + (neto < 0 ? 'negative' : 'positive');
+    document.getElementById('sim-neto-sub').textContent = neto < 0
+      ? `déficit operativo · faltan ${fmt(-neto)}`
+      : `superávit · ${((neto/ventas)*100).toFixed(1)}% sobre ventas`;
+
+    const beEl = document.getElementById('sim-be');
+    if (effMargin > 0 && beVentas < 200000000) {
+      beEl.textContent = fmt(beVentas);
+      const gap = beVentas - ventas;
+      document.getElementById('sim-be-sub').textContent = gap > 0
+        ? `faltan ${fmt(gap)} más de ventas`
+        : `superado por ${fmt(-gap)}`;
+    } else {
+      beEl.textContent = 'imposible';
+      document.getElementById('sim-be-sub').textContent = 'margen no cubre comisión';
+    }
+
+    document.getElementById('sim-margin-be').textContent = fmtPct(marginRequired);
+  }
+
+  // ============ STATE PATH HELPERS ============
+  function getByPath(obj, path) {
+    return path.split('.').reduce((o, k) => o?.[k], obj);
+  }
+  function setByPath(obj, path, val) {
+    const keys = path.split('.');
+    const last = keys.pop();
+    const target = keys.reduce((o, k) => o[k] = o[k] || {}, obj);
+    target[last] = val;
+  }
+
+  // ============ INPUTS BINDING ============
+  function bindInputs() {
+    document.querySelectorAll('input[data-state]').forEach(input => {
+      const path = input.dataset.state;
+      input.addEventListener('input', e => {
+        const val = parseFloat(e.target.value);
+        if (!isNaN(val)) {
+          setByPath(data(), path, val);
+          saveState();
+          renderAll();
+        }
+      });
+    });
+    document.getElementById('month-name').addEventListener('input', e => {
+      state.activeName = e.target.value || 'Sin nombre';
+      saveState();
+      renderMeta();
+    });
+  }
+
+  function syncInputs() {
+    document.querySelectorAll('input[data-state]').forEach(input => {
+      const path = input.dataset.state;
+      input.value = getByPath(data(), path);
+    });
+    document.getElementById('month-name').value = state.activeName;
+  }
+
+  // ============ SNAPSHOTS ============
+  function genId() {
+    return 'snap-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+  }
+
+  function saveSnapshot() {
+    const name = state.activeName || prompt('Nombre del snapshot:', 'Mes ' + new Date().toLocaleDateString('es-AR'));
+    if (!name) return;
+    const id = genId();
+    state.snapshots[id] = {
+      id,
+      name,
+      createdAt: new Date().toISOString(),
+      data: clone(data())
+    };
+    saveState();
+    renderSnapshotList();
+    renderCompareSelect();
+    renderMeta();
+    alert(`✓ Snapshot "${name}" guardado.\n\nAhora podés:\n• Crear un mes nuevo con "+ Nuevo mes"\n• Comparar contra este snapshot con el selector "Comparar"`);
+  }
+
+  function loadSnapshot(id) {
+    const snap = state.snapshots[id];
+    if (!snap) return;
+    if (!confirm(`¿Cargar "${snap.name}" como mes activo?\n\nEsto reemplazará los valores actuales (se pueden recuperar si guardaste el actual como snapshot).`)) return;
+    state.activeName = snap.name;
+    state.activeData = clone(snap.data);
+    state.compareWith = null;
+    saveState();
+    syncInputs();
+    renderAll();
+    renderSnapshotList();
+    renderCompareSelect();
+  }
+
+  function deleteSnapshot(id) {
+    const snap = state.snapshots[id];
+    if (!snap) return;
+    if (!confirm(`¿Eliminar el snapshot "${snap.name}"?`)) return;
+    delete state.snapshots[id];
+    if (state.compareWith === id) state.compareWith = null;
+    saveState();
+    renderSnapshotList();
+    renderCompareSelect();
+    renderAll();
+  }
+
+  function newEmptyMonth() {
+    if (!confirm('¿Crear un mes nuevo con valores por defecto?\n\n(Tip: guardá el actual como snapshot antes para no perderlo)')) return;
+    state.activeName = 'Nuevo mes';
+    state.activeData = clone(DEFAULT_DATA);
+    state.compareWith = null;
+    saveState();
+    syncInputs();
+    renderAll();
+    renderCompareSelect();
+  }
+
+  function renderSnapshotList() {
+    const el = document.getElementById('snapshot-list');
+    const ids = Object.keys(state.snapshots).sort((a,b) =>
+      new Date(state.snapshots[b].createdAt) - new Date(state.snapshots[a].createdAt)
+    );
+    if (!ids.length) {
+      el.innerHTML = `<div class="snapshot-empty">No hay snapshots guardados</div>`;
+      return;
+    }
+    let html = '';
+    ids.forEach(id => {
+      const s = state.snapshots[id];
+      const isCompare = state.compareWith === id;
+      html += `
+        <div class="snapshot-item ${isCompare ? 'active' : ''}">
+          <span class="name">${s.name}</span>
+          <button class="btn-mini icon" title="Cargar" onclick="loadSnapshot('${id}')">📂</button>
+          <button class="btn-mini icon" title="Eliminar" onclick="deleteSnapshot('${id}')">🗑</button>
+        </div>
+      `;
+    });
+    el.innerHTML = html;
+  }
+
+  function renderCompareSelect() {
+    const sel = document.getElementById('compare-select');
+    const ids = Object.keys(state.snapshots).sort((a,b) =>
+      new Date(state.snapshots[b].createdAt) - new Date(state.snapshots[a].createdAt)
+    );
+    let html = '<option value="">— ninguno —</option>';
+    ids.forEach(id => {
+      const s = state.snapshots[id];
+      const selected = state.compareWith === id ? 'selected' : '';
+      html += `<option value="${id}" ${selected}>${s.name}</option>`;
+    });
+    sel.innerHTML = html;
+  }
+
+  // ============ RENDER ALL ============
+  function renderAll() {
+    renderMeta();
+    const s = buildScenario(currentView);
+    renderKpis(s);
+    renderSellers(s);
+    renderWaterfall(s);
+    renderStruct();
+    renderAdsSection(s);
+    renderCompare(s);
+  }
+
+  // ============ INIT ============
+  document.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view;
+      renderAll();
+    });
+  });
+
+  document.querySelectorAll('input[type=range]').forEach(input => {
+    if (input.id !== 'ads-loss') input.addEventListener('input', updateSimulator);
+  });
+
+  document.getElementById('ads-loss').addEventListener('input', e => {
+    adsLossPercent = parseInt(e.target.value);
+    document.getElementById('ads-loss-val').textContent = adsLossPercent + ' %';
+    renderAdsSection(buildScenario(currentView));
+  });
+
+  document.getElementById('compare-select').addEventListener('change', e => {
+    state.compareWith = e.target.value || null;
+    saveState();
+    renderSnapshotList();
+    renderAll();
+  });
+
+  document.getElementById('btn-save-snapshot').addEventListener('click', saveSnapshot);
+  document.getElementById('btn-new-month').addEventListener('click', newEmptyMonth);
+
+  const consoleEl = document.getElementById('console');
+  document.getElementById('console-toggle').addEventListener('click', () => {
+    consoleEl.classList.toggle('collapsed');
+    localStorage.setItem('graziano-console-collapsed', consoleEl.classList.contains('collapsed') ? '1' : '0');
+  });
+  if (localStorage.getItem('graziano-console-collapsed') === '1' || (window.innerWidth < 900 && localStorage.getItem('graziano-console-collapsed') === null)) {
+    consoleEl.classList.add('collapsed');
+  }
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    if (confirm('¿Restaurar todos los valores a los defaults?\n\nEsto NO borra los snapshots, solo el mes activo.')) {
+      state.activeData = clone(DEFAULT_DATA);
+      state.activeName = 'Junio 2026';
+      state.compareWith = null;
+      saveState();
+      syncInputs();
+      renderAll();
+      renderCompareSelect();
+    }
+  });
+
+  // expose for inline onclick
+  window.loadSnapshot = loadSnapshot;
+  window.deleteSnapshot = deleteSnapshot;
+
+  syncInputs();
+  bindInputs();
+  renderSnapshotList();
+  renderCompareSelect();
+  renderAll();
+  updateSimulator();
+</script>
+
+</body>
+</html>
