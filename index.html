@@ -1137,6 +1137,43 @@
     padding: 3px 8px; background: var(--red-tint); border: 1px solid var(--red);
   }
 
+  /* 🛡 BANDA SELLER ACTIVO (modal venta) */
+  .seller-active-banner {
+    margin: 14px 0 8px;
+    padding: 14px 18px;
+    background: linear-gradient(90deg, #FFEDEC 0%, #FFD9D7 100%);
+    border: 2px solid var(--red);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .sab-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--ink); font-weight: 700;
+    text-transform: uppercase;
+  }
+  .sab-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 22px;
+    color: var(--red); letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  /* Cuando seller no coincide con currentUser (anomalía) */
+  .seller-active-banner.is-warning {
+    background: linear-gradient(90deg, #FEF3C7 0%, #FDE68A 100%);
+    border-color: #B45309;
+  }
+  .seller-active-banner.is-warning .sab-name { color: #B45309; }
+  /* Estado en modo Estela · azul */
+  .seller-active-banner.is-estela {
+    background: linear-gradient(90deg, #DBEAFE 0%, #BFDBFE 100%);
+    border-color: #1E40AF;
+  }
+  .seller-active-banner.is-estela .sab-name { color: #1E40AF; }
+  /* Modo admin · neutro */
+  .seller-active-banner.is-admin {
+    background: var(--bg-soft); border-color: var(--ink);
+  }
+  .seller-active-banner.is-admin .sab-name { color: var(--ink); }
+
   /* COBROS · toggle frecuencia */
   .cobros-section-title { display: flex; align-items: center; gap: 16px; }
   .cobros-toggle {
@@ -3848,6 +3885,12 @@
     <h2 id="modalTitle">CARGAR VENTA</h2>
     <div class="modal-sub" id="modalSub">— PANEL —</div>
 
+    <!-- 🛡 BANDA DE SELLER ACTIVO · siempre visible · imposible no verla -->
+    <div class="seller-active-banner" id="sellerActiveBanner">
+      <span class="sab-label">CARGANDO COMO:</span>
+      <span class="sab-name" id="sabName">—</span>
+    </div>
+
     <div class="budget-sync" id="saleSyncIndicator" onclick="refreshPrices(true)" title="Click para refrescar">⟳ actualizando precios...</div>
 
     <div class="form-row">
@@ -4383,11 +4426,35 @@
     pinTargetUser = null;
   }
   document.addEventListener('DOMContentLoaded', () => {
-    // Registrar Service Worker (PWA)
+    // Registrar Service Worker (PWA) · con auto-update agresivo
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js')
-        .then(() => console.log('SW registrado'))
+      navigator.serviceWorker.register('./sw.js?v=20260630-2', { updateViaCache: 'none' })
+        .then(reg => {
+          console.log('SW registrado · v20260630-2');
+          // Forzar check de actualización
+          reg.update();
+          // Si hay un SW nuevo esperando, activarlo ya
+          if (reg.waiting) reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          reg.addEventListener('updatefound', () => {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                console.log('Nueva versión disponible · activando...');
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
+              }
+            });
+          });
+        })
         .catch(err => console.warn('SW error:', err));
+      // Cuando cambia el controller, recargar para tomar la nueva versión
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        console.log('SW cambió · recargando...');
+        window.location.reload();
+      });
     }
     // Bind slider simulador
     const simSlider = document.getElementById('simSlider');
@@ -6634,6 +6701,12 @@
   // ===== ACTIONS =====
   async function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
+    console.log('▸ openModal · currentUser=', currentUser, '· selectedSellerForSale (antes)=', selectedSellerForSale);
+    // 🛡 SINCRONIZACIÓN FORZADA: si el usuario logueado es un vendedor,
+    // el seller seleccionado SIEMPRE debe ser ese vendedor.
+    if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
+      selectedSellerForSale = currentUser;
+    }
     // Refresh INMEDIATO de precios (force=true para ignorar cache)
     refreshPrices(true);
     document.getElementById('saleDate').valueAsDate = new Date();
@@ -6649,8 +6722,9 @@
     } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin') {
       selectSeller(currentUser);
     } else {
-      // Admin: estado por defecto
+      // Admin: estado por defecto · mostrar banner
       document.getElementById('saleModal').classList.remove('estela-mode');
+      updateSellerBanner();
     }
     if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
       const myPending = pendingSales(currentUser).length;
@@ -6658,6 +6732,7 @@
     } else {
       switchTab(allPending().length > 0 ? 'pending' : 'approved');
     }
+    console.log('▸ openModal · selectedSellerForSale (después)=', selectedSellerForSale);
     setTimeout(() => document.getElementById('saleClient').focus(), 100);
   }
   function closeModal() {
@@ -6666,6 +6741,28 @@
   }
 
   let selectedSellerForSale = 'lauti';
+
+  function updateSellerBanner() {
+    const banner = document.getElementById('sellerActiveBanner');
+    const nameEl = document.getElementById('sabName');
+    if (!banner || !nameEl) return;
+    const meta = (typeof SELLER_META !== 'undefined' && SELLER_META[selectedSellerForSale]) || null;
+    const displayName = meta ? `${meta.emoji} ${meta.name}` : selectedSellerForSale.toUpperCase();
+    nameEl.textContent = displayName;
+    // Reset classes
+    banner.classList.remove('is-warning', 'is-estela', 'is-admin');
+    // Cuando el seller seleccionado NO coincide con el usuario logueado (admin)
+    if (currentUser === 'admin') {
+      banner.classList.add('is-admin');
+    } else if (selectedSellerForSale === 'estela') {
+      banner.classList.add('is-estela');
+    } else if (currentUser !== selectedSellerForSale) {
+      // ⚠ Anomalía: el seller seleccionado no es el logueado
+      banner.classList.add('is-warning');
+      console.warn('⚠ ANOMALÍA: selectedSellerForSale=', selectedSellerForSale, '· currentUser=', currentUser);
+    }
+  }
+
   function selectSeller(s) {
     if (currentUser === 'lauti' && s !== 'lauti') return;
     if (currentUser === 'bauti' && s !== 'bauti') return;
@@ -6673,14 +6770,17 @@
     if (currentUser === 'kevin' && s !== 'kevin') return;
     if (currentUser === 'estela' && s !== 'estela') return;
     selectedSellerForSale = s;
+    console.log('▸ selectSeller(', s, ') · currentUser=', currentUser);
     ['lauti', 'bauti', 'leo', 'kevin', 'estela'].forEach(k => {
-      document.getElementById('btn-' + k).classList.toggle('active', s === k);
+      const btn = document.getElementById('btn-' + k);
+      if (btn) btn.classList.toggle('active', s === k);
     });
     // Modo simplificado para Estela
     document.getElementById('saleModal').classList.toggle('estela-mode', s === 'estela');
     if (s === 'estela') {
       setTimeout(() => document.getElementById('saleEstelaAmount')?.focus(), 50);
     }
+    updateSellerBanner();
     updateSalePreview();
   }
 
@@ -7141,6 +7241,23 @@
     // Esto evita que un bug en selectSeller o selectedSellerForSale haga que
     // una venta cargada por un vendedor se atribuya a otro.
     const sellerForSale = isAdmin ? selectedSellerForSale : currentUser;
+
+    // Validación defensiva: el seller resultante debe ser uno válido
+    const validSellers = ['lauti', 'bauti', 'leo', 'kevin', 'estela'];
+    if (!validSellers.includes(sellerForSale)) {
+      showToast('ERROR · seller inválido: ' + sellerForSale, 'warn');
+      console.error('❌ submitSale: seller inválido', { currentUser, selectedSellerForSale, sellerForSale });
+      return;
+    }
+
+    // 🔍 LOG EXPLÍCITO de qué seller se va a guardar
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('📥 GUARDANDO VENTA');
+    console.log('   currentUser:', currentUser);
+    console.log('   selectedSellerForSale:', selectedSellerForSale);
+    console.log('   isAdmin:', isAdmin);
+    console.log('   → seller FINAL:', sellerForSale);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     const newSale = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
