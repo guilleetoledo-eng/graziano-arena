@@ -433,58 +433,256 @@
   }
 
   /* PREMIOS */
-  .premios-grid {
-    display: grid; grid-template-columns: repeat(2, 1fr); gap: 0;
+  /* ===== REGLAS DEL JUEGO ===== */
+  .rules-card {
     border: 1.5px solid var(--line); background: var(--bg-card);
-    box-shadow: 6px 6px 0 var(--ink);
+    box-shadow: 6px 6px 0 var(--ink); padding: 28px;
   }
-  .premio {
-    padding: 22px 24px; display: flex; align-items: center; gap: 20px;
-    position: relative; transition: all 0.4s;
-    border-right: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+  .rules-block { margin-bottom: 28px; }
+  .rules-block:last-child { margin-bottom: 0; }
+  .rules-block-header {
+    display: flex; align-items: baseline; gap: 12px;
+    padding-bottom: 12px; margin-bottom: 16px;
+    border-bottom: 2px solid var(--ink);
   }
-  .premio:nth-child(even) { border-right: none; }
-  .premio:nth-last-child(-n+2) { border-bottom: none; }
-  .premio.unlocked { background: var(--red-tint); }
-  .premio.unlocked::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--red);
+  .rules-block-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    letter-spacing: 0.08em; color: var(--ink); text-transform: uppercase;
   }
-  .premio-icon {
-    width: 52px; height: 52px; flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    border: 1.5px solid var(--ink-5); background: var(--bg);
-    font-family: 'Anton', sans-serif; font-size: 22px;
-    color: var(--ink-4); transition: all 0.4s;
-  }
-  .premio.unlocked .premio-icon {
-    border-color: var(--red); color: var(--red); background: white;
-    animation: premio-pulse 2.4s ease-in-out infinite;
-  }
-  @keyframes premio-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(255,46,31,0.4); }
-    50% { box-shadow: 0 0 0 10px rgba(255,46,31,0); }
-  }
-  .premio-body { flex: 1; }
-  .premio-title {
-    font-family: 'Archivo Black', sans-serif; font-size: 13px;
-    letter-spacing: 0.1em; color: var(--ink); text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .premio.locked .premio-title { color: var(--ink-3); }
-  .premio-desc {
+  .rules-block-sub {
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    color: var(--ink-3); line-height: 1.4;
+    color: var(--ink-3); letter-spacing: 0.03em;
   }
-  .premio-desc strong { font-weight: 700; }
-  .premio-status {
-    font-family: 'JetBrains Mono', monospace; font-size: 10px;
-    letter-spacing: 0.15em; padding: 6px 12px;
+  .rules-rows { display: grid; gap: 8px; }
+  .rules-row {
+    display: grid; grid-template-columns: auto 1fr auto auto;
+    align-items: center; gap: 16px; padding: 16px 18px;
+    background: var(--bg-soft); border-left: 3px solid var(--line);
+    transition: all 0.3s;
+  }
+  .rules-row.done {
+    background: linear-gradient(90deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.02) 100%);
+    border-left-color: #22c55e;
+  }
+  .rules-row.current {
+    background: linear-gradient(90deg, rgba(255,46,31,0.10) 0%, rgba(255,46,31,0.02) 100%);
+    border-left-color: var(--red);
+    box-shadow: 0 0 0 1.5px rgba(255,46,31,0.25), inset 0 0 0 1px rgba(255,46,31,0.05);
+    position: relative; padding-right: 22px;
+  }
+  .rules-row.current::after {
+    content: ''; position: absolute; right: 0; top: 0; bottom: 0;
+    width: 3px; background: var(--red);
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .rules-row.locked { opacity: 0.55; }
+  .rules-row-icon {
+    font-size: 22px; line-height: 1;
+    width: 36px; text-align: center;
+  }
+  .rules-row-body {
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .rules-row-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    color: var(--ink); letter-spacing: 0.04em;
+  }
+  .rules-row.locked .rules-row-title { color: var(--ink-3); }
+  .rules-row-detail {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.02em;
+  }
+  .rules-row-detail strong { color: var(--ink); font-weight: 700; }
+  .rules-row.current .rules-row-detail strong { color: var(--red); }
+  .rules-row-rate {
+    font-family: 'Archivo Black', sans-serif; font-size: 20px;
+    color: var(--ink);
+  }
+  .rules-row.locked .rules-row-rate { color: var(--ink-4); }
+  .rules-row.current .rules-row-rate { color: var(--red); }
+  .rules-row-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; padding: 4px 10px;
+    text-transform: uppercase; white-space: nowrap;
+    border: 1.5px solid var(--line);
+    min-width: 100px; text-align: center;
+  }
+  .rules-row.done .rules-row-status {
+    color: #16a34a; border-color: #22c55e;
+    background: rgba(34,197,94,0.1);
+  }
+  .rules-row.current .rules-row-status {
+    color: white; background: var(--red); border-color: var(--red);
+  }
+  .rules-row.locked .rules-row-status {
+    color: var(--ink-4);
+  }
+  /* Sub-info de progreso en la fila current */
+  .rules-progress {
+    grid-column: 1 / -1;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px dashed rgba(255,46,31,0.3);
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 16px;
+  }
+  .rules-progress-text {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink); letter-spacing: 0.02em;
+  }
+  .rules-progress-text strong { color: var(--red); font-weight: 700; }
+  .rules-progress-bar {
+    width: 140px; height: 6px; background: rgba(0,0,0,0.08); overflow: hidden;
+  }
+  .rules-progress-fill {
+    height: 100%; background: var(--red);
+    transition: width 0.5s;
+  }
+  /* Banner de transición para Lauti */
+  .rules-transition-banner {
+    background: linear-gradient(90deg, rgba(245,158,11,0.12) 0%, rgba(245,158,11,0.04) 100%);
+    border: 1.5px dashed #f59e0b;
+    padding: 14px 18px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .rules-transition-icon { font-size: 22px; line-height: 1; }
+  .rules-transition-text {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink); letter-spacing: 0.02em; line-height: 1.5;
+  }
+  .rules-transition-text strong { font-weight: 700; }
+
+  /* ===== LOGROS POR DESBLOQUEAR ===== */
+  .achievements-card {
     border: 1.5px solid var(--line); background: var(--bg-card);
+    box-shadow: 6px 6px 0 var(--ink); padding: 28px;
   }
-  .premio.unlocked .premio-status {
-    color: var(--red); border-color: var(--red); background: white;
+  .ach-block { margin-bottom: 28px; }
+  .ach-block:last-child { margin-bottom: 0; }
+  .ach-block-header {
+    display: flex; align-items: baseline; gap: 12px;
+    padding-bottom: 12px; margin-bottom: 16px;
+    border-bottom: 2px solid var(--ink);
   }
-  .premio.locked .premio-status { color: var(--ink-4); }
+  .ach-block-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    letter-spacing: 0.08em; color: var(--ink); text-transform: uppercase;
+  }
+  .ach-block-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.03em;
+  }
+  .ach-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+  }
+  .ach-item {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 14px; padding: 14px 16px;
+    background: var(--bg-soft); border-left: 3px solid var(--line);
+    transition: all 0.3s;
+  }
+  .ach-item.unlocked {
+    background: linear-gradient(90deg, rgba(34,197,94,0.10) 0%, rgba(34,197,94,0.02) 100%);
+    border-left-color: #22c55e;
+  }
+  .ach-item.unlocked .ach-item-emoji {
+    filter: drop-shadow(0 0 6px rgba(34,197,94,0.4));
+    animation: achPulse 2.5s ease-in-out infinite;
+  }
+  @keyframes achPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .ach-item.locked { opacity: 0.55; }
+  .ach-item-emoji {
+    font-size: 26px; line-height: 1;
+  }
+  .ach-item-body { display: flex; flex-direction: column; gap: 3px; }
+  .ach-item-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    color: var(--ink); letter-spacing: 0.04em;
+  }
+  .ach-item-desc {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+  .ach-item-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; padding: 4px 8px;
+    text-transform: uppercase; white-space: nowrap;
+    border: 1.5px solid var(--line);
+  }
+  .ach-item.unlocked .ach-item-badge {
+    color: #16a34a; border-color: #22c55e;
+    background: rgba(34,197,94,0.1); font-weight: 700;
+  }
+  .ach-item.locked .ach-item-badge {
+    color: var(--ink-4);
+  }
+
+  /* CORONAS · más complejas, con más contexto */
+  .crowns-list { display: grid; gap: 12px; }
+  .crown-item {
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: start; gap: 18px; padding: 18px 20px;
+    background: var(--bg-soft); border-left: 3px solid var(--line);
+    transition: all 0.3s;
+  }
+  .crown-item.mine {
+    background: linear-gradient(90deg, rgba(255,215,0,0.12) 0%, rgba(255,215,0,0.02) 100%);
+    border-left-color: #FFD700;
+    box-shadow: 0 0 0 1.5px rgba(255,215,0,0.3);
+  }
+  .crown-item.mine .crown-item-emoji {
+    filter: drop-shadow(0 0 10px rgba(255,215,0,0.6));
+    animation: crownGlow 2.5s ease-in-out infinite;
+  }
+  @keyframes crownGlow {
+    0%, 100% { transform: rotate(-5deg) scale(1); }
+    50% { transform: rotate(5deg) scale(1.1); }
+  }
+  .crown-item-emoji {
+    font-size: 38px; line-height: 1; width: 48px; text-align: center;
+  }
+  .crown-item-body {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .crown-item-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); letter-spacing: 0.04em;
+  }
+  .crown-item-desc {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.02em;
+  }
+  .crown-item-holder {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink); margin-top: 4px; letter-spacing: 0.02em;
+  }
+  .crown-item-holder strong { color: var(--ink); font-weight: 700; }
+  .crown-item-holder.mine strong { color: #B8860B; }
+  .crown-item-progress {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--red); margin-top: 4px; letter-spacing: 0.02em;
+    font-weight: 700;
+  }
+  .crown-item-empty {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-4); font-style: italic; margin-top: 4px;
+  }
+  .crown-item-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.18em; padding: 6px 12px;
+    text-transform: uppercase; white-space: nowrap;
+    border: 1.5px solid var(--line); align-self: flex-start;
+  }
+  .crown-item.mine .crown-item-badge {
+    color: white; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-color: #B8860B; font-weight: 700;
+  }
 
   /* HOF */
   .hof {
@@ -2281,6 +2479,25 @@
     .bi-subtotal { grid-area: subtotal; }
     .bi-price { display: none; }
     .premios-grid { grid-template-columns: 1fr; box-shadow: 4px 4px 0 var(--ink); }
+    /* Reglas del juego mobile */
+    .rules-card { padding: 18px; box-shadow: 4px 4px 0 var(--ink); }
+    .rules-row { grid-template-columns: auto 1fr auto; gap: 10px; padding: 12px 14px; }
+    .rules-row-status { grid-column: 1 / -1; margin-top: 6px; }
+    .rules-row-rate { font-size: 18px; }
+    .rules-progress { grid-template-columns: 1fr; gap: 8px; }
+    .rules-progress-bar { width: 100%; }
+    .rules-block-title { font-size: 14px; }
+    .rules-block-sub { font-size: 10px; }
+    /* Achievements mobile */
+    .achievements-card { padding: 18px; box-shadow: 4px 4px 0 var(--ink); }
+    .ach-grid { grid-template-columns: 1fr; }
+    .ach-item { padding: 12px 14px; gap: 10px; }
+    .ach-item-emoji { font-size: 22px; }
+    .crown-item { grid-template-columns: auto 1fr; gap: 12px; padding: 14px; }
+    .crown-item-badge { grid-column: 1 / -1; justify-self: start; margin-top: 4px; }
+    .crown-item-emoji { font-size: 30px; }
+    .ach-block-title { font-size: 14px; }
+    .ach-block-sub { font-size: 10px; }
     .premio { border-right: none; }
     .premio:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .premio:last-child { border-bottom: none; }
@@ -2927,14 +3144,26 @@
 
   <div class="section-title">
     <span class="section-title-num">/04</span>
-    <span class="section-title-text">PREMIOS A DESBLOQUEAR</span>
+    <span class="section-title-text">REGLAS DEL JUEGO</span>
     <span class="section-title-line"></span>
   </div>
 
-  <div class="premios-grid" id="premiosGrid"></div>
+  <div class="rules-card" id="rulesCard">
+    <!-- relleno dinámico según el esquema del vendedor logueado -->
+  </div>
 
   <div class="section-title">
     <span class="section-title-num">/05</span>
+    <span class="section-title-text">LOGROS POR DESBLOQUEAR</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="achievements-card" id="achievementsCard">
+    <!-- relleno dinámico -->
+  </div>
+
+  <div class="section-title">
+    <span class="section-title-num">/06</span>
     <span class="section-title-text">HALL OF FAME</span>
     <span class="section-title-line"></span>
   </div>
@@ -4540,56 +4769,522 @@
     document.getElementById('pending-num-estela').textContent = pending.length;
   }
 
-  function renderPremios(c) {
-    const items = [
-      {
-        icon: '◆', title: 'Cumplir meta de 13,5M', desc: 'Bonus fijo al cruzar la línea · ',
-        reward: '+$35.000 c/u',
-        unlockedBy: (c.lauti.bonusTarget > 0 ? 'LAUTI' : '') + (c.bauti.bonusTarget > 0 ? (c.lauti.bonusTarget > 0 ? ' · ' : '') + 'BAUTI' : ''),
-        unlocked: c.lauti.bonusTarget > 0 || c.bauti.bonusTarget > 0
-      },
-      {
-        icon: '▲', title: 'Superar 14,5M', desc: 'Comisión extra sobre el excedente · ',
-        reward: '+0,5%',
-        unlockedBy: (c.lauti.total > 14500000 ? 'LAUTI' : '') + (c.bauti.total > 14500000 ? (c.lauti.total > 14500000 ? ' · ' : '') + 'BAUTI' : ''),
-        unlocked: c.lauti.total > 14500000 || c.bauti.total > 14500000
-      },
-      {
-        icon: '▲▲', title: 'Superar 15,5M', desc: 'Comisión extra sobre el excedente · ',
-        reward: '+1%',
-        unlockedBy: (c.lauti.total > 15500000 ? 'LAUTI' : '') + (c.bauti.total > 15500000 ? (c.lauti.total > 15500000 ? ' · ' : '') + 'BAUTI' : ''),
-        unlocked: c.lauti.total > 15500000 || c.bauti.total > 15500000
-      },
-      {
-        icon: '▲▲▲', title: 'Llegar al objetivo final $17M', desc: 'Máxima comisión sobre excedente · ',
-        reward: '+1,5%',
-        unlockedBy: (c.lauti.total >= CONFIG.finalTarget ? 'LAUTI' : '') + (c.bauti.total >= CONFIG.finalTarget ? (c.lauti.total >= CONFIG.finalTarget ? ' · ' : '') + 'BAUTI' : ''),
-        unlocked: c.lauti.total >= CONFIG.finalTarget || c.bauti.total >= CONFIG.finalTarget
-      },
-      {
-        icon: '♛', title: '#1 del mes', desc: 'Premio físico al líder absoluto · ',
-        reward: '+$30.000',
-        unlockedBy: c.firstPlace ? c.firstPlace.toUpperCase() + ' LIDERA' : '—',
-        unlocked: !!c.firstPlace
-      },
-      {
-        icon: '⚐', title: 'Ambos cumplen meta', desc: 'Bono de equipo · anti-rivalidad · ',
-        reward: '+$20.000 c/u',
-        unlockedBy: c.bothMet ? 'EQUIPO COMPLETO' : '—',
-        unlocked: c.bothMet
+  // ===== LOGROS POR DESBLOQUEAR · sección /05 =====
+  function renderAchievementsCard(c) {
+    const container = document.getElementById('achievementsCard');
+    if (!container) return;
+
+    const seller = ['lauti', 'bauti', 'leo', 'kevin'].includes(currentUser) ? currentUser : null;
+    const isPersonal = seller !== null;
+    const mk = currentMonthKey();
+    const monthly = isPersonal ? (state.achievementsMonthly?.[mk]?.[seller] || {}) : {};
+    const personal = isPersonal ? (state.achievementsPersonal?.[seller] || {}) : {};
+
+    // --- 1. DEL MES ---
+    const monthlyItems = ACHIEVEMENTS_MONTHLY.map(a => {
+      const unlocked = isPersonal && !!monthly[a.id];
+      // Para vista neutral (admin/pantalla) mostrar quién lo tiene
+      let badgeText;
+      if (isPersonal) {
+        badgeText = unlocked ? '✓ TUYO' : '🔒 BLOQUEADO';
+      } else {
+        // Vista neutral: ¿quién(es) lo tienen este mes?
+        const holders = CONFIG.competitiveSellers.filter(s => state.achievementsMonthly?.[mk]?.[s]?.[a.id]);
+        if (holders.length === 0) badgeText = '🔒 SIN DUEÑO';
+        else if (holders.length === CONFIG.competitiveSellers.length) badgeText = '✓ TODOS';
+        else badgeText = '✓ ' + holders.map(h => SELLER_META[h]?.name || h.toUpperCase()).join(' · ');
       }
+      const cls = isPersonal ? (unlocked ? 'unlocked' : 'locked') : (badgeText.startsWith('🔒') ? 'locked' : 'unlocked');
+      return `
+        <div class="ach-item ${cls}">
+          <div class="ach-item-emoji">${a.emoji}</div>
+          <div class="ach-item-body">
+            <div class="ach-item-title">${a.title}</div>
+            <div class="ach-item-desc">${a.desc}</div>
+          </div>
+          <div class="ach-item-badge">${badgeText}</div>
+        </div>
+      `;
+    }).join('');
+
+    // --- 2. MEDALLAS HISTÓRICAS ---
+    const personalItems = ACHIEVEMENTS_PERSONAL.map(a => {
+      const unlocked = isPersonal && !!personal[a.id];
+      let badgeText;
+      if (isPersonal) {
+        badgeText = unlocked ? '✓ TUYA' : '🔒 BLOQUEADA';
+      } else {
+        const holders = CONFIG.competitiveSellers.filter(s => state.achievementsPersonal?.[s]?.[a.id]);
+        if (holders.length === 0) badgeText = '🔒 SIN DUEÑO';
+        else badgeText = '✓ ' + holders.map(h => SELLER_META[h]?.name || h.toUpperCase()).join(' · ');
+      }
+      const cls = isPersonal ? (unlocked ? 'unlocked' : 'locked') : (badgeText.startsWith('🔒') ? 'locked' : 'unlocked');
+      return `
+        <div class="ach-item ${cls}">
+          <div class="ach-item-emoji">${a.emoji}</div>
+          <div class="ach-item-body">
+            <div class="ach-item-title">${a.title}</div>
+            <div class="ach-item-desc">${a.desc}</div>
+          </div>
+          <div class="ach-item-badge">${badgeText}</div>
+        </div>
+      `;
+    }).join('');
+
+    // --- 3. CORONAS ---
+    const crownItems = CROWNS.map(crown => {
+      const data = state.crowns?.[crown.id];
+      const isMine = isPersonal && data?.holder === seller;
+      const hasOwner = !!data?.holder;
+      const valueText = hasOwner ? (crown.unit === '$' ? fmtMoney(data.value) : `${data.value} ${crown.unit}`) : '';
+      const sinceText = hasOwner && data.sinceMonthKey ? `desde ${monthLabel(data.sinceMonthKey)}` : '';
+      const ownerMeta = hasOwner ? SELLER_META[data.holder] : null;
+
+      let holderHTML = '';
+      let progressHTML = '';
+      let badgeText = '';
+      let cls = 'locked';
+
+      if (!hasOwner) {
+        holderHTML = `<div class="crown-item-empty">— sin dueño todavía · podés ser el primero —</div>`;
+        badgeText = '🎯 LIBRE';
+        cls = '';
+      } else if (isMine) {
+        holderHTML = `<div class="crown-item-holder mine">Tu récord: <strong>${valueText}</strong> · ${sinceText}</div>`;
+        badgeText = '👑 TUYA';
+        cls = 'mine';
+      } else {
+        const ownerName = ownerMeta?.name || data.holder.toUpperCase();
+        holderHTML = `<div class="crown-item-holder">Tiene: <strong>${ownerName}</strong> con ${valueText} ${sinceText ? '· ' + sinceText : ''}</div>`;
+        // Calcular cuánto le falta al currentUser para robársela
+        if (isPersonal) {
+          const myProgress = computeMyCrownProgress(seller, crown.id);
+          if (myProgress.canRob) {
+            progressHTML = `<div class="crown-item-progress">🎯 ${myProgress.message}</div>`;
+          }
+        }
+        badgeText = '🔒 BLOQUEADA';
+        cls = 'locked';
+      }
+
+      return `
+        <div class="crown-item ${cls}">
+          <div class="crown-item-emoji">${crown.emoji}</div>
+          <div class="crown-item-body">
+            <div class="crown-item-title">${crown.title}</div>
+            <div class="crown-item-desc">${crown.desc}</div>
+            ${holderHTML}
+            ${progressHTML}
+          </div>
+          <div class="crown-item-badge">${badgeText}</div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <div class="ach-block">
+        <div class="ach-block-header">
+          <div class="ach-block-title">DEL MES</div>
+          <div class="ach-block-sub">se resetean cada 1° del mes</div>
+        </div>
+        <div class="ach-grid">${monthlyItems}</div>
+      </div>
+      <div class="ach-block">
+        <div class="ach-block-header">
+          <div class="ach-block-title">MEDALLAS HISTÓRICAS</div>
+          <div class="ach-block-sub">se ganan UNA vez · quedan para siempre</div>
+        </div>
+        <div class="ach-grid">${personalItems}</div>
+      </div>
+      <div class="ach-block">
+        <div class="ach-block-header">
+          <div class="ach-block-title">CORONAS</div>
+          <div class="ach-block-sub">1 sola persona la tiene · se pelean · se roban</div>
+        </div>
+        <div class="crowns-list">${crownItems}</div>
+      </div>
+    `;
+  }
+
+  // Calcula cuánto le falta al vendedor para "robarse" una corona
+  function computeMyCrownProgress(seller, crownId) {
+    const data = state.crowns?.[crownId];
+    if (!data) return { canRob: false };
+    const current = data.value;
+    const sales = state.sales.filter(s => s.status === 'approved' && s.seller === seller);
+
+    if (crownId === 'rey-corralon') {
+      // récord cantidad de ventas en un mes (incluye mes en curso)
+      const byMonth = {};
+      sales.forEach(s => {
+        const mk = monthKeyOf(s.date);
+        byMonth[mk] = (byMonth[mk] || 0) + 1;
+      });
+      const myBest = Math.max(0, ...Object.values(byMonth));
+      const falta = current - myBest;
+      if (falta <= 0) return { canRob: false }; // ya debería tenerla
+      return { canRob: true, message: `Tu mejor mes: ${myBest} ventas · te faltan ${falta + 1} ventas más en un solo mes` };
+    }
+    if (crownId === 'facturador') {
+      const byMonth = {};
+      sales.forEach(s => {
+        const mk = monthKeyOf(s.date);
+        byMonth[mk] = (byMonth[mk] || 0) + s.amount;
+      });
+      const myBest = Math.max(0, ...Object.values(byMonth));
+      const falta = current - myBest;
+      if (falta <= 0) return { canRob: false };
+      return { canRob: true, message: `Tu mejor mes: ${fmtMoney(myBest)} · te faltan ${fmtMoney(falta + 1)} más en un solo mes` };
+    }
+    if (crownId === 'acaparador') {
+      const byDay = {};
+      sales.forEach(s => { byDay[s.date] = (byDay[s.date] || 0) + 1; });
+      const myBest = Math.max(0, ...Object.values(byDay));
+      const falta = current - myBest;
+      if (falta <= 0) return { canRob: false };
+      return { canRob: true, message: `Tu récord diario: ${myBest} ventas · te faltan ${falta + 1} ventas en un solo día` };
+    }
+    if (crownId === 'venta-siglo') {
+      const myBest = sales.length > 0 ? Math.max(...sales.map(s => s.amount)) : 0;
+      const falta = current - myBest;
+      if (falta <= 0) return { canRob: false };
+      return { canRob: true, message: `Tu venta más grande: ${fmtMoney(myBest)} · cerrá una de ${fmtMoney(current + 1)} para robarla` };
+    }
+    if (crownId === 'preciso') {
+      // ticket promedio en un mes vencido, mín 20 ventas
+      const curMk = currentMonthKey();
+      const byMonth = {};
+      sales.forEach(s => {
+        const mk = monthKeyOf(s.date);
+        if (mk === curMk) return;
+        if (!byMonth[mk]) byMonth[mk] = { sum: 0, count: 0 };
+        byMonth[mk].sum += s.amount;
+        byMonth[mk].count++;
+      });
+      let myBest = 0;
+      Object.values(byMonth).forEach(v => {
+        if (v.count >= 20) myBest = Math.max(myBest, v.sum / v.count);
+      });
+      if (myBest === 0) return { canRob: true, message: `Aún no tenés un mes cerrado con 20+ ventas para entrar al ranking` };
+      const falta = current - myBest;
+      if (falta <= 0) return { canRob: false };
+      return { canRob: true, message: `Tu mejor ticket promedio: ${fmtMoney(myBest)} (en un mes cerrado con +20 ventas)` };
+    }
+    return { canRob: false };
+  }
+
+  function renderRulesCard(c) {
+    const container = document.getElementById('rulesCard');
+    if (!container) return;
+
+    // Quien está logueado define qué esquema mostrar
+    const isAdmin = currentUser === 'admin';
+    const isViewer = currentUser === 'view';
+    const seller = ['lauti', 'bauti', 'leo', 'kevin'].includes(currentUser) ? currentUser : null;
+
+    // Si es admin o pantalla, mostrar SISTEMA NUEVO (genérico, sin progreso personal)
+    if (!seller) {
+      container.innerHTML = renderRulesNewScheme(null, null);
+      return;
+    }
+
+    // Para vendedor: detectar esquema según la fecha
+    const scheme = getCommissionScheme(seller, currentMonthKey());
+    const sellerData = c[seller];
+    const facturado = sellerData ? sellerData.total : 0;
+
+    if (scheme === 'old') {
+      container.innerHTML = renderRulesOldScheme(facturado, c);
+    } else {
+      container.innerHTML = renderRulesNewScheme(facturado, c);
+    }
+  }
+
+  // SISTEMA NUEVO: 5/6/7/8 + arena + viático
+  function renderRulesNewScheme(facturado, c) {
+    const ns = CONFIG.newScheme;
+    const tiers = [
+      { from: 0,        to: 6000000,  rate: ns.tiers[0].rate, name: 'ESCALÓN 1 · BASE',        label: '$0 → $6M' },
+      { from: 6000000,  to: 10000000, rate: ns.tiers[1].rate, name: 'ESCALÓN 2 · SUBIDA',      label: '$6M → $10M' },
+      { from: 10000000, to: 15000000, rate: ns.tiers[2].rate, name: 'ESCALÓN 3 · CRECIMIENTO', label: '$10M → $15M' },
+      { from: 15000000, to: Infinity, rate: ns.tiers[3].rate, name: 'ESCALÓN 4 · CRACK',       label: '$15M+' }
+    ];
+    const arena = [
+      { from: 13500000, to: 14500000, rate: ns.arena[0].rate, name: 'ARENA I',   label: '$13,5M → $14,5M' },
+      { from: 14500000, to: 15500000, rate: ns.arena[1].rate, name: 'ARENA II',  label: '$14,5M → $15,5M' },
+      { from: 15500000, to: Infinity, rate: ns.arena[2].rate, name: 'ARENA III', label: '$15,5M+' }
     ];
 
-    document.getElementById('premiosGrid').innerHTML = items.map(p => `
-      <div class="premio ${p.unlocked ? 'unlocked' : 'locked'}">
-        <div class="premio-icon">${p.icon}</div>
-        <div class="premio-body">
-          <div class="premio-title">${p.title}</div>
-          <div class="premio-desc">${p.desc}<strong style="color:${p.unlocked ? 'var(--red)' : 'var(--ink)'}">${p.reward}</strong></div>
+    const tierRows = tiers.map((t, i) => {
+      const isPersonal = facturado !== null;
+      const done = isPersonal && facturado >= t.to;
+      const current = isPersonal && facturado >= t.from && facturado < t.to;
+      const cls = done ? 'done' : (current ? 'current' : (isPersonal ? 'locked' : ''));
+      const statusText = done ? '✓ SUPERADO' : (current ? '▶ ACÁ ESTÁS' : (isPersonal ? '🔒 BLOQUEADO' : '—'));
+      let progressRow = '';
+      if (current && t.to !== Infinity) {
+        const pct = ((facturado - t.from) / (t.to - t.from)) * 100;
+        const falta = t.to - facturado;
+        progressRow = `
+          <div class="rules-progress">
+            <div class="rules-progress-text">Te faltan <strong>${fmtMoney(falta)}</strong> para el próximo escalón</div>
+            <div class="rules-progress-bar"><div class="rules-progress-fill" style="width: ${Math.min(100, pct)}%"></div></div>
+          </div>
+        `;
+      } else if (current && t.to === Infinity) {
+        progressRow = `<div class="rules-progress"><div class="rules-progress-text">🚀 Estás en el escalón máximo · cada peso suma al ${(t.rate*100).toFixed(0)}%</div></div>`;
+      }
+      return `
+        <div class="rules-row ${cls}">
+          <div class="rules-row-icon">${done ? '✓' : (current ? '▶' : (i+1))}</div>
+          <div class="rules-row-body">
+            <div class="rules-row-title">${t.name}</div>
+            <div class="rules-row-detail">${t.label}</div>
+          </div>
+          <div class="rules-row-rate">${(t.rate*100).toFixed(t.rate*100 % 1 === 0 ? 0 : 1)}%</div>
+          <div class="rules-row-status">${statusText}</div>
+          ${progressRow}
         </div>
-        <div class="premio-status">${p.unlocked ? '✓ ' + (p.unlockedBy || 'ON') : '◯ BLOQUEADO'}</div>
+      `;
+    }).join('');
+
+    const arenaRows = arena.map((a, i) => {
+      const isPersonal = facturado !== null;
+      const done = isPersonal && facturado >= a.to;
+      const current = isPersonal && facturado >= a.from && facturado < a.to;
+      const cls = done ? 'done' : (current ? 'current' : (isPersonal ? 'locked' : ''));
+      const statusText = done ? '✓ DESBLOQUEADO' : (current ? '▶ ACTIVO' : (isPersonal ? '🔒 BLOQUEADO' : '—'));
+      let progressRow = '';
+      if (current && a.to !== Infinity) {
+        const pct = ((facturado - a.from) / (a.to - a.from)) * 100;
+        const falta = a.to - facturado;
+        progressRow = `
+          <div class="rules-progress">
+            <div class="rules-progress-text">Te faltan <strong>${fmtMoney(falta)}</strong> para el siguiente escalón Arena</div>
+            <div class="rules-progress-bar"><div class="rules-progress-fill" style="width: ${Math.min(100, pct)}%"></div></div>
+          </div>
+        `;
+      } else if (!current && isPersonal && !done) {
+        const falta = a.from - facturado;
+        if (falta > 0 && falta < 5000000) {
+          progressRow = `<div class="rules-progress"><div class="rules-progress-text">Te faltan <strong>${fmtMoney(falta)}</strong> para activarlo</div></div>`;
+        }
+      }
+      return `
+        <div class="rules-row ${cls}">
+          <div class="rules-row-icon">💎</div>
+          <div class="rules-row-body">
+            <div class="rules-row-title">${a.name}</div>
+            <div class="rules-row-detail">${a.label} · sobre el excedente</div>
+          </div>
+          <div class="rules-row-rate">+${(a.rate*100).toFixed(1)}%</div>
+          <div class="rules-row-status">${statusText}</div>
+          ${progressRow}
+        </div>
+      `;
+    }).join('');
+
+    // EXTRAS: viático + bonus #1 + bonus equipo
+    const viaticoActive = facturado !== null && facturado >= ns.viaticoThreshold;
+    const viaticoFalta = facturado !== null ? Math.max(0, ns.viaticoThreshold - facturado) : 0;
+    const viaticoCls = viaticoActive ? 'done' : (facturado !== null && viaticoFalta < 3000000 ? 'current' : 'locked');
+    const viaticoStatus = viaticoActive ? '✓ ACTIVO' : (facturado === null ? '—' : '🔒 BLOQUEADO');
+
+    let firstLeader = '—';
+    let firstActive = false;
+    let amILeader = false;
+    if (c && c.firstPlace) {
+      firstLeader = SELLER_META[c.firstPlace]?.name || c.firstPlace.toUpperCase();
+      firstActive = true;
+      amILeader = currentUser === c.firstPlace;
+    }
+
+    const teamActive = c && c.allMet;
+
+    const extras = `
+      <div class="rules-row ${viaticoCls}">
+        <div class="rules-row-icon">🚗</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">VIÁTICO</div>
+          <div class="rules-row-detail">Se activa si facturás más de <strong>${fmtMoney(ns.viaticoThreshold)}</strong></div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(ns.viatico)}</div>
+        <div class="rules-row-status">${viaticoStatus}</div>
+        ${(!viaticoActive && facturado !== null && viaticoFalta > 0 && viaticoFalta < 3000000) ? `<div class="rules-progress"><div class="rules-progress-text">Te faltan <strong>${fmtMoney(viaticoFalta)}</strong> para activarlo</div></div>` : ''}
       </div>
-    `).join('');
+      <div class="rules-row ${amILeader ? 'current' : (firstActive ? 'done' : 'locked')}">
+        <div class="rules-row-icon">👑</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">BONUS #1 DEL MES</div>
+          <div class="rules-row-detail">Premio al líder absoluto del ranking</div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(CONFIG.bonusFirstPlace)}</div>
+        <div class="rules-row-status">${amILeader ? '▶ SOS VOS' : (firstActive ? '✓ ' + firstLeader : '—')}</div>
+      </div>
+      <div class="rules-row ${teamActive ? 'done' : 'locked'}">
+        <div class="rules-row-icon">🤝</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">TODOS LLEGARON</div>
+          <div class="rules-row-detail">Si los 4 vendedores cumplen su meta de <strong>${fmtMoney(CONFIG.target)}</strong></div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(CONFIG.bonusTeamGoal)}</div>
+        <div class="rules-row-status">${teamActive ? '✓ TODOS' : '🔒 BLOQUEADO'}</div>
+      </div>
+    `;
+
+    return `
+      <div class="rules-block">
+        <div class="rules-block-header">
+          <div class="rules-block-title">COMISIÓN ESCALONADA</div>
+          <div class="rules-block-sub">tu sueldo crece a medida que facturás más</div>
+        </div>
+        <div class="rules-rows">${tierRows}</div>
+      </div>
+      <div class="rules-block">
+        <div class="rules-block-header">
+          <div class="rules-block-title">BONUS ARENA</div>
+          <div class="rules-block-sub">extras que se suman al pasar la meta de ${fmtMoney(CONFIG.target)}</div>
+        </div>
+        <div class="rules-rows">${arenaRows}</div>
+      </div>
+      <div class="rules-block">
+        <div class="rules-block-header">
+          <div class="rules-block-title">EXTRAS</div>
+          <div class="rules-block-sub">viático y bonus competitivos</div>
+        </div>
+        <div class="rules-rows">${extras}</div>
+      </div>
+    `;
+  }
+
+  // SISTEMA VIEJO (solo Lauti hasta 30 junio 2026)
+  function renderRulesOldScheme(facturado, c) {
+    const baseAt = CONFIG.target; // $13,5M
+    const arena = [
+      { from: 13500000, to: 14500000, rate: 0.005, name: 'EXTRA I',   label: '$13,5M → $14,5M' },
+      { from: 14500000, to: 15500000, rate: 0.010, name: 'EXTRA II',  label: '$14,5M → $15,5M' },
+      { from: 15500000, to: Infinity, rate: 0.015, name: 'EXTRA III', label: '$15,5M+' }
+    ];
+
+    const transition = `
+      <div class="rules-transition-banner">
+        <div class="rules-transition-icon">⚠</div>
+        <div class="rules-transition-text">
+          <strong>Sistema VIEJO vigente hasta el 30 de junio.</strong> El 1° de julio pasás automáticamente al sistema nuevo (5/6/7/8 % escalonado + Arena + viático). Sin sueldo base.
+        </div>
+      </div>
+    `;
+
+    const baseRows = `
+      <div class="rules-row done">
+        <div class="rules-row-icon">💼</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">SUELDO BASE</div>
+          <div class="rules-row-detail">Fijo todos los meses, vendas lo que vendas</div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(CONFIG.baseSalary)}</div>
+        <div class="rules-row-status">✓ FIJO</div>
+      </div>
+      <div class="rules-row done">
+        <div class="rules-row-icon">💵</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">COMISIÓN BASE</div>
+          <div class="rules-row-detail">Sobre <strong>TODA</strong> tu facturación, desde el primer peso</div>
+        </div>
+        <div class="rules-row-rate">${(CONFIG.baseCommission*100).toFixed(0)}%</div>
+        <div class="rules-row-status">✓ ACTIVA</div>
+      </div>
+      <div class="rules-row ${facturado >= baseAt ? 'done' : (facturado >= baseAt * 0.7 ? 'current' : 'locked')}">
+        <div class="rules-row-icon">🎯</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">BONUS META</div>
+          <div class="rules-row-detail">Cuando cruzás <strong>${fmtMoney(baseAt)}</strong></div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(CONFIG.bonusOnTarget)}</div>
+        <div class="rules-row-status">${facturado >= baseAt ? '✓ COBRADO' : '🔒 BLOQUEADO'}</div>
+        ${(facturado < baseAt && facturado >= baseAt * 0.7) ? `<div class="rules-progress"><div class="rules-progress-text">Te faltan <strong>${fmtMoney(baseAt - facturado)}</strong> para activarlo</div><div class="rules-progress-bar"><div class="rules-progress-fill" style="width: ${(facturado / baseAt * 100).toFixed(0)}%"></div></div></div>` : ''}
+      </div>
+    `;
+
+    const arenaRows = arena.map(a => {
+      const done = facturado >= a.to;
+      const current = facturado >= a.from && facturado < a.to;
+      const cls = done ? 'done' : (current ? 'current' : 'locked');
+      const statusText = done ? '✓ COBRADO' : (current ? '▶ ACTIVO' : '🔒 BLOQUEADO');
+      let progressRow = '';
+      if (current && a.to !== Infinity) {
+        const pct = ((facturado - a.from) / (a.to - a.from)) * 100;
+        const falta = a.to - facturado;
+        progressRow = `<div class="rules-progress"><div class="rules-progress-text">Te faltan <strong>${fmtMoney(falta)}</strong> para el siguiente escalón</div><div class="rules-progress-bar"><div class="rules-progress-fill" style="width: ${Math.min(100, pct)}%"></div></div></div>`;
+      }
+      return `
+        <div class="rules-row ${cls}">
+          <div class="rules-row-icon">▲</div>
+          <div class="rules-row-body">
+            <div class="rules-row-title">${a.name}</div>
+            <div class="rules-row-detail">${a.label} · sobre el excedente</div>
+          </div>
+          <div class="rules-row-rate">+${(a.rate*100).toFixed(1)}%</div>
+          <div class="rules-row-status">${statusText}</div>
+          ${progressRow}
+        </div>
+      `;
+    }).join('');
+
+    // Bonus #1 y equipo siguen aplicando
+    let firstLeader = '—', amILeader = false, firstActive = false;
+    if (c && c.firstPlace) {
+      firstLeader = SELLER_META[c.firstPlace]?.name || c.firstPlace.toUpperCase();
+      firstActive = true;
+      amILeader = currentUser === c.firstPlace;
+    }
+    const teamActive = c && c.allMet;
+
+    const extras = `
+      <div class="rules-row ${amILeader ? 'current' : (firstActive ? 'done' : 'locked')}">
+        <div class="rules-row-icon">👑</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">BONUS #1 DEL MES</div>
+          <div class="rules-row-detail">Premio al líder absoluto del ranking</div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(CONFIG.bonusFirstPlace)}</div>
+        <div class="rules-row-status">${amILeader ? '▶ SOS VOS' : (firstActive ? '✓ ' + firstLeader : '—')}</div>
+      </div>
+      <div class="rules-row ${teamActive ? 'done' : 'locked'}">
+        <div class="rules-row-icon">🤝</div>
+        <div class="rules-row-body">
+          <div class="rules-row-title">TODOS LLEGARON</div>
+          <div class="rules-row-detail">Si los 4 vendedores cumplen su meta</div>
+        </div>
+        <div class="rules-row-rate">${fmtMoney(CONFIG.bonusTeamGoal)}</div>
+        <div class="rules-row-status">${teamActive ? '✓ TODOS' : '🔒 BLOQUEADO'}</div>
+      </div>
+    `;
+
+    return `
+      ${transition}
+      <div class="rules-block">
+        <div class="rules-block-header">
+          <div class="rules-block-title">BASE FIJA</div>
+          <div class="rules-block-sub">tu sueldo asegurado mes a mes</div>
+        </div>
+        <div class="rules-rows">${baseRows}</div>
+      </div>
+      <div class="rules-block">
+        <div class="rules-block-header">
+          <div class="rules-block-title">EXTRAS POR EXCEDENTE</div>
+          <div class="rules-block-sub">se aplican sobre lo que pasa cada umbral</div>
+        </div>
+        <div class="rules-rows">${arenaRows}</div>
+      </div>
+      <div class="rules-block">
+        <div class="rules-block-header">
+          <div class="rules-block-title">BONUS COMPETITIVOS</div>
+          <div class="rules-block-sub">premios por ranking</div>
+        </div>
+        <div class="rules-rows">${extras}</div>
+      </div>
+    `;
   }
 
   function renderHOF() {
@@ -5352,7 +6047,8 @@
     dueloEl.classList.remove('leader-lauti', 'leader-bauti', 'leader-leo', 'leader-kevin');
     if (c.firstPlace) dueloEl.classList.add('leader-' + c.firstPlace);
 
-    renderPremios(c);
+    renderRulesCard(c);
+    renderAchievementsCard(c);
     renderHOF();
     renderChannelStrip();
     renderCobros(c);
