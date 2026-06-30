@@ -341,7 +341,11 @@
     font-family: 'Anton', sans-serif; font-size: clamp(42px, 6vw, 76px);
     line-height: 0.95; color: var(--ink); margin: 18px 0 4px;
     letter-spacing: -0.02em;
+    /* Auto-scale clases agregadas por JS según largo del número */
   }
+  .seller-amount.size-md { font-size: clamp(36px, 5.2vw, 64px); }
+  .seller-amount.size-sm { font-size: clamp(30px, 4.4vw, 52px); }
+  .seller-amount.size-xs { font-size: clamp(24px, 3.6vw, 42px); letter-spacing: -0.03em; }
   .seller-amount .currency { color: var(--ink-4); font-size: 0.55em; vertical-align: top; margin-right: 6px; }
   .seller-meta-line {
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
@@ -682,6 +686,164 @@
   .crown-item.mine .crown-item-badge {
     color: white; background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
     border-color: #B8860B; font-weight: 700;
+  }
+
+  /* ===== VENDEDORES VIEW ===== */
+  /* Resumen diario */
+  .daily-summary-row {
+    display: grid; grid-template-columns: 1fr 240px; gap: 16px;
+    align-items: stretch;
+  }
+  .daily-summary-card {
+    background: var(--bg-soft); border: 1.5px solid var(--line);
+    padding: 24px 28px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.7; color: var(--ink);
+    white-space: pre-wrap; word-break: break-word;
+    min-height: 320px;
+  }
+  .daily-summary-actions {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .daily-date-picker { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+  .daily-date-picker label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: var(--ink-3); text-transform: uppercase;
+  }
+  .daily-date-picker input {
+    padding: 8px 10px; border: 1.5px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .daily-btn { padding: 14px 16px !important; font-size: 12px !important; }
+  .daily-btn-wpp { background: #25D366 !important; border-color: #25D366 !important; }
+  .daily-btn-wpp:hover { background: #1ea952 !important; }
+  .daily-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #16a34a; letter-spacing: 0.1em; text-align: center;
+    min-height: 16px; padding-top: 6px;
+  }
+
+  /* Alertas */
+  .alert-card {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px;
+    align-items: start; padding: 18px 22px; margin-bottom: 10px;
+    background: var(--bg-soft); border-left: 4px solid var(--line);
+  }
+  .alert-card.warn  {
+    background: linear-gradient(90deg, rgba(245,158,11,0.08) 0%, rgba(245,158,11,0.01) 100%);
+    border-left-color: #f59e0b;
+  }
+  .alert-card.bad   {
+    background: linear-gradient(90deg, rgba(229,37,33,0.08) 0%, rgba(229,37,33,0.01) 100%);
+    border-left-color: var(--red);
+  }
+  .alert-card.good  {
+    background: linear-gradient(90deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.01) 100%);
+    border-left-color: #22c55e;
+  }
+  .alert-icon {
+    font-size: 28px; line-height: 1; padding-top: 2px;
+  }
+  .alert-body { display: flex; flex-direction: column; gap: 4px; }
+  .alert-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); letter-spacing: 0.04em;
+  }
+  .alert-detail {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink); line-height: 1.6; letter-spacing: 0.02em;
+  }
+  .alert-detail strong { font-weight: 700; }
+  .alert-card.warn .alert-detail strong { color: #b45309; }
+  .alert-card.bad .alert-detail strong  { color: var(--red); }
+  .alert-card.good .alert-detail strong { color: #15803d; }
+  .alerts-empty {
+    padding: 24px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink-3); letter-spacing: 0.05em;
+    background: var(--bg-soft); border: 1px dashed var(--line);
+  }
+
+  /* Proyección */
+  .projection-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .projection-table thead th {
+    text-align: right; padding: 12px 16px;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink-3); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+  }
+  .projection-table thead th:first-child { text-align: left; }
+  .projection-table tbody td {
+    padding: 14px 16px; text-align: right; color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .projection-table tbody td:first-child {
+    text-align: left; font-family: 'Archivo Black', sans-serif;
+    font-size: 14px; letter-spacing: 0.03em;
+  }
+  .projection-table tbody tr.total td {
+    border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+    background: var(--bg-soft); font-weight: 700;
+  }
+  .proj-status {
+    display: inline-block; padding: 4px 8px;
+    font-size: 10px; letter-spacing: 0.1em;
+    border: 1.5px solid currentColor;
+  }
+  .proj-status.good { color: #16a34a; }
+  .proj-status.warn { color: #b45309; }
+  .proj-status.bad  { color: var(--red); }
+
+  /* Tendencia */
+  .tendency-container { display: grid; gap: 16px; }
+  .tendency-row {
+    background: var(--bg-soft); padding: 16px 20px;
+    border-left: 3px solid var(--line);
+  }
+  .tendency-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .tendency-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); letter-spacing: 0.04em;
+  }
+  .tendency-comment {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.02em;
+  }
+  .tendency-bars {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink); font-size: 17px;
+    letter-spacing: 0.3em; line-height: 1.2;
+    overflow-x: auto; white-space: nowrap;
+    padding: 4px 0;
+  }
+  .tendency-row.good { border-left-color: #22c55e; }
+  .tendency-row.warn { border-left-color: #f59e0b; }
+  .tendency-row.bad  { border-left-color: var(--red); }
+
+  /* Margen */
+  .margin-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .margin-table thead th {
+    text-align: right; padding: 12px 16px;
+    border-bottom: 2px solid var(--ink);
+    color: var(--ink-3); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+  }
+  .margin-table thead th:first-child { text-align: left; }
+  .margin-table tbody td {
+    padding: 14px 16px; text-align: right; color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .margin-table tbody td:first-child {
+    text-align: left; font-family: 'Archivo Black', sans-serif;
+    font-size: 14px; letter-spacing: 0.03em;
   }
 
   /* HOF */
@@ -1342,6 +1504,9 @@
     font-family: 'Anton', sans-serif; font-size: 28px; color: white;
     line-height: 1;
   }
+  .cw-amount.size-md { font-size: 24px; }
+  .cw-amount.size-sm { font-size: 20px; }
+  .cw-amount.size-xs { font-size: 17px; letter-spacing: -0.02em; }
   .cw-btn {
     width: 100%; margin-top: 10px; padding: 12px;
     background: var(--green); color: white; border: 1.5px solid var(--green);
@@ -2498,6 +2663,22 @@
     .crown-item-emoji { font-size: 30px; }
     .ach-block-title { font-size: 14px; }
     .ach-block-sub { font-size: 10px; }
+    /* Vendedores mobile */
+    .daily-summary-row { grid-template-columns: 1fr; }
+    .daily-summary-actions { flex-direction: column; }
+    .tendency-bars { font-size: 14px; letter-spacing: 0.2em; }
+    .tendency-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .projection-table, .margin-table {
+      font-size: 11px;
+    }
+    .projection-table thead th, .margin-table thead th,
+    .projection-table tbody td, .margin-table tbody td {
+      padding: 8px 6px;
+    }
+    .projection-table tbody td:first-child,
+    .margin-table tbody td:first-child {
+      font-size: 12px;
+    }
     .premio { border-right: none; }
     .premio:nth-last-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
     .premio:last-child { border-bottom: none; }
@@ -2633,10 +2814,11 @@
     </div>
   </div>
 
-  <!-- Toggle TABLERO / OPERACIONES (solo admin) -->
+  <!-- Toggle TABLERO / OPERACIONES / VENDEDORES (solo admin) -->
   <div class="view-toggle" id="viewToggle" style="display:none;">
     <button class="vt-btn active" id="vt-tablero" onclick="switchView('tablero')">🏆 TABLERO</button>
     <button class="vt-btn" id="vt-operaciones" onclick="switchView('operaciones')">⚙ OPERACIONES</button>
+    <button class="vt-btn" id="vt-vendedores" onclick="switchView('vendedores')">👥 VENDEDORES</button>
   </div>
 
   <div id="tableroView">
@@ -3433,6 +3615,88 @@
       <span id="opsLastUpdate">— SIN ACTUALIZAR —</span>
     </div>
   </div><!-- /operationsView -->
+
+  <!-- ===== VENDEDORES (solo admin) ===== -->
+  <div id="vendedoresView" style="display:none;">
+    <div class="ops-header">
+      <div class="ops-eyebrow">👥 ADMIN · ANÁLISIS DEL EQUIPO</div>
+      <h2 class="ops-title">VENDEDORES</h2>
+      <div class="ops-period-row">
+        <span class="ops-period" id="vendPeriod">JUNIO 2026</span>
+      </div>
+    </div>
+
+    <!-- 01 RESUMEN DIARIO -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>📋 RESUMEN DIARIO PARA EL GRUPO</h3>
+        <span class="ops-section-sub">copialo o mandalo directo al grupo cada noche</span>
+      </div>
+      <div class="daily-summary-row">
+        <div class="daily-summary-card" id="dailySummaryCard">
+          <!-- relleno dinámico -->
+        </div>
+        <div class="daily-summary-actions">
+          <div class="daily-date-picker">
+            <label>FECHA</label>
+            <input type="date" id="dailySummaryDate" onchange="renderDailySummary()">
+          </div>
+          <button class="btn-primary daily-btn" onclick="copyDailySummary()">📋 COPIAR TEXTO</button>
+          <button class="btn-primary daily-btn daily-btn-wpp" onclick="sendDailyWhatsApp()">📲 WHATSAPP</button>
+          <div class="daily-status" id="dailyStatus"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 ALERTAS DEL EQUIPO -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>🚨 ALERTAS DEL EQUIPO</h3>
+        <span class="ops-section-sub">se calculan automáticamente · solo aparecen cuando hay señal</span>
+      </div>
+      <div id="alertsContainer">
+        <!-- relleno dinámico -->
+      </div>
+    </div>
+
+    <!-- 03 PROYECCIÓN DE CIERRE -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>🎯 PROYECCIÓN DE CIERRE DE MES</h3>
+        <span class="ops-section-sub">si el ritmo se mantiene, así termina el mes</span>
+      </div>
+      <div class="projection-table" id="projectionTable">
+        <!-- relleno dinámico -->
+      </div>
+    </div>
+
+    <!-- 04 TENDENCIA 90 DÍAS -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>📈 TENDENCIA · ÚLTIMOS 90 DÍAS</h3>
+        <span class="ops-section-sub">cada barra es un día · permite ver patrones</span>
+      </div>
+      <div class="tendency-container" id="tendencyContainer">
+        <!-- relleno dinámico -->
+      </div>
+    </div>
+
+    <!-- 05 MARGEN POR VENDEDOR -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>💰 MARGEN POR VENDEDOR</h3>
+        <span class="ops-section-sub">mes en curso · solo ventas con costo cargado</span>
+      </div>
+      <div class="margin-table" id="marginTable">
+        <!-- relleno dinámico -->
+      </div>
+    </div>
+
+    <div class="footer">
+      <span><strong>◢ GRAZIANO MATERIALES</strong> · ANÁLISIS DE EQUIPO</span>
+      <span id="vendLastUpdate">— SIN ACTUALIZAR —</span>
+    </div>
+  </div><!-- /vendedoresView -->
 </div><!-- /mainContainer -->
 
 <div class="fab-group fab-hidden" id="fabGroup">
@@ -4691,8 +4955,31 @@
   }
 
   // ===== RENDER =====
+  // Auto-escala fuente según largo del número
+  // Cuanto más dígitos, clase más chica
+  function autoScaleAmount(elementId, value, parentClass) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    // Obtener el contenedor con clase parentClass
+    let target = el;
+    while (target && !target.classList.contains(parentClass)) {
+      target = target.parentElement;
+    }
+    if (!target) return;
+    target.classList.remove('size-md', 'size-sm', 'size-xs');
+    const digits = Math.abs(Math.round(value)).toString().length;
+    // <= 6 dígitos ($999.999) → tamaño base
+    // 7 dígitos ($9.999.999) → md
+    // 8 dígitos ($99.999.999) → sm
+    // 9+ dígitos ($999.999.999+) → xs
+    if (digits >= 9) target.classList.add('size-xs');
+    else if (digits === 8) target.classList.add('size-sm');
+    else if (digits === 7) target.classList.add('size-md');
+  }
+
   function renderSeller(key, data, isLeader) {
     document.getElementById(`amount-${key}`).textContent = fmtFull(data.total);
+    autoScaleAmount(`amount-${key}`, data.total, 'seller-amount');
     document.getElementById(`count-${key}`).textContent = data.count;
     document.getElementById(`ticket-${key}`).textContent = fmtMoney(data.ticketAvg);
     document.getElementById(`pct-${key}`).textContent = Math.round(data.pct * 100) + '%';
@@ -5444,6 +5731,7 @@
       document.getElementById(`cw-facturado-${seller}`).textContent = fmtMoney(wkCur.facturado);
       document.getElementById(`cw-comision-${seller}`).textContent = fmtMoney(wkCur.comision);
       document.getElementById(`cw-amount-${seller}`).textContent = fmtMoney(wkCur.comision);
+      autoScaleAmount(`cw-amount-${seller}`, wkCur.comision, 'cw-amount');
 
       // Botón cobrar (solo admin)
       const btn = document.getElementById(`cw-btn-${seller}`);
@@ -5711,16 +5999,18 @@
     const daysLeft = daysInMonth - dayOfMonth + 1;
     const pctElapsed = Math.round((dayOfMonth / daysInMonth) * 100);
 
-    // Para vendedor: sus números. Para admin: equipo completo
+    // Para vendedor: sus números. Para admin: equipo COMPLETO incluyendo Estela
     let total, sales, targetForBanner;
     if (isSeller) {
       total = c[currentUser].total;
       sales = state.sales.filter(s => s.seller === currentUser && s.status === 'approved' && monthKeyOf(s.date) === currentMonthKey());
       targetForBanner = CONFIG.target;
     } else {
-      sales = state.sales.filter(s => CONFIG.competitiveSellers.includes(s.seller) && s.status === 'approved' && monthKeyOf(s.date) === currentMonthKey());
+      // ADMIN: incluye Estela
+      const allSellers = [...CONFIG.competitiveSellers, 'estela'];
+      sales = state.sales.filter(s => allSellers.includes(s.seller) && s.status === 'approved' && monthKeyOf(s.date) === currentMonthKey());
       total = sales.reduce((a, v) => a + v.amount, 0);
-      targetForBanner = CONFIG.target * CONFIG.competitiveSellers.length;
+      targetForBanner = (CONFIG.target * CONFIG.competitiveSellers.length) + CONFIG.estelaTarget;
     }
 
     // Últimos 7 días
@@ -5736,6 +6026,9 @@
     const neededRate = daysLeft > 0 ? remaining / daysLeft : 0;
     const pctMeta = Math.min(100, (total / targetForBanner) * 100);
 
+    // MODO CIERRE DE MES: cuando quedan ≤5 días el "ritmo necesario" da números absurdos
+    const closingMode = daysLeft <= 5;
+
     // Status
     let statusClass = 'is-good';
     let statusText = '✓ vas arriba del ritmo';
@@ -5744,6 +6037,21 @@
       statusClass = 'is-good';
       statusText = '🎯 meta superada';
       pillEmoji = '🏆';
+    } else if (closingMode) {
+      // En modo cierre: status basado en si está cerca de la meta
+      if (pctMeta >= 90) {
+        statusClass = 'is-good';
+        statusText = '🏁 a un paso de cumplir';
+        pillEmoji = '🏁';
+      } else if (pctMeta >= 70) {
+        statusClass = 'is-warn';
+        statusText = '⏳ mes cerrando · empujen para llegar';
+        pillEmoji = '⏳';
+      } else {
+        statusClass = 'is-bad';
+        statusText = '🏁 mes cerrando · queda poco margen';
+        pillEmoji = '🏁';
+      }
     } else if (currentRate >= neededRate) {
       statusClass = 'is-good';
       statusText = '✓ vas arriba del ritmo necesario';
@@ -5759,17 +6067,31 @@
     }
 
     banner.className = 'countdown-banner ' + statusClass;
+    if (closingMode) banner.classList.add('is-closing');
+
     document.getElementById('cbDaysLeft').textContent = `QUEDAN ${daysLeft} DÍA${daysLeft === 1 ? '' : 'S'}`;
     document.getElementById('cbPctElapsed').textContent = `${pctElapsed}%`;
     document.getElementById('cbStatusPill').textContent = `${pillEmoji}  ${pctMeta.toFixed(0)}% META`;
     document.getElementById('cbProgressFill').style.width = pctMeta + '%';
     document.getElementById('cbLast7').textContent = fmtMoney(last7Total);
     document.getElementById('cbCurrentRate').textContent = fmtMoney(currentRate) + '/día';
-    document.getElementById('cbNeededRate').textContent = remaining > 0 ? fmtMoney(neededRate) + '/día' : '—';
+
+    // En modo cierre, "ritmo necesario" se reemplaza por "falta para meta"
+    const neededRateEl = document.getElementById('cbNeededRate');
+    const neededRateLabelEl = neededRateEl?.parentElement?.querySelector('.cb-stat-label');
+    if (closingMode) {
+      if (neededRateLabelEl) neededRateLabelEl.textContent = 'Falta para meta';
+      neededRateEl.textContent = remaining > 0 ? fmtMoney(remaining) : '✓ cumplida';
+    } else {
+      if (neededRateLabelEl) neededRateLabelEl.textContent = 'Ritmo necesario';
+      neededRateEl.textContent = remaining > 0 ? fmtMoney(neededRate) + '/día' : '—';
+    }
 
     let footerText;
     if (remaining === 0) {
       footerText = `🏆 Superaste la meta de ${fmtMoney(targetForBanner)}. Cada peso que sigas vendiendo es bonus puro.`;
+    } else if (closingMode) {
+      footerText = `Te faltan <strong>${fmtMoney(remaining)}</strong> · ${statusText}`;
     } else {
       footerText = `Te faltan <strong>${fmtMoney(remaining)}</strong> para meta · ${statusText}`;
     }
@@ -6640,9 +6962,12 @@
     currentView = view;
     document.getElementById('tableroView').style.display = view === 'tablero' ? '' : 'none';
     document.getElementById('operationsView').style.display = view === 'operaciones' ? '' : 'none';
+    document.getElementById('vendedoresView').style.display = view === 'vendedores' ? '' : 'none';
     document.getElementById('vt-tablero').classList.toggle('active', view === 'tablero');
     document.getElementById('vt-operaciones').classList.toggle('active', view === 'operaciones');
+    document.getElementById('vt-vendedores').classList.toggle('active', view === 'vendedores');
     if (view === 'operaciones') renderOperations(computeAll());
+    if (view === 'vendedores') renderVendedores();
     window.scrollTo(0, 0);
   }
 
@@ -6695,6 +7020,416 @@
     renderOpsTable();
     populateConfigPanel();
     renderCrownBoard();
+  }
+
+  // ===== SECCIÓN VENDEDORES =====
+
+  function renderVendedores() {
+    document.getElementById('vendPeriod').textContent =
+      monthLabel(currentMonthKey()).toUpperCase();
+    document.getElementById('vendLastUpdate').textContent =
+      `▸ ACTUALIZADO ${new Date().toLocaleString('es-AR')}`;
+    const dailyDate = document.getElementById('dailySummaryDate');
+    if (dailyDate && !dailyDate.value) {
+      dailyDate.value = new Date().toISOString().slice(0, 10);
+    }
+    renderDailySummary();
+    renderAlerts();
+    renderProjection();
+    renderTendency();
+    renderMargin();
+  }
+
+  // ===== 01 RESUMEN DIARIO =====
+  function buildDailySummaryText(dateStr) {
+    const day = new Date(dateStr + 'T00:00:00');
+    const dayLabel = day.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', weekday: 'long' }).toUpperCase();
+    const dailySales = state.sales.filter(s => s.date === dateStr && s.status !== 'cancelled' && s.status !== 'voided');
+    const totalAmount = dailySales.reduce((a, v) => a + v.amount, 0);
+    const totalOps = dailySales.length;
+
+    const allSellers = [...CONFIG.competitiveSellers, 'estela'];
+    const bySeller = {};
+    allSellers.forEach(s => { bySeller[s] = { total: 0, count: 0 }; });
+    dailySales.forEach(s => {
+      if (bySeller[s.seller]) {
+        bySeller[s.seller].total += s.amount;
+        bySeller[s.seller].count += 1;
+      }
+    });
+
+    const ranking = allSellers.map(k => ({ key: k, ...bySeller[k] })).sort((a, b) => b.total - a.total);
+
+    const medals = ['🥇', '🥈', '🥉'];
+    let sellerLines = '';
+    let withSales = ranking.filter(r => r.total > 0);
+    let noSales = ranking.filter(r => r.total === 0);
+    withSales.forEach((r, i) => {
+      const med = i < 3 ? medals[i] : '  ';
+      const name = SELLER_META[r.key].name;
+      const pad = name.padEnd(8, ' ');
+      sellerLines += `${med} ${pad} ${fmtMoney(r.total)}  ·  ${r.count} venta${r.count === 1 ? '' : 's'}\n`;
+    });
+    noSales.forEach(r => {
+      const name = SELLER_META[r.key].name;
+      sellerLines += `🚨 ${name.padEnd(8, ' ')} Sin ventas\n`;
+    });
+
+    const outstandingLines = [];
+    if (dailySales.length > 0) {
+      const topSale = dailySales.reduce((m, v) => v.amount > m.amount ? v : m, dailySales[0]);
+      if (topSale.amount >= 500000) {
+        const name = SELLER_META[topSale.seller]?.name || topSale.seller.toUpperCase();
+        outstandingLines.push(`${name} cerró una venta de ${fmtMoney(topSale.amount)}`);
+      }
+    }
+    if (withSales.length > 0 && withSales[0].total > 0) {
+      const leader = withSales[0];
+      const leaderName = SELLER_META[leader.key].name;
+      if (leader.count >= 3 && (!withSales[1] || leader.total > withSales[1].total * 1.5)) {
+        outstandingLines.push(`${leaderName} hizo ${leader.count} ventas hoy · lidera el día`);
+      }
+    }
+    const megaSales = dailySales.filter(s => s.amount >= 1000000);
+    megaSales.forEach(s => {
+      const name = SELLER_META[s.seller]?.name || s.seller.toUpperCase();
+      if (!outstandingLines.some(l => l.includes(fmtMoney(s.amount)))) {
+        outstandingLines.push(`${name} cerró una venta gigante de ${fmtMoney(s.amount)}`);
+      }
+    });
+    const mk = currentMonthKey();
+    const todayNum = day.getDate();
+    allSellers.forEach(seller => {
+      const monthSales = state.sales.filter(s => s.seller === seller && monthKeyOf(s.date) === mk && s.status === 'approved');
+      const monthTotal = monthSales.reduce((a, v) => a + v.amount, 0);
+      const avgDaily = todayNum > 1 ? monthTotal / (todayNum - 1) : 0;
+      const todayTotal = bySeller[seller].total;
+      if (avgDaily > 0 && todayTotal > avgDaily * 1.5 && bySeller[seller].count >= 2) {
+        const name = SELLER_META[seller].name;
+        if (!outstandingLines.some(l => l.startsWith(name))) {
+          outstandingLines.push(`${name} vendió por encima de su promedio diario`);
+        }
+      }
+    });
+
+    const lazyLines = [];
+    CONFIG.competitiveSellers.forEach(seller => {
+      if (bySeller[seller].count === 0) {
+        const name = SELLER_META[seller].name;
+        lazyLines.push(`${name} no cargó ventas hoy`);
+      }
+    });
+
+    let text = `📋 RESUMEN VENTAS · ${dayLabel}\n\n`;
+    text += `💰 Total del día: ${fmtMoney(totalAmount)} · ${totalOps} operacion${totalOps === 1 ? '' : 'es'}\n\n`;
+    text += `POR VENDEDOR:\n${sellerLines}\n`;
+    if (outstandingLines.length > 0) {
+      text += `🔥 SOBRESALIENTE\n${outstandingLines.join('\n')}\n\n`;
+    }
+    if (lazyLines.length > 0) {
+      text += `⚠ A MEJORAR\n${lazyLines.join('\n')}\n\n`;
+    }
+    text += `━━━━━━━━━━━━━━━━━━━━━━━\n◢ GRAZIANO MATERIALES`;
+    return text;
+  }
+
+  function renderDailySummary() {
+    const dateStr = document.getElementById('dailySummaryDate')?.value
+      || new Date().toISOString().slice(0, 10);
+    const text = buildDailySummaryText(dateStr);
+    const card = document.getElementById('dailySummaryCard');
+    if (card) card.textContent = text;
+  }
+
+  async function copyDailySummary() {
+    const text = document.getElementById('dailySummaryCard').textContent;
+    const status = document.getElementById('dailyStatus');
+    try {
+      await navigator.clipboard.writeText(text);
+      status.textContent = '✓ copiado · pegalo en el grupo';
+      status.style.color = '#16a34a';
+      setTimeout(() => { status.textContent = ''; }, 3500);
+    } catch (e) {
+      status.textContent = '✗ error · copialo manual';
+      status.style.color = 'var(--red)';
+    }
+  }
+
+  function sendDailyWhatsApp() {
+    const text = document.getElementById('dailySummaryCard').textContent;
+    const encoded = encodeURIComponent(text);
+    const url = `https://wa.me/?text=${encoded}`;
+    window.open(url, '_blank');
+  }
+
+  // ===== 02 ALERTAS =====
+  function renderAlerts() {
+    const container = document.getElementById('alertsContainer');
+    if (!container) return;
+    const alerts = [];
+    const today = new Date();
+    const sellers = CONFIG.competitiveSellers;
+
+    sellers.forEach(seller => {
+      const allSales = state.sales.filter(s => s.seller === seller && s.status === 'approved');
+      if (allSales.length === 0) return;
+
+      const sevenAgo = new Date(today); sevenAgo.setDate(sevenAgo.getDate() - 6);
+      const ninetyAgo = new Date(today); ninetyAgo.setDate(ninetyAgo.getDate() - 90);
+
+      const last7 = allSales.filter(s => new Date(s.date + 'T00:00:00') >= sevenAgo);
+      const last7Total = last7.reduce((a, v) => a + v.amount, 0);
+      const last7Avg = last7Total / 7;
+
+      const historical = allSales.filter(s => {
+        const d = new Date(s.date + 'T00:00:00');
+        return d >= ninetyAgo && d < sevenAgo;
+      });
+      const histDays = 83;
+      const histTotal = historical.reduce((a, v) => a + v.amount, 0);
+      const histAvg = histTotal / histDays;
+
+      if (histAvg > 0 && last7Avg < histAvg * 0.5 && historical.length >= 10) {
+        const drop = Math.round((1 - last7Avg / histAvg) * 100);
+        const name = SELLER_META[seller].name;
+        alerts.push({
+          level: 'bad',
+          icon: '⚠',
+          title: `${name} · BAJÓN DE RITMO`,
+          detail: `Últimos 7 días: <strong>${fmtMoney(last7Avg)}/día</strong> · Promedio histórico: <strong>${fmtMoney(histAvg)}/día</strong> · 📉 caída del ${drop}%`
+        });
+      }
+
+      const lastSale = allSales.slice().sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+      const daysSinceLastSale = Math.floor((today - new Date(lastSale.date + 'T00:00:00')) / 86400000);
+      if (daysSinceLastSale >= 3) {
+        const name = SELLER_META[seller].name;
+        alerts.push({
+          level: 'warn',
+          icon: '🛌',
+          title: `${name} · INACTIVIDAD`,
+          detail: `<strong>${daysSinceLastSale} días sin cargar ventas</strong> · Última venta: ${lastSale.date} · ${fmtMoney(lastSale.amount)}`
+        });
+      }
+
+      const mk = currentMonthKey();
+      const byMonth = {};
+      allSales.forEach(s => {
+        const m = monthKeyOf(s.date);
+        if (m === mk) return;
+        byMonth[m] = (byMonth[m] || 0) + s.amount;
+      });
+      const bestMonthTotal = Math.max(0, ...Object.values(byMonth));
+      const currentMonthSales = allSales.filter(s => monthKeyOf(s.date) === mk);
+      const currentMonthTotal = currentMonthSales.reduce((a, v) => a + v.amount, 0);
+      const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+      const dayOfMonth = today.getDate();
+      const projected = dayOfMonth > 0 ? (currentMonthTotal / dayOfMonth) * daysInMonth : 0;
+
+      if (bestMonthTotal > 0 && projected > bestMonthTotal && currentMonthTotal > bestMonthTotal * 0.5) {
+        const name = SELLER_META[seller].name;
+        alerts.push({
+          level: 'good',
+          icon: '💡',
+          title: `${name} · A PUNTO DE BATIR RÉCORD`,
+          detail: `Mejor mes histórico: <strong>${fmtMoney(bestMonthTotal)}</strong> · Proyección cierre: <strong>${fmtMoney(projected)}</strong>`
+        });
+      }
+    });
+
+    if (alerts.length === 0) {
+      container.innerHTML = `<div class="alerts-empty">✓ todo bajo control · no se detectaron señales preocupantes</div>`;
+      return;
+    }
+
+    container.innerHTML = alerts.map(a => `
+      <div class="alert-card ${a.level}">
+        <div class="alert-icon">${a.icon}</div>
+        <div class="alert-body">
+          <div class="alert-title">${a.title}</div>
+          <div class="alert-detail">${a.detail}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ===== 03 PROYECCIÓN DE CIERRE =====
+  function renderProjection() {
+    const container = document.getElementById('projectionTable');
+    if (!container) return;
+    const mk = currentMonthKey();
+    const today = new Date();
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const dayOfMonth = today.getDate();
+    const allSellers = [...CONFIG.competitiveSellers, 'estela'];
+
+    const rows = allSellers.map(seller => {
+      const sales = state.sales.filter(s => s.seller === seller && s.status === 'approved' && monthKeyOf(s.date) === mk);
+      const actual = sales.reduce((a, v) => a + v.amount, 0);
+      const projected = dayOfMonth > 0 ? (actual / dayOfMonth) * daysInMonth : 0;
+      const target = seller === 'estela' ? CONFIG.estelaTarget : CONFIG.target;
+      const projectedPct = target > 0 ? (projected / target) * 100 : 0;
+
+      let statusCls = 'bad';
+      if (projectedPct >= 95) statusCls = 'good';
+      else if (projectedPct >= 70) statusCls = 'warn';
+
+      const name = SELLER_META[seller].name;
+      return `
+        <tr>
+          <td>${name}</td>
+          <td>${fmtMoney(actual)}</td>
+          <td>${fmtMoney(projected)}</td>
+          <td>${fmtMoney(target)}</td>
+          <td><span class="proj-status ${statusCls}">${projectedPct.toFixed(0)}%</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    const onlineActual = CONFIG.competitiveSellers.reduce((sum, seller) => {
+      const s = state.sales.filter(x => x.seller === seller && x.status === 'approved' && monthKeyOf(x.date) === mk);
+      return sum + s.reduce((a, v) => a + v.amount, 0);
+    }, 0);
+    const onlineProjected = dayOfMonth > 0 ? (onlineActual / dayOfMonth) * daysInMonth : 0;
+    const onlineTarget = CONFIG.target * CONFIG.competitiveSellers.length;
+    const onlinePct = onlineTarget > 0 ? (onlineProjected / onlineTarget) * 100 : 0;
+
+    container.innerHTML = `
+      <table class="projection-table">
+        <thead>
+          <tr>
+            <th>Vendedor</th><th>Facturado</th><th>Proyección</th><th>Meta</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+          <tr class="total">
+            <td>TOTAL ONLINE</td>
+            <td>${fmtMoney(onlineActual)}</td>
+            <td>${fmtMoney(onlineProjected)}</td>
+            <td>${fmtMoney(onlineTarget)}</td>
+            <td><span class="proj-status ${onlinePct >= 95 ? 'good' : onlinePct >= 70 ? 'warn' : 'bad'}">${onlinePct.toFixed(0)}%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+  }
+
+  // ===== 04 TENDENCIA 90 DÍAS =====
+  function renderTendency() {
+    const container = document.getElementById('tendencyContainer');
+    if (!container) return;
+    const bars = ['▁','▂','▃','▄','▅','▆','▇','█'];
+    const allSellers = CONFIG.competitiveSellers;
+    const today = new Date();
+
+    const html = allSellers.map(seller => {
+      const sales = state.sales.filter(s => s.seller === seller && s.status === 'approved');
+      const days = [];
+      for (let i = 89; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const ds = d.toISOString().slice(0, 10);
+        const dayTotal = sales.filter(s => s.date === ds).reduce((a, v) => a + v.amount, 0);
+        days.push(dayTotal);
+      }
+      const max = Math.max(...days, 1);
+      const barString = days.map(v => {
+        if (v === 0) return ' ';
+        const ratio = v / max;
+        const idx = Math.min(7, Math.max(0, Math.floor(ratio * 7)));
+        return bars[idx];
+      }).join('');
+
+      const first30Avg = days.slice(0, 30).reduce((a, v) => a + v, 0) / 30;
+      const last30Avg = days.slice(60).reduce((a, v) => a + v, 0) / 30;
+      const recentNonZero = days.slice(70).filter(v => v > 0).length;
+
+      let comment, cls;
+      if (last30Avg > first30Avg * 1.3 && last30Avg > 0) {
+        comment = '📈 En crecimiento'; cls = 'good';
+      } else if (last30Avg < first30Avg * 0.5 && first30Avg > 0) {
+        comment = '📉 Bajón fuerte vs hace 60 días'; cls = 'bad';
+      } else if (recentNonZero <= 5) {
+        comment = '🌵 Pocas ventas en últimas 3 semanas'; cls = 'bad';
+      } else if (last30Avg < first30Avg * 0.8 && first30Avg > 0) {
+        comment = '📉 Bajando ritmo'; cls = 'warn';
+      } else if (last30Avg > 0) {
+        comment = '✓ Saludable · sube y baja normal'; cls = 'good';
+      } else {
+        comment = '— sin actividad'; cls = 'warn';
+      }
+
+      return `
+        <div class="tendency-row ${cls}">
+          <div class="tendency-header">
+            <div class="tendency-name">${SELLER_META[seller].emoji}  ${SELLER_META[seller].name}</div>
+            <div class="tendency-comment">${comment}</div>
+          </div>
+          <div class="tendency-bars">${barString}</div>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = html;
+  }
+
+  // ===== 05 MARGEN POR VENDEDOR =====
+  function renderMargin() {
+    const container = document.getElementById('marginTable');
+    if (!container) return;
+    const mk = currentMonthKey();
+    const allSellers = [...CONFIG.competitiveSellers, 'estela'];
+
+    const rows = allSellers.map(seller => {
+      const sales = state.sales.filter(s => s.seller === seller && s.status === 'approved' && monthKeyOf(s.date) === mk);
+      const facturado = sales.reduce((a, v) => a + v.amount, 0);
+
+      let marginSum = 0;
+      let marginRevenue = 0;
+      sales.forEach(s => {
+        const m = typeof saleMargin === 'function' ? saleMargin(s) : null;
+        if (m !== null && s.amount > 0) {
+          marginSum += m;
+          marginRevenue += s.amount;
+        }
+      });
+      const marginPct = marginRevenue > 0 ? (marginSum / marginRevenue) * 100 : null;
+
+      let statusCls = '';
+      let statusText = '—';
+      if (marginPct !== null) {
+        if (marginPct >= 22) { statusCls = 'good'; statusText = '✓ Normal'; }
+        else if (marginPct >= 15) { statusCls = 'warn'; statusText = '⚠ Bajo'; }
+        else { statusCls = 'bad'; statusText = '🚨 Muy bajo'; }
+      } else if (facturado === 0) {
+        statusText = '—';
+      } else {
+        statusText = 'sin costo cargado';
+      }
+
+      const name = SELLER_META[seller].name;
+      return `
+        <tr>
+          <td>${name}</td>
+          <td>${fmtMoney(facturado)}</td>
+          <td>${marginPct !== null ? fmtMoney(marginSum) : '—'}</td>
+          <td>${marginPct !== null ? marginPct.toFixed(1) + '%' : '—'}</td>
+          <td><span class="proj-status ${statusCls}">${statusText}</span></td>
+        </tr>
+      `;
+    }).join('');
+
+    container.innerHTML = `
+      <table class="margin-table">
+        <thead>
+          <tr>
+            <th>Vendedor</th><th>Facturado</th><th>Margen $</th><th>Margen %</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
   }
 
   function renderCrownBoard() {
