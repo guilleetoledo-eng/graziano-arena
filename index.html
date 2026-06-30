@@ -67,8 +67,15 @@
     position: fixed; inset: 0; background: var(--bg); z-index: 500;
     display: flex; align-items: center; justify-content: center;
     padding: 24px;
+    overflow-y: auto;
     background-image:
       radial-gradient(ellipse at center, rgba(255,46,31,0.06) 0%, transparent 60%);
+  }
+  @media (max-width: 700px) {
+    .login-overlay {
+      align-items: flex-start;
+      padding: 24px 16px 60px;
+    }
   }
   .login-overlay.hidden { display: none; }
   .login-card { max-width: 560px; width: 100%; text-align: center; }
@@ -101,7 +108,7 @@
     text-transform: uppercase;
   }
   .login-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
   }
   .login-btn.primary { grid-column: 1 / -1; }
   .login-btn {
@@ -290,7 +297,7 @@
 
   /* ==== DUELO ==== */
   .duelo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
-  .duelo.trio { grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .duelo.trio { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
   .seller-card {
     position: relative; padding: 32px 28px;
     background: var(--bg-card);
@@ -600,7 +607,7 @@
   @media (max-width: 600px) {
     .form-grid-2 { grid-template-columns: 1fr; }
   }
-  .seller-toggle { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .seller-toggle { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
   .seller-toggle button {
     padding: 14px; background: var(--bg); border: 1.5px solid var(--line);
     color: var(--ink); font-family: 'Archivo Black', sans-serif;
@@ -752,6 +759,60 @@
   }
 
   /* COBROS SEMANALES */
+  /* COUNTDOWN BANNER · estímulo de tiempo + ritmo */
+  .countdown-banner {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    padding: 18px 22px; margin-bottom: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .countdown-banner.is-good { background: #E8F5E9; border-color: #1F8A3A; }
+  .countdown-banner.is-warn { background: #FFF7E0; border-color: #C58A00; }
+  .countdown-banner.is-bad  { background: #FFEDEC; border-color: var(--red); }
+  .cb-row1 {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap; margin-bottom: 12px;
+  }
+  .cb-eyebrow {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; color: var(--ink); text-transform: uppercase;
+    font-weight: 700;
+  }
+  .cb-meta-pill {
+    padding: 5px 12px; border: 1.5px solid currentColor;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700;
+  }
+  .countdown-banner.is-good .cb-meta-pill { color: #1F8A3A; background: rgba(255,255,255,0.5); }
+  .countdown-banner.is-warn .cb-meta-pill { color: #B07000; background: rgba(255,255,255,0.5); }
+  .countdown-banner.is-bad  .cb-meta-pill { color: var(--red); background: rgba(255,255,255,0.5); }
+  .cb-progress-track {
+    height: 8px; background: rgba(0,0,0,0.08); margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .cb-progress-fill { height: 100%; background: var(--ink); transition: width 0.5s, background 0.3s; }
+  .countdown-banner.is-good .cb-progress-fill { background: #1F8A3A; }
+  .countdown-banner.is-warn .cb-progress-fill { background: #C58A00; }
+  .countdown-banner.is-bad  .cb-progress-fill { background: var(--red); }
+  .cb-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    padding-bottom: 14px; margin-bottom: 12px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+  .cb-stat {}
+  .cb-stat-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    letter-spacing: 0.18em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .cb-stat-value {
+    font-family: 'Archivo Black', sans-serif; font-size: 18px;
+    letter-spacing: 0.01em; color: var(--ink); line-height: 1;
+  }
+  .cb-footer {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink); letter-spacing: 0.03em;
+  }
   /* MI SUELDO PROYECTADO · card vendedor */
   .mysalary-card {
     background: linear-gradient(135deg, var(--ink) 0%, #1a1a1a 100%);
@@ -830,9 +891,103 @@
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: rgba(255,255,255,0.55); letter-spacing: 0.05em;
   }
+  /* PRÓXIMOS HITOS dentro del Mi Sueldo */
+  .ms-milestones {
+    margin-top: 22px; padding-top: 18px;
+    border-top: 1px dashed rgba(255,255,255,0.15);
+    display: grid; gap: 10px;
+  }
+  .ms-milestone {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 12px;
+    align-items: center; padding: 12px 14px;
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid var(--red);
+  }
+  .ms-milestone-icon { font-size: 18px; line-height: 1; }
+  .ms-milestone-body { display: flex; flex-direction: column; gap: 2px; }
+  .ms-milestone-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.18em; color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+  }
+  .ms-milestone-detail {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    color: white; letter-spacing: 0.01em;
+  }
+  .ms-milestone-extra {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--red); font-weight: 700; text-align: right;
+    white-space: nowrap;
+  }
+  /* SIMULADOR */
+  .ms-simulator {
+    margin-top: 22px; padding: 18px;
+    background: rgba(255,46,31,0.08);
+    border: 1px solid rgba(255,46,31,0.3);
+  }
+  .sim-header {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; color: white;
+    text-transform: uppercase; margin-bottom: 14px; font-weight: 700;
+  }
+  .sim-slider-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+  }
+  .sim-slider-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.7); letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .sim-slider-value {
+    font-family: 'Archivo Black', sans-serif; font-size: 18px;
+    color: white;
+  }
+  .sim-slider {
+    width: 100%; height: 8px; -webkit-appearance: none; appearance: none;
+    background: rgba(255,255,255,0.15); outline: none;
+    border-radius: 0; cursor: pointer; margin-bottom: 16px;
+  }
+  .sim-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 24px; height: 24px; background: var(--red);
+    border: 2px solid white; cursor: grab; border-radius: 50%;
+  }
+  .sim-slider::-moz-range-thumb {
+    width: 24px; height: 24px; background: var(--red);
+    border: 2px solid white; cursor: grab; border-radius: 50%;
+  }
+  .sim-result-row {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px;
+    align-items: center; margin-bottom: 8px;
+  }
+  .sim-result-block {
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .sim-result-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+  }
+  .sim-result-current {
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    color: rgba(255,255,255,0.7); font-weight: 700;
+  }
+  .sim-result-projected {
+    font-family: 'Archivo Black', sans-serif; font-size: 18px;
+    color: white;
+  }
+  .sim-arrow {
+    font-family: 'Archivo Black', sans-serif; font-size: 24px;
+    color: var(--red); text-align: center;
+  }
+  .sim-delta {
+    font-family: 'Archivo Black', sans-serif; font-size: 22px;
+    color: var(--red); text-align: center; padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
   .cobros-wrapper { margin-bottom: 24px; }
   .cobros-grid {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
   }
   .cobros-card {
     background: var(--bg-card); border: 1.5px solid var(--line);
@@ -1097,6 +1252,88 @@
   .toast.show { transform: translateX(0); }
   .toast.unlock { background: var(--red); box-shadow: 6px 6px 0 var(--ink); }
   .toast.warn { background: var(--amber); box-shadow: 6px 6px 0 var(--ink); }
+
+  /* BIG TOAST POST-VENTA */
+  .big-toast {
+    position: fixed; left: 50%; top: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0; pointer-events: none;
+    z-index: 350; width: min(90vw, 420px);
+    background: linear-gradient(135deg, var(--ink) 0%, #1a1a1a 100%);
+    color: white; padding: 30px 28px 26px;
+    border: 2px solid var(--red);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 8px 8px 0 var(--red);
+    text-align: center;
+    transition: opacity 0.3s, transform 0.5s cubic-bezier(0.2, 1.5, 0.3, 1);
+  }
+  .big-toast.show {
+    opacity: 1; pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .big-toast.epic {
+    border-color: gold;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 8px 8px 0 gold;
+  }
+  .bt-emoji {
+    font-size: 56px; line-height: 1; margin-bottom: 10px;
+    animation: btPulse 1s ease-in-out infinite alternate;
+  }
+  @keyframes btPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+  }
+  .bt-amount {
+    font-family: 'Archivo Black', sans-serif; font-size: 44px;
+    color: var(--red); letter-spacing: 0.01em; line-height: 1;
+    margin-bottom: 6px;
+  }
+  .big-toast.epic .bt-amount { color: gold; }
+  .bt-seller {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.3em; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .bt-rows {
+    display: grid; gap: 8px; padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  .bt-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .bt-label {
+    color: rgba(255,255,255,0.6); letter-spacing: 0.05em;
+  }
+  .bt-value { color: white; font-weight: 700; }
+  .bt-delta {
+    color: #4ADE80; font-size: 11px; font-weight: 700;
+    margin-left: 4px;
+  }
+  .bt-event {
+    font-family: 'Archivo Black', sans-serif; font-size: 13px;
+    color: gold; letter-spacing: 0.08em;
+    text-transform: uppercase; line-height: 1.3;
+    min-height: 14px;
+  }
+  .bt-event:empty { display: none; }
+
+  /* CONFETI */
+  .confetti-container {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 340; overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute; top: -20px;
+    width: 10px; height: 14px;
+    opacity: 0.9;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0.5; }
+  }
 
   /* FOOTER */
   .footer {
@@ -1784,6 +2021,27 @@
     .ms-name { font-size: 26px; }
     .ms-total { font-size: 28px; }
     .ms-facturado { font-size: 16px; }
+    .ms-milestone { grid-template-columns: auto 1fr; }
+    .ms-milestone-extra { grid-column: 2; text-align: left; padding-top: 2px; }
+    .ms-simulator { padding: 14px; }
+    .sim-result-row { grid-template-columns: 1fr; gap: 6px; text-align: center; }
+    .sim-arrow { display: none; }
+    .sim-result-block { align-items: center; }
+    .sim-delta { font-size: 18px; }
+    /* Countdown banner · mobile */
+    .countdown-banner { padding: 16px 16px; box-shadow: 4px 4px 0 var(--ink); }
+    .cb-stats { grid-template-columns: 1fr; gap: 10px; }
+    .cb-stat { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 8px; padding-bottom: 8px; border-bottom: 1px dashed rgba(0,0,0,0.1); }
+    .cb-stat:last-child { border-bottom: none; padding-bottom: 0; }
+    .cb-stat-label { margin-bottom: 0; }
+    .cb-stat-value { font-size: 16px; text-align: right; }
+    .cb-eyebrow { font-size: 10px; }
+    .cb-footer { font-size: 11px; }
+    /* Big toast mobile */
+    .big-toast { padding: 22px 20px 18px; }
+    .bt-emoji { font-size: 44px; }
+    .bt-amount { font-size: 34px; }
+    .bt-event { font-size: 12px; }
     /* Cobros mobile */
     .cobros-grid { grid-template-columns: 1fr; }
     .duelo { grid-template-columns: 1fr; display: flex; flex-direction: column; }
@@ -1871,7 +2129,13 @@
     .fab { bottom: 18px; right: 18px; width: 56px; height: 56px; font-size: 30px; box-shadow: 4px 4px 0 var(--ink); }
     .footer { font-size: 9px; }
     .login-grid { grid-template-columns: 1fr; }
-    .login-btn { padding: 22px 18px; }
+    .login-btn { padding: 18px 16px; font-size: 22px; }
+    .login-btn .role { font-size: 9.5px; margin-top: 4px; }
+    .login-brand { margin-bottom: 20px; padding-bottom: 16px; }
+    .login-brand svg { width: 42px; height: 42px; }
+    .login-brand .name { font-size: 18px; }
+    .login-title { font-size: clamp(36px, 13vw, 64px) !important; margin-bottom: 4px; }
+    .login-eyebrow { margin-bottom: 18px; font-size: 9.5px; letter-spacing: 0.3em; }
   }
 </style>
 </head>
@@ -1920,6 +2184,10 @@
         <button class="login-btn" onclick="askPin('leo')">
           LEO 🦴
           <span class="role">La Hiena — Cargar mis ventas</span>
+        </button>
+        <button class="login-btn" onclick="askPin('kevin')">
+          KEVIN 🏹
+          <span class="role">El Líder — Cargar mis ventas</span>
         </button>
         <button class="login-btn" onclick="askPin('estela')" style="grid-column:1/-1;">
           ESTELA 🏪
@@ -2030,6 +2298,32 @@
     </div>
   </div>
 
+  <!-- BANNER COUNTDOWN · solo vendedores + admin -->
+  <div class="countdown-banner" id="countdownBanner" style="display:none;">
+    <div class="cb-row1">
+      <div class="cb-eyebrow">🕐 <span id="cbDaysLeft">—</span> · <span id="cbPctElapsed">—</span> DEL MES</div>
+      <div class="cb-meta-pill" id="cbStatusPill">—</div>
+    </div>
+    <div class="cb-progress-track">
+      <div class="cb-progress-fill" id="cbProgressFill" style="width:0%"></div>
+    </div>
+    <div class="cb-stats">
+      <div class="cb-stat">
+        <div class="cb-stat-label">Últimos 7 días</div>
+        <div class="cb-stat-value" id="cbLast7">$0</div>
+      </div>
+      <div class="cb-stat">
+        <div class="cb-stat-label">Ritmo actual</div>
+        <div class="cb-stat-value" id="cbCurrentRate">$0/día</div>
+      </div>
+      <div class="cb-stat">
+        <div class="cb-stat-label">Ritmo necesario</div>
+        <div class="cb-stat-value" id="cbNeededRate">$0/día</div>
+      </div>
+    </div>
+    <div class="cb-footer" id="cbFooter">—</div>
+  </div>
+
   <!-- MI SUELDO PROYECTADO · solo vendedores -->
   <div class="mysalary-card" id="mySalaryCard" style="display:none;">
     <div class="ms-header">
@@ -2048,6 +2342,31 @@
     </div>
     <div class="ms-tier" id="msTier"></div>
     <div class="ms-next" id="msNext"></div>
+
+    <!-- PRÓXIMOS HITOS -->
+    <div class="ms-milestones" id="msMilestones"></div>
+
+    <!-- SIMULADOR -->
+    <div class="ms-simulator" id="msSimulator">
+      <div class="sim-header">💭 SIMULADOR — "¿Y si cierro una venta más?"</div>
+      <div class="sim-slider-row">
+        <span class="sim-slider-label">Monto:</span>
+        <span class="sim-slider-value" id="simAmount">$500.000</span>
+      </div>
+      <input type="range" id="simSlider" min="50000" max="3000000" step="50000" value="500000" class="sim-slider">
+      <div class="sim-result-row">
+        <div class="sim-result-block">
+          <span class="sim-result-label">De</span>
+          <span class="sim-result-current" id="simCurrent">$0</span>
+        </div>
+        <div class="sim-result-block sim-arrow">→</div>
+        <div class="sim-result-block">
+          <span class="sim-result-label">A</span>
+          <span class="sim-result-projected" id="simProjected">$0</span>
+        </div>
+      </div>
+      <div class="sim-delta" id="simDelta">+ $0 🔥</div>
+    </div>
   </div>
 
   <div class="section-title">
@@ -2180,6 +2499,48 @@
       </div>
       <div class="pending-pill" id="pending-leo" style="display:none;">
         <span class="num" id="pending-num-leo">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-leo">$0</span>
+      </div>
+    </div>
+
+    <div class="seller-card" id="card-kevin">
+      <div class="seller-header">
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-kevin"></span><span class="hash">#</span><span id="rank-kevin">—</span></div>
+        <div class="seller-name-block">
+          <div class="seller-name">KEVIN</div>
+          <div class="seller-title">EL LÍDER</div>
+        </div>
+      </div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-kevin">0</span></div>
+      <div class="seller-meta-line">
+        <span class="val" id="count-kevin">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-kevin">$0</span>
+      </div>
+      <div class="progress-block">
+        <div class="progress-header">
+          <span class="progress-label">Meta · $13,5M</span>
+          <span class="progress-pct" id="pct-kevin">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bar-kevin" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="stat-cell">
+          <div class="stat-label">Excedente</div>
+          <div class="stat-value" id="excess-kevin">$0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Mejor venta</div>
+          <div class="stat-value" id="best-kevin">$0</div>
+        </div>
+      </div>
+      <div class="earnings">
+        <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
+        <div class="earnings-amount" id="earn-kevin">$0</div>
+        <div class="earnings-breakdown" id="breakdown-kevin">—</div>
+      </div>
+      <div class="pending-pill" id="pending-kevin" style="display:none;">
+        <span class="num" id="pending-num-kevin">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-kevin">$0</span>
       </div>
     </div>
   </div>
@@ -2323,6 +2684,37 @@
             <span class="cw-amount" id="cw-amount-leo">$0</span>
           </div>
           <button class="cw-btn" id="cw-btn-leo" onclick="toggleWeekPaid('leo', currentWeekNum())">✓ MARCAR COBRADO</button>
+        </div>
+      </div>
+
+      <!-- KEVIN -->
+      <div class="cobros-card" id="cobros-kevin">
+        <div class="cobros-card-header">
+          <div class="cobros-seller-block">
+            <span class="cobros-emoji" id="cobros-emoji-kevin"></span>
+            <span class="cobros-name">KEVIN</span>
+          </div>
+          <div class="cobros-total">
+            <span class="ct-label">COBRADO ESTE MES</span>
+            <span class="ct-value" id="cobros-total-kevin">$0</span>
+          </div>
+        </div>
+        <div class="weeks-timeline" id="timeline-kevin"></div>
+        <div class="current-week-card">
+          <div class="cw-header">
+            <span class="cw-label">▸ ESTA SEMANA</span>
+            <span class="cw-range" id="cw-range-kevin">SEM 3 · días 15-21</span>
+          </div>
+          <div class="cw-stats">
+            <span>Facturado <strong id="cw-facturado-kevin">$0</strong></span>
+            <span class="cw-pipe">·</span>
+            <span>Com. <strong id="cw-comision-kevin">$0</strong></span>
+          </div>
+          <div class="cw-amount-block">
+            <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
+            <span class="cw-amount" id="cw-amount-kevin">$0</span>
+          </div>
+          <button class="cw-btn" id="cw-btn-kevin" onclick="toggleWeekPaid('kevin', currentWeekNum())">✓ MARCAR COBRADO</button>
         </div>
       </div>
     </div>
@@ -2628,6 +3020,7 @@
         <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI 🎯</button>
         <button id="btn-bauti" onclick="selectSeller('bauti')">BAUTI 🧱</button>
         <button id="btn-leo" onclick="selectSeller('leo')">LEO 🦴</button>
+        <button id="btn-kevin" onclick="selectSeller('kevin')">KEVIN 🏹</button>
         <button id="btn-estela" onclick="selectSeller('estela')">ESTELA</button>
       </div>
     </div>
@@ -2863,6 +3256,27 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- TOAST ENRIQUECIDO POST-VENTA -->
+<div class="big-toast" id="bigToast">
+  <div class="bt-emoji" id="btEmoji">🔥</div>
+  <div class="bt-amount" id="btAmount">+$0</div>
+  <div class="bt-seller" id="btSeller">VENDEDOR</div>
+  <div class="bt-rows">
+    <div class="bt-row">
+      <span class="bt-label">Acumulado</span>
+      <span class="bt-value" id="btAccum">$0</span>
+    </div>
+    <div class="bt-row">
+      <span class="bt-label">Tu sueldo</span>
+      <span class="bt-value"><span id="btSalary">$0</span> <span class="bt-delta" id="btDelta">+$0</span></span>
+    </div>
+  </div>
+  <div class="bt-event" id="btEvent"></div>
+</div>
+
+<!-- CONTENEDOR DE CONFETI -->
+<div class="confetti-container" id="confettiContainer"></div>
+
 <script>
   // ===== CONFIG =====
   const CONFIG = {
@@ -2897,19 +3311,20 @@
       viaticoThreshold: 7000000
     },
     newSchemeStartLauti: '2026-07',  // Lauti pasa al nuevo desde julio 2026
-    competitiveSellers: ['lauti', 'bauti', 'leo'],  // los que compiten
+    competitiveSellers: ['lauti', 'bauti', 'leo', 'kevin'],  // los que compiten
     estelaTarget: 4000000  // tracking Estela (dueña, no compite)
   };
 
-  const PINS = { lauti: '1111', bauti: '2222', leo: '4444', estela: '3333', admin: '0000' };
+  const PINS = { lauti: '1111', bauti: '2222', leo: '4444', kevin: '5555', estela: '3333', admin: '0000' };
   const SELLER_META = {
     lauti:  { name: 'LAUTI',  title: 'EL CAZADOR',   emoji: '🎯' },
     bauti:  { name: 'BAUTI',  title: 'EL CONSTANTE', emoji: '🧱' },
     leo:    { name: 'LEO',    title: 'LA HIENA',     emoji: '🦴' },
+    kevin:  { name: 'KEVIN',  title: 'EL LÍDER',     emoji: '🏹' },
     estela: { name: 'ESTELA', title: 'LA DUEÑA',     emoji: '🏪' }
   };
   // Emojis por POSICIÓN en el ranking (dinámicos, no identidad fija)
-  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺' };
+  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺', 4: '🪦' };
   function positionEmoji(rank) { return RANK_EMOJI[rank] || ''; }
   const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
@@ -3099,6 +3514,9 @@
         .then(() => console.log('SW registrado'))
         .catch(err => console.warn('SW error:', err));
     }
+    // Bind slider simulador
+    const simSlider = document.getElementById('simSlider');
+    if (simSlider) simSlider.addEventListener('input', updateSimulator);
     const inp = document.getElementById('pinInput');
     inp.addEventListener('input', (e) => {
       if (inp.value.length === 4) {
@@ -3212,7 +3630,7 @@
       modalTitle.textContent = 'PANEL ADMIN';
       modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
       btnLauti.disabled = false; btnBauti.disabled = false; btnEstela.disabled = false;
-    } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'estela') {
+    } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
       modalTitle.textContent = 'CARGAR VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
       btnLauti.disabled = currentUser !== 'lauti';
@@ -3609,31 +4027,35 @@
     const lauti  = computeSeller('lauti');
     const bauti  = computeSeller('bauti');
     const leo    = computeSeller('leo');
+    const kevin  = computeSeller('kevin');
     const estela = computeSeller('estela');
-    // Tercia: si los 3 vendedores online llegan a la meta
-    const allMet = lauti.total >= CONFIG.target && bauti.total >= CONFIG.target && leo.total >= CONFIG.target;
+    // Tercia: si los 4 vendedores online llegan a la meta
+    const allMet = lauti.total >= CONFIG.target && bauti.total >= CONFIG.target && leo.total >= CONFIG.target && kevin.total >= CONFIG.target;
     const teamBonus = allMet ? CONFIG.bonusTeamGoal : 0;
 
-    // Primer puesto entre los 3 vendedores online
+    // Primer puesto entre los 4 vendedores online
     const totals = [
       { key: 'lauti', total: lauti.total },
       { key: 'bauti', total: bauti.total },
-      { key: 'leo',   total: leo.total }
+      { key: 'leo',   total: leo.total },
+      { key: 'kevin', total: kevin.total }
     ].sort((a, b) => b.total - a.total);
     let firstPlace = (totals[0].total > 0 && totals[0].total > totals[1].total) ? totals[0].key : null;
 
-    [lauti, bauti, leo].forEach(s => { s.teamBonus = teamBonus; s.firstBonus = 0; });
+    [lauti, bauti, leo, kevin].forEach(s => { s.teamBonus = teamBonus; s.firstBonus = 0; });
     estela.teamBonus = 0; estela.firstBonus = 0;
     if (firstPlace === 'lauti') lauti.firstBonus = CONFIG.bonusFirstPlace;
     if (firstPlace === 'bauti') bauti.firstBonus = CONFIG.bonusFirstPlace;
     if (firstPlace === 'leo')   leo.firstBonus   = CONFIG.bonusFirstPlace;
+    if (firstPlace === 'kevin') kevin.firstBonus = CONFIG.bonusFirstPlace;
 
     lauti.totalEarn = lauti.baseSalary + lauti.baseComm + lauti.bonusTarget + lauti.extraComm + lauti.teamBonus + lauti.firstBonus;
     bauti.totalEarn = bauti.baseSalary + bauti.baseComm + bauti.bonusTarget + bauti.extraComm + bauti.teamBonus + bauti.firstBonus;
     leo.totalEarn   = leo.baseSalary   + leo.baseComm   + leo.bonusTarget   + leo.extraComm   + leo.teamBonus   + leo.firstBonus;
+    kevin.totalEarn = kevin.baseSalary + kevin.baseComm + kevin.bonusTarget + kevin.extraComm + kevin.teamBonus + kevin.firstBonus;
     estela.totalEarn = 0;
 
-    return { lauti, bauti, leo, estela, bothMet: allMet, allMet, firstPlace };
+    return { lauti, bauti, leo, kevin, estela, bothMet: allMet, allMet, firstPlace };
   }
 
   // ===== COMISIÓN: ESQUEMA POR VENDEDOR + MES =====
@@ -3917,7 +4339,7 @@
     const isAdmin = currentUser === 'admin';
     const payments = state.weeklyPayments?.[periodKey] || {};
 
-    ['lauti', 'bauti', 'leo'].forEach(seller => {
+    ['lauti', 'bauti', 'leo', 'kevin'].forEach(seller => {
       const isLeader = c.firstPlace === seller;
       const sellerPayments = payments[seller] || {};
 
@@ -3925,7 +4347,7 @@
       const emojiEl = document.getElementById(`cobros-emoji-${seller}`);
       if (emojiEl) {
         // Calcular rank actual de este seller
-        const ranking = ['lauti', 'bauti', 'leo']
+        const ranking = ['lauti', 'bauti', 'leo', 'kevin']
           .map(k => ({ key: k, total: c[k].total }))
           .sort((a, b) => b.total - a.total);
         const rank = ranking.findIndex(r => r.key === seller) + 1;
@@ -4146,7 +4568,7 @@
 
     let visible = [];
     if (currentUser === 'admin') visible = allPending();
-    else if (currentUser === 'lauti' || currentUser === 'bauti') visible = pendingSales(currentUser);
+    else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin') visible = pendingSales(currentUser);
 
     if (visible.length === 0) {
       section.style.display = 'none';
@@ -4157,7 +4579,7 @@
 
     const opts = {
       canApprove: currentUser === 'admin',
-      canCancel: currentUser === 'lauti' || currentUser === 'bauti',
+      canCancel: currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin',
     };
 
     container.innerHTML = visible
@@ -4176,7 +4598,7 @@
       return;
     }
     const opts = {
-      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'estela',
+      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela',
       canDelete: false,
     };
     container.innerHTML = approved
@@ -4220,10 +4642,94 @@
     });
   }
 
+  function renderCountdownBanner(c) {
+    const banner = document.getElementById('countdownBanner');
+    if (!banner) return;
+    const isSeller = ['lauti', 'bauti', 'leo', 'kevin'].includes(currentUser);
+    const isAdmin = currentUser === 'admin';
+    if (!isSeller && !isAdmin) {
+      banner.style.display = 'none';
+      return;
+    }
+    banner.style.display = '';
+
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dayOfMonth = now.getDate();
+    const daysLeft = daysInMonth - dayOfMonth + 1;
+    const pctElapsed = Math.round((dayOfMonth / daysInMonth) * 100);
+
+    // Para vendedor: sus números. Para admin: equipo completo
+    let total, sales, targetForBanner;
+    if (isSeller) {
+      total = c[currentUser].total;
+      sales = state.sales.filter(s => s.seller === currentUser && s.status === 'approved' && monthKeyOf(s.date) === currentMonthKey());
+      targetForBanner = CONFIG.target;
+    } else {
+      sales = state.sales.filter(s => CONFIG.competitiveSellers.includes(s.seller) && s.status === 'approved' && monthKeyOf(s.date) === currentMonthKey());
+      total = sales.reduce((a, v) => a + v.amount, 0);
+      targetForBanner = CONFIG.target * CONFIG.competitiveSellers.length;
+    }
+
+    // Últimos 7 días
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+    const sevenDaysAgoStr = sevenDaysAgo.toISOString().slice(0, 10);
+    const last7Sales = sales.filter(s => s.date >= sevenDaysAgoStr);
+    const last7Total = last7Sales.reduce((a, v) => a + v.amount, 0);
+    const last7Days = Math.min(7, dayOfMonth);
+    const currentRate = last7Days > 0 ? last7Total / last7Days : 0;
+
+    const remaining = Math.max(0, targetForBanner - total);
+    const neededRate = daysLeft > 0 ? remaining / daysLeft : 0;
+    const pctMeta = Math.min(100, (total / targetForBanner) * 100);
+
+    // Status
+    let statusClass = 'is-good';
+    let statusText = '✓ vas arriba del ritmo';
+    let pillEmoji = '🚀';
+    if (remaining === 0) {
+      statusClass = 'is-good';
+      statusText = '🎯 meta superada';
+      pillEmoji = '🏆';
+    } else if (currentRate >= neededRate) {
+      statusClass = 'is-good';
+      statusText = '✓ vas arriba del ritmo necesario';
+      pillEmoji = '🚀';
+    } else if (currentRate >= neededRate * 0.85) {
+      statusClass = 'is-warn';
+      statusText = '⚠ vas justo · acelerá';
+      pillEmoji = '⏱';
+    } else {
+      statusClass = 'is-bad';
+      statusText = '⚠ vas debajo del ritmo';
+      pillEmoji = '🔥';
+    }
+
+    banner.className = 'countdown-banner ' + statusClass;
+    document.getElementById('cbDaysLeft').textContent = `QUEDAN ${daysLeft} DÍA${daysLeft === 1 ? '' : 'S'}`;
+    document.getElementById('cbPctElapsed').textContent = `${pctElapsed}%`;
+    document.getElementById('cbStatusPill').textContent = `${pillEmoji}  ${pctMeta.toFixed(0)}% META`;
+    document.getElementById('cbProgressFill').style.width = pctMeta + '%';
+    document.getElementById('cbLast7').textContent = fmtMoney(last7Total);
+    document.getElementById('cbCurrentRate').textContent = fmtMoney(currentRate) + '/día';
+    document.getElementById('cbNeededRate').textContent = remaining > 0 ? fmtMoney(neededRate) + '/día' : '—';
+
+    let footerText;
+    if (remaining === 0) {
+      footerText = `🏆 Superaste la meta de ${fmtMoney(targetForBanner)}. Cada peso que sigas vendiendo es bonus puro.`;
+    } else {
+      footerText = `Te faltan <strong>${fmtMoney(remaining)}</strong> para meta · ${statusText}`;
+    }
+    document.getElementById('cbFooter').innerHTML = footerText;
+  }
+
   function renderMySalary(c) {
     const card = document.getElementById('mySalaryCard');
     if (!card) return;
-    const isSeller = ['lauti', 'bauti', 'leo'].includes(currentUser);
+    const isSeller = ['lauti', 'bauti', 'leo', 'kevin'].includes(currentUser);
     if (!isSeller) {
       card.style.display = 'none';
       return;
@@ -4282,6 +4788,138 @@
     document.getElementById('msTotal').textContent = fmtMoney(total);
     document.getElementById('msTier').innerHTML = tierInfo;
     document.getElementById('msNext').innerHTML = nextInfo;
+
+    // Renderear Próximos Hitos
+    renderMilestones(currentUser, data.total, total, c);
+    // Renderear Simulador
+    renderSimulator(currentUser, data.total, total);
+  }
+
+  // Calcula próximos hitos relevantes (tiers, meta, arena, alcanzar a alguien)
+  function renderMilestones(seller, facturado, currentSalary, c) {
+    const container = document.getElementById('msMilestones');
+    if (!container) return;
+    const milestones = [];
+    const scheme = getCommissionScheme(seller, currentMonthKey());
+
+    // 1. Próximo tier de comisión (nuevo esquema)
+    if (scheme === 'new') {
+      const tierMap = [
+        { from: 0,        next: 6000000,  rate: 0.06, label: 'TIER 2 (6%)' },
+        { from: 6000000,  next: 10000000, rate: 0.07, label: 'TIER 3 (7%)' },
+        { from: 10000000, next: 15000000, rate: 0.08, label: 'TIER 4 CRACK (8%)' }
+      ];
+      const nextTier = tierMap.find(t => facturado >= t.from && facturado < t.next);
+      if (nextTier) {
+        const falta = nextTier.next - facturado;
+        const currentRate = nextTier.from === 0 ? 0.05 : tierMap.find(x => x.next === nextTier.from)?.rate || 0.05;
+        // El extra que cobra cuando entra al próximo tier es la diferencia de rate sobre cada peso adicional
+        const extraOnNext = falta * (nextTier.rate - currentRate);
+        milestones.push({
+          icon: '⚡',
+          title: 'PRÓXIMO TIER',
+          detail: `Faltan ${fmtMoney(falta)} para ${nextTier.label}`,
+          extra: extraOnNext > 0 ? `+${fmtMoney(extraOnNext)}` : ''
+        });
+      }
+    }
+
+    // 2. Meta del mes
+    const metaFalta = CONFIG.target - facturado;
+    if (metaFalta > 0) {
+      milestones.push({
+        icon: '🎖',
+        title: 'META DEL MES',
+        detail: `Faltan ${fmtMoney(metaFalta)} para meta`,
+        extra: ''
+      });
+    } else {
+      milestones.push({
+        icon: '🏆',
+        title: 'META SUPERADA',
+        detail: `Superaste ${fmtMoney(CONFIG.target)} por ${fmtMoney(facturado - CONFIG.target)}`,
+        extra: '✓'
+      });
+    }
+
+    // 3. Próximo escalón Arena (si está cerca)
+    const arenaSteps = [
+      { from: 13500000, label: 'BONUS ARENA +0,5%' },
+      { from: 14500000, label: 'BONUS ARENA +1,0%' },
+      { from: 15500000, label: 'BONUS ARENA +1,5%' }
+    ];
+    const nextArena = arenaSteps.find(a => facturado < a.from);
+    if (nextArena && scheme === 'new' && (nextArena.from - facturado) < 3000000) {
+      milestones.push({
+        icon: '💎',
+        title: 'ESCALÓN ARENA',
+        detail: `Faltan ${fmtMoney(nextArena.from - facturado)} para ${nextArena.label}`,
+        extra: ''
+      });
+    }
+
+    // 4. Alcanzar al de adelante (si va atrás)
+    const ranking = ['lauti', 'bauti', 'leo', 'kevin']
+      .map(k => ({ key: k, total: c[k].total }))
+      .sort((a, b) => b.total - a.total);
+    const myIdx = ranking.findIndex(r => r.key === seller);
+    if (myIdx > 0) {
+      const ahead = ranking[myIdx - 1];
+      const diff = ahead.total - facturado;
+      if (diff > 0 && diff < 5000000) {
+        milestones.push({
+          icon: '🎯',
+          title: `ALCANZAR A ${SELLER_META[ahead.key].name}`,
+          detail: `Te lleva ${fmtMoney(diff)}`,
+          extra: `Sumás 1 puesto`
+        });
+      }
+    }
+
+    // Render
+    if (milestones.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = milestones.slice(0, 4).map(m => `
+      <div class="ms-milestone">
+        <div class="ms-milestone-icon">${m.icon}</div>
+        <div class="ms-milestone-body">
+          <div class="ms-milestone-title">${m.title}</div>
+          <div class="ms-milestone-detail">${m.detail}</div>
+        </div>
+        <div class="ms-milestone-extra">${m.extra}</div>
+      </div>
+    `).join('');
+  }
+
+  // Simulador: si vendés X más, cobrarías Y
+  let simulatorSeller = null;
+  let simulatorBaseTotal = 0;
+  let simulatorBaseSalary = 0;
+
+  function renderSimulator(seller, facturado, currentSalary) {
+    simulatorSeller = seller;
+    simulatorBaseTotal = facturado;
+    simulatorBaseSalary = currentSalary;
+    document.getElementById('simCurrent').textContent = fmtMoney(currentSalary);
+    updateSimulator();
+  }
+
+  function updateSimulator() {
+    const slider = document.getElementById('simSlider');
+    if (!slider || !simulatorSeller) return;
+    const extra = parseFloat(slider.value);
+    document.getElementById('simAmount').textContent = fmtMoney(extra);
+    const projected = simulatorBaseTotal + extra;
+    const comm = calcCommission(simulatorSeller, projected, currentMonthKey());
+    // Sumarle los bonos competitivos (asumiendo no cambian con esa venta)
+    const c = computeAll();
+    const data = c[simulatorSeller];
+    let total = comm.total + (data.firstBonus || 0) + (data.teamBonus || 0);
+    const delta = total - simulatorBaseSalary;
+    document.getElementById('simProjected').textContent = fmtMoney(total);
+    document.getElementById('simDelta').textContent = `+ ${fmtMoney(delta)} 🔥`;
   }
 
   function nextTierTarget(facturado) {
@@ -4299,10 +4937,11 @@
     const c = computeAll();
     renderTopBar();
     renderGlobals(c);
+    renderCountdownBanner(c);
     renderMySalary(c);
 
     // Ranking entre los 3 vendedores online
-    const ranking = ['lauti', 'bauti', 'leo']
+    const ranking = ['lauti', 'bauti', 'leo', 'kevin']
       .map(k => ({ key: k, total: c[k].total }))
       .sort((a, b) => b.total - a.total);
     const rankMap = {};
@@ -4312,10 +4951,11 @@
     renderSeller('lauti', c.lauti, c.firstPlace === 'lauti');
     renderSeller('bauti', c.bauti, c.firstPlace === 'bauti');
     renderSeller('leo',   c.leo,   c.firstPlace === 'leo');
+    renderSeller('kevin', c.kevin, c.firstPlace === 'kevin');
     renderEstela(c.estela);
 
     // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🥺 #3)
-    ['lauti', 'bauti', 'leo'].forEach(k => {
+    ['lauti', 'bauti', 'leo', 'kevin'].forEach(k => {
       const r = rankMap[k];
       const rankEl = document.getElementById('rank-' + k);
       const emojiEl = document.getElementById('emoji-' + k);
@@ -4330,7 +4970,7 @@
 
     // Marcar visualmente el líder en el duelo
     const dueloEl = document.querySelector('.duelo');
-    dueloEl.classList.remove('leader-lauti', 'leader-bauti', 'leader-leo');
+    dueloEl.classList.remove('leader-lauti', 'leader-bauti', 'leader-leo', 'leader-kevin');
     if (c.firstPlace) dueloEl.classList.add('leader-' + c.firstPlace);
 
     renderPremios(c);
@@ -4361,13 +5001,13 @@
     // Si el usuario es Estela, forzar selección de Estela y activar modo simplificado
     if (currentUser === 'estela') {
       selectSeller('estela');
-    } else if (currentUser === 'lauti' || currentUser === 'bauti') {
+    } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin') {
       selectSeller(currentUser);
     } else {
       // Admin: estado por defecto
       document.getElementById('saleModal').classList.remove('estela-mode');
     }
-    if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'estela') {
+    if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
       const myPending = pendingSales(currentUser).length;
       switchTab(myPending > 0 ? 'pending' : 'approved');
     } else {
@@ -4385,9 +5025,10 @@
     if (currentUser === 'lauti' && s !== 'lauti') return;
     if (currentUser === 'bauti' && s !== 'bauti') return;
     if (currentUser === 'leo' && s !== 'leo') return;
+    if (currentUser === 'kevin' && s !== 'kevin') return;
     if (currentUser === 'estela' && s !== 'estela') return;
     selectedSellerForSale = s;
-    ['lauti', 'bauti', 'leo', 'estela'].forEach(k => {
+    ['lauti', 'bauti', 'leo', 'kevin', 'estela'].forEach(k => {
       document.getElementById('btn-' + k).classList.toggle('active', s === k);
     });
     // Modo simplificado para Estela
@@ -4405,6 +5046,130 @@
     if (type) t.classList.add(type);
     setTimeout(() => t.classList.add('show'), 10);
     setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // ===== TOAST ENRIQUECIDO + CONFETI + CHA-CHING =====
+
+  // Detecta eventos "épicos" comparando antes/después
+  function detectEpicEvents(before, after, seller) {
+    const events = [];
+    const beforeData = before[seller];
+    const afterData = after[seller];
+    const beforeComm = calcCommission(seller, beforeData.total, currentMonthKey());
+    const afterComm = calcCommission(seller, afterData.total, currentMonthKey());
+
+    // 1. Cruzó un tier de comisión
+    if (beforeComm && afterComm && beforeComm.scheme === 'new') {
+      const tierBefore = tierIndexFor(beforeData.total);
+      const tierAfter = tierIndexFor(afterData.total);
+      if (tierAfter > tierBefore) {
+        const tierNames = ['TIER 1 BASE', 'TIER 2 SUBIDA', 'TIER 3 CRECIMIENTO', 'TIER 4 CRACK'];
+        events.push({ type: 'tier', label: `⚡ ENTRASTE A ${tierNames[tierAfter]}`, epic: false });
+      }
+    }
+    // 2. Cruzó la meta del mes
+    if (beforeData.total < CONFIG.target && afterData.total >= CONFIG.target) {
+      events.push({ type: 'meta', label: '🎯 META DEL MES CUMPLIDA', epic: true });
+    }
+    // 3. Pasó al #1 del ranking
+    if (before.firstPlace !== seller && after.firstPlace === seller) {
+      events.push({ type: 'first', label: '👑 PASASTE AL #1', epic: true });
+    }
+    // 4. Cruzó escalón Arena
+    if (beforeComm && afterComm && beforeComm.scheme === 'new') {
+      const arenaSteps = [13500000, 14500000, 15500000];
+      for (const step of arenaSteps) {
+        if (beforeData.total < step && afterData.total >= step) {
+          const labels = { 13500000: '+0,5%', 14500000: '+1,0%', 15500000: '+1,5%' };
+          events.push({ type: 'arena', label: `💎 BONUS ARENA ${labels[step]}`, epic: false });
+        }
+      }
+    }
+    return events;
+  }
+
+  function tierIndexFor(f) {
+    if (f >= 15000000) return 3;
+    if (f >= 10000000) return 2;
+    if (f >= 6000000)  return 1;
+    return 0;
+  }
+
+  function showBigToast(seller, amount, before, after) {
+    const t = document.getElementById('bigToast');
+    if (!t) return;
+    const meta = SELLER_META[seller];
+    const beforeData = before[seller];
+    const afterData = after[seller];
+    const beforeComm = calcCommission(seller, beforeData.total, currentMonthKey());
+    const afterComm = calcCommission(seller, afterData.total, currentMonthKey());
+    const salaryDelta = (afterComm?.total || 0) - (beforeComm?.total || 0);
+    const events = detectEpicEvents(before, after, seller);
+    const isEpic = events.some(e => e.epic);
+
+    document.getElementById('btEmoji').textContent = isEpic ? '🎊' : '🔥';
+    document.getElementById('btAmount').textContent = '+' + fmtMoney(amount);
+    document.getElementById('btSeller').textContent = meta.name;
+    document.getElementById('btAccum').textContent = fmtMoney(afterData.total);
+    document.getElementById('btSalary').textContent = fmtMoney(afterComm?.total || 0);
+    document.getElementById('btDelta').textContent = salaryDelta > 0 ? '+' + fmtMoney(salaryDelta) : '—';
+    document.getElementById('btEvent').textContent = events.map(e => e.label).join(' · ');
+
+    t.classList.toggle('epic', isEpic);
+    setTimeout(() => t.classList.add('show'), 50);
+    setTimeout(() => t.classList.remove('show'), isEpic ? 5500 : 3800);
+
+    // Sonido cha-ching siempre (en el celu del que cargó)
+    playChaChing();
+    // Confeti si hay evento épico
+    if (isEpic) triggerConfetti(60);
+    else if (events.length > 0) triggerConfetti(25); // mini confeti para tier/arena
+  }
+
+  // Confeti con colores Graziano (rojo + negro + dorado + blanco)
+  function triggerConfetti(count) {
+    const container = document.getElementById('confettiContainer');
+    if (!container) return;
+    const colors = ['#FF2E1F', '#1A1A1A', '#FFD700', '#FFFFFF', '#FF7043'];
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + 'vw';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+      piece.style.animationDelay = Math.random() * 0.5 + 's';
+      piece.style.width = (6 + Math.random() * 8) + 'px';
+      piece.style.height = (10 + Math.random() * 8) + 'px';
+      container.appendChild(piece);
+      setTimeout(() => piece.remove(), 4500);
+    }
+  }
+
+  // Cha-ching con WebAudio (sin archivo externo)
+  let _audioCtx = null;
+  function playChaChing() {
+    try {
+      if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = _audioCtx;
+      const now = ctx.currentTime;
+
+      // Dos notas tipo "ka-ching" (Mi5 → La5)
+      const freqs = [659.25, 880.00];
+      const offsets = [0, 0.06];
+
+      freqs.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now + offsets[i]);
+        gain.gain.linearRampToValueAtTime(0.12, now + offsets[i] + 0.01);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + offsets[i] + 0.35);
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(now + offsets[i]);
+        osc.stop(now + offsets[i] + 0.4);
+      });
+    } catch(e) { /* navegador bloquea o no soporta */ }
   }
 
   // ===== SPEED DIAL FAB =====
@@ -4768,8 +5533,9 @@
     try { await navigator.clipboard.writeText(text); } catch(e) {}
 
     if (isAdmin) {
-      showToast(`✓ REGISTRADA Y COPIADA · ${selectedSellerForSale.toUpperCase()} +${fmtMoney(total)}`);
-      checkUnlocks(before, computeAll(), selectedSellerForSale);
+      const after = computeAll();
+      showBigToast(selectedSellerForSale, amount, before, after);
+      checkUnlocks(before, after, selectedSellerForSale);
     } else {
       showToast(`✓ ENVIADA Y COPIADA · ESPERA APROBACIÓN`, 'warn');
     }
@@ -5094,6 +5860,7 @@
       { key: 'lauti',  name: `LAUTI ${SELLER_META.lauti.emoji}`,   data: computeForMonth('lauti'),  target: CONFIG.target },
       { key: 'bauti',  name: `BAUTI ${SELLER_META.bauti.emoji}`,   data: computeForMonth('bauti'),  target: CONFIG.target },
       { key: 'leo',    name: `LEO ${SELLER_META.leo.emoji}`,       data: computeForMonth('leo'),    target: CONFIG.target },
+      { key: 'kevin',  name: `KEVIN ${SELLER_META.kevin.emoji}`,   data: computeForMonth('kevin'),  target: CONFIG.target },
       { key: 'estela', name: 'ESTELA',                              data: computeForMonth('estela'), target: CONFIG.estelaTarget }
     ];
     document.getElementById('opsBySeller').innerHTML = sellers.map(s => {
@@ -5124,7 +5891,7 @@
     if (!mk) mk = activeOpsMonth();
     const container = document.getElementById('opsSalaries');
     if (!container) return;
-    const sellers = ['lauti', 'bauti', 'leo'];
+    const sellers = ['lauti', 'bauti', 'leo', 'kevin'];
     const rows = sellers.map(key => {
       const sales = state.sales.filter(s => s.seller === key && s.status === 'approved' && monthKeyOf(s.date) === mk);
       const facturado = sales.reduce((a, v) => a + v.amount, 0);
@@ -5400,8 +6167,9 @@
     sale.approvedAt = Date.now();
     await saveState();
     renderAll();
-    showToast(`✓ APROBADA · ${sale.seller.toUpperCase()} +${fmtMoney(sale.amount)}`);
-    checkUnlocks(before, computeAll(), sale.seller);
+    const after = computeAll();
+    showBigToast(sale.seller, sale.amount, before, after);
+    checkUnlocks(before, after, sale.seller);
   }
 
   async function rejectSale(id) {
