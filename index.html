@@ -1139,6 +1139,27 @@
     padding: 3px 8px; background: var(--red-tint); border: 1px solid var(--red);
   }
 
+  /* COBROS · toggle frecuencia */
+  .cobros-section-title { display: flex; align-items: center; gap: 16px; }
+  .cobros-toggle {
+    display: inline-flex; gap: 0;
+    border: 1.5px solid var(--ink); background: var(--bg-card);
+  }
+  .ct-btn {
+    background: transparent; border: none;
+    padding: 7px 14px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; color: var(--ink-3);
+    text-transform: uppercase; font-weight: 700;
+    border-right: 1px solid var(--ink);
+    transition: all 0.15s;
+  }
+  .ct-btn:last-child { border-right: none; }
+  .ct-btn:hover { background: var(--bg-soft); color: var(--ink); }
+  .ct-btn.active {
+    background: var(--ink); color: white;
+  }
+
   /* COBROS SEMANALES */
   /* COUNTDOWN BANNER · estímulo de tiempo + ritmo */
   .countdown-banner {
@@ -1509,25 +1530,33 @@
   .cw-stats {
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: var(--ink-3); margin-bottom: 12px; line-height: 1.5;
+    display: flex; flex-wrap: wrap; gap: 4px 0;
+    align-items: baseline;
   }
-  .cw-stats strong { color: var(--ink); font-weight: 700; }
+  .cw-stats strong {
+    color: var(--ink); font-weight: 700;
+    /* Permite que el número grande se ajuste sin cortar */
+    word-break: keep-all; white-space: nowrap;
+  }
+  .cw-stats > span { white-space: nowrap; }
   .cw-pipe { color: var(--ink-5); margin: 0 8px; }
   .cw-amount-block {
-    padding: 12px 14px; background: var(--ink); color: white;
-    display: flex; align-items: baseline; justify-content: space-between;
-    gap: 10px;
+    padding: 14px 16px; background: var(--ink); color: white;
+    /* Stack vertical: label arriba, monto abajo · evita que se rompa el layout */
+    display: flex; flex-direction: column; gap: 4px;
   }
   .cw-amount-label {
     font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
-    letter-spacing: 0.25em; color: rgba(255,255,255,0.7); text-transform: uppercase;
+    letter-spacing: 0.25em; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; white-space: nowrap;
   }
   .cw-amount {
-    font-family: 'Anton', sans-serif; font-size: 28px; color: white;
-    line-height: 1;
+    font-family: 'Anton', sans-serif; font-size: 32px; color: white;
+    line-height: 1; text-align: right; letter-spacing: -0.01em;
   }
-  .cw-amount.size-md { font-size: 24px; }
-  .cw-amount.size-sm { font-size: 20px; }
-  .cw-amount.size-xs { font-size: 17px; letter-spacing: -0.02em; }
+  .cw-amount.size-md { font-size: 28px; }
+  .cw-amount.size-sm { font-size: 24px; }
+  .cw-amount.size-xs { font-size: 20px; letter-spacing: -0.02em; }
   .cw-btn {
     width: 100%; margin-top: 10px; padding: 12px;
     background: var(--green); color: white; border: 1.5px solid var(--green);
@@ -2613,6 +2642,9 @@
     .week-cell .wc-amount { font-size: 11px; }
     .cw-amount { font-size: 24px; }
     .cobros-card-header { flex-wrap: wrap; }
+    .cobros-section-title { flex-wrap: wrap; gap: 10px; }
+    .cobros-toggle { width: 100%; justify-content: space-between; }
+    .ct-btn { flex: 1; padding: 8px 6px; font-size: 9px; }
     /* ESTELA mobile */
     .estela-card { padding: 18px 18px; box-shadow: 4px 4px 0 var(--ink); }
     .estela-header { flex-direction: column; gap: 8px; }
@@ -3176,7 +3208,12 @@
 
   <div class="section-title cobros-section-title" id="cobrosSectionTitle">
     <span class="section-title-num">/02</span>
-    <span class="section-title-text">COBROS SEMANALES</span>
+    <span class="section-title-text" id="cobrosSectionLabel">COBROS SEMANALES</span>
+    <div class="cobros-toggle">
+      <button class="ct-btn active" data-freq="weekly"     onclick="setCobrosFreq('weekly')">SEM</button>
+      <button class="ct-btn"        data-freq="biweekly"   onclick="setCobrosFreq('biweekly')">QUINC</button>
+      <button class="ct-btn"        data-freq="monthly"    onclick="setCobrosFreq('monthly')">MES</button>
+    </div>
     <span class="section-title-line"></span>
   </div>
 
@@ -4360,6 +4397,17 @@
     if (simSlider) simSlider.addEventListener('input', updateSimulator);
     // Bind inputs del panel de configuración
     bindConfigInputs();
+    // Aplicar frecuencia de cobros desde localStorage (sin re-render porque aún no hay data)
+    if (cobrosFreq !== 'weekly') {
+      document.querySelectorAll('.cobros-toggle .ct-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.freq === cobrosFreq);
+      });
+      const labelEl = document.getElementById('cobrosSectionLabel');
+      if (labelEl) {
+        labelEl.textContent =
+          cobrosFreq === 'biweekly' ? 'COBROS QUINCENALES' : 'COBROS MENSUALES';
+      }
+    }
     const inp = document.getElementById('pinInput');
     inp.addEventListener('input', (e) => {
       if (inp.value.length === 4) {
@@ -5678,6 +5726,137 @@
     });
   }
 
+  // Estado global de la frecuencia (persistido en localStorage)
+  let cobrosFreq = (() => {
+    try { return localStorage.getItem('cobrosFreq') || 'weekly'; }
+    catch (e) { return 'weekly'; }
+  })();
+
+  function setCobrosFreq(freq) {
+    if (!['weekly', 'biweekly', 'monthly'].includes(freq)) return;
+    cobrosFreq = freq;
+    try { localStorage.setItem('cobrosFreq', freq); } catch (e) {}
+    // Actualizar UI del toggle
+    document.querySelectorAll('.cobros-toggle .ct-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.freq === freq);
+    });
+    // Actualizar label de la sección
+    const labelEl = document.getElementById('cobrosSectionLabel');
+    if (labelEl) {
+      labelEl.textContent =
+        freq === 'weekly'   ? 'COBROS SEMANALES'   :
+        freq === 'biweekly' ? 'COBROS QUINCENALES' :
+                              'COBROS MENSUALES';
+    }
+    // Re-render
+    renderCobros(computeAll());
+  }
+
+  // Devuelve "qué cobrar el sábado" según frecuencia
+  // - weekly: solo la semana actual
+  // - biweekly: acumulado semanas del período quincenal en curso (semanas 1-2 ó 3-4)
+  // - monthly: acumulado de todas las semanas hasta hoy
+  function currentPayoutForFreq(seller, curWeek) {
+    if (cobrosFreq === 'weekly') {
+      return weeklyCommission(seller, curWeek);
+    }
+    if (cobrosFreq === 'biweekly') {
+      // Q1 = semanas 1-2, Q2 = semanas 3-4
+      const range = curWeek <= 2 ? [1, 2] : [3, 4];
+      let facturado = 0, comision = 0;
+      range.forEach(w => {
+        if (w <= curWeek) {
+          const wk = weeklyCommission(seller, w);
+          facturado += wk.facturado;
+          comision += wk.comision;
+        }
+      });
+      return { facturado, comision };
+    }
+    // monthly: acumulado hasta semana actual
+    let facturado = 0, comision = 0;
+    for (let w = 1; w <= curWeek; w++) {
+      const wk = weeklyCommission(seller, w);
+      facturado += wk.facturado;
+      comision += wk.comision;
+    }
+    return { facturado, comision };
+  }
+
+  // Etiqueta del período actual según frecuencia
+  function payoutPeriodLabel(curWeek) {
+    if (cobrosFreq === 'weekly') {
+      const range = weekDateRange(curWeek);
+      return { label: `SEM ${curWeek}`, sublabel: `días ${range.start}–${range.end}` };
+    }
+    if (cobrosFreq === 'biweekly') {
+      const isQ1 = curWeek <= 2;
+      const r1 = weekDateRange(isQ1 ? 1 : 3);
+      const r2 = weekDateRange(isQ1 ? 2 : 4);
+      return {
+        label: `QUINCENA ${isQ1 ? 1 : 2}`,
+        sublabel: `días ${r1.start}–${r2.end}`
+      };
+    }
+    const r1 = weekDateRange(1);
+    const r4 = weekDateRange(4);
+    return { label: 'MES COMPLETO', sublabel: `días ${r1.start}–${r4.end}` };
+  }
+
+  // Fecha a cobrar según frecuencia (texto del label)
+  function payoutDateLabel(curWeek) {
+    if (cobrosFreq === 'weekly') return 'A COBRAR EL SÁBADO';
+    if (cobrosFreq === 'biweekly') {
+      const isQ1 = curWeek <= 2;
+      const r = weekDateRange(isQ1 ? 2 : 4);
+      const monthAbr = new Date().toLocaleDateString('es-AR', { month: 'short' }).toUpperCase().replace('.', '');
+      return `A COBRAR EL ${r.end}/${monthAbr}`;
+    }
+    const r = weekDateRange(4);
+    const monthAbr = new Date().toLocaleDateString('es-AR', { month: 'short' }).toUpperCase().replace('.', '');
+    return `A COBRAR EL ${r.end}/${monthAbr}`;
+  }
+
+  // Cuántas semanas se agrupan en la unidad de timeline (1, 2 o 4)
+  function timelineUnits() {
+    if (cobrosFreq === 'weekly') return [[1],[2],[3],[4]];
+    if (cobrosFreq === 'biweekly') return [[1,2],[3,4]];
+    return [[1,2,3,4]];
+  }
+
+  // Marca cobrado todas las semanas de la unidad
+  async function toggleUnitPaid(seller, weeks) {
+    if (currentUser !== 'admin') return;
+    const periodKey = currentPeriodKey();
+    if (!state.weeklyPayments) state.weeklyPayments = {};
+    if (!state.weeklyPayments[periodKey]) state.weeklyPayments[periodKey] = {};
+    if (!state.weeklyPayments[periodKey][seller]) state.weeklyPayments[periodKey][seller] = {};
+    const sellerPayments = state.weeklyPayments[periodKey][seller];
+
+    // Si todas las semanas del grupo están pagadas → desmarcar todas
+    // Si no → marcar todas
+    const allPaid = weeks.every(w => sellerPayments[w]?.paid);
+
+    if (allPaid) {
+      if (!confirm(`¿Desmarcar el cobro de ${seller.toUpperCase()}?`)) return;
+      weeks.forEach(w => delete sellerPayments[w]);
+      await saveState();
+      renderAll();
+      showToast(`${seller.toUpperCase()} desmarcado`, 'warn');
+    } else {
+      // Marcar todas con su comisión actual
+      weeks.forEach(w => {
+        const wk = weeklyCommission(seller, w);
+        if (wk.facturado > 0) {
+          sellerPayments[w] = { paid: true, amount: wk.comision, paidAt: Date.now() };
+        }
+      });
+      await saveState();
+      renderAll();
+      showToast(`${seller.toUpperCase()} marcado cobrado · ${cobrosFreq === 'weekly' ? 'semana' : cobrosFreq === 'biweekly' ? 'quincena' : 'mes'}`, 'success');
+    }
+  }
+
   function renderCobros(c) {
     const periodKey = currentPeriodKey();
     const curWeek = currentWeekNum();
@@ -5685,7 +5864,6 @@
     const payments = state.weeklyPayments?.[periodKey] || {};
 
     // PRIVACIDAD: vendedor logueado solo ve SU card de cobros
-    // Admin y modo pantalla ven todas
     const isViewer = currentUser === 'view';
     const sellerVisibility = ['lauti', 'bauti', 'leo', 'kevin'];
     sellerVisibility.forEach(seller => {
@@ -5700,14 +5878,16 @@
       }
     });
 
+    const units = timelineUnits(); // qué grupos mostrar en el timeline
+    const currentPeriodLbl = payoutPeriodLabel(curWeek);
+    const currentDateLbl = payoutDateLabel(curWeek);
+
     ['lauti', 'bauti', 'leo', 'kevin'].forEach(seller => {
-      const isLeader = c.firstPlace === seller;
       const sellerPayments = payments[seller] || {};
 
-      // Emoji al lado del nombre (por posición dinámica)
+      // Emoji al lado del nombre
       const emojiEl = document.getElementById(`cobros-emoji-${seller}`);
       if (emojiEl) {
-        // Calcular rank actual de este seller
         const ranking = ['lauti', 'bauti', 'leo', 'kevin']
           .map(k => ({ key: k, total: c[k].total }))
           .sort((a, b) => b.total - a.total);
@@ -5716,53 +5896,85 @@
         emojiEl.textContent = (someoneHasSales && c[seller].total > 0) ? positionEmoji(rank) : '';
       }
 
-      // Timeline 4 semanas
+      // Timeline · adaptado a la frecuencia
       const timeline = document.getElementById(`timeline-${seller}`);
       let html = '';
       let cobradoMes = 0;
-      for (let w = 1; w <= 4; w++) {
-        const wk = weeklyCommission(seller, w);
-        const p = sellerPayments[w];
-        const isPaid = p && p.paid;
-        const isCurrent = w === curWeek;
-        const isFuture = w > curWeek;
-        let cls = 'pending';
-        let icon = '⌛';
-        if (isPaid) { cls = 'paid'; icon = '✓'; cobradoMes += (p.amount || wk.comision); }
+      // Determinar la unidad "actual" (donde está la semana en curso)
+      const curUnitIdx = units.findIndex(u => u.includes(curWeek));
+
+      units.forEach((weeks, idx) => {
+        // Sumar facturado y comisión de las semanas del grupo
+        let unitFacturado = 0, unitComision = 0, unitPaidAmount = 0;
+        let allPaid = true, anyHasFacturado = false;
+        weeks.forEach(w => {
+          const wk = weeklyCommission(seller, w);
+          unitFacturado += wk.facturado;
+          unitComision += wk.comision;
+          if (wk.facturado > 0) anyHasFacturado = true;
+          const p = sellerPayments[w];
+          if (p?.paid) {
+            unitPaidAmount += (p.amount || wk.comision);
+          } else {
+            allPaid = false;
+          }
+        });
+        // Si no hay facturado en ninguna semana, no se considera "pagado"
+        const isPaid = anyHasFacturado && allPaid;
+        const isCurrent = idx === curUnitIdx;
+        const isFuture = idx > curUnitIdx;
+
+        let cls = 'pending', icon = '⌛';
+        if (isPaid) { cls = 'paid'; icon = '✓'; cobradoMes += unitPaidAmount; }
         else if (isCurrent) { cls = 'current'; icon = '●'; }
         else if (isFuture) { cls = 'future'; icon = '◯'; }
-        const clickable = isAdmin && wk.facturado > 0 ? 'admin-clickable' : '';
-        const clickAttr = isAdmin && wk.facturado > 0 ? `onclick="toggleWeekPaid('${seller}', ${w})"` : '';
-        const amountShown = (isPaid && p.amount != null) ? p.amount : wk.comision;
+
+        const clickable = isAdmin && anyHasFacturado ? 'admin-clickable' : '';
+        const clickAttr = isAdmin && anyHasFacturado
+          ? `onclick="toggleUnitPaid('${seller}', [${weeks.join(',')}])"` : '';
+        const amountShown = isPaid ? unitPaidAmount : unitComision;
         const amountText = amountShown > 0 ? fmtMoney(amountShown) : '—';
+
+        // Etiqueta del grupo según frecuencia
+        let unitLabel;
+        if (cobrosFreq === 'weekly') unitLabel = `SEM ${weeks[0]}`;
+        else if (cobrosFreq === 'biweekly') unitLabel = `QUINC ${idx + 1}`;
+        else unitLabel = 'MES';
+
         html += `
           <div class="week-cell ${cls} ${clickable}" ${clickAttr}>
-            <div class="wc-num">SEM ${w}</div>
+            <div class="wc-num">${unitLabel}</div>
             <div class="wc-amount">${amountText}</div>
             <div class="wc-state">${icon}</div>
           </div>
         `;
-      }
+      });
       timeline.innerHTML = html;
 
       // Total cobrado del mes
       document.getElementById(`cobros-total-${seller}`).textContent = fmtMoney(cobradoMes);
 
-      // Detalle de la semana actual
-      const wkCur = weeklyCommission(seller, curWeek);
-      const range = weekDateRange(curWeek);
-      document.getElementById(`cw-range-${seller}`).textContent = `SEM ${curWeek} · días ${range.start}–${range.end}`;
-      document.getElementById(`cw-facturado-${seller}`).textContent = fmtMoney(wkCur.facturado);
-      document.getElementById(`cw-comision-${seller}`).textContent = fmtMoney(wkCur.comision);
-      document.getElementById(`cw-amount-${seller}`).textContent = fmtMoney(wkCur.comision);
-      autoScaleAmount(`cw-amount-${seller}`, wkCur.comision, 'cw-amount');
+      // Detalle del período actual
+      const payout = currentPayoutForFreq(seller, curWeek);
+      document.getElementById(`cw-range-${seller}`).textContent = `${currentPeriodLbl.label} · ${currentPeriodLbl.sublabel}`;
+      document.getElementById(`cw-facturado-${seller}`).textContent = fmtMoney(payout.facturado);
+      document.getElementById(`cw-comision-${seller}`).textContent = fmtMoney(payout.comision);
+      document.getElementById(`cw-amount-${seller}`).textContent = fmtMoney(payout.comision);
+      autoScaleAmount(`cw-amount-${seller}`, payout.comision, 'cw-amount');
 
-      // Botón cobrar (solo admin)
+      // Cambiar label "A COBRAR EL ..."
+      const labelEl = document.querySelector(`#cobros-${seller} .cw-amount-label`);
+      if (labelEl) labelEl.textContent = currentDateLbl;
+
+      // Botón cobrar
       const btn = document.getElementById(`cw-btn-${seller}`);
-      const curPaid = sellerPayments[curWeek]?.paid;
+      const curUnit = units[curUnitIdx] || [curWeek];
+      const allCurPaid = curUnit.every(w => sellerPayments[w]?.paid);
+      // Reemplazar onclick para usar toggleUnitPaid en lugar de toggleWeekPaid
+      btn.onclick = () => toggleUnitPaid(seller, curUnit);
       if (isAdmin) {
         btn.classList.remove('hidden');
-        if (curPaid) {
+        if (allCurPaid && payout.facturado > 0) {
           btn.textContent = '✕ DESMARCAR COBRADO';
           btn.classList.add('paid');
         } else {
