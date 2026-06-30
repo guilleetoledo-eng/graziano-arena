@@ -4489,11 +4489,21 @@
     const modalSub = document.getElementById('modalSub');
     const btnLauti = document.getElementById('btn-lauti');
     const btnBauti = document.getElementById('btn-bauti');
+    const btnLeo = document.getElementById('btn-leo');
+    const btnKevin = document.getElementById('btn-kevin');
     const btnEstela = document.getElementById('btn-estela');
     const tabsRow = document.getElementById('tabsRow');
 
-    const labels = { view: '👁 PANTALLA', lauti: '👤 LAUTI', bauti: '👤 BAUTI', estela: '👤 ESTELA', admin: '★ ADMIN' };
-    chip.textContent = labels[currentUser] + ' · CAMBIAR';
+    const labels = {
+      view: '👁 PANTALLA',
+      lauti: '👤 LAUTI',
+      bauti: '👤 BAUTI',
+      leo: '👤 LEO',
+      kevin: '👤 KEVIN',
+      estela: '👤 ESTELA',
+      admin: '★ ADMIN'
+    };
+    chip.textContent = (labels[currentUser] || '👤 USUARIO') + ' · CAMBIAR';
     chip.classList.toggle('viewer', currentUser === 'view');
 
     if (currentUser === 'view') {
@@ -4508,21 +4518,26 @@
     costCell.style.display = (currentUser === 'admin') ? '' : 'none';
     adminActions.style.display = (currentUser === 'admin') ? 'flex' : 'none';
     tabsRow.style.display = (currentUser !== 'view') ? 'flex' : 'none';
-    // Toggle TABLERO/OPERACIONES solo para admin
     const viewToggle = document.getElementById('viewToggle');
     if (viewToggle) viewToggle.style.display = (currentUser === 'admin') ? 'flex' : 'none';
-    // Reset a tablero al cambiar de user
     switchView('tablero');
 
     if (currentUser === 'admin') {
       modalTitle.textContent = 'PANEL ADMIN';
       modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
-      btnLauti.disabled = false; btnBauti.disabled = false; btnEstela.disabled = false;
+      btnLauti.disabled = false;
+      btnBauti.disabled = false;
+      btnLeo.disabled = false;
+      btnKevin.disabled = false;
+      btnEstela.disabled = false;
     } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
       modalTitle.textContent = 'CARGAR VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
+      // Cada vendedor solo puede tener su propio botón habilitado
       btnLauti.disabled = currentUser !== 'lauti';
       btnBauti.disabled = currentUser !== 'bauti';
+      btnLeo.disabled = currentUser !== 'leo';
+      btnKevin.disabled = currentUser !== 'kevin';
       btnEstela.disabled = currentUser !== 'estela';
       selectSeller(currentUser);
     }
@@ -7121,9 +7136,15 @@
 
     const before = computeAll();
     const isAdmin = currentUser === 'admin';
+
+    // 🛡 GUARD DE SEGURIDAD: si NO sos admin, la venta SIEMPRE es tuya.
+    // Esto evita que un bug en selectSeller o selectedSellerForSale haga que
+    // una venta cargada por un vendedor se atribuya a otro.
+    const sellerForSale = isAdmin ? selectedSellerForSale : currentUser;
+
     const newSale = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2,6),
-      seller: selectedSellerForSale,
+      seller: sellerForSale,
       amount: amount,           // SIN flete · cuenta para comisión
       date, client, channel,
       product: productSummary,
