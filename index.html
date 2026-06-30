@@ -6036,6 +6036,8 @@
     }).join('');
     container.innerHTML = html;
   }
+
+  function renderOpsKPIs(mk) {
     if (!mk) mk = activeOpsMonth();
     const prevMk = prevMonthOf(mk);
     const cur = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
