@@ -714,8 +714,6 @@
     font-family: 'JetBrains Mono', monospace; font-size: 13px;
   }
   .daily-btn { padding: 14px 16px !important; font-size: 12px !important; }
-  .daily-btn-wpp { background: #25D366 !important; border-color: #25D366 !important; }
-  .daily-btn-wpp:hover { background: #1ea952 !important; }
   .daily-status {
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: #16a34a; letter-spacing: 0.1em; text-align: center;
@@ -3703,7 +3701,6 @@
             <input type="date" id="dailySummaryDate" onchange="renderDailySummary()">
           </div>
           <button class="btn-primary daily-btn" onclick="copyDailySummary()">📋 COPIAR TEXTO</button>
-          <button class="btn-primary daily-btn daily-btn-wpp" onclick="sendDailyWhatsApp()">📲 WHATSAPP</button>
           <div class="daily-status" id="dailyStatus"></div>
         </div>
       </div>
@@ -7392,13 +7389,6 @@
       status.textContent = '✗ error · copialo manual';
       status.style.color = 'var(--red)';
     }
-  }
-
-  function sendDailyWhatsApp() {
-    const text = document.getElementById('dailySummaryCard').textContent;
-    const encoded = encodeURIComponent(text);
-    const url = `https://wa.me/?text=${encoded}`;
-    window.open(url, '_blank');
   }
 
   // ===== 02 ALERTAS =====
