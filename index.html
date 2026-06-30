@@ -891,6 +891,44 @@
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: rgba(255,255,255,0.55); letter-spacing: 0.05em;
   }
+  /* CORONAS Y LOGROS chapas */
+  .seller-crowns {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px;
+  }
+  .crown-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px;
+    font-size: 14px; line-height: 1;
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border: 1.5px solid #B8860B;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    cursor: help;
+  }
+  .ms-crowns, .ms-achievements {
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+    margin-top: 10px;
+  }
+  .ms-crowns-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: rgba(255,255,255,0.5);
+    text-transform: uppercase; margin-right: 4px;
+  }
+  .ms-crowns .crown-chip {
+    width: 26px; height: 26px; font-size: 16px;
+  }
+  .ach-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; font-size: 14px; line-height: 1;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: help;
+  }
+  .ach-chip.his {
+    background: rgba(255,46,31,0.15);
+    border-color: rgba(255,46,31,0.4);
+  }
   /* PRÓXIMOS HITOS dentro del Mi Sueldo */
   .ms-milestones {
     margin-top: 22px; padding-top: 18px;
@@ -987,7 +1025,9 @@
   }
   .cobros-wrapper { margin-bottom: 24px; }
   .cobros-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 12px;
   }
   .cobros-card {
     background: var(--bg-card); border: 1.5px solid var(--line);
@@ -1748,6 +1788,125 @@
   }
   .ops-grid-2 .ops-section { margin-bottom: 24px; }
   .ops-section-full { margin-top: 32px; }
+  .ops-config-section { margin-top: 32px; }
+  /* PIZARRA DE CORONAS */
+  .crown-board {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .crown-board-item {
+    display: grid; grid-template-columns: auto 1fr; gap: 16px;
+    align-items: center; padding: 18px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    color: white; border-left: 4px solid #FFD700;
+  }
+  .crown-board-emoji {
+    font-size: 36px; line-height: 1;
+  }
+  .crown-board-body { display: flex; flex-direction: column; gap: 4px; }
+  .crown-board-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+  }
+  .crown-board-holder {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    color: white; letter-spacing: 0.02em;
+  }
+  .crown-board-value {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #FFD700; font-weight: 700;
+  }
+  .crown-board-since {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: rgba(255,255,255,0.4); letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .crown-board-empty {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.4); font-style: italic;
+  }
+  .cfg-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-bottom: 24px;
+  }
+  .cfg-block {
+    background: var(--bg-soft); padding: 20px;
+    border: 1px solid var(--line);
+  }
+  .cfg-block-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    letter-spacing: 0.2em; color: var(--ink);
+    text-transform: uppercase; margin-bottom: 4px;
+    padding-bottom: 8px; border-bottom: 2px solid var(--ink);
+  }
+  .cfg-block-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); margin-bottom: 14px;
+    letter-spacing: 0.05em;
+  }
+  .cfg-field { margin-bottom: 12px; }
+  .cfg-field label {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; color: var(--ink-3);
+    text-transform: uppercase; margin-bottom: 4px;
+  }
+  .cfg-field input {
+    width: 100%; padding: 8px 10px; border: 1.5px solid var(--line);
+    background: white; font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; color: var(--ink);
+  }
+  .cfg-field input:focus { outline: none; border-color: var(--red); }
+  .cfg-field.cfg-row {
+    display: grid; grid-template-columns: 1fr 80px auto;
+    align-items: center; gap: 8px; margin-bottom: 8px;
+  }
+  .cfg-field.cfg-row label { margin-bottom: 0; }
+  .cfg-unit {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink-3);
+  }
+  .cfg-preview {
+    background: var(--ink); color: white; padding: 18px 20px;
+    margin-bottom: 16px; border-left: 4px solid var(--red);
+  }
+  .cfg-preview-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; color: rgba(255,255,255,0.6);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .cfg-preview-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cfg-preview-item {
+    padding: 10px; background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .cfg-preview-item .pi-label {
+    font-size: 10px; color: rgba(255,255,255,0.5);
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .cfg-preview-item .pi-current {
+    font-family: 'Archivo Black', sans-serif; font-size: 18px;
+    color: white; margin-top: 4px;
+  }
+  .cfg-preview-item .pi-delta {
+    font-size: 11px; margin-top: 2px;
+  }
+  .cfg-preview-item .pi-delta.up   { color: #4ADE80; }
+  .cfg-preview-item .pi-delta.down { color: #FF6B6B; }
+  .cfg-preview-item .pi-delta.same { color: rgba(255,255,255,0.4); }
+  .cfg-actions {
+    display: flex; align-items: center; gap: 12px;
+    padding-top: 16px; border-top: 1px solid var(--line);
+  }
+  .cfg-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.1em;
+  }
+  .cfg-status.saved { color: #16a34a; }
+  .cfg-status.error { color: var(--red); }
   .ops-section-sub {
     font-family: 'JetBrains Mono', monospace; font-size: 10px;
     letter-spacing: 0.15em; color: var(--ink-3);
@@ -2042,6 +2201,10 @@
     .bt-emoji { font-size: 44px; }
     .bt-amount { font-size: 34px; }
     .bt-event { font-size: 12px; }
+    /* Config panel mobile */
+    .cfg-grid { grid-template-columns: 1fr; gap: 16px; }
+    .cfg-preview-grid { grid-template-columns: 1fr 1fr; }
+    .cfg-actions { flex-wrap: wrap; }
     /* Cobros mobile */
     .cobros-grid { grid-template-columns: 1fr; }
     .duelo { grid-template-columns: 1fr; display: flex; flex-direction: column; }
@@ -2331,6 +2494,8 @@
       <div class="ms-period" id="msPeriod">JUNIO 2026</div>
     </div>
     <div class="ms-name" id="msName">VENDEDOR</div>
+    <div class="ms-crowns" id="msCrowns"></div>
+    <div class="ms-achievements" id="msAchievements"></div>
     <div class="ms-facturado-row">
       <span class="ms-label">FACTURADO HASTA HOY</span>
       <span class="ms-facturado" id="msFacturado">$0</span>
@@ -2914,6 +3079,126 @@
       <div class="ops-table-footer" id="opsTableFooter">— sin resultados —</div>
     </div>
 
+    <!-- PIZARRA DE CORONAS -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <h3>🏛 PIZARRA DE CORONAS</h3>
+        <span class="ops-section-sub">récords históricos que se pelean entre los vendedores</span>
+      </div>
+      <div class="crown-board" id="crownBoard"></div>
+    </div>
+
+    <!-- PANEL DE CONFIGURACIÓN · solo admin -->
+    <div class="ops-section ops-section-full ops-config-section">
+      <div class="ops-section-header">
+        <h3>⚙ CONFIGURACIÓN DEL SISTEMA</h3>
+        <span class="ops-section-sub">cambios se aplican a todos los dispositivos al guardar</span>
+      </div>
+
+      <div class="cfg-grid">
+
+        <!-- METAS -->
+        <div class="cfg-block">
+          <div class="cfg-block-title">METAS</div>
+          <div class="cfg-field">
+            <label>Meta individual de vendedores</label>
+            <input type="number" id="cfgTarget" step="100000">
+          </div>
+          <div class="cfg-field">
+            <label>Meta de equipo (suma 4 vendedores)</label>
+            <input type="number" id="cfgTeamTarget" step="100000">
+          </div>
+          <div class="cfg-field">
+            <label>Meta Estela (tracker)</label>
+            <input type="number" id="cfgEstelaTarget" step="100000">
+          </div>
+        </div>
+
+        <!-- ESCALONES -->
+        <div class="cfg-block">
+          <div class="cfg-block-title">COMISIÓN ESCALONADA</div>
+          <div class="cfg-block-sub">Aplica a Bauti, Leo, Kevin y a Lauti desde el 1° de julio</div>
+          <div class="cfg-field cfg-row">
+            <label>Escalón 1 (0 a 6M)</label>
+            <input type="number" id="cfgTier1" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+          <div class="cfg-field cfg-row">
+            <label>Escalón 2 (6M a 10M)</label>
+            <input type="number" id="cfgTier2" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+          <div class="cfg-field cfg-row">
+            <label>Escalón 3 (10M a 15M)</label>
+            <input type="number" id="cfgTier3" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+          <div class="cfg-field cfg-row">
+            <label>Escalón 4 (15M+)</label>
+            <input type="number" id="cfgTier4" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+        </div>
+
+        <!-- ARENA -->
+        <div class="cfg-block">
+          <div class="cfg-block-title">BONUS ARENA</div>
+          <div class="cfg-block-sub">Premio extra que se suma al escalón al pasar la meta</div>
+          <div class="cfg-field cfg-row">
+            <label>De 13,5M a 14,5M</label>
+            <input type="number" id="cfgArena1" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+          <div class="cfg-field cfg-row">
+            <label>De 14,5M a 15,5M</label>
+            <input type="number" id="cfgArena2" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+          <div class="cfg-field cfg-row">
+            <label>Desde 15,5M</label>
+            <input type="number" id="cfgArena3" step="0.1" min="0" max="100">
+            <span class="cfg-unit">%</span>
+          </div>
+        </div>
+
+        <!-- VIÁTICO + BONOS -->
+        <div class="cfg-block">
+          <div class="cfg-block-title">VIÁTICO Y BONOS</div>
+          <div class="cfg-field">
+            <label>Monto del viático ($)</label>
+            <input type="number" id="cfgViatico" step="10000">
+          </div>
+          <div class="cfg-field">
+            <label>Viático se activa al superar ($)</label>
+            <input type="number" id="cfgViaticoThreshold" step="100000">
+          </div>
+          <div class="cfg-field">
+            <label>Bonus #1 del mes ($)</label>
+            <input type="number" id="cfgBonusFirst" step="5000">
+          </div>
+          <div class="cfg-field">
+            <label>Bonus equipo cumple ($)</label>
+            <input type="number" id="cfgBonusTeam" step="5000">
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="cfg-preview">
+        <div class="cfg-preview-title">🔍 PREVIEW DEL CAMBIO (esquema NUEVO)</div>
+        <div class="cfg-preview-grid" id="cfgPreview">
+          <!-- relleno dinámico -->
+        </div>
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="cfg-actions">
+        <button class="btn-primary" onclick="saveConfig()">💾 GUARDAR CAMBIOS</button>
+        <button class="btn-secondary" onclick="resetConfigDefaults()">↺ RESTAURAR DEFAULTS</button>
+        <span class="cfg-status" id="cfgStatus"></span>
+      </div>
+    </div>
+
     <div class="footer">
       <span><strong>◢ GRAZIANO MATERIALES</strong> · CENTRO DE OPERACIONES</span>
       <span id="opsLastUpdate">— SIN ACTUALIZAR —</span>
@@ -3278,8 +3563,8 @@
 <div class="confetti-container" id="confettiContainer"></div>
 
 <script>
-  // ===== CONFIG =====
-  const CONFIG = {
+  // ===== CONFIG por DEFAULT (inmutable, sirve para "restaurar") =====
+  const DEFAULT_CONFIG = {
     // Sistema VIEJO (Lauti hasta junio 2026)
     baseSalary: 300000,
     baseCommission: 0.03,
@@ -3288,32 +3573,39 @@
     teamTarget: 30000000,        // meta empresa
     bonusOnTarget: 35000,
     tiers: [
-      { from: 13500000, to: 14500000, rate: 0.005 },  // +0,5%
-      { from: 14500000, to: 15500000, rate: 0.01  },  // +1%
-      { from: 15500000, to: Infinity, rate: 0.015 }   // +1,5%
+      { from: 13500000, to: 14500000, rate: 0.005 },
+      { from: 14500000, to: 15500000, rate: 0.01  },
+      { from: 15500000, to: Infinity, rate: 0.015 }
     ],
     bonusFirstPlace: 30000,
     bonusTeamGoal: 20000,
     // Sistema NUEVO (Bauti y Leo desde ya · Lauti desde 1 julio 2026)
     newScheme: {
       tiers: [
-        { from: 0,        to: 6000000,   rate: 0.05 },   // tier 1: 5%
-        { from: 6000000,  to: 10000000,  rate: 0.06 },   // tier 2: 6%
-        { from: 10000000, to: 15000000,  rate: 0.07 },   // tier 3: 7%
-        { from: 15000000, to: Infinity,  rate: 0.08 }    // tier 4: 8%
+        { from: 0,        to: 6000000,   rate: 0.05 },
+        { from: 6000000,  to: 10000000,  rate: 0.06 },
+        { from: 10000000, to: 15000000,  rate: 0.07 },
+        { from: 15000000, to: Infinity,  rate: 0.08 }
       ],
       arena: [
-        { from: 13500000, to: 14500000, rate: 0.005 },   // +0,5%
-        { from: 14500000, to: 15500000, rate: 0.010 },   // +1,0%
-        { from: 15500000, to: Infinity, rate: 0.015 }    // +1,5%
+        { from: 13500000, to: 14500000, rate: 0.005 },
+        { from: 14500000, to: 15500000, rate: 0.010 },
+        { from: 15500000, to: Infinity, rate: 0.015 }
       ],
-      viatico: 100000,           // flat si factura > $7M
+      viatico: 100000,
       viaticoThreshold: 7000000
     },
-    newSchemeStartLauti: '2026-07',  // Lauti pasa al nuevo desde julio 2026
-    competitiveSellers: ['lauti', 'bauti', 'leo', 'kevin'],  // los que compiten
-    estelaTarget: 4000000  // tracking Estela (dueña, no compite)
+    newSchemeStartLauti: '2026-07',
+    competitiveSellers: ['lauti', 'bauti', 'leo', 'kevin'],
+    estelaTarget: 4000000
   };
+
+  // CONFIG mutable (se sobreescribe con los valores guardados en Firebase)
+  const CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG).replace(/Infinity/g,'1e308'));
+  // Restaurar Infinity tras el clone
+  CONFIG.tiers.forEach(t => { if (t.to >= 1e308) t.to = Infinity; });
+  CONFIG.newScheme.tiers.forEach(t => { if (t.to >= 1e308) t.to = Infinity; });
+  CONFIG.newScheme.arena.forEach(t => { if (t.to >= 1e308) t.to = Infinity; });
 
   const PINS = { lauti: '1111', bauti: '2222', leo: '4444', kevin: '5555', estela: '3333', admin: '0000' };
   const SELLER_META = {
@@ -3380,7 +3672,7 @@
         });
         if (migrated > 0) {
           console.log(`Migradas ${migrated} ventas de toto → bauti`);
-          saveState();  // persistir el cambio
+          saveState();
         }
         if (data.hofPrev) state.hofPrev = data.hofPrev;
         state.weeklyPayments = data.weeklyPayments || {};
@@ -3390,6 +3682,38 @@
       }
       if (currentUser) renderAll();
     }, (err) => { console.warn('Firebase read error', err); });
+
+    // Listener separado para config
+    db.ref('config').on('value', (snapshot) => {
+      const remote = snapshot.val();
+      if (remote) {
+        applyRemoteConfig(remote);
+        if (currentUser) {
+          populateConfigPanel();
+          renderAll();
+        }
+      }
+    }, (err) => { console.warn('Firebase config read error', err); });
+
+    // Listener para achievements + crowns
+    db.ref('achievements').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        state.achievementsMonthly = data.achievementsMonthly || {};
+        state.achievementsPersonal = data.achievementsPersonal || {};
+        state.crowns = data.crowns || {};
+      } else {
+        state.achievementsMonthly = {};
+        state.achievementsPersonal = {};
+        state.crowns = {};
+      }
+      // Si nunca se inicializaron las coronas, detectarlas desde el histórico
+      if (Object.keys(state.crowns).length === 0 && state.sales.length > 0) {
+        detectCrowns();
+        saveAchievementsState();
+      }
+      if (currentUser) renderAll();
+    }, (err) => { console.warn('Firebase achievements read error', err); });
   }
 
   // ===== HELPERS =====
@@ -3517,6 +3841,8 @@
     // Bind slider simulador
     const simSlider = document.getElementById('simSlider');
     if (simSlider) simSlider.addEventListener('input', updateSimulator);
+    // Bind inputs del panel de configuración
+    bindConfigInputs();
     const inp = document.getElementById('pinInput');
     inp.addEventListener('input', (e) => {
       if (inp.value.length === 4) {
@@ -4099,10 +4425,10 @@
   }
 
   function tierNameFor(f) {
-    if (f >= 15000000) return 'TIER 4 · CRACK (8%)';
-    if (f >= 10000000) return 'TIER 3 · CRECIMIENTO (7%)';
-    if (f >= 6000000)  return 'TIER 2 · SUBIDA (6%)';
-    return 'TIER 1 · BASE (5%)';
+    if (f >= 15000000) return 'ESCALÓN 4 · CRACK (8%)';
+    if (f >= 10000000) return 'ESCALÓN 3 · CRECIMIENTO (7%)';
+    if (f >= 6000000)  return 'ESCALÓN 2 · SUBIDA (6%)';
+    return 'ESCALÓN 1 · BASE (5%)';
   }
 
   // Cálculo VIEJO (3% + base $300k + escalonado desde $13,5M + viático >$7M)
@@ -4144,6 +4470,19 @@
     document.getElementById(`bar-${key}`).style.width = Math.min(100, data.pct * 100) + '%';
     document.getElementById(`excess-${key}`).textContent = data.excess > 0 ? '+' + fmtMoney(data.excess) : '$0';
     document.getElementById(`best-${key}`).textContent = fmtMoney(data.best);
+
+    // CHAPEO DE CORONAS: inyectar chapas al lado del nombre (siempre visibles, todas)
+    const card = document.getElementById(`card-${key}`);
+    let crownEl = card.querySelector('.seller-crowns');
+    if (!crownEl) {
+      const nameBlock = card.querySelector('.seller-name-block');
+      if (nameBlock) {
+        crownEl = document.createElement('div');
+        crownEl.className = 'seller-crowns';
+        nameBlock.appendChild(crownEl);
+      }
+    }
+    if (crownEl) crownEl.innerHTML = crownChipsFor(key);
 
     // Cálculo de comisión según esquema vigente (nuevo o viejo)
     const comm = calcCommission(key, data.total);
@@ -4338,6 +4677,22 @@
     const curWeek = currentWeekNum();
     const isAdmin = currentUser === 'admin';
     const payments = state.weeklyPayments?.[periodKey] || {};
+
+    // PRIVACIDAD: vendedor logueado solo ve SU card de cobros
+    // Admin y modo pantalla ven todas
+    const isViewer = currentUser === 'view';
+    const sellerVisibility = ['lauti', 'bauti', 'leo', 'kevin'];
+    sellerVisibility.forEach(seller => {
+      const card = document.getElementById(`cobros-${seller}`);
+      if (!card) return;
+      if (isAdmin || isViewer) {
+        card.style.display = '';
+      } else if (currentUser === seller) {
+        card.style.display = '';
+      } else {
+        card.style.display = 'none';
+      }
+    });
 
     ['lauti', 'bauti', 'leo', 'kevin'].forEach(seller => {
       const isLeader = c.firstPlace === seller;
@@ -4743,6 +5098,30 @@
     document.getElementById('msPeriod').textContent = periodLabel().toUpperCase();
     document.getElementById('msFacturado').textContent = fmtMoney(data.total);
 
+    // Coronas activas (chapas)
+    const msCrowns = document.getElementById('msCrowns');
+    if (msCrowns) {
+      const chips = crownChipsFor(currentUser);
+      msCrowns.innerHTML = chips ? `<span class="ms-crowns-label">CORONAS ACTIVAS</span>${chips}` : '';
+      msCrowns.style.display = chips ? '' : 'none';
+    }
+
+    // Logros del mes ganados
+    const msAch = document.getElementById('msAchievements');
+    if (msAch) {
+      const monthly = monthlyAchievementsFor(currentUser);
+      const personal = personalAchievementsFor(currentUser);
+      const monthlyChips = Object.keys(monthly).map(id => {
+        const a = MONTHLY_BY_ID[id]; return a ? `<span class="ach-chip mes" title="${a.title} · ${a.desc}">${a.emoji}</span>` : '';
+      }).join('');
+      const personalChips = Object.keys(personal).map(id => {
+        const a = PERSONAL_BY_ID[id]; return a ? `<span class="ach-chip his" title="${a.title} · ${a.desc}">${a.emoji}</span>` : '';
+      }).join('');
+      const all = monthlyChips + personalChips;
+      msAch.innerHTML = all ? `<span class="ms-crowns-label">LOGROS</span>${all}` : '';
+      msAch.style.display = all ? '' : 'none';
+    }
+
     let breakdown = '';
     let total = 0;
     let tierInfo = '';
@@ -4769,7 +5148,7 @@
         const falta = next.target - data.total;
         nextInfo = `Te faltan <strong style="color:white;">${fmtMoney(falta)}</strong> para ${next.label}`;
       } else {
-        nextInfo = `🚀 Estás en el tier máximo. Cada peso suma al 8% + bonus arena.`;
+        nextInfo = `🚀 Estás en el escalón máximo. Cada peso suma al 8% + bonus arena.`;
       }
     } else if (comm.scheme === 'old') {
       total = comm.total;
@@ -4805,19 +5184,19 @@
     // 1. Próximo tier de comisión (nuevo esquema)
     if (scheme === 'new') {
       const tierMap = [
-        { from: 0,        next: 6000000,  rate: 0.06, label: 'TIER 2 (6%)' },
-        { from: 6000000,  next: 10000000, rate: 0.07, label: 'TIER 3 (7%)' },
-        { from: 10000000, next: 15000000, rate: 0.08, label: 'TIER 4 CRACK (8%)' }
+        { from: 0,        next: 6000000,  rate: 0.06, label: 'ESCALÓN 2 (6%)' },
+        { from: 6000000,  next: 10000000, rate: 0.07, label: 'ESCALÓN 3 (7%)' },
+        { from: 10000000, next: 15000000, rate: 0.08, label: 'ESCALÓN 4 CRACK (8%)' }
       ];
       const nextTier = tierMap.find(t => facturado >= t.from && facturado < t.next);
       if (nextTier) {
         const falta = nextTier.next - facturado;
         const currentRate = nextTier.from === 0 ? 0.05 : tierMap.find(x => x.next === nextTier.from)?.rate || 0.05;
-        // El extra que cobra cuando entra al próximo tier es la diferencia de rate sobre cada peso adicional
+        // El extra que cobra cuando entra al próximo escalón es la diferencia de rate sobre cada peso adicional
         const extraOnNext = falta * (nextTier.rate - currentRate);
         milestones.push({
           icon: '⚡',
-          title: 'PRÓXIMO TIER',
+          title: 'PRÓXIMO ESCALÓN',
           detail: `Faltan ${fmtMoney(falta)} para ${nextTier.label}`,
           extra: extraOnNext > 0 ? `+${fmtMoney(extraOnNext)}` : ''
         });
@@ -4923,11 +5302,11 @@
   }
 
   function nextTierTarget(facturado) {
-    if (facturado < 6000000)  return { target: 6000000,  label: 'tier 2 (6%)' };
-    if (facturado < 10000000) return { target: 10000000, label: 'tier 3 (7%)' };
+    if (facturado < 6000000)  return { target: 6000000,  label: 'escalón 2 (6%)' };
+    if (facturado < 10000000) return { target: 10000000, label: 'escalón 3 (7%)' };
     if (facturado < 13500000) return { target: 13500000, label: 'arena +0,5%' };
     if (facturado < 14500000) return { target: 14500000, label: 'arena +1,0%' };
-    if (facturado < 15000000) return { target: 15000000, label: 'tier 4 crack (8%)' };
+    if (facturado < 15000000) return { target: 15000000, label: 'escalón 4 crack (8%)' };
     if (facturado < 15500000) return { target: 15500000, label: 'arena +1,5%' };
     return null;
   }
@@ -5063,7 +5442,7 @@
       const tierBefore = tierIndexFor(beforeData.total);
       const tierAfter = tierIndexFor(afterData.total);
       if (tierAfter > tierBefore) {
-        const tierNames = ['TIER 1 BASE', 'TIER 2 SUBIDA', 'TIER 3 CRECIMIENTO', 'TIER 4 CRACK'];
+        const tierNames = ['ESCALÓN 1 BASE', 'ESCALÓN 2 SUBIDA', 'ESCALÓN 3 CRECIMIENTO', 'ESCALÓN 4 CRACK'];
         events.push({ type: 'tier', label: `⚡ ENTRASTE A ${tierNames[tierAfter]}`, epic: false });
       }
     }
@@ -5618,9 +5997,45 @@
     renderOpsByChannel(mk);
     renderOpsByPayment(mk);
     renderOpsTable();
+    populateConfigPanel();
+    renderCrownBoard();
   }
 
-  function renderOpsKPIs(mk) {
+  function renderCrownBoard() {
+    const container = document.getElementById('crownBoard');
+    if (!container) return;
+    const html = CROWNS.map(c => {
+      const data = state.crowns?.[c.id];
+      if (!data || !data.holder) {
+        return `
+          <div class="crown-board-item">
+            <div class="crown-board-emoji">${c.emoji}</div>
+            <div class="crown-board-body">
+              <div class="crown-board-title">${c.title}</div>
+              <div class="crown-board-empty">— sin dueño todavía —</div>
+              <div class="crown-board-since">${c.desc}</div>
+            </div>
+          </div>
+        `;
+      }
+      const meta = SELLER_META[data.holder] || { name: data.holder.toUpperCase(), emoji: '' };
+      const valueText = c.unit === '$' ? fmtMoney(data.value) : `${data.value} ${c.unit}`;
+      const sinceText = data.sinceMonthKey
+        ? `desde ${monthLabel(data.sinceMonthKey)}`
+        : '';
+      return `
+        <div class="crown-board-item">
+          <div class="crown-board-emoji">${c.emoji}</div>
+          <div class="crown-board-body">
+            <div class="crown-board-title">${c.title}</div>
+            <div class="crown-board-holder">${meta.emoji} ${meta.name} · ${valueText}</div>
+            <div class="crown-board-since">${sinceText}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    container.innerHTML = html;
+  }
     if (!mk) mk = activeOpsMonth();
     const prevMk = prevMonthOf(mk);
     const cur = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
@@ -5886,6 +6301,176 @@
     }).join('');
   }
 
+  // ===== PANEL DE CONFIGURACIÓN =====
+  function populateConfigPanel() {
+    const T = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+    T('cfgTarget', CONFIG.target);
+    T('cfgTeamTarget', CONFIG.teamTarget);
+    T('cfgEstelaTarget', CONFIG.estelaTarget);
+    T('cfgTier1', (CONFIG.newScheme.tiers[0].rate * 100).toFixed(1));
+    T('cfgTier2', (CONFIG.newScheme.tiers[1].rate * 100).toFixed(1));
+    T('cfgTier3', (CONFIG.newScheme.tiers[2].rate * 100).toFixed(1));
+    T('cfgTier4', (CONFIG.newScheme.tiers[3].rate * 100).toFixed(1));
+    T('cfgArena1', (CONFIG.newScheme.arena[0].rate * 100).toFixed(1));
+    T('cfgArena2', (CONFIG.newScheme.arena[1].rate * 100).toFixed(1));
+    T('cfgArena3', (CONFIG.newScheme.arena[2].rate * 100).toFixed(1));
+    T('cfgViatico', CONFIG.newScheme.viatico);
+    T('cfgViaticoThreshold', CONFIG.newScheme.viaticoThreshold);
+    T('cfgBonusFirst', CONFIG.bonusFirstPlace);
+    T('cfgBonusTeam', CONFIG.bonusTeamGoal);
+    updateConfigPreview();
+  }
+
+  function readConfigFromForm() {
+    const G = id => parseFloat(document.getElementById(id)?.value) || 0;
+    return {
+      target: G('cfgTarget'),
+      teamTarget: G('cfgTeamTarget'),
+      estelaTarget: G('cfgEstelaTarget'),
+      tiers:  [G('cfgTier1')/100, G('cfgTier2')/100, G('cfgTier3')/100, G('cfgTier4')/100],
+      arena:  [G('cfgArena1')/100, G('cfgArena2')/100, G('cfgArena3')/100],
+      viatico: G('cfgViatico'),
+      viaticoThreshold: G('cfgViaticoThreshold'),
+      bonusFirstPlace: G('cfgBonusFirst'),
+      bonusTeamGoal: G('cfgBonusTeam')
+    };
+  }
+
+  function calcWithForm(facturado, formCfg) {
+    const tiers = [
+      { from: 0,        to: 6000000,   rate: formCfg.tiers[0] },
+      { from: 6000000,  to: 10000000,  rate: formCfg.tiers[1] },
+      { from: 10000000, to: 15000000,  rate: formCfg.tiers[2] },
+      { from: 15000000, to: Infinity,  rate: formCfg.tiers[3] }
+    ];
+    const arena = [
+      { from: 13500000, to: 14500000, rate: formCfg.arena[0] },
+      { from: 14500000, to: 15500000, rate: formCfg.arena[1] },
+      { from: 15500000, to: Infinity, rate: formCfg.arena[2] }
+    ];
+    let base = 0;
+    for (const t of tiers) {
+      if (facturado <= t.from) break;
+      base += (Math.min(facturado, t.to) - t.from) * t.rate;
+    }
+    let extra = 0;
+    for (const t of arena) {
+      if (facturado <= t.from) break;
+      extra += (Math.min(facturado, t.to) - t.from) * t.rate;
+    }
+    const via = facturado > formCfg.viaticoThreshold ? formCfg.viatico : 0;
+    return Math.round(base + extra + via);
+  }
+
+  function updateConfigPreview() {
+    const form = readConfigFromForm();
+    const cases = [5000000, 10000000, 13500000, 18000000];
+    const grid = document.getElementById('cfgPreview');
+    if (!grid) return;
+    grid.innerHTML = cases.map(f => {
+      const newVal = calcWithForm(f, form);
+      const curVal = calcCommissionNew(f).total;
+      const diff = newVal - curVal;
+      const cls = diff === 0 ? 'same' : (diff > 0 ? 'up' : 'down');
+      const sign = diff === 0 ? '= sin cambio' : (diff > 0 ? `+${fmtMoney(diff)}` : `−${fmtMoney(-diff)}`);
+      return `
+        <div class="cfg-preview-item">
+          <div class="pi-label">$${(f/1e6).toFixed(1)}M facturado</div>
+          <div class="pi-current">${fmtMoney(newVal)}</div>
+          <div class="pi-delta ${cls}">${sign}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function saveConfig() {
+    const form = readConfigFromForm();
+    if (form.target <= 0 || form.tiers.some(t => isNaN(t)) || form.arena.some(t => isNaN(t))) {
+      const st = document.getElementById('cfgStatus');
+      st.textContent = '✗ valores inválidos';
+      st.className = 'cfg-status error';
+      return;
+    }
+    CONFIG.target = form.target;
+    CONFIG.teamTarget = form.teamTarget;
+    CONFIG.estelaTarget = form.estelaTarget;
+    form.tiers.forEach((r, i) => CONFIG.newScheme.tiers[i].rate = r);
+    form.arena.forEach((r, i) => CONFIG.newScheme.arena[i].rate = r);
+    CONFIG.newScheme.viatico = form.viatico;
+    CONFIG.newScheme.viaticoThreshold = form.viaticoThreshold;
+    CONFIG.bonusFirstPlace = form.bonusFirstPlace;
+    CONFIG.bonusTeamGoal = form.bonusTeamGoal;
+    try {
+      const payload = {
+        target: form.target,
+        teamTarget: form.teamTarget,
+        estelaTarget: form.estelaTarget,
+        tiersRates: form.tiers,
+        arenaRates: form.arena,
+        viatico: form.viatico,
+        viaticoThreshold: form.viaticoThreshold,
+        bonusFirstPlace: form.bonusFirstPlace,
+        bonusTeamGoal: form.bonusTeamGoal,
+        updatedAt: Date.now(),
+        updatedBy: currentUser
+      };
+      await db.ref('config').set(payload);
+      const st = document.getElementById('cfgStatus');
+      st.textContent = '✓ guardado · aplicado a todos los dispositivos';
+      st.className = 'cfg-status saved';
+      setTimeout(() => { st.textContent = ''; }, 4000);
+      renderAll();
+    } catch (e) {
+      const st = document.getElementById('cfgStatus');
+      st.textContent = '✗ error guardando: ' + e.message;
+      st.className = 'cfg-status error';
+    }
+  }
+
+  function resetConfigDefaults() {
+    if (!confirm('¿Restaurar la configuración a los valores por defecto?')) return;
+    CONFIG.target = DEFAULT_CONFIG.target;
+    CONFIG.teamTarget = DEFAULT_CONFIG.teamTarget;
+    CONFIG.estelaTarget = DEFAULT_CONFIG.estelaTarget;
+    DEFAULT_CONFIG.newScheme.tiers.forEach((t, i) => CONFIG.newScheme.tiers[i].rate = t.rate);
+    DEFAULT_CONFIG.newScheme.arena.forEach((t, i) => CONFIG.newScheme.arena[i].rate = t.rate);
+    CONFIG.newScheme.viatico = DEFAULT_CONFIG.newScheme.viatico;
+    CONFIG.newScheme.viaticoThreshold = DEFAULT_CONFIG.newScheme.viaticoThreshold;
+    CONFIG.bonusFirstPlace = DEFAULT_CONFIG.bonusFirstPlace;
+    CONFIG.bonusTeamGoal = DEFAULT_CONFIG.bonusTeamGoal;
+    populateConfigPanel();
+    saveConfig();
+  }
+
+  function bindConfigInputs() {
+    const ids = ['cfgTarget','cfgTeamTarget','cfgEstelaTarget',
+                 'cfgTier1','cfgTier2','cfgTier3','cfgTier4',
+                 'cfgArena1','cfgArena2','cfgArena3',
+                 'cfgViatico','cfgViaticoThreshold',
+                 'cfgBonusFirst','cfgBonusTeam'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateConfigPreview);
+    });
+  }
+
+  function applyRemoteConfig(remote) {
+    if (!remote) return;
+    if (typeof remote.target === 'number')           CONFIG.target = remote.target;
+    if (typeof remote.teamTarget === 'number')       CONFIG.teamTarget = remote.teamTarget;
+    if (typeof remote.estelaTarget === 'number')     CONFIG.estelaTarget = remote.estelaTarget;
+    if (Array.isArray(remote.tiersRates) && remote.tiersRates.length === 4) {
+      remote.tiersRates.forEach((r, i) => CONFIG.newScheme.tiers[i].rate = r);
+    }
+    if (Array.isArray(remote.arenaRates) && remote.arenaRates.length === 3) {
+      remote.arenaRates.forEach((r, i) => CONFIG.newScheme.arena[i].rate = r);
+    }
+    if (typeof remote.viatico === 'number')          CONFIG.newScheme.viatico = remote.viatico;
+    if (typeof remote.viaticoThreshold === 'number') CONFIG.newScheme.viaticoThreshold = remote.viaticoThreshold;
+    if (typeof remote.bonusFirstPlace === 'number')  CONFIG.bonusFirstPlace = remote.bonusFirstPlace;
+    if (typeof remote.bonusTeamGoal === 'number')    CONFIG.bonusTeamGoal = remote.bonusTeamGoal;
+  }
+
   // SUELDOS PROYECTADOS · admin only
   function renderOpsSalaries(mk) {
     if (!mk) mk = activeOpsMonth();
@@ -6136,26 +6721,384 @@
     showToast(`📥 CSV EXPORTADO · ${sales.length} ventas`);
   }
 
+  // ===== CATÁLOGO DE LOGROS Y CORONAS =====
+
+  // Logros del mes (se resetean cada mes)
+  const ACHIEVEMENTS_MONTHLY = [
+    { id: 'first-sale',  emoji: '🚀', title: 'ARRANCAR PRIMERO', desc: '1ra venta del mes' },
+    { id: 'half-meta',   emoji: '💎', title: 'MITAD DE CAMINO',   desc: '50% de tu meta' },
+    { id: 'meta',        emoji: '🏆', title: 'META CUMPLIDA',     desc: '100% de tu meta' },
+    { id: 'king-month',  emoji: '👑', title: 'REY DEL MES',       desc: '#1 del ranking' },
+    { id: 'gunner-50',   emoji: '⚡', title: 'ARTILLERO',         desc: '50 ventas en el mes' },
+    { id: 'gunner-70',   emoji: '🔥', title: 'IMPARABLE',         desc: '70 ventas en el mes' },
+    { id: 'gunner-100',  emoji: '💯', title: 'CENTURIÓN',         desc: '100 ventas en el mes' },
+    { id: 'gold-ticket', emoji: '🎟', title: 'TICKET DE ORO',     desc: 'Mejor ticket promedio del mes' },
+    { id: 'team-met',    emoji: '🤝', title: 'TODOS LLEGARON',    desc: 'Bonus equipo cumplido' }
+  ];
+
+  // Logros personales históricos (se ganan una vez, no se pierden)
+  const ACHIEVEMENTS_PERSONAL = [
+    { id: 'first-million', emoji: '💰', title: 'PRIMER MILLÓN', desc: '1ra venta de $1M+',  threshold: 1000000 },
+    { id: 'bestia',        emoji: '🦍', title: 'BESTIA',         desc: '1ra venta de $3M+',  threshold: 3000000 },
+    { id: 'dragon',        emoji: '🐉', title: 'DRAGÓN',         desc: '1ra venta de $5M+',  threshold: 5000000 },
+    { id: 'titan',         emoji: '🌋', title: 'TITAN',          desc: '1ra venta de $10M+', threshold: 10000000 }
+  ];
+
+  // Coronas (1 solo dueño · se pelean · se roban)
+  const CROWNS = [
+    { id: 'rey-corralon',  emoji: '👑', title: 'REY DEL CORRALÓN', desc: 'Récord de ventas (cantidad) en un mes',  unit: 'ventas' },
+    { id: 'facturador',    emoji: '💰', title: 'EL FACTURADOR',    desc: 'Récord de pesos facturados en un mes',   unit: '$' },
+    { id: 'acaparador',    emoji: '🦅', title: 'EL ACAPARADOR',    desc: 'Récord de ventas en un solo día',         unit: 'ventas' },
+    { id: 'venta-siglo',   emoji: '🌋', title: 'LA VENTA DEL SIGLO', desc: 'Récord de venta única más grande',     unit: '$' },
+    { id: 'preciso',       emoji: '💎', title: 'EL PRECISO',       desc: 'Mejor ticket promedio (mes vencido, mín 20 ventas)', unit: '$' }
+  ];
+
+  const CROWN_BY_ID = Object.fromEntries(CROWNS.map(c => [c.id, c]));
+  const MONTHLY_BY_ID = Object.fromEntries(ACHIEVEMENTS_MONTHLY.map(a => [a.id, a]));
+  const PERSONAL_BY_ID = Object.fromEntries(ACHIEVEMENTS_PERSONAL.map(a => [a.id, a]));
+
+  // ===== ESTADO LOCAL DE LOGROS Y CORONAS =====
+  // state.achievementsMonthly[mk][seller][achievementId] = timestamp
+  // state.achievementsPersonal[seller][achievementId] = { unlockedAt, saleId }
+  // state.crowns[crownId] = { holder, value, sinceMonthKey, sinceTimestamp }
+
+  // ===== DETECCIÓN DE LOGROS DEL MES =====
+  function detectMonthlyAchievements(c) {
+    const mk = currentMonthKey();
+    const sales = state.sales.filter(s => s.status === 'approved' && monthKeyOf(s.date) === mk);
+    if (!state.achievementsMonthly) state.achievementsMonthly = {};
+    if (!state.achievementsMonthly[mk]) state.achievementsMonthly[mk] = {};
+    const monthState = state.achievementsMonthly[mk];
+    const sellers = CONFIG.competitiveSellers;
+    const newly = []; // [{seller, achievementId}]
+
+    // ARRANCAR PRIMERO: la 1ra venta del mes la consigue solo UNO entre todos
+    const firstSale = sales.slice().sort((a,b) => (a.submittedAt || 0) - (b.submittedAt || 0))[0];
+    if (firstSale && sellers.includes(firstSale.seller)) {
+      const winner = firstSale.seller;
+      if (!monthState[winner]) monthState[winner] = {};
+      // Solo un seller puede tenerlo
+      sellers.forEach(s => {
+        if (monthState[s] && monthState[s]['first-sale'] && s !== winner) {
+          delete monthState[s]['first-sale'];
+        }
+      });
+      if (!monthState[winner]['first-sale']) {
+        monthState[winner]['first-sale'] = Date.now();
+        newly.push({ seller: winner, achievementId: 'first-sale' });
+      }
+    }
+
+    // Por vendedor: meta 50%, meta 100%, volumen 50/70/100, rey del mes
+    sellers.forEach(seller => {
+      if (!monthState[seller]) monthState[seller] = {};
+      const data = c[seller];
+      const sellerSales = sales.filter(s => s.seller === seller);
+      const count = sellerSales.length;
+      const tryUnlock = (id, cond) => {
+        if (cond && !monthState[seller][id]) {
+          monthState[seller][id] = Date.now();
+          newly.push({ seller, achievementId: id });
+        }
+      };
+      tryUnlock('half-meta',  data.total >= CONFIG.target * 0.5);
+      tryUnlock('meta',       data.total >= CONFIG.target);
+      tryUnlock('gunner-50',  count >= 50);
+      tryUnlock('gunner-70',  count >= 70);
+      tryUnlock('gunner-100', count >= 100);
+    });
+
+    // REY DEL MES: solo uno lo tiene (el #1)
+    if (c.firstPlace) {
+      const king = c.firstPlace;
+      sellers.forEach(s => {
+        if (monthState[s] && monthState[s]['king-month'] && s !== king) {
+          delete monthState[s]['king-month'];
+        }
+      });
+      if (!monthState[king]) monthState[king] = {};
+      if (!monthState[king]['king-month']) {
+        monthState[king]['king-month'] = Date.now();
+        newly.push({ seller: king, achievementId: 'king-month' });
+      }
+    }
+
+    // TICKET DE ORO: mejor ticket promedio del mes (mín 5 ventas para no premiar 1 venta gigante)
+    let bestTicket = null;
+    sellers.forEach(seller => {
+      const sellerSales = sales.filter(s => s.seller === seller);
+      if (sellerSales.length >= 5) {
+        const avg = sellerSales.reduce((a, v) => a + v.amount, 0) / sellerSales.length;
+        if (!bestTicket || avg > bestTicket.avg) bestTicket = { seller, avg };
+      }
+    });
+    if (bestTicket) {
+      sellers.forEach(s => {
+        if (monthState[s] && monthState[s]['gold-ticket'] && s !== bestTicket.seller) {
+          delete monthState[s]['gold-ticket'];
+        }
+      });
+      if (!monthState[bestTicket.seller]) monthState[bestTicket.seller] = {};
+      if (!monthState[bestTicket.seller]['gold-ticket']) {
+        monthState[bestTicket.seller]['gold-ticket'] = Date.now();
+        newly.push({ seller: bestTicket.seller, achievementId: 'gold-ticket' });
+      }
+    }
+
+    // TODOS LLEGARON: bonus equipo activo → todos lo tienen
+    if (c.allMet) {
+      sellers.forEach(seller => {
+        if (!monthState[seller]) monthState[seller] = {};
+        if (!monthState[seller]['team-met']) {
+          monthState[seller]['team-met'] = Date.now();
+          newly.push({ seller, achievementId: 'team-met' });
+        }
+      });
+    }
+
+    return newly;
+  }
+
+  // ===== DETECCIÓN DE LOGROS PERSONALES (HISTÓRICOS) =====
+  function detectPersonalAchievements(seller, sale) {
+    if (!state.achievementsPersonal) state.achievementsPersonal = {};
+    if (!state.achievementsPersonal[seller]) state.achievementsPersonal[seller] = {};
+    const sellerState = state.achievementsPersonal[seller];
+    const newly = [];
+    ACHIEVEMENTS_PERSONAL.forEach(a => {
+      if (sale.amount >= a.threshold && !sellerState[a.id]) {
+        sellerState[a.id] = { unlockedAt: Date.now(), saleId: sale.id, amount: sale.amount };
+        newly.push({ seller, achievementId: a.id });
+      }
+    });
+    return newly;
+  }
+
+  // ===== DETECCIÓN DE CORONAS (records peleables) =====
+  function detectCrowns() {
+    if (!state.crowns) state.crowns = {};
+    const changes = []; // [{crownId, newHolder, oldHolder, value, oldValue}]
+    const allApproved = state.sales.filter(s => s.status === 'approved' && CONFIG.competitiveSellers.includes(s.seller));
+
+    // 👑 REY DEL CORRALÓN: max cantidad de ventas en un mes (incluye mes en curso)
+    {
+      const byMonth = {};
+      allApproved.forEach(s => {
+        const k = `${s.seller}|${monthKeyOf(s.date)}`;
+        byMonth[k] = (byMonth[k] || 0) + 1;
+      });
+      let best = null;
+      Object.entries(byMonth).forEach(([k, count]) => {
+        const [seller, monthKey] = k.split('|');
+        if (!best || count > best.value) best = { seller, value: count, monthKey };
+      });
+      if (best) {
+        const cur = state.crowns['rey-corralon'];
+        if (!cur || best.value > cur.value || (best.value === cur.value && cur.holder !== best.seller && best.monthKey !== cur.sinceMonthKey)) {
+          if (!cur || best.value > cur.value) {
+            changes.push({ crownId: 'rey-corralon', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+            state.crowns['rey-corralon'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now() };
+          }
+        }
+      }
+    }
+
+    // 💰 EL FACTURADOR: max pesos en un mes
+    {
+      const byMonth = {};
+      allApproved.forEach(s => {
+        const k = `${s.seller}|${monthKeyOf(s.date)}`;
+        byMonth[k] = (byMonth[k] || 0) + s.amount;
+      });
+      let best = null;
+      Object.entries(byMonth).forEach(([k, total]) => {
+        const [seller, monthKey] = k.split('|');
+        if (!best || total > best.value) best = { seller, value: total, monthKey };
+      });
+      if (best) {
+        const cur = state.crowns['facturador'];
+        if (!cur || best.value > cur.value) {
+          changes.push({ crownId: 'facturador', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          state.crowns['facturador'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now() };
+        }
+      }
+    }
+
+    // 🦅 EL ACAPARADOR: max ventas en un solo día
+    {
+      const byDay = {};
+      allApproved.forEach(s => {
+        const k = `${s.seller}|${s.date}`;
+        byDay[k] = (byDay[k] || 0) + 1;
+      });
+      let best = null;
+      Object.entries(byDay).forEach(([k, count]) => {
+        const [seller, date] = k.split('|');
+        if (!best || count > best.value) best = { seller, value: count, date };
+      });
+      if (best) {
+        const cur = state.crowns['acaparador'];
+        if (!cur || best.value > cur.value) {
+          changes.push({ crownId: 'acaparador', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          state.crowns['acaparador'] = { holder: best.seller, value: best.value, sinceMonthKey: monthKeyOf(best.date), sinceTimestamp: Date.now(), date: best.date };
+        }
+      }
+    }
+
+    // 🌋 LA VENTA DEL SIGLO: venta única más grande
+    {
+      let best = null;
+      allApproved.forEach(s => {
+        if (!best || s.amount > best.value) best = { seller: s.seller, value: s.amount, monthKey: monthKeyOf(s.date), saleId: s.id };
+      });
+      if (best) {
+        const cur = state.crowns['venta-siglo'];
+        if (!cur || best.value > cur.value) {
+          changes.push({ crownId: 'venta-siglo', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          state.crowns['venta-siglo'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now(), saleId: best.saleId };
+        }
+      }
+    }
+
+    // 💎 EL PRECISO: mejor ticket promedio en un mes VENCIDO (no en curso), mín 20 ventas
+    {
+      const curMk = currentMonthKey();
+      const byMonth = {};
+      allApproved.forEach(s => {
+        const mk = monthKeyOf(s.date);
+        if (mk === curMk) return; // solo meses cerrados
+        const k = `${s.seller}|${mk}`;
+        if (!byMonth[k]) byMonth[k] = { sum: 0, count: 0 };
+        byMonth[k].sum += s.amount;
+        byMonth[k].count++;
+      });
+      let best = null;
+      Object.entries(byMonth).forEach(([k, v]) => {
+        if (v.count < 20) return;
+        const avg = v.sum / v.count;
+        const [seller, monthKey] = k.split('|');
+        if (!best || avg > best.value) best = { seller, value: avg, monthKey };
+      });
+      if (best) {
+        const cur = state.crowns['preciso'];
+        if (!cur || best.value > cur.value) {
+          changes.push({ crownId: 'preciso', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          state.crowns['preciso'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now() };
+        }
+      }
+    }
+
+    return changes;
+  }
+
+  // ===== NOTIFICACIONES DE LOGROS =====
+  function notifyAchievement(seller, achievementId, type) {
+    const catalog = type === 'monthly' ? MONTHLY_BY_ID : PERSONAL_BY_ID;
+    const a = catalog[achievementId];
+    if (!a) return;
+    const meta = SELLER_META[seller];
+    // Solo notifica si el seller es el currentUser (o admin viendo)
+    if (currentUser !== seller && currentUser !== 'admin') return;
+    // Toast simple para logros
+    const msg = `🔓 ${meta.name} · ${a.emoji} ${a.title}`;
+    showToast(msg, 'unlock');
+    // Si soy el seller, mini confeti
+    if (currentUser === seller) {
+      playChaChing();
+      triggerConfetti(20);
+    }
+  }
+
+  function notifyCrownChange(change) {
+    const crown = CROWN_BY_ID[change.crownId];
+    if (!crown) return;
+    const newMeta = SELLER_META[change.newHolder];
+    const oldMeta = change.oldHolder ? SELLER_META[change.oldHolder] : null;
+    // GANADOR: si el currentUser ganó, mostrar big toast épico
+    if (currentUser === change.newHolder || currentUser === 'admin') {
+      const formatted = crown.unit === '$' ? fmtMoney(change.value) : `${change.value} ${crown.unit}`;
+      const oldText = oldMeta ? ` · ROBADA A ${oldMeta.name}` : '';
+      showToast(`👑 ${crown.emoji} ${crown.title}${oldText}`, 'unlock');
+      if (currentUser === change.newHolder) {
+        playChaChing();
+        triggerConfetti(60);
+      }
+    }
+    // PERDEDOR: si el currentUser perdió, mensaje neutro
+    if (oldMeta && currentUser === change.oldHolder) {
+      const formatted = crown.unit === '$' ? fmtMoney(change.value) : `${change.value} ${crown.unit}`;
+      showToast(`👑 PERDISTE · ${crown.title} → ${newMeta.name} (${formatted})`, 'warn');
+    }
+  }
+
+  // ===== checkUnlocks (entrypoint principal) =====
   function checkUnlocks(before, after, seller) {
-    // Estela no compite ni desbloquea premios
     if (seller === 'estela') return;
-    const prev = before[seller], curr = after[seller];
-    let delay = 600;
-    if (prev.bonusTarget === 0 && curr.bonusTarget > 0) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} DESBLOQUEÓ META 13,5M`, 'unlock'), delay); delay += 700;
+
+    // 1. Logros del mes
+    const newlyMonthly = detectMonthlyAchievements(after);
+
+    // 2. Logros personales (analizar última venta)
+    const lastSale = state.sales
+      .filter(s => s.seller === seller && s.status === 'approved')
+      .sort((a, b) => (b.submittedAt || 0) - (a.submittedAt || 0))[0];
+    let newlyPersonal = [];
+    if (lastSale) {
+      newlyPersonal = detectPersonalAchievements(seller, lastSale);
     }
-    if (prev.total <= 14500000 && curr.total > 14500000) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 14,5M`, 'unlock'), delay); delay += 700;
+
+    // 3. Coronas
+    const crownChanges = detectCrowns();
+
+    // 4. Persistir en Firebase
+    if (newlyMonthly.length || newlyPersonal.length || crownChanges.length) {
+      saveAchievementsState();
     }
-    if (prev.total <= 15500000 && curr.total > 15500000) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} CRUZÓ 15,5M`, 'unlock'), delay); delay += 700;
-    }
-    if (prev.total < CONFIG.finalTarget && curr.total >= CONFIG.finalTarget) {
-      setTimeout(() => showToast(`🔓 ${seller.toUpperCase()} LLEGÓ AL OBJETIVO FINAL · $17M`, 'unlock'), delay); delay += 700;
-    }
-    if (!before.bothMet && after.bothMet) {
-      setTimeout(() => showToast(`🔓 EQUIPO COMPLETO · BONUS`, 'unlock'), delay);
-    }
+
+    // 5. Notificar (con delay stagger)
+    let delay = 700;
+    newlyMonthly.forEach(n => {
+      setTimeout(() => notifyAchievement(n.seller, n.achievementId, 'monthly'), delay);
+      delay += 600;
+    });
+    newlyPersonal.forEach(n => {
+      setTimeout(() => notifyAchievement(n.seller, n.achievementId, 'personal'), delay);
+      delay += 600;
+    });
+    crownChanges.forEach(ch => {
+      setTimeout(() => notifyCrownChange(ch), delay);
+      delay += 800;
+    });
+  }
+
+  async function saveAchievementsState() {
+    try {
+      const payload = {
+        achievementsMonthly: state.achievementsMonthly || {},
+        achievementsPersonal: state.achievementsPersonal || {},
+        crowns: state.crowns || {}
+      };
+      await db.ref('achievements').set(payload);
+    } catch(e) { console.warn('save achievements error', e); }
+  }
+
+  // ===== HELPERS PARA UI =====
+  // Devuelve string con las coronas que tiene un vendedor (chapas SIEMPRE visibles)
+  function crownChipsFor(seller) {
+    if (!state.crowns) return '';
+    return CROWNS
+      .filter(c => state.crowns[c.id]?.holder === seller)
+      .map(c => `<span class="crown-chip" title="${c.title}">${c.emoji}</span>`)
+      .join('');
+  }
+
+  // Devuelve los logros del mes ACTUAL de un vendedor
+  function monthlyAchievementsFor(seller) {
+    const mk = currentMonthKey();
+    return (state.achievementsMonthly?.[mk]?.[seller]) || {};
+  }
+  function personalAchievementsFor(seller) {
+    return (state.achievementsPersonal?.[seller]) || {};
   }
 
   async function approveSale(id) {
