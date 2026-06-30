@@ -816,10 +816,31 @@
   }
   .tendency-bars {
     font-family: 'JetBrains Mono', monospace;
-    color: var(--ink); font-size: 17px;
-    letter-spacing: 0.3em; line-height: 1.2;
-    overflow-x: auto; white-space: nowrap;
-    padding: 4px 0;
+    color: var(--ink);
+    line-height: 1; padding: 12px 0 6px;
+    display: flex; flex-wrap: nowrap;
+    gap: 1px;
+  }
+  .td-bar {
+    font-size: 32px; line-height: 0.7;
+    color: var(--ink); display: inline-block;
+    width: 8px; text-align: center;
+    letter-spacing: 0;
+  }
+  .td-bar.td-sep {
+    border-left: 1px dashed rgba(0,0,0,0.25);
+    padding-left: 3px; margin-left: 3px;
+  }
+  .tendency-monthstrip {
+    position: relative; height: 18px;
+    margin-bottom: 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .td-month-label {
+    position: absolute; bottom: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.15em;
+    font-weight: 700;
   }
   .tendency-row.good { border-left-color: #22c55e; }
   .tendency-row.warn { border-left-color: #f59e0b; }
@@ -2666,7 +2687,10 @@
     /* Vendedores mobile */
     .daily-summary-row { grid-template-columns: 1fr; }
     .daily-summary-actions { flex-direction: column; }
-    .tendency-bars { font-size: 14px; letter-spacing: 0.2em; }
+    .tendency-bars { gap: 0; }
+    .td-bar { font-size: 22px; width: 5px; }
+    .td-bar.td-sep { padding-left: 2px; margin-left: 2px; }
+    .td-month-label { font-size: 9px; }
     .tendency-header { flex-direction: column; align-items: flex-start; gap: 4px; }
     .projection-table, .margin-table {
       font-size: 11px;
@@ -7044,7 +7068,9 @@
   function buildDailySummaryText(dateStr) {
     const day = new Date(dateStr + 'T00:00:00');
     const dayLabel = day.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', weekday: 'long' }).toUpperCase();
+    // Incluye aprobadas + pendientes (excluye canceladas/anuladas)
     const dailySales = state.sales.filter(s => s.date === dateStr && s.status !== 'cancelled' && s.status !== 'voided');
+    const pendingCount = dailySales.filter(s => s.status === 'pending').length;
     const totalAmount = dailySales.reduce((a, v) => a + v.amount, 0);
     const totalOps = dailySales.length;
 
@@ -7121,7 +7147,8 @@
     });
 
     let text = `📋 RESUMEN VENTAS · ${dayLabel}\n\n`;
-    text += `💰 Total del día: ${fmtMoney(totalAmount)} · ${totalOps} operacion${totalOps === 1 ? '' : 'es'}\n\n`;
+    const pendingNote = pendingCount > 0 ? ` (${pendingCount} pendiente${pendingCount === 1 ? '' : 's'})` : '';
+    text += `💰 Total del día: ${fmtMoney(totalAmount)} · ${totalOps} operacion${totalOps === 1 ? '' : 'es'}${pendingNote}\n\n`;
     text += `POR VENDEDOR:\n${sellerLines}\n`;
     if (outstandingLines.length > 0) {
       text += `🔥 SOBRESALIENTE\n${outstandingLines.join('\n')}\n\n`;
@@ -7171,7 +7198,8 @@
     const sellers = CONFIG.competitiveSellers;
 
     sellers.forEach(seller => {
-      const allSales = state.sales.filter(s => s.seller === seller && s.status === 'approved');
+      // Aprobadas + pendientes (lo que el vendedor cargó, sin importar aprobación)
+      const allSales = state.sales.filter(s => s.seller === seller && s.status !== 'cancelled' && s.status !== 'voided');
       if (allSales.length === 0) return;
 
       const sevenAgo = new Date(today); sevenAgo.setDate(sevenAgo.getDate() - 6);
@@ -7323,8 +7351,23 @@
     const allSellers = CONFIG.competitiveSellers;
     const today = new Date();
 
+    // Helper para etiquetar meses
+    function buildMonthHeader() {
+      const labels = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+      const monthsSeen = {};
+      for (let i = 89; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(d.getDate() - i);
+        const k = `${d.getFullYear()}-${d.getMonth()}`;
+        if (!(k in monthsSeen)) monthsSeen[k] = { idx: 89 - i, label: labels[d.getMonth()] };
+      }
+      return Object.values(monthsSeen);
+    }
+    const monthHeaderInfo = buildMonthHeader();
+
     const html = allSellers.map(seller => {
-      const sales = state.sales.filter(s => s.seller === seller && s.status === 'approved');
+      // Aprobadas + pendientes (lo que cargaron, sin importar aprobación)
+      const sales = state.sales.filter(s => s.seller === seller && s.status !== 'cancelled' && s.status !== 'voided');
       const days = [];
       for (let i = 89; i >= 0; i--) {
         const d = new Date(today);
@@ -7333,17 +7376,37 @@
         const dayTotal = sales.filter(s => s.date === ds).reduce((a, v) => a + v.amount, 0);
         days.push(dayTotal);
       }
-      const max = Math.max(...days, 1);
-      const barString = days.map(v => {
-        if (v === 0) return ' ';
-        const ratio = v / max;
-        const idx = Math.min(7, Math.max(0, Math.floor(ratio * 7)));
-        return bars[idx];
-      }).join('');
 
-      const first30Avg = days.slice(0, 30).reduce((a, v) => a + v, 0) / 30;
-      const last30Avg = days.slice(60).reduce((a, v) => a + v, 0) / 30;
-      const recentNonZero = days.slice(70).filter(v => v > 0).length;
+      // Escala mejorada: usar percentil 85 para que los outliers no aplasten el resto
+      const nonZero = days.filter(v => v > 0).sort((a, b) => a - b);
+      let scaleMax;
+      if (nonZero.length >= 5) {
+        const p85Index = Math.floor(nonZero.length * 0.85);
+        scaleMax = nonZero[p85Index] || nonZero[nonZero.length - 1];
+      } else {
+        scaleMax = Math.max(...days, 1);
+      }
+      if (scaleMax === 0) scaleMax = 1;
+
+      // Construir grilla con separadores cada 30 días
+      const barElements = days.map((v, i) => {
+        let barChar = ' ';
+        if (v > 0) {
+          const ratio = Math.min(1, v / scaleMax);
+          const idx = Math.min(7, Math.max(0, Math.floor(ratio * 7) + (ratio > 0 ? 1 : 0) - 1));
+          barChar = bars[Math.max(0, Math.min(7, idx))];
+        }
+        // Separador visual cada 30 días
+        const isMonthBoundary = i > 0 && i % 30 === 0;
+        return { bar: barChar, sep: isMonthBoundary };
+      });
+
+      // Análisis
+      const first30 = days.slice(0, 30);
+      const last30 = days.slice(60);
+      const first30Avg = first30.reduce((a, v) => a + v, 0) / 30;
+      const last30Avg = last30.reduce((a, v) => a + v, 0) / 30;
+      const recentNonZero = last30.filter(v => v > 0).length;
 
       let comment, cls;
       if (last30Avg > first30Avg * 1.3 && last30Avg > 0) {
@@ -7360,18 +7423,31 @@
         comment = '— sin actividad'; cls = 'warn';
       }
 
+      // Renderizar grilla con separadores
+      const barsHTML = barElements.map(b =>
+        `<span class="td-bar${b.sep ? ' td-sep' : ''}">${b.bar}</span>`
+      ).join('');
+
       return `
         <div class="tendency-row ${cls}">
           <div class="tendency-header">
             <div class="tendency-name">${SELLER_META[seller].emoji}  ${SELLER_META[seller].name}</div>
             <div class="tendency-comment">${comment}</div>
           </div>
-          <div class="tendency-bars">${barString}</div>
+          <div class="tendency-bars">${barsHTML}</div>
         </div>
       `;
     }).join('');
 
-    container.innerHTML = html;
+    // Etiquetas de mes arriba
+    const headerLabels = monthHeaderInfo.map(m =>
+      `<span class="td-month-label" style="left: ${(m.idx / 90 * 100).toFixed(1)}%">${m.label}</span>`
+    ).join('');
+
+    container.innerHTML = `
+      <div class="tendency-monthstrip">${headerLabels}</div>
+      ${html}
+    `;
   }
 
   // ===== 05 MARGEN POR VENDEDOR =====
@@ -7385,16 +7461,14 @@
       const sales = state.sales.filter(s => s.seller === seller && s.status === 'approved' && monthKeyOf(s.date) === mk);
       const facturado = sales.reduce((a, v) => a + v.amount, 0);
 
-      let marginSum = 0;
-      let marginRevenue = 0;
-      sales.forEach(s => {
-        const m = typeof saleMargin === 'function' ? saleMargin(s) : null;
-        if (m !== null && s.amount > 0) {
-          marginSum += m;
-          marginRevenue += s.amount;
-        }
-      });
-      const marginPct = marginRevenue > 0 ? (marginSum / marginRevenue) * 100 : null;
+      // Usar aggregateMargin que ya existe y devuelve resultado limpio
+      const agg = typeof aggregateMargin === 'function' ? aggregateMargin(sales) : null;
+      let marginPct = null;
+      let marginAmount = null;
+      if (agg && agg.withCost > 0 && agg.revenue > 0) {
+        marginPct = agg.pct;
+        marginAmount = agg.margin;
+      }
 
       let statusCls = '';
       let statusText = '—';
@@ -7413,7 +7487,7 @@
         <tr>
           <td>${name}</td>
           <td>${fmtMoney(facturado)}</td>
-          <td>${marginPct !== null ? fmtMoney(marginSum) : '—'}</td>
+          <td>${marginAmount !== null ? fmtMoney(marginAmount) : '—'}</td>
           <td>${marginPct !== null ? marginPct.toFixed(1) + '%' : '—'}</td>
           <td><span class="proj-status ${statusCls}">${statusText}</span></td>
         </tr>
