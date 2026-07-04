@@ -5022,20 +5022,42 @@
 
   // Migración inicial · crea los 4 vendedores default en Firebase la primera vez
   function migrateUsersIfNeeded() {
-    if (state.users && Object.keys(state.users).length > 0) return false;
-    console.log('▸ Migrando usuarios · creando 4 vendedores default');
-    state.users = {};
-    DEFAULT_USERS.forEach(u => {
-      const id = 'usr-' + u.key;
-      state.users[id] = {
-        id,
-        ...u,
-        joinedAt: Date.now(),
-        updatedAt: Date.now()
-      };
-    });
-    saveUsers();
-    return true;
+    if (!state.users) state.users = {};
+    let migrated = false;
+
+    // Si el objeto está vacío, crear todo desde cero
+    if (Object.keys(state.users).length === 0) {
+      console.log('▸ Migrando usuarios · creando todos los defaults');
+      DEFAULT_USERS.forEach(u => {
+        const id = 'usr-' + u.key;
+        state.users[id] = {
+          id,
+          ...u,
+          joinedAt: Date.now(),
+          updatedAt: Date.now()
+        };
+      });
+      migrated = true;
+    } else {
+      // Migración incremental · agregar defaults que falten (por ejemplo admin en instalaciones viejas)
+      DEFAULT_USERS.forEach(u => {
+        const existing = Object.values(state.users).find(x => x.key === u.key);
+        if (!existing) {
+          console.log(`▸ Migración incremental · agregando ${u.key} (${u.role})`);
+          const id = 'usr-' + u.key;
+          state.users[id] = {
+            id,
+            ...u,
+            joinedAt: Date.now(),
+            updatedAt: Date.now()
+          };
+          migrated = true;
+        }
+      });
+    }
+
+    if (migrated) saveUsers();
+    return migrated;
   }
 
   // Emojis por POSICIÓN en el ranking (dinámicos, no identidad fija)
