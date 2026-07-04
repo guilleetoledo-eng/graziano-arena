@@ -1242,6 +1242,93 @@
     .users-add-btn { width: 100%; }
   }
 
+  /* TABLA MAESTRA · sub-toggle de estados */
+  .mt-header {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .mt-header-left { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .mt-info-btn {
+    background: transparent; border: 1.5px solid var(--ink-4);
+    padding: 5px 10px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; color: var(--ink-3); font-weight: 700;
+    transition: all 0.15s;
+  }
+  .mt-info-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
+
+  .mt-info-panel {
+    background: var(--bg-soft); border: 1.5px solid var(--ink);
+    padding: 16px 20px; margin: 14px 0 18px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .mt-info-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.25em; color: var(--red); font-weight: 700;
+    text-transform: uppercase; margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1px dashed var(--line);
+  }
+  .mt-info-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px;
+  }
+  .mt-info-item {
+    display: grid; grid-template-columns: 32px 1fr; gap: 12px;
+    align-items: start;
+  }
+  .mt-info-icon {
+    font-size: 22px; line-height: 1; padding-top: 2px;
+  }
+  .mt-info-item div {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); line-height: 1.5;
+  }
+  .mt-info-item strong {
+    display: block; margin-bottom: 3px;
+    font-family: 'Archivo Black', sans-serif; font-size: 11.5px;
+    color: var(--ink); letter-spacing: 0.06em;
+  }
+  .mt-info-item em { color: var(--red); font-style: normal; font-weight: 700; }
+
+  .mt-toggle {
+    display: flex; gap: 6px; margin: 14px 0 12px;
+    overflow-x: auto; padding-bottom: 4px;
+  }
+  .mt-toggle::-webkit-scrollbar { height: 4px; }
+  .mt-toggle::-webkit-scrollbar-thumb { background: var(--ink-4); }
+  .mt-btn {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    padding: 8px 12px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.12em; color: var(--ink-3); font-weight: 700;
+    text-transform: uppercase; white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: all 0.15s;
+  }
+  .mt-btn:hover { background: var(--bg-soft); color: var(--ink); }
+  .mt-btn.active {
+    background: var(--ink); color: white;
+  }
+  .mt-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; padding: 2px 7px;
+    background: var(--bg-soft); color: var(--ink-3);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+    border-radius: 2px;
+  }
+  .mt-btn.active .mt-count { background: rgba(255,255,255,0.18); color: white; }
+  .mt-count.is-good { color: #1F8A3A; background: #E8F5E9; }
+  .mt-count.is-alert { color: var(--red); background: #FFEDEC; }
+  .mt-btn.active .mt-count.is-good,
+  .mt-btn.active .mt-count.is-alert {
+    background: rgba(255,255,255,0.22); color: white;
+  }
+
+  @media (max-width: 700px) {
+    .mt-info-grid { grid-template-columns: 1fr; gap: 12px; }
+    .mt-btn { font-size: 9.5px; padding: 6px 9px; }
+    .mt-count { min-width: 18px; padding: 1px 5px; font-size: 9px; }
+  }
+
   /* HISTORIA DEL CLUB · sub-títulos */
   .hc-sub-title {
     display: flex; align-items: baseline; gap: 12px;
@@ -3956,10 +4043,34 @@
 
     <!-- Tabla maestra -->
     <div class="ops-section">
-      <div class="ops-section-header">
-        <h3>▦ TABLA MAESTRA DE VENTAS</h3>
+      <div class="ops-section-header mt-header">
+        <div class="mt-header-left">
+          <h3>▦ TABLA MAESTRA DE VENTAS</h3>
+          <button class="mt-info-btn" onclick="toggleMtInfo()" title="Ver diferencias entre estados">ℹ diferencias</button>
+        </div>
         <button class="btn-secondary btn-sm" onclick="exportOpsCSV()">⤓ EXPORTAR CSV</button>
       </div>
+
+      <!-- Panel info · diferencias entre estados -->
+      <div class="mt-info-panel" id="mtInfoPanel" style="display:none;">
+        <div class="mt-info-title">ESTADOS DE VENTAS · DIFERENCIAS</div>
+        <div class="mt-info-grid">
+          <div class="mt-info-item"><span class="mt-info-icon">⏳</span><div><strong>PENDIENTE</strong>Cargada por el vendedor, esperando aprobación de admin. No suma al ranking ni comisión.</div></div>
+          <div class="mt-info-item"><span class="mt-info-icon">✓</span><div><strong>APROBADA</strong>Admin dio OK. Cuenta para ranking, coronas, comisiones, cobros y liquidaciones.</div></div>
+          <div class="mt-info-item"><span class="mt-info-icon">❌</span><div><strong>CANCELADA</strong>Admin <em>rechazó</em> una pendiente antes de aprobar. Nunca fue venta real.</div></div>
+          <div class="mt-info-item"><span class="mt-info-icon">🗑</span><div><strong>ANULADA</strong>Admin dio <em>de baja</em> una venta ya aprobada (devolución, pago fallido, etc). Era venta real.</div></div>
+        </div>
+      </div>
+
+      <!-- Sub-toggle · pills de estado -->
+      <div class="mt-toggle" id="mtToggle">
+        <button class="mt-btn active" data-mtfilter="all"       onclick="setMasterFilter('all')">▦ TODAS <span class="mt-count" id="mtCountAll">0</span></button>
+        <button class="mt-btn"        data-mtfilter="approved"  onclick="setMasterFilter('approved')">✓ APROBADAS <span class="mt-count is-good" id="mtCountApproved">0</span></button>
+        <button class="mt-btn"        data-mtfilter="pending"   onclick="setMasterFilter('pending')">⏳ PENDIENTES <span class="mt-count is-alert" id="mtCountPending">0</span></button>
+        <button class="mt-btn"        data-mtfilter="cancelled" onclick="setMasterFilter('cancelled')">❌ CANCELADAS <span class="mt-count" id="mtCountCancelled">0</span></button>
+        <button class="mt-btn"        data-mtfilter="voided"    onclick="setMasterFilter('voided')">🗑 ANULADAS <span class="mt-count" id="mtCountVoided">0</span></button>
+      </div>
+
       <div class="ops-filters">
         <select id="opsFilterSeller" onchange="renderOpsTable()">
           <option value="">Todos los vendedores</option>
@@ -3967,7 +4078,8 @@
           <option value="bauti">Bauti</option>
           <option value="estela">Estela</option>
         </select>
-        <select id="opsFilterStatus" onchange="renderOpsTable()">
+        <select id="opsFilterStatus" onchange="renderOpsTable()" style="display:none;">
+          <!-- Oculto · reemplazado por sub-toggle · queda para retrocompat interna -->
           <option value="">Todos los estados</option>
           <option value="approved">Aprobadas</option>
           <option value="pending">Pendientes</option>
@@ -8346,6 +8458,8 @@
     renderOpsByChannel(mk);
     renderOpsByPayment(mk);
     renderOpsTable();
+    updateMasterCounts();
+    initMasterFilter();
     renderUsersSection();
     populateConfigPanel();
     renderCrownBoard();
@@ -10221,6 +10335,67 @@
     document.getElementById('opsTableFooter').textContent =
       `${sales.length} resultados${sales.length > 200 ? ' · mostrando los primeros 200' : ''}`;
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // TABLA MAESTRA · sub-toggle de estados
+  // ═══════════════════════════════════════════════════════════
+  let masterFilterActive = (() => {
+    try { return localStorage.getItem('masterTableFilter') || 'all'; }
+    catch (e) { return 'all'; }
+  })();
+
+  function setMasterFilter(status) {
+    if (!['all', 'approved', 'pending', 'cancelled', 'voided'].includes(status)) return;
+    masterFilterActive = status;
+    try { localStorage.setItem('masterTableFilter', status); } catch (e) {}
+    // Actualizar UI del toggle
+    document.querySelectorAll('.mt-toggle .mt-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mtfilter === status);
+    });
+    // Sincronizar con el dropdown oculto que renderOpsTable ya usa
+    const dd = document.getElementById('opsFilterStatus');
+    if (dd) dd.value = (status === 'all') ? '' : status;
+    renderOpsTable();
+  }
+
+  function toggleMtInfo() {
+    const panel = document.getElementById('mtInfoPanel');
+    if (!panel) return;
+    panel.style.display = (panel.style.display === 'none') ? '' : 'none';
+  }
+
+  // Contadores dinámicos según sales cargadas
+  function updateMasterCounts() {
+    if (!state.sales) return;
+    const counts = { all: 0, approved: 0, pending: 0, cancelled: 0, voided: 0 };
+    state.sales.forEach(s => {
+      counts.all++;
+      if (counts[s.status] !== undefined) counts[s.status]++;
+    });
+    const setCount = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+    setCount('mtCountAll', counts.all);
+    setCount('mtCountApproved', counts.approved);
+    setCount('mtCountPending', counts.pending);
+    setCount('mtCountCancelled', counts.cancelled);
+    setCount('mtCountVoided', counts.voided);
+  }
+
+  // Aplicar filtro inicial desde localStorage (al render inicial de operaciones)
+  function initMasterFilter() {
+    if (masterFilterActive !== 'all') {
+      document.querySelectorAll('.mt-toggle .mt-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.mtfilter === masterFilterActive);
+      });
+      const dd = document.getElementById('opsFilterStatus');
+      if (dd) dd.value = masterFilterActive;
+    }
+  }
+
+  window.setMasterFilter = setMasterFilter;
+  window.toggleMtInfo = toggleMtInfo;
 
   function exportOpsCSV() {
     const fSeller = document.getElementById('opsFilterSeller').value;
