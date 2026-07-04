@@ -865,6 +865,299 @@
     font-size: 14px; letter-spacing: 0.03em;
   }
 
+  /* ═════════════════════════════════════════════════════ */
+  /* LIQUIDACIONES · sección /06                              */
+  /* ═════════════════════════════════════════════════════ */
+  .liq-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .liq-header-left { display: flex; flex-direction: column; gap: 4px; }
+  .liq-header-right {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .liq-toggle {
+    display: inline-flex; border: 1.5px solid var(--ink); background: var(--bg-card);
+  }
+  .lt-btn {
+    background: transparent; border: none;
+    padding: 8px 14px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; color: var(--ink-3);
+    text-transform: uppercase; font-weight: 700;
+    border-right: 1px solid var(--ink);
+    transition: all 0.15s;
+  }
+  .lt-btn:last-child { border-right: none; }
+  .lt-btn:hover { background: var(--bg-soft); color: var(--ink); }
+  .lt-btn.active { background: var(--ink); color: white; }
+  .liq-period-select {
+    padding: 8px 12px; border: 1.5px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    background: var(--bg-card); color: var(--ink); cursor: pointer;
+    font-weight: 700; letter-spacing: 0.06em;
+  }
+
+  /* Grid de cards */
+  .liq-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px; margin-top: 20px;
+  }
+
+  .liq-card {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    padding: 18px 20px 16px;
+    box-shadow: 4px 4px 0 var(--ink);
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative;
+    transition: box-shadow 0.15s;
+  }
+  .liq-card.is-paid {
+    background: linear-gradient(180deg, #E8F5E9 0%, #F1F8F2 100%);
+    border-color: #1F8A3A;
+    box-shadow: 4px 4px 0 #1F8A3A;
+  }
+  .liq-card.is-negative {
+    border-color: var(--red);
+    box-shadow: 4px 4px 0 var(--red);
+  }
+
+  .liq-card-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 8px; margin-bottom: 4px; flex-wrap: wrap;
+  }
+  .liq-seller-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 22px;
+    color: var(--ink); letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .liq-scheme-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 8.5px;
+    padding: 3px 7px; letter-spacing: 0.15em;
+    background: var(--ink); color: white; font-weight: 700;
+  }
+  .liq-scheme-badge.is-old { background: #7A3F00; color: #FFE8CC; }
+
+  .liq-period-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink-3); letter-spacing: 0.12em;
+    text-transform: uppercase; padding-bottom: 8px;
+    border-bottom: 1px dashed var(--line-soft);
+  }
+
+  .liq-summary {
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    padding: 8px 0; border-bottom: 1px dashed var(--line-soft);
+  }
+  .liq-summary .lbl { color: var(--ink-3); }
+  .liq-summary .val { color: var(--ink); font-weight: 700; text-align: right; }
+
+  .liq-breakdown {
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    padding: 8px 0; border-bottom: 1px dashed var(--line-soft);
+  }
+  .liq-breakdown .lbl { color: var(--ink-3); }
+  .liq-breakdown .val { color: var(--ink); font-weight: 500; text-align: right; }
+  .liq-breakdown .row-zero .lbl,
+  .liq-breakdown .row-zero .val { color: var(--ink-4); }
+  .liq-breakdown .row-crown .lbl { color: #B45309; font-weight: 700; }
+  .liq-breakdown .row-crown .val { color: #B45309; font-weight: 700; }
+
+  .liq-line-bruto {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 0; border-bottom: 1px dashed var(--line-soft);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .liq-line-bruto .lbl {
+    font-size: 11px; color: var(--ink); letter-spacing: 0.1em;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .liq-line-bruto .val {
+    font-family: 'Archivo Black', sans-serif; font-size: 18px;
+    color: var(--ink); letter-spacing: 0.01em;
+  }
+
+  .liq-descuentos {
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    padding: 8px 0; border-bottom: 1px dashed var(--line-soft);
+  }
+  .liq-descuentos .lbl { color: var(--ink-3); }
+  .liq-descuentos .lbl.has-btn { display: flex; align-items: center; gap: 6px; }
+  .liq-descuentos .val { color: var(--red); font-weight: 700; text-align: right; }
+  .liq-add-advance {
+    background: var(--ink); color: white; border: none;
+    width: 18px; height: 18px; line-height: 1; padding: 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .liq-add-advance:hover { background: var(--red); }
+
+  .liq-neto {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 12px 0 6px;
+  }
+  .liq-neto .lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink); letter-spacing: 0.18em; font-weight: 700;
+    text-transform: uppercase;
+  }
+  .liq-neto .val {
+    font-family: 'Anton', sans-serif; font-size: 28px;
+    color: var(--ink); letter-spacing: -0.01em;
+  }
+  .liq-neto .val.is-positive { color: #16a34a; }
+  .liq-neto .val.is-negative { color: var(--red); }
+  .liq-neto .val.size-md { font-size: 24px; }
+  .liq-neto .val.size-sm { font-size: 20px; }
+
+  .liq-status-line {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; margin: 2px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); letter-spacing: 0.06em;
+  }
+  .liq-status-badge {
+    padding: 3px 8px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; border: 1.5px solid currentColor;
+  }
+  .liq-status-badge.pending { color: #B45309; }
+  .liq-status-badge.paid { color: #1F8A3A; }
+
+  .liq-card-actions {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+  }
+  .liq-btn {
+    flex: 1; min-width: 0;
+    padding: 9px 8px; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; font-weight: 700;
+    text-transform: uppercase; cursor: pointer;
+    border: 1.5px solid var(--ink); background: var(--bg-card); color: var(--ink);
+    transition: all 0.15s;
+  }
+  .liq-btn:hover { background: var(--ink); color: white; }
+  .liq-btn.is-primary { background: var(--ink); color: white; }
+  .liq-btn.is-primary:hover { background: #333; }
+  .liq-btn.is-liq { background: #1F8A3A; color: white; border-color: #1F8A3A; }
+  .liq-btn.is-liq:hover { background: #167029; }
+  .liq-btn.is-liq.unmark { background: var(--bg-card); color: #1F8A3A; }
+
+  /* Panel de detalle */
+  .liq-detail-panel {
+    margin-top: 24px; padding: 22px 24px;
+    background: var(--bg-soft); border: 1.5px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .liq-detail-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 12px; border-bottom: 2px solid var(--ink); margin-bottom: 16px;
+  }
+  .liq-detail-title {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    color: var(--ink); letter-spacing: 0.03em;
+  }
+  .liq-detail-close {
+    background: transparent; border: 1.5px solid var(--ink);
+    padding: 4px 10px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; font-weight: 700;
+  }
+  .liq-detail-close:hover { background: var(--ink); color: white; }
+  .liq-detail-block {
+    margin-bottom: 18px; padding-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .liq-detail-block:last-child { border-bottom: none; margin-bottom: 0; }
+  .liq-detail-block-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--red); text-transform: uppercase;
+    font-weight: 700; margin-bottom: 10px;
+  }
+  .liq-tramos-list {
+    display: grid; gap: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .liq-tramo-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 12px;
+    padding: 4px 0;
+  }
+  .liq-tramo-row .lbl { color: var(--ink-3); }
+  .liq-tramo-row .val { color: var(--ink); font-weight: 700; text-align: right; }
+  .liq-tramo-row.total {
+    border-top: 1px solid var(--ink); margin-top: 4px; padding-top: 6px; font-weight: 700;
+  }
+  .liq-tramo-row.total .lbl { color: var(--ink); font-weight: 700; }
+  .liq-sales-list {
+    max-height: 260px; overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+  }
+  .liq-sales-list::-webkit-scrollbar { width: 4px; }
+  .liq-sales-list::-webkit-scrollbar-thumb { background: var(--ink-4); }
+  .liq-sale-row {
+    display: grid; grid-template-columns: 70px 1fr auto; gap: 10px;
+    padding: 6px 0; border-bottom: 1px dashed var(--line-soft);
+  }
+  .liq-sale-row .lsr-date { color: var(--ink-3); }
+  .liq-sale-row .lsr-client { color: var(--ink); }
+  .liq-sale-row .lsr-amount { color: var(--ink); font-weight: 700; text-align: right; }
+  .liq-sale-row.is-rejected .lsr-amount { color: var(--red); }
+  .liq-advances-list { display: grid; gap: 4px; }
+  .liq-advance-row {
+    display: grid; grid-template-columns: 70px 1fr auto auto auto; gap: 8px;
+    padding: 6px 0; border-bottom: 1px dashed var(--line-soft);
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    align-items: center;
+  }
+  .liq-advance-row .lar-date { color: var(--ink-3); }
+  .liq-advance-row .lar-note { color: var(--ink); font-size: 10.5px; }
+  .liq-advance-row .lar-amount { color: var(--red); font-weight: 700; text-align: right; }
+  .liq-advance-mini-btn {
+    background: transparent; border: 1px solid var(--ink-4); padding: 2px 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; cursor: pointer;
+  }
+  .liq-advance-mini-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
+  .liq-advance-mini-btn.danger:hover { background: var(--red); border-color: var(--red); }
+  .liq-crown-events-list { display: grid; gap: 8px; }
+  .liq-crown-event {
+    padding: 10px 12px; background: linear-gradient(90deg, #FFF7E0 0%, #FFEEC5 100%);
+    border-left: 3px solid #B45309; display: grid; gap: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+  }
+  .liq-crown-event .lce-title { font-weight: 700; color: #7A3F00; }
+  .liq-crown-event .lce-detail { color: var(--ink-3); font-size: 10.5px; }
+  .liq-crown-event .lce-amount { color: #B45309; font-weight: 700; text-align: right; }
+
+  /* Modal Adelanto */
+  .advance-modal {
+    max-width: 460px !important;
+  }
+  .advance-modal-banner {
+    background: var(--ink); color: white; padding: 8px 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase;
+    margin: -20px -20px 12px;
+  }
+  .advance-modal-actions {
+    display: flex; gap: 10px; margin-top: 20px;
+  }
+  .advance-modal-actions button { flex: 1; }
+
+  /* Mobile responsive liquidaciones */
+  @media (max-width: 700px) {
+    .liq-grid { grid-template-columns: 1fr; }
+    .liq-header { flex-direction: column; align-items: stretch; }
+    .liq-header-right { justify-content: space-between; }
+    .liq-toggle { flex: 1; }
+    .lt-btn { flex: 1; }
+    .liq-period-select { flex: 1; }
+    .liq-detail-panel { padding: 16px; }
+    .liq-detail-header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  }
+
   /* HOF */
   .hof {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
@@ -3787,11 +4080,69 @@
       </div>
     </div>
 
+    <!-- 06 LIQUIDACIONES -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header liq-header">
+        <div class="liq-header-left">
+          <h3>💵 LIQUIDACIONES</h3>
+          <span class="ops-section-sub">solo se contabilizan ventas aprobadas</span>
+        </div>
+        <div class="liq-header-right">
+          <div class="liq-toggle">
+            <button class="lt-btn active" data-liqfreq="biweekly" onclick="setLiqFreq('biweekly')">QUINCENAL</button>
+            <button class="lt-btn"        data-liqfreq="monthly"  onclick="setLiqFreq('monthly')">MENSUAL</button>
+          </div>
+          <select id="liqPeriodSelect" class="liq-period-select" onchange="onLiqPeriodChange(this.value)">
+            <!-- opciones dinámicas -->
+          </select>
+        </div>
+      </div>
+
+      <div class="liq-grid" id="liqGrid">
+        <!-- 4 cards dinámicas -->
+      </div>
+
+      <!-- Panel de detalle expandible -->
+      <div class="liq-detail-panel" id="liqDetailPanel" style="display:none;">
+        <!-- contenido dinámico -->
+      </div>
+    </div>
+
     <div class="footer">
       <span><strong>◢ GRAZIANO MATERIALES</strong> · ANÁLISIS DE EQUIPO</span>
       <span id="vendLastUpdate">— SIN ACTUALIZAR —</span>
     </div>
   </div><!-- /vendedoresView -->
+
+  <!-- Modal Agregar/Editar Adelanto -->
+  <div class="modal-overlay" id="advanceModalOverlay" onclick="closeAdvanceModal()">
+    <div class="modal advance-modal" onclick="event.stopPropagation()">
+      <div class="advance-modal-banner">
+        <span id="advanceModalMode">▸ AGREGAR ADELANTO</span>
+      </div>
+      <button class="modal-close" onclick="closeAdvanceModal()">✕</button>
+      <h2 id="advanceModalTitle">ADELANTO</h2>
+      <div class="modal-sub" id="advanceModalSub">— vendedor —</div>
+
+      <div class="form-row">
+        <label>Fecha</label>
+        <input type="date" id="advanceDate">
+      </div>
+      <div class="form-row">
+        <label>Monto</label>
+        <input type="number" id="advanceAmount" placeholder="$" min="0" step="1000">
+      </div>
+      <div class="form-row">
+        <label>Nota (opcional)</label>
+        <input type="text" id="advanceNote" placeholder="ej: efectivo, sábado 22...">
+      </div>
+
+      <div class="advance-modal-actions">
+        <button class="btn-secondary" onclick="closeAdvanceModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveAdvance()" id="btnSaveAdvance">✓ GUARDAR</button>
+      </div>
+    </div>
+  </div>
 </div><!-- /mainContainer -->
 
 <div class="fab-group fab-hidden" id="fabGroup">
@@ -4191,7 +4542,9 @@
     },
     newSchemeStartLauti: '2026-07',
     competitiveSellers: ['lauti', 'bauti', 'leo', 'kevin'],
-    estelaTarget: 4000000
+    estelaTarget: 4000000,
+    // Bonus corona · $ por evento sostenido al cierre del mes
+    crownBonus: 5000
   };
 
   // CONFIG mutable (se sobreescribe con los valores guardados en Firebase)
@@ -4308,6 +4661,21 @@
       }
       if (currentUser) renderAll();
     }, (err) => { console.warn('Firebase achievements read error', err); });
+
+    // Listener liquidaciones (advances + liquidations + crownEvents)
+    db.ref('liquidationsData').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        state.advances = data.advances || {};
+        state.liquidations = data.liquidations || {};
+        state.crownEvents = data.crownEvents || {};
+      } else {
+        state.advances = {};
+        state.liquidations = {};
+        state.crownEvents = {};
+      }
+      if (currentUser === 'admin' && currentView === 'vendedores') renderVendedores();
+    }, (err) => { console.warn('Firebase liquidations read error', err); });
   }
 
   // ===== HELPERS =====
@@ -5104,6 +5472,263 @@
     if (scheme === 'new')  return calcCommissionNew(facturado);
     return calcCommissionOld(facturado);
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // LIQUIDACIONES · funciones core
+  // ═══════════════════════════════════════════════════════════
+
+  // periodKey de liquidación: '2026-07-Q1' | '2026-07-Q2' | '2026-07-FULL'
+  function makeLiqPeriodKey(monthKey, kind) {
+    return `${monthKey}-${kind}`; // kind: 'Q1' | 'Q2' | 'FULL'
+  }
+  function parseLiqPeriodKey(periodKey) {
+    const parts = periodKey.split('-');
+    const monthKey = `${parts[0]}-${parts[1]}`;
+    const kind = parts[2];
+    return { monthKey, kind };
+  }
+  // Devuelve {start, end} en fechas YYYY-MM-DD según periodKey
+  function periodDateRange(periodKey) {
+    const { monthKey, kind } = parseLiqPeriodKey(periodKey);
+    const [y, m] = monthKey.split('-').map(Number);
+    const lastDay = new Date(y, m, 0).getDate();
+    const pad = n => String(n).padStart(2,'0');
+    if (kind === 'Q1') return { start: `${monthKey}-01`, end: `${monthKey}-15` };
+    if (kind === 'Q2') return { start: `${monthKey}-16`, end: `${monthKey}-${pad(lastDay)}` };
+    return { start: `${monthKey}-01`, end: `${monthKey}-${pad(lastDay)}` };
+  }
+  function periodDisplayLabel(periodKey) {
+    const { monthKey, kind } = parseLiqPeriodKey(periodKey);
+    const [y, m] = monthKey.split('-').map(Number);
+    const monthName = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'][m-1];
+    const range = periodDateRange(periodKey);
+    const startDay = parseInt(range.start.slice(-2));
+    const endDay = parseInt(range.end.slice(-2));
+    if (kind === 'FULL') return `${monthName} ${y} · ${startDay}-${endDay}`;
+    return `${kind} · ${startDay}-${endDay} ${monthName} ${y}`;
+  }
+
+  // Ventas APPROVED del vendedor en el período de liquidación
+  function approvedSalesInPeriod(seller, periodKey) {
+    const range = periodDateRange(periodKey);
+    return state.sales.filter(s =>
+      s.seller === seller &&
+      s.status === 'approved' &&
+      s.date >= range.start &&
+      s.date <= range.end
+    );
+  }
+  // Ventas RECHAZADAS/ANULADAS del vendedor en el período
+  function rejectedSalesInPeriod(seller, periodKey) {
+    const range = periodDateRange(periodKey);
+    return state.sales.filter(s =>
+      s.seller === seller &&
+      (s.status === 'cancelled' || s.status === 'voided') &&
+      s.date >= range.start &&
+      s.date <= range.end
+    );
+  }
+
+  // Desglose comisión detallado por tramo
+  function getCommissionBreakdown(facturado, scheme) {
+    if (scheme === 'new') {
+      const N = CONFIG.newScheme;
+      const tramos = [];
+      for (const t of N.tiers) {
+        if (facturado <= t.from) break;
+        const piece = Math.min(facturado, t.to) - t.from;
+        if (piece > 0) {
+          tramos.push({
+            rate: t.rate,
+            amount: piece,
+            commission: Math.round(piece * t.rate),
+            label: `${(t.rate*100).toFixed(0)}% de ${fmtMoney(piece)}`
+          });
+        }
+      }
+      return { tramos, total: tramos.reduce((a,t) => a + t.commission, 0) };
+    }
+    // OLD: 3% fijo
+    const base = Math.round(facturado * CONFIG.baseCommission);
+    return {
+      tramos: [{ rate: CONFIG.baseCommission, amount: facturado, commission: base, label: `3% de ${fmtMoney(facturado)}` }],
+      total: base
+    };
+  }
+
+  // Desglose ARENA por tramos (los 3 niveles)
+  function getArenaBreakdown(facturado) {
+    const N = CONFIG.newScheme;
+    const tramos = [];
+    for (const t of N.arena) {
+      if (facturado <= t.from) break;
+      const piece = Math.min(facturado, t.to) - t.from;
+      if (piece > 0) {
+        tramos.push({
+          rate: t.rate,
+          amount: piece,
+          commission: Math.round(piece * t.rate),
+          label: `+${(t.rate*100).toFixed(1)}% de ${fmtMoney(piece)} (${fmtMoney(t.from)}→${t.to === Infinity ? '+' : fmtMoney(t.to)})`
+        });
+      }
+    }
+    return { tramos, total: tramos.reduce((a,t) => a + t.commission, 0) };
+  }
+
+  // Cobros semanales YA MARCADOS en el período (suma amounts)
+  function getWeeklyPaymentsInPeriod(seller, periodKey) {
+    const { monthKey, kind } = parseLiqPeriodKey(periodKey);
+    const payments = state.weeklyPayments?.[monthKey]?.[seller] || {};
+    // Q1 = semanas 1-2, Q2 = semanas 3-4, FULL = 1-4
+    let weeks = [1,2,3,4];
+    if (kind === 'Q1') weeks = [1,2];
+    if (kind === 'Q2') weeks = [3,4];
+    let total = 0;
+    const detail = [];
+    weeks.forEach(w => {
+      const p = payments[w];
+      if (p?.paid) {
+        total += p.amount || 0;
+        detail.push({ week: w, amount: p.amount || 0, paidAt: p.paidAt });
+      }
+    });
+    return { total, detail };
+  }
+
+  // Adelantos manuales del vendedor en el período
+  function getManualAdvancesInPeriod(seller, periodKey) {
+    const range = periodDateRange(periodKey);
+    const advances = state.advances?.[seller] || {};
+    const list = [];
+    let total = 0;
+    Object.entries(advances).forEach(([id, adv]) => {
+      if (adv.date >= range.start && adv.date <= range.end) {
+        list.push({ id, ...adv });
+        total += adv.amount || 0;
+      }
+    });
+    list.sort((a,b) => a.date.localeCompare(b.date));
+    return { total, list };
+  }
+
+  // Bonus coronas · solo eventos SOSTENIDOS del período con ventas APPROVED
+  function getCrownBonusForPeriod(seller, periodKey) {
+    const { monthKey, kind } = parseLiqPeriodKey(periodKey);
+    // Solo se paga en liquidación FULL (mensual)
+    if (kind !== 'FULL') return { total: 0, events: [] };
+
+    const events = state.crownEvents || {};
+    const list = [];
+    let total = 0;
+
+    Object.entries(events).forEach(([evtId, evt]) => {
+      if (evt.seller !== seller) return;
+      if (evt.monthKey !== monthKey) return;
+      if (!evt.sustained) return; // solo sostenidos al cierre
+
+      const crown = CROWN_BY_ID[evt.crownId];
+      list.push({
+        id: evtId,
+        crownEmoji: crown?.emoji || '👑',
+        crownTitle: crown?.title || evt.crownId,
+        type: evt.type,
+        previousHolder: evt.previousHolder,
+        previousValue: evt.previousValue,
+        newValue: evt.newValue,
+        timestamp: evt.timestamp,
+        amount: CONFIG.crownBonus || 5000
+      });
+      total += CONFIG.crownBonus || 5000;
+    });
+
+    return { total, events: list };
+  }
+
+  // FUNCIÓN MAESTRA · calcula liquidación completa de un vendedor en un período
+  function calcLiquidation(seller, periodKey) {
+    const { monthKey, kind } = parseLiqPeriodKey(periodKey);
+    const scheme = getCommissionScheme(seller, monthKey);
+    const sales = approvedSalesInPeriod(seller, periodKey);
+    const rejected = rejectedSalesInPeriod(seller, periodKey);
+    const facturado = sales.reduce((a, s) => a + s.amount, 0);
+    const ticketProm = sales.length > 0 ? Math.round(facturado / sales.length) : 0;
+
+    // COMISIÓN + BASE
+    const commBreakdown = getCommissionBreakdown(facturado, scheme);
+    const baseSalary = (scheme === 'old') ? (CONFIG.baseSalary || 300000) : 0;
+
+    // ARENA · aplica en ambos esquemas cuando >$13.5M
+    const arenaBreakdown = getArenaBreakdown(facturado);
+
+    // VIÁTICO
+    const N = CONFIG.newScheme;
+    const viaticoThreshold = N?.viaticoThreshold || 7000000;
+    const viaticoMonto = N?.viatico || 100000;
+    const viatico = facturado > viaticoThreshold ? viaticoMonto : 0;
+
+    // BONUS #1 · solo si es #1 del mes (aplica solo en liquidación FULL)
+    let bonusFirst = 0;
+    if (kind === 'FULL') {
+      const rank = getMonthRanking(monthKey);
+      if (rank.length > 0 && rank[0].seller === seller && rank[0].total >= CONFIG.target) {
+        bonusFirst = CONFIG.bonusOnTarget || 30000;
+      }
+    }
+
+    // BONUS CORONAS
+    const crownBonus = getCrownBonusForPeriod(seller, periodKey);
+
+    // BRUTO
+    const bruto = baseSalary + commBreakdown.total + arenaBreakdown.total + viatico + bonusFirst + crownBonus.total;
+
+    // DESCUENTOS · separados
+    const weeklyPaid = getWeeklyPaymentsInPeriod(seller, periodKey);
+    const advances = getManualAdvancesInPeriod(seller, periodKey);
+
+    // NETO
+    const neto = bruto - weeklyPaid.total - advances.total;
+
+    // Estado liquidación
+    const liqRecord = state.liquidations?.[periodKey]?.[seller];
+    const isLiquidated = !!liqRecord?.paid;
+
+    return {
+      seller, periodKey, monthKey, kind, scheme,
+      facturado,
+      salesCount: sales.length,
+      sales,
+      rejected,
+      ticketProm,
+      baseSalary,
+      commission: commBreakdown,
+      arena: arenaBreakdown,
+      viatico,
+      viaticoThreshold,
+      bonusFirst,
+      crownBonus,
+      bruto,
+      weeklyPaid,
+      advances,
+      neto,
+      isLiquidated,
+      liqRecord
+    };
+  }
+
+  // Ranking del mes para bonus #1
+  function getMonthRanking(monthKey) {
+    const sellers = CONFIG.competitiveSellers;
+    return sellers.map(seller => {
+      const total = state.sales
+        .filter(s => s.seller === seller && s.status === 'approved' && monthKeyOf(s.date) === monthKey)
+        .reduce((a, s) => a + s.amount, 0);
+      return { seller, total };
+    }).sort((a,b) => b.total - a.total);
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // FIN funciones core LIQUIDACIONES
+  // ═══════════════════════════════════════════════════════════
 
   // ===== RENDER =====
   // Auto-escala fuente según largo del número
@@ -7409,6 +8034,7 @@
     renderProjection();
     renderTendency();
     renderMargin();
+    renderLiquidations();
   }
 
   // ===== 01 RESUMEN DIARIO =====
@@ -7845,6 +8471,540 @@
       </table>
     `;
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // ===== 06 LIQUIDACIONES · UI RENDER + CRUD =====
+  // ═══════════════════════════════════════════════════════════
+  let liqFreq = 'biweekly'; // 'biweekly' | 'monthly'
+  let liqActivePeriodKey = null;
+  let liqExpandedSeller = null;
+  let advanceEditContext = { seller: null, advanceId: null };
+
+  function setLiqFreq(freq) {
+    if (!['biweekly', 'monthly'].includes(freq)) return;
+    liqFreq = freq;
+    liqActivePeriodKey = null; // se regenera al renderizar
+    document.querySelectorAll('.liq-toggle .lt-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.liqfreq === freq);
+    });
+    renderLiquidations();
+  }
+
+  function onLiqPeriodChange(periodKey) {
+    liqActivePeriodKey = periodKey;
+    liqExpandedSeller = null;
+    document.getElementById('liqDetailPanel').style.display = 'none';
+    renderLiquidations(true); // skipPeriodPopulate
+  }
+
+  // Genera lista de períodos disponibles según liqFreq
+  function generateLiqPeriods() {
+    const periods = [];
+    const today = new Date();
+    // Mostrar mes actual + 5 meses previos
+    for (let i = 0; i < 6; i++) {
+      const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
+      const monthKey = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+      if (liqFreq === 'biweekly') {
+        periods.push(makeLiqPeriodKey(monthKey, 'Q2'));
+        periods.push(makeLiqPeriodKey(monthKey, 'Q1'));
+      } else {
+        periods.push(makeLiqPeriodKey(monthKey, 'FULL'));
+      }
+    }
+    return periods;
+  }
+
+  function populateLiqPeriodSelect() {
+    const sel = document.getElementById('liqPeriodSelect');
+    if (!sel) return;
+    const periods = generateLiqPeriods();
+    // Si no hay período activo, tomar el primero (más reciente)
+    if (!liqActivePeriodKey || !periods.includes(liqActivePeriodKey)) {
+      liqActivePeriodKey = periods[0];
+    }
+    sel.innerHTML = periods.map(pk => {
+      const selected = pk === liqActivePeriodKey ? 'selected' : '';
+      return `<option value="${pk}" ${selected}>${periodDisplayLabel(pk)}</option>`;
+    }).join('');
+  }
+
+  function renderLiquidations(skipPeriodPopulate) {
+    if (!skipPeriodPopulate) populateLiqPeriodSelect();
+    const grid = document.getElementById('liqGrid');
+    if (!grid) return;
+    const periodKey = liqActivePeriodKey;
+    if (!periodKey) return;
+
+    const sellers = CONFIG.competitiveSellers;
+    grid.innerHTML = sellers.map(seller => renderLiqCard(seller, periodKey)).join('');
+
+    // Reabrir panel de detalle si estaba abierto
+    if (liqExpandedSeller && sellers.includes(liqExpandedSeller)) {
+      showLiqDetail(liqExpandedSeller);
+    }
+  }
+
+  function renderLiqCard(seller, periodKey) {
+    const meta = SELLER_META[seller];
+    const liq = calcLiquidation(seller, periodKey);
+    const isNeg = liq.neto < 0;
+    const isPaid = liq.isLiquidated;
+    const schemeBadge = liq.scheme === 'old' ? 'ESQUEMA VIEJO' : 'ESQUEMA NUEVO';
+    const schemeCls = liq.scheme === 'old' ? 'is-old' : '';
+    const cardCls = isPaid ? 'is-paid' : (isNeg ? 'is-negative' : '');
+
+    // Base salary (solo en esquema viejo)
+    const baseRow = liq.scheme === 'old'
+      ? `<div class="lbl">Base fija</div><div class="val">${fmtMoney(liq.baseSalary)}</div>`
+      : '';
+
+    // Comisión escalón label
+    const commLabel = liq.scheme === 'new' ? 'Comisión escalón' : 'Comisión 3%';
+
+    // Arena · si hay tramos, mostrar consolidado
+    const arenaZeroCls = liq.arena.total === 0 ? 'row-zero' : '';
+    const viaticoZeroCls = liq.viatico === 0 ? 'row-zero' : '';
+    const bonusFirstZeroCls = liq.bonusFirst === 0 ? 'row-zero' : '';
+
+    // Crown bonus (solo si hay eventos, y solo mensual)
+    const crownRow = (liq.crownBonus.total > 0)
+      ? `<div class="lbl row-crown">💎 Bonus coronas <span style="opacity:.7">(${liq.crownBonus.events.length})</span></div><div class="val row-crown">${fmtMoney(liq.crownBonus.total)}</div>`
+      : '';
+
+    // Neto class
+    let netoCls = isNeg ? 'is-negative' : 'is-positive';
+    const netoDigits = Math.abs(Math.round(liq.neto)).toString().length;
+    if (netoDigits >= 9) netoCls += ' size-sm';
+    else if (netoDigits >= 8) netoCls += ' size-md';
+
+    // Status
+    const statusBadge = isPaid
+      ? `<span class="liq-status-badge paid">✓ LIQUIDADO</span>`
+      : `<span class="liq-status-badge pending">⏳ PENDIENTE</span>`;
+    const paidInfo = isPaid && liq.liqRecord?.paidAt
+      ? `<span>${new Date(liq.liqRecord.paidAt).toLocaleDateString('es-AR')}</span>`
+      : '';
+
+    // Button liquidar
+    const liqBtnLabel = isPaid ? '✕ DESMARCAR' : '✓ LIQUIDADO';
+    const liqBtnCls = isPaid ? 'liq-btn is-liq unmark' : 'liq-btn is-liq';
+
+    return `
+      <div class="liq-card ${cardCls}">
+        <div class="liq-card-header">
+          <div class="liq-seller-name">${meta.emoji} ${meta.name}</div>
+          <div class="liq-scheme-badge ${schemeCls}">${schemeBadge}</div>
+        </div>
+        <div class="liq-period-label">${periodDisplayLabel(periodKey)}</div>
+
+        <div class="liq-summary">
+          <div class="lbl">Facturado</div><div class="val">${fmtMoney(liq.facturado)}</div>
+          <div class="lbl">Ventas</div><div class="val">${liq.salesCount}</div>
+          <div class="lbl">Ticket prom.</div><div class="val">${fmtMoney(liq.ticketProm)}</div>
+        </div>
+
+        <div class="liq-breakdown">
+          ${baseRow}
+          <div class="lbl">${commLabel}</div><div class="val">${fmtMoney(liq.commission.total)}</div>
+          <div class="lbl ${arenaZeroCls}">Bonus arena</div><div class="val ${arenaZeroCls}">${fmtMoney(liq.arena.total)}</div>
+          <div class="lbl ${viaticoZeroCls}">Viático</div><div class="val ${viaticoZeroCls}">${fmtMoney(liq.viatico)}</div>
+          <div class="lbl ${bonusFirstZeroCls}">Bonus #1</div><div class="val ${bonusFirstZeroCls}">${fmtMoney(liq.bonusFirst)}</div>
+          ${crownRow}
+        </div>
+
+        <div class="liq-line-bruto">
+          <div class="lbl">Bruto</div>
+          <div class="val">${fmtMoney(liq.bruto)}</div>
+        </div>
+
+        <div class="liq-descuentos">
+          <div class="lbl">(−) Cobros sem.</div>
+          <div class="val">${fmtMoney(liq.weeklyPaid.total)}</div>
+          <div class="lbl has-btn">
+            (−) Adelantos
+            <button class="liq-add-advance" onclick="openAdvanceModal('${seller}')" title="Agregar adelanto">+</button>
+          </div>
+          <div class="val">${fmtMoney(liq.advances.total)}</div>
+        </div>
+
+        <div class="liq-neto">
+          <div class="lbl">💰 Neto</div>
+          <div class="val ${netoCls}">${fmtMoney(liq.neto)}</div>
+        </div>
+
+        <div class="liq-status-line">
+          ${statusBadge} ${paidInfo}
+        </div>
+
+        <div class="liq-card-actions">
+          <button class="liq-btn" onclick="toggleLiqDetail('${seller}')">👁 DETALLE</button>
+          <button class="liq-btn is-primary" onclick="copyLiqWhatsApp('${seller}')">📋 WPP</button>
+          <button class="${liqBtnCls}" onclick="toggleLiqPaid('${seller}')">${liqBtnLabel}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== DETALLE EXPANDIBLE =====
+  function toggleLiqDetail(seller) {
+    if (liqExpandedSeller === seller) {
+      liqExpandedSeller = null;
+      document.getElementById('liqDetailPanel').style.display = 'none';
+      return;
+    }
+    liqExpandedSeller = seller;
+    showLiqDetail(seller);
+  }
+
+  function showLiqDetail(seller) {
+    const panel = document.getElementById('liqDetailPanel');
+    if (!panel) return;
+    const periodKey = liqActivePeriodKey;
+    const liq = calcLiquidation(seller, periodKey);
+    const meta = SELLER_META[seller];
+
+    // Bloques
+    let blocks = '';
+
+    // 1. Desglose comisión
+    let commRows = liq.commission.tramos.map(t =>
+      `<div class="liq-tramo-row"><div class="lbl">${t.label}</div><div class="val">${fmtMoney(t.commission)}</div></div>`
+    ).join('');
+    if (liq.commission.tramos.length > 1) {
+      commRows += `<div class="liq-tramo-row total"><div class="lbl">Subtotal comisión</div><div class="val">${fmtMoney(liq.commission.total)}</div></div>`;
+    }
+    blocks += `
+      <div class="liq-detail-block">
+        <div class="liq-detail-block-title">📋 Desglose comisión (${liq.scheme === 'old' ? 'esquema viejo · 3%' : 'esquema nuevo · escalonado'})</div>
+        <div class="liq-tramos-list">${commRows}</div>
+      </div>
+    `;
+
+    // 2. Bonus arena (si aplica)
+    if (liq.arena.tramos.length > 0) {
+      const arenaRows = liq.arena.tramos.map(t =>
+        `<div class="liq-tramo-row"><div class="lbl">${t.label}</div><div class="val">${fmtMoney(t.commission)}</div></div>`
+      ).join('');
+      blocks += `
+        <div class="liq-detail-block">
+          <div class="liq-detail-block-title">🏟 Bonus arena · desglose por tramo</div>
+          <div class="liq-tramos-list">
+            ${arenaRows}
+            <div class="liq-tramo-row total"><div class="lbl">Total arena</div><div class="val">${fmtMoney(liq.arena.total)}</div></div>
+          </div>
+        </div>
+      `;
+    } else {
+      blocks += `
+        <div class="liq-detail-block">
+          <div class="liq-detail-block-title">🏟 Bonus arena</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-3);">No alcanza umbral ($13.500.000)</div>
+        </div>
+      `;
+    }
+
+    // 3. Viático / Bonus #1
+    const viaticoStatus = liq.viatico > 0
+      ? `<div class="lbl">✓ Superó $${(liq.viaticoThreshold/1e6).toFixed(1)}M</div><div class="val">${fmtMoney(liq.viatico)}</div>`
+      : `<div class="lbl">✗ No alcanza umbral ($${(liq.viaticoThreshold/1e6).toFixed(1)}M)</div><div class="val">$0</div>`;
+    const bonus1Status = liq.bonusFirst > 0
+      ? `<div class="lbl">✓ #1 del mes con meta cumplida</div><div class="val">${fmtMoney(liq.bonusFirst)}</div>`
+      : `<div class="lbl">✗ No es #1 o no llegó a meta</div><div class="val">$0</div>`;
+    blocks += `
+      <div class="liq-detail-block">
+        <div class="liq-detail-block-title">🚗 Viático + 🏆 Bonus #1</div>
+        <div class="liq-tramos-list">${viaticoStatus}${bonus1Status}</div>
+      </div>
+    `;
+
+    // 4. Bonus coronas
+    if (liq.crownBonus.total > 0) {
+      const crownRows = liq.crownBonus.events.map(evt => {
+        const typeText = evt.type === 'robo'
+          ? `Robaste a ${SELLER_META[evt.previousHolder]?.name || evt.previousHolder} · valor: ${typeof evt.newValue === 'number' && evt.newValue > 100000 ? fmtMoney(evt.newValue) : evt.newValue}`
+          : `Mejoraste tu récord · ${typeof evt.newValue === 'number' && evt.newValue > 100000 ? fmtMoney(evt.newValue) : evt.newValue}`;
+        return `
+          <div class="liq-crown-event">
+            <div class="lce-title">${evt.crownEmoji} ${evt.crownTitle} · ${evt.type === 'robo' ? '🏆 ROBO' : '💎 MEJORA'}</div>
+            <div class="lce-detail">${typeText} · sostenido ✓</div>
+            <div class="lce-amount">+${fmtMoney(evt.amount)}</div>
+          </div>
+        `;
+      }).join('');
+      blocks += `
+        <div class="liq-detail-block">
+          <div class="liq-detail-block-title">💎 Bonus coronas · ${liq.crownBonus.events.length} evento${liq.crownBonus.events.length === 1 ? '' : 's'}</div>
+          <div class="liq-crown-events-list">${crownRows}</div>
+        </div>
+      `;
+    } else if (liq.kind === 'FULL') {
+      blocks += `
+        <div class="liq-detail-block">
+          <div class="liq-detail-block-title">💎 Bonus coronas</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--ink-3);">Sin coronas robadas o mejoradas este mes</div>
+        </div>
+      `;
+    }
+
+    // 5. Ventas del período
+    let salesRows = liq.sales.slice().sort((a,b) => a.date.localeCompare(b.date)).map(s => {
+      const dateShort = s.date.slice(5).split('-').reverse().join('/');
+      return `<div class="liq-sale-row"><div class="lsr-date">${dateShort}</div><div class="lsr-client">${s.client || '—'}</div><div class="lsr-amount">${fmtMoney(s.amount)}</div></div>`;
+    }).join('');
+    if (!salesRows) salesRows = '<div style="padding:10px;color:var(--ink-3);font-family:monospace;font-size:11px;">Sin ventas aprobadas en el período</div>';
+    blocks += `
+      <div class="liq-detail-block">
+        <div class="liq-detail-block-title">📉 Ventas del período · ${liq.salesCount}</div>
+        <div class="liq-sales-list">${salesRows}</div>
+      </div>
+    `;
+
+    // 6. Ventas rechazadas/anuladas (si hay)
+    if (liq.rejected.length > 0) {
+      const rejRows = liq.rejected.map(s => {
+        const dateShort = s.date.slice(5).split('-').reverse().join('/');
+        const status = s.status === 'cancelled' ? 'cancelada' : 'anulada';
+        return `<div class="liq-sale-row is-rejected"><div class="lsr-date">${dateShort}</div><div class="lsr-client">${s.client || '—'} <span style="opacity:.5;font-size:10px;">(${status})</span></div><div class="lsr-amount">−${fmtMoney(s.amount)}</div></div>`;
+      }).join('');
+      blocks += `
+        <div class="liq-detail-block">
+          <div class="liq-detail-block-title">❌ Ventas rechazadas/anuladas · ${liq.rejected.length}</div>
+          <div class="liq-sales-list">${rejRows}</div>
+        </div>
+      `;
+    }
+
+    // 7. Adelantos manuales
+    let advRows = '';
+    if (liq.advances.list.length > 0) {
+      advRows = liq.advances.list.map(a => {
+        const dateShort = a.date.slice(5).split('-').reverse().join('/');
+        return `
+          <div class="liq-advance-row">
+            <div class="lar-date">${dateShort}</div>
+            <div class="lar-note">${a.note || 'sin nota'}</div>
+            <div class="lar-amount">${fmtMoney(a.amount)}</div>
+            <button class="liq-advance-mini-btn" onclick="openAdvanceModal('${seller}', '${a.id}')" title="Editar">✏</button>
+            <button class="liq-advance-mini-btn danger" onclick="deleteAdvance('${seller}', '${a.id}')" title="Eliminar">🗑</button>
+          </div>
+        `;
+      }).join('');
+    } else {
+      advRows = '<div style="padding:10px;color:var(--ink-3);font-family:monospace;font-size:11px;">Sin adelantos registrados</div>';
+    }
+    blocks += `
+      <div class="liq-detail-block">
+        <div class="liq-detail-block-title">
+          💸 Adelantos manuales · ${liq.advances.list.length}
+          <button class="liq-advance-mini-btn" style="margin-left:8px;" onclick="openAdvanceModal('${seller}')">+ AGREGAR</button>
+        </div>
+        <div class="liq-advances-list">${advRows}</div>
+      </div>
+    `;
+
+    panel.innerHTML = `
+      <div class="liq-detail-header">
+        <div class="liq-detail-title">DETALLE · ${meta.emoji} ${meta.name} · ${periodDisplayLabel(periodKey)}</div>
+        <button class="liq-detail-close" onclick="closeLiqDetail()">✕ CERRAR</button>
+      </div>
+      ${blocks}
+    `;
+    panel.style.display = '';
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function closeLiqDetail() {
+    liqExpandedSeller = null;
+    document.getElementById('liqDetailPanel').style.display = 'none';
+  }
+
+  // ===== CRUD ADELANTOS =====
+  function openAdvanceModal(seller, advanceId) {
+    advanceEditContext = { seller, advanceId: advanceId || null };
+    const meta = SELLER_META[seller];
+    const isEdit = !!advanceId;
+    document.getElementById('advanceModalMode').textContent = isEdit ? '▸ EDITAR ADELANTO' : '▸ AGREGAR ADELANTO';
+    document.getElementById('advanceModalTitle').textContent = isEdit ? 'EDITAR ADELANTO' : 'AGREGAR ADELANTO';
+    document.getElementById('advanceModalSub').textContent = `— ${meta.emoji} ${meta.name} —`;
+    document.getElementById('btnSaveAdvance').textContent = isEdit ? '✓ ACTUALIZAR' : '✓ GUARDAR';
+
+    if (isEdit) {
+      const adv = state.advances?.[seller]?.[advanceId];
+      if (adv) {
+        document.getElementById('advanceDate').value = adv.date;
+        document.getElementById('advanceAmount').value = adv.amount;
+        document.getElementById('advanceNote').value = adv.note || '';
+      }
+    } else {
+      document.getElementById('advanceDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('advanceAmount').value = '';
+      document.getElementById('advanceNote').value = '';
+    }
+    document.getElementById('advanceModalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('advanceAmount').focus(), 100);
+  }
+
+  function closeAdvanceModal() {
+    document.getElementById('advanceModalOverlay').classList.remove('open');
+    advanceEditContext = { seller: null, advanceId: null };
+  }
+
+  async function saveAdvance() {
+    const { seller, advanceId } = advanceEditContext;
+    if (!seller) return;
+    const date = document.getElementById('advanceDate').value;
+    const amount = parseInt(document.getElementById('advanceAmount').value);
+    const note = document.getElementById('advanceNote').value.trim();
+
+    if (!date) return alert('Seleccioná una fecha');
+    if (!amount || amount <= 0) return alert('Ingresá un monto válido');
+
+    if (!state.advances) state.advances = {};
+    if (!state.advances[seller]) state.advances[seller] = {};
+
+    let id = advanceId;
+    if (!id) {
+      id = 'adv-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    state.advances[seller][id] = {
+      id,
+      date,
+      amount,
+      note,
+      createdAt: state.advances[seller][id]?.createdAt || Date.now(),
+      createdBy: currentUser,
+      updatedAt: Date.now()
+    };
+
+    await saveLiquidationsData();
+    closeAdvanceModal();
+    renderLiquidations(true);
+    showToast(advanceId ? `✓ Adelanto actualizado` : `✓ Adelanto registrado`, 'success');
+  }
+
+  async function deleteAdvance(seller, advanceId) {
+    if (!confirm(`¿Eliminar este adelanto?`)) return;
+    if (state.advances?.[seller]?.[advanceId]) {
+      delete state.advances[seller][advanceId];
+      await saveLiquidationsData();
+      renderLiquidations(true);
+      showToast(`✓ Adelanto eliminado`, 'warn');
+    }
+  }
+
+  // ===== TOGGLE LIQUIDADO =====
+  async function toggleLiqPaid(seller) {
+    const periodKey = liqActivePeriodKey;
+    if (!periodKey) return;
+    if (!state.liquidations) state.liquidations = {};
+    if (!state.liquidations[periodKey]) state.liquidations[periodKey] = {};
+
+    const current = state.liquidations[periodKey][seller];
+
+    if (current?.paid) {
+      if (!confirm(`¿Desmarcar liquidación de ${SELLER_META[seller].name} de este período?`)) return;
+      delete state.liquidations[periodKey][seller];
+      await saveLiquidationsData();
+      renderLiquidations(true);
+      showToast(`${SELLER_META[seller].name} · liquidación desmarcada`, 'warn');
+    } else {
+      const liq = calcLiquidation(seller, periodKey);
+      state.liquidations[periodKey][seller] = {
+        paid: true,
+        amount: liq.neto,
+        bruto: liq.bruto,
+        paidAt: Date.now(),
+        paidBy: currentUser
+      };
+      // Si es liquidación FULL (mensual), marcar crownEvents como sustained/paid
+      if (liq.kind === 'FULL') {
+        markCrownEventsAtLiquidation(seller, periodKey, liq);
+      }
+      await saveLiquidationsData();
+      renderLiquidations(true);
+      playChaChing();
+      triggerConfetti(25);
+      showToast(`✓ ${SELLER_META[seller].name} · liquidación registrada`, 'success');
+    }
+  }
+
+  // Al liquidar FULL, marcar los crownEvents del mes como sustained/pagados
+  function markCrownEventsAtLiquidation(seller, periodKey, liq) {
+    const { monthKey } = parseLiqPeriodKey(periodKey);
+    if (!state.crownEvents) return;
+    // Verificar cuáles eventos del mes seguían siendo del seller al momento de liquidar
+    Object.entries(state.crownEvents).forEach(([evtId, evt]) => {
+      if (evt.seller !== seller || evt.monthKey !== monthKey) return;
+      // Sostenido si el holder actual de la corona sigue siendo el mismo vendedor
+      const currentCrown = state.crowns?.[evt.crownId];
+      const sustained = currentCrown?.holder === seller;
+      state.crownEvents[evtId].sustained = sustained;
+      if (sustained) {
+        state.crownEvents[evtId].paidInLiquidation = periodKey;
+        state.crownEvents[evtId].paidAmount = CONFIG.crownBonus || 5000;
+      }
+    });
+  }
+
+  // ===== COPIAR WHATSAPP =====
+  async function copyLiqWhatsApp(seller) {
+    const periodKey = liqActivePeriodKey;
+    const liq = calcLiquidation(seller, periodKey);
+    const meta = SELLER_META[seller];
+
+    let text = `💵 LIQUIDACIÓN · ${meta.name} ${meta.emoji}\n`;
+    text += `📅 ${periodDisplayLabel(periodKey)}\n\n`;
+
+    text += `📊 RESUMEN\n`;
+    text += `Facturado: ${fmtMoney(liq.facturado)} · ${liq.salesCount} ventas\n`;
+    text += `Ticket prom: ${fmtMoney(liq.ticketProm)}\n\n`;
+
+    text += `💰 DESGLOSE\n`;
+    if (liq.scheme === 'old') text += `Base fija:      ${fmtMoney(liq.baseSalary)}\n`;
+    text += `Comisión:       ${fmtMoney(liq.commission.total)}\n`;
+    if (liq.arena.total > 0) text += `Bonus arena:    ${fmtMoney(liq.arena.total)}\n`;
+    if (liq.viatico > 0) text += `Viático:        ${fmtMoney(liq.viatico)}\n`;
+    if (liq.bonusFirst > 0) text += `Bonus #1:       ${fmtMoney(liq.bonusFirst)}\n`;
+    if (liq.crownBonus.total > 0) {
+      text += `💎 Coronas (${liq.crownBonus.events.length}):  ${fmtMoney(liq.crownBonus.total)}\n`;
+    }
+    text += `─────────────────\n`;
+    text += `BRUTO:          ${fmtMoney(liq.bruto)}\n`;
+
+    text += `\n📤 DESCUENTOS\n`;
+    text += `Cobros sem:     ${fmtMoney(liq.weeklyPaid.total)}\n`;
+    text += `Adelantos:      ${fmtMoney(liq.advances.total)}\n`;
+    text += `─────────────────\n`;
+    text += `💵 NETO: ${fmtMoney(liq.neto)}\n`;
+
+    if (liq.rejected.length > 0) {
+      const rejTotal = liq.rejected.reduce((a,s) => a + s.amount, 0);
+      text += `\n📉 Anulaciones/rechazos: ${liq.rejected.length} (−${fmtMoney(rejTotal)})\n`;
+    }
+
+    text += `\n━━━━━━━━━━━━━━━━━\n◢ GRAZIANO MATERIALES`;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast(`✓ ${meta.name} · copiado al portapapeles`, 'success');
+    } catch (e) {
+      showToast(`✗ Error al copiar`, 'warn');
+    }
+  }
+
+  // Expose para inline onclicks
+  window.setLiqFreq = setLiqFreq;
+  window.onLiqPeriodChange = onLiqPeriodChange;
+  window.toggleLiqDetail = toggleLiqDetail;
+  window.closeLiqDetail = closeLiqDetail;
+  window.openAdvanceModal = openAdvanceModal;
+  window.closeAdvanceModal = closeAdvanceModal;
+  window.saveAdvance = saveAdvance;
+  window.deleteAdvance = deleteAdvance;
+  window.toggleLiqPaid = toggleLiqPaid;
+  window.copyLiqWhatsApp = copyLiqWhatsApp;
 
   function renderCrownBoard() {
     const container = document.getElementById('crownBoard');
@@ -8724,8 +9884,41 @@
   // ===== DETECCIÓN DE CORONAS (records peleables) =====
   function detectCrowns() {
     if (!state.crowns) state.crowns = {};
+    if (!state.crownEvents) state.crownEvents = {};
     const changes = []; // [{crownId, newHolder, oldHolder, value, oldValue}]
     const allApproved = state.sales.filter(s => s.status === 'approved' && CONFIG.competitiveSellers.includes(s.seller));
+
+    // Helper: registra un crownEvent (robo o mejora)
+    // Solo se registra si NO estamos en modo inicial (crown ya existía antes)
+    // Este es el mecanismo que después se cobra en la liquidación mensual
+    const registerCrownEvent = (crownId, change) => {
+      // Regla: si es la primera vez que se detecta esta corona (oldHolder undefined),
+      // NO se registra evento — es estado inicial, no robo
+      if (!change.oldHolder) return;
+
+      const isRobo = change.newHolder !== change.oldHolder;
+      const isMejora = change.newHolder === change.oldHolder && change.value > (change.oldValue || 0);
+      if (!isRobo && !isMejora) return;
+
+      const evtId = `evt-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,6)}`;
+      const now = new Date();
+      const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+      state.crownEvents[evtId] = {
+        id: evtId,
+        crownId,
+        type: isRobo ? 'robo' : 'mejora',
+        seller: change.newHolder,
+        previousHolder: change.oldHolder,
+        previousValue: change.oldValue || 0,
+        newValue: change.value,
+        timestamp: Date.now(),
+        monthKey,
+        sustained: null,        // se completa al cierre del mes
+        paidInLiquidation: null,
+        paidAmount: null
+      };
+    };
 
     // 👑 REY DEL CORRALÓN: max cantidad de ventas en un mes (incluye mes en curso)
     {
@@ -8743,7 +9936,9 @@
         const cur = state.crowns['rey-corralon'];
         if (!cur || best.value > cur.value || (best.value === cur.value && cur.holder !== best.seller && best.monthKey !== cur.sinceMonthKey)) {
           if (!cur || best.value > cur.value) {
-            changes.push({ crownId: 'rey-corralon', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+            const change = { crownId: 'rey-corralon', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value };
+            changes.push(change);
+            registerCrownEvent('rey-corralon', change);
             state.crowns['rey-corralon'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now() };
           }
         }
@@ -8765,7 +9960,9 @@
       if (best) {
         const cur = state.crowns['facturador'];
         if (!cur || best.value > cur.value) {
-          changes.push({ crownId: 'facturador', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          const change = { crownId: 'facturador', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value };
+          changes.push(change);
+          registerCrownEvent('facturador', change);
           state.crowns['facturador'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now() };
         }
       }
@@ -8786,7 +9983,9 @@
       if (best) {
         const cur = state.crowns['acaparador'];
         if (!cur || best.value > cur.value) {
-          changes.push({ crownId: 'acaparador', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          const change = { crownId: 'acaparador', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value };
+          changes.push(change);
+          registerCrownEvent('acaparador', change);
           state.crowns['acaparador'] = { holder: best.seller, value: best.value, sinceMonthKey: monthKeyOf(best.date), sinceTimestamp: Date.now(), date: best.date };
         }
       }
@@ -8801,7 +10000,9 @@
       if (best) {
         const cur = state.crowns['venta-siglo'];
         if (!cur || best.value > cur.value) {
-          changes.push({ crownId: 'venta-siglo', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          const change = { crownId: 'venta-siglo', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value };
+          changes.push(change);
+          registerCrownEvent('venta-siglo', change);
           state.crowns['venta-siglo'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now(), saleId: best.saleId };
         }
       }
@@ -8829,7 +10030,9 @@
       if (best) {
         const cur = state.crowns['preciso'];
         if (!cur || best.value > cur.value) {
-          changes.push({ crownId: 'preciso', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value });
+          const change = { crownId: 'preciso', newHolder: best.seller, oldHolder: cur?.holder, value: best.value, oldValue: cur?.value };
+          changes.push(change);
+          registerCrownEvent('preciso', change);
           state.crowns['preciso'] = { holder: best.seller, value: best.value, sinceMonthKey: best.monthKey, sinceTimestamp: Date.now() };
         }
       }
@@ -8861,14 +10064,31 @@
     if (!crown) return;
     const newMeta = SELLER_META[change.newHolder];
     const oldMeta = change.oldHolder ? SELLER_META[change.oldHolder] : null;
+    const bonus = CONFIG.crownBonus || 5000;
+
+    // Detectar si es ROBO (holder cambia) o MEJORA (mismo holder, nuevo record)
+    const isRobo = oldMeta && change.newHolder !== change.oldHolder;
+    const isMejora = oldMeta && change.newHolder === change.oldHolder;
+    const isInitial = !oldMeta;
+
     // GANADOR: si el currentUser ganó, mostrar big toast épico
     if (currentUser === change.newHolder || currentUser === 'admin') {
-      const formatted = crown.unit === '$' ? fmtMoney(change.value) : `${change.value} ${crown.unit}`;
-      const oldText = oldMeta ? ` · ROBADA A ${oldMeta.name}` : '';
-      showToast(`👑 ${crown.emoji} ${crown.title}${oldText}`, 'unlock');
-      if (currentUser === change.newHolder) {
+      let msg;
+      if (isRobo) {
+        msg = `🏆 ROBASTE ${crown.emoji} ${crown.title} · a ${oldMeta.name} · +${fmtMoney(bonus)} si sostenés al cierre`;
+      } else if (isMejora) {
+        msg = `💎 MEJORASTE TU RÉCORD · ${crown.emoji} ${crown.title} · +${fmtMoney(bonus)} al cierre del mes`;
+      } else {
+        // isInitial: histórico inicial, NO cobra bonus
+        msg = `👑 ${crown.emoji} ${crown.title}`;
+      }
+      showToast(msg, 'unlock');
+      if (currentUser === change.newHolder && (isRobo || isMejora)) {
         playChaChing();
         triggerConfetti(60);
+      } else if (currentUser === change.newHolder) {
+        playChaChing();
+        triggerConfetti(30);
       }
     }
     // PERDEDOR: si el currentUser perdió, mensaje neutro
@@ -8901,6 +10121,10 @@
     if (newlyMonthly.length || newlyPersonal.length || crownChanges.length) {
       saveAchievementsState();
     }
+    // Si hubo cambios de coronas, guardar crownEvents
+    if (crownChanges.length) {
+      saveLiquidationsData();
+    }
 
     // 5. Notificar (con delay stagger)
     let delay = 700;
@@ -8929,6 +10153,18 @@
     } catch(e) { console.warn('save achievements error', e); }
   }
 
+  // Guardar advances/liquidations/crownEvents en Firebase
+  async function saveLiquidationsData() {
+    try {
+      const payload = {
+        advances: state.advances || {},
+        liquidations: state.liquidations || {},
+        crownEvents: state.crownEvents || {}
+      };
+      await db.ref('liquidationsData').set(payload);
+    } catch(e) { console.warn('save liquidations error', e); }
+  }
+
   // ===== HELPERS PARA UI =====
   // Devuelve string con las coronas que tiene un vendedor (chapas SIEMPRE visibles)
   function crownChipsFor(seller) {
@@ -8951,6 +10187,25 @@
   async function approveSale(id) {
     const sale = state.sales.find(s => s.id === id);
     if (!sale) return;
+
+    // Detectar si la venta pertenece a un mes ya liquidado (mensual FULL)
+    const saleMonthKey = monthKeyOf(sale.date);
+    const liqKey = makeLiqPeriodKey(saleMonthKey, 'FULL');
+    const liq = state.liquidations?.[liqKey]?.[sale.seller];
+    const isMonthLiquidated = !!liq?.paid;
+
+    if (isMonthLiquidated) {
+      const meta = SELLER_META[sale.seller];
+      const proceed = confirm(
+        `⚠ ADVERTENCIA\n\n` +
+        `Esta venta es de ${saleMonthKey} · un mes YA LIQUIDADO para ${meta?.name || sale.seller}.\n\n` +
+        `Aprobarla NO va a ajustar la liquidación pasada.\n` +
+        `Va a contar solo en el estado actual y próxima liquidación.\n\n` +
+        `¿Aprobar igual?`
+      );
+      if (!proceed) return;
+    }
+
     const before = computeAll();
     sale.status = 'approved';
     sale.approvedBy = currentUser;
@@ -8960,6 +10215,10 @@
     const after = computeAll();
     showBigToast(sale.seller, sale.amount, before, after);
     checkUnlocks(before, after, sale.seller);
+
+    if (isMonthLiquidated) {
+      showToast(`⚠ Aprobada · mes ${saleMonthKey} ya liquidado · sin ajuste retroactivo`, 'warn');
+    }
   }
 
   async function rejectSale(id) {
