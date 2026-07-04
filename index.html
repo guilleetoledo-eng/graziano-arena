@@ -1173,6 +1173,12 @@
     border-left: 3px solid var(--red);
   }
   .users-count { color: var(--red); font-weight: 700; }
+  .users-block-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    color: var(--ink-3); letter-spacing: 0.06em;
+    text-transform: none; font-weight: 400;
+    font-style: italic;
+  }
   .users-list { display: grid; gap: 8px; }
   .user-row {
     display: grid; grid-template-columns: auto 1fr auto auto auto auto; gap: 12px;
@@ -1182,6 +1188,20 @@
   }
   .user-row.is-inactive {
     background: var(--bg-soft); opacity: 0.65;
+  }
+  .user-row.user-row-admin {
+    background: linear-gradient(90deg, #FFF7E0 0%, #FFEEC5 100%);
+    border-color: #B45309;
+    border-left: 4px solid #B45309;
+  }
+  .user-row.user-row-admin .user-row-name { color: #7A3F00; }
+  .user-row.user-row-admin .user-row-pin { background: #B45309; }
+  .admin-pin-warn {
+    background: linear-gradient(90deg, #FFEDEC 0%, #FFD9D7 100%);
+    border-left: 3px solid var(--red);
+    padding: 12px 14px; margin: 12px 0 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: var(--ink); line-height: 1.6;
   }
   .user-row-emoji { font-size: 22px; line-height: 1; }
   .user-row-info { display: flex; flex-direction: column; gap: 2px; }
@@ -1321,6 +1341,19 @@
   .mt-btn.active .mt-count.is-good,
   .mt-btn.active .mt-count.is-alert {
     background: rgba(255,255,255,0.22); color: white;
+  }
+
+  .mt-load-more {
+    width: 100%; margin-top: 8px;
+    padding: 14px 18px; cursor: pointer;
+    background: var(--bg-card); border: 1.5px dashed var(--ink);
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: var(--ink); font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .mt-load-more:hover {
+    background: var(--ink); color: white; border-style: solid;
   }
 
   @media (max-width: 700px) {
@@ -4041,80 +4074,6 @@
       </div>
     </div>
 
-    <!-- Tabla maestra -->
-    <div class="ops-section">
-      <div class="ops-section-header mt-header">
-        <div class="mt-header-left">
-          <h3>▦ TABLA MAESTRA DE VENTAS</h3>
-          <button class="mt-info-btn" onclick="toggleMtInfo()" title="Ver diferencias entre estados">ℹ diferencias</button>
-        </div>
-        <button class="btn-secondary btn-sm" onclick="exportOpsCSV()">⤓ EXPORTAR CSV</button>
-      </div>
-
-      <!-- Panel info · diferencias entre estados -->
-      <div class="mt-info-panel" id="mtInfoPanel" style="display:none;">
-        <div class="mt-info-title">ESTADOS DE VENTAS · DIFERENCIAS</div>
-        <div class="mt-info-grid">
-          <div class="mt-info-item"><span class="mt-info-icon">⏳</span><div><strong>PENDIENTE</strong>Cargada por el vendedor, esperando aprobación de admin. No suma al ranking ni comisión.</div></div>
-          <div class="mt-info-item"><span class="mt-info-icon">✓</span><div><strong>APROBADA</strong>Admin dio OK. Cuenta para ranking, coronas, comisiones, cobros y liquidaciones.</div></div>
-          <div class="mt-info-item"><span class="mt-info-icon">❌</span><div><strong>CANCELADA</strong>Admin <em>rechazó</em> una pendiente antes de aprobar. Nunca fue venta real.</div></div>
-          <div class="mt-info-item"><span class="mt-info-icon">🗑</span><div><strong>ANULADA</strong>Admin dio <em>de baja</em> una venta ya aprobada (devolución, pago fallido, etc). Era venta real.</div></div>
-        </div>
-      </div>
-
-      <!-- Sub-toggle · pills de estado -->
-      <div class="mt-toggle" id="mtToggle">
-        <button class="mt-btn active" data-mtfilter="all"       onclick="setMasterFilter('all')">▦ TODAS <span class="mt-count" id="mtCountAll">0</span></button>
-        <button class="mt-btn"        data-mtfilter="approved"  onclick="setMasterFilter('approved')">✓ APROBADAS <span class="mt-count is-good" id="mtCountApproved">0</span></button>
-        <button class="mt-btn"        data-mtfilter="pending"   onclick="setMasterFilter('pending')">⏳ PENDIENTES <span class="mt-count is-alert" id="mtCountPending">0</span></button>
-        <button class="mt-btn"        data-mtfilter="cancelled" onclick="setMasterFilter('cancelled')">❌ CANCELADAS <span class="mt-count" id="mtCountCancelled">0</span></button>
-        <button class="mt-btn"        data-mtfilter="voided"    onclick="setMasterFilter('voided')">🗑 ANULADAS <span class="mt-count" id="mtCountVoided">0</span></button>
-      </div>
-
-      <div class="ops-filters">
-        <select id="opsFilterSeller" onchange="renderOpsTable()">
-          <option value="">Todos los vendedores</option>
-          <option value="lauti">Lauti</option>
-          <option value="bauti">Bauti</option>
-          <option value="estela">Estela</option>
-        </select>
-        <select id="opsFilterStatus" onchange="renderOpsTable()" style="display:none;">
-          <!-- Oculto · reemplazado por sub-toggle · queda para retrocompat interna -->
-          <option value="">Todos los estados</option>
-          <option value="approved">Aprobadas</option>
-          <option value="pending">Pendientes</option>
-          <option value="cancelled">Canceladas</option>
-          <option value="voided">Anuladas</option>
-        </select>
-        <select id="opsFilterChannel" onchange="renderOpsTable()">
-          <option value="">Todos los canales</option>
-          <option value="Marketplace">Marketplace</option>
-          <option value="WhatsApp">WhatsApp</option>
-          <option value="Presencial">Presencial</option>
-        </select>
-        <input type="text" id="opsFilterText" placeholder="Buscar cliente, producto..." oninput="renderOpsTable()">
-      </div>
-      <div class="ops-table-wrap">
-        <table class="ops-table">
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Vendedor</th>
-              <th>Cliente</th>
-              <th>Productos</th>
-              <th>Canal</th>
-              <th>Modalidad</th>
-              <th class="num">Total</th>
-              <th>Estado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="opsTableBody"></tbody>
-        </table>
-      </div>
-      <div class="ops-table-footer" id="opsTableFooter">— sin resultados —</div>
-    </div>
-
     <!-- SECCIÓN USUARIOS · solo admin -->
     <div class="ops-section ops-section-full">
       <div class="ops-section-header users-header">
@@ -4123,6 +4082,17 @@
           <span class="ops-section-sub">agregá, editá o desactivá vendedores del sistema</span>
         </div>
         <button class="btn-primary users-add-btn" onclick="openUserModal()">+ AGREGAR VENDEDOR</button>
+      </div>
+
+      <!-- Bloque ADMIN -->
+      <div class="users-block">
+        <div class="users-block-title">
+          <span>⭐ ADMIN</span>
+          <span class="users-block-hint">PIN maestro · lo usan Guille y Cami</span>
+        </div>
+        <div class="users-list" id="usersAdminList">
+          <!-- dinámico -->
+        </div>
       </div>
 
       <div class="users-block">
@@ -4255,6 +4225,80 @@
         <button class="btn-secondary" onclick="resetConfigDefaults()">↺ RESTAURAR DEFAULTS</button>
         <span class="cfg-status" id="cfgStatus"></span>
       </div>
+    </div>
+
+    <!-- Tabla maestra · al final para no romper el flujo de scroll -->
+    <div class="ops-section">
+      <div class="ops-section-header mt-header">
+        <div class="mt-header-left">
+          <h3>▦ TABLA MAESTRA DE VENTAS</h3>
+          <button class="mt-info-btn" onclick="toggleMtInfo()" title="Ver diferencias entre estados">ℹ diferencias</button>
+        </div>
+        <button class="btn-secondary btn-sm" onclick="exportOpsCSV()">⤓ EXPORTAR CSV</button>
+      </div>
+
+      <!-- Panel info · diferencias entre estados -->
+      <div class="mt-info-panel" id="mtInfoPanel" style="display:none;">
+        <div class="mt-info-title">ESTADOS DE VENTAS · DIFERENCIAS</div>
+        <div class="mt-info-grid">
+          <div class="mt-info-item"><span class="mt-info-icon">⏳</span><div><strong>PENDIENTE</strong>Cargada por el vendedor, esperando aprobación de admin. No suma al ranking ni comisión.</div></div>
+          <div class="mt-info-item"><span class="mt-info-icon">✓</span><div><strong>APROBADA</strong>Admin dio OK. Cuenta para ranking, coronas, comisiones, cobros y liquidaciones.</div></div>
+          <div class="mt-info-item"><span class="mt-info-icon">❌</span><div><strong>CANCELADA</strong>Admin <em>rechazó</em> una pendiente antes de aprobar. Nunca fue venta real.</div></div>
+          <div class="mt-info-item"><span class="mt-info-icon">🗑</span><div><strong>ANULADA</strong>Admin dio <em>de baja</em> una venta ya aprobada (devolución, pago fallido, etc). Era venta real.</div></div>
+        </div>
+      </div>
+
+      <!-- Sub-toggle · pills de estado -->
+      <div class="mt-toggle" id="mtToggle">
+        <button class="mt-btn active" data-mtfilter="all"       onclick="setMasterFilter('all')">▦ TODAS <span class="mt-count" id="mtCountAll">0</span></button>
+        <button class="mt-btn"        data-mtfilter="approved"  onclick="setMasterFilter('approved')">✓ APROBADAS <span class="mt-count is-good" id="mtCountApproved">0</span></button>
+        <button class="mt-btn"        data-mtfilter="pending"   onclick="setMasterFilter('pending')">⏳ PENDIENTES <span class="mt-count is-alert" id="mtCountPending">0</span></button>
+        <button class="mt-btn"        data-mtfilter="cancelled" onclick="setMasterFilter('cancelled')">❌ CANCELADAS <span class="mt-count" id="mtCountCancelled">0</span></button>
+        <button class="mt-btn"        data-mtfilter="voided"    onclick="setMasterFilter('voided')">🗑 ANULADAS <span class="mt-count" id="mtCountVoided">0</span></button>
+      </div>
+
+      <div class="ops-filters">
+        <select id="opsFilterSeller" onchange="renderOpsTable()">
+          <option value="">Todos los vendedores</option>
+          <option value="lauti">Lauti</option>
+          <option value="bauti">Bauti</option>
+          <option value="estela">Estela</option>
+        </select>
+        <select id="opsFilterStatus" onchange="renderOpsTable()" style="display:none;">
+          <option value="">Todos los estados</option>
+          <option value="approved">Aprobadas</option>
+          <option value="pending">Pendientes</option>
+          <option value="cancelled">Canceladas</option>
+          <option value="voided">Anuladas</option>
+        </select>
+        <select id="opsFilterChannel" onchange="renderOpsTable()">
+          <option value="">Todos los canales</option>
+          <option value="Marketplace">Marketplace</option>
+          <option value="WhatsApp">WhatsApp</option>
+          <option value="Presencial">Presencial</option>
+        </select>
+        <input type="text" id="opsFilterText" placeholder="Buscar cliente, producto..." oninput="renderOpsTable()">
+      </div>
+      <div class="ops-table-wrap">
+        <table class="ops-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Vendedor</th>
+              <th>Cliente</th>
+              <th>Productos</th>
+              <th>Canal</th>
+              <th>Modalidad</th>
+              <th class="num">Total</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="opsTableBody"></tbody>
+        </table>
+      </div>
+      <button class="mt-load-more" id="mtLoadMoreBtn" onclick="loadMoreOpsTable()" style="display:none;">+ VER MÁS</button>
+      <div class="ops-table-footer" id="opsTableFooter">— sin resultados —</div>
     </div>
 
     <div class="footer">
@@ -4449,6 +4493,31 @@
       <div class="user-modal-actions">
         <button class="btn-secondary" onclick="closeUserModal()">CANCELAR</button>
         <button class="btn-primary" onclick="saveUser()" id="btnSaveUser">✓ GUARDAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Cambiar PIN de Admin -->
+  <div class="modal-overlay" id="adminPinModalOverlay" onclick="closeAdminPinModal()">
+    <div class="modal user-modal" onclick="event.stopPropagation()">
+      <div class="user-modal-banner">▸ CAMBIAR PIN DE ADMIN</div>
+      <button class="modal-close" onclick="closeAdminPinModal()">✕</button>
+      <h2>PIN DE ADMIN</h2>
+      <div class="modal-sub">— Guille · Cami —</div>
+
+      <div class="admin-pin-warn">
+        ⚠ Este PIN lo usan todas las personas con acceso admin.
+        Al cambiarlo, todos tienen que saber el nuevo.
+      </div>
+
+      <div class="form-row">
+        <label>🔒 PIN nuevo (4 dígitos)</label>
+        <input type="text" id="adminPinNew" placeholder="1234" maxlength="4" pattern="[0-9]{4}" inputmode="numeric">
+      </div>
+
+      <div class="user-modal-actions">
+        <button class="btn-secondary" onclick="closeAdminPinModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveAdminPin()">✓ GUARDAR</button>
       </div>
     </div>
   </div>
@@ -4864,15 +4933,15 @@
   // ═══════════════════════════════════════════════════════════
   // Defaults iniciales (se usan solo al migrar por primera vez)
   const DEFAULT_USERS = [
+    { key: 'admin', name: 'ADMIN', title: '',              emoji: '★',  pin: '0000', role: 'admin',  active: true, order: 0, commissionScheme: 'none' },
     { key: 'lauti', name: 'LAUTI', title: 'EL CAZADOR',   emoji: '🎯', pin: '1111', role: 'seller', active: true, order: 1, commissionScheme: 'auto' },
     { key: 'bauti', name: 'BAUTI', title: 'EL CONSTANTE', emoji: '🧱', pin: '2222', role: 'seller', active: true, order: 2, commissionScheme: 'new' },
     { key: 'leo',   name: 'LEO',   title: 'LA HIENA',     emoji: '🦴', pin: '4444', role: 'seller', active: true, order: 3, commissionScheme: 'new' },
     { key: 'kevin', name: 'KEVIN', title: 'EL LÍDER',     emoji: '🏹', pin: '5555', role: 'seller', active: true, order: 4, commissionScheme: 'new' }
   ];
-  // Los NO-vendedores (Estela + admin) son fijos, no editables
+  // Estela sigue fija (dueña · lógica especial)
   const FIXED_USERS = {
-    estela: { key: 'estela', name: 'ESTELA', title: 'LA DUEÑA', emoji: '🏪', pin: '3333', role: 'estela', active: true, order: 99, fixed: true },
-    admin:  { key: 'admin',  name: 'ADMIN',  title: '',         emoji: '★',  pin: '0000', role: 'admin',  active: true, order: 0,  fixed: true }
+    estela: { key: 'estela', name: 'ESTELA', title: 'LA DUEÑA', emoji: '🏪', pin: '3333', role: 'estela', active: true, order: 99, fixed: true }
   };
 
   // PINS y SELLER_META se rellenan dinámicamente desde users
@@ -4884,22 +4953,27 @@
   // Función que re-arma PINS y SELLER_META desde state.users
   function rebuildUserMaps() {
     // Limpiar y volver a llenar
-    Object.keys(PINS).forEach(k => { if (k !== 'estela' && k !== 'admin') delete PINS[k]; });
+    Object.keys(PINS).forEach(k => delete PINS[k]);
     Object.keys(SELLER_META).forEach(k => { if (k !== 'estela') delete SELLER_META[k]; });
 
-    // Fijos siempre presentes
+    // Estela siempre fija
     PINS.estela = FIXED_USERS.estela.pin;
-    PINS.admin = FIXED_USERS.admin.pin;
     SELLER_META.estela = { name: 'ESTELA', title: 'LA DUEÑA', emoji: '🏪' };
 
-    // Vendedores activos desde state.users
+    // Admin y vendedores desde state.users
     const users = state.users || {};
     Object.values(users).forEach(u => {
       if (!u.active) return;
-      if (u.role !== 'seller') return;
-      PINS[u.key] = u.pin;
-      SELLER_META[u.key] = { name: u.name, title: u.title, emoji: u.emoji };
+      if (u.role === 'seller') {
+        PINS[u.key] = u.pin;
+        SELLER_META[u.key] = { name: u.name, title: u.title, emoji: u.emoji };
+      } else if (u.role === 'admin') {
+        PINS[u.key] = u.pin;
+      }
     });
+
+    // Fallback: si por algún motivo admin no está en users, usar 0000
+    if (!PINS.admin) PINS.admin = '0000';
 
     // Actualizar CONFIG.competitiveSellers dinámicamente
     CONFIG.competitiveSellers = Object.values(users)
@@ -8473,14 +8547,21 @@
   function renderUsersSection() {
     const activeList = document.getElementById('usersActiveList');
     const inactiveList = document.getElementById('usersInactiveList');
+    const adminList = document.getElementById('usersAdminList');
     if (!activeList) return;
 
     const all = getAllUsers();
+    const adminUsers = all.filter(u => u.role === 'admin');
     const active = all.filter(u => u.active && u.role === 'seller');
     const inactive = all.filter(u => !u.active && u.role === 'seller');
 
     document.getElementById('usersActiveCount').textContent = active.length;
     document.getElementById('usersInactiveCount').textContent = inactive.length;
+
+    if (adminList) {
+      adminList.innerHTML = adminUsers.map(u => renderAdminRow(u)).join('') ||
+        '<div style="padding:16px;color:var(--ink-3);font-family:monospace;font-size:11px;text-align:center;">Sin admin configurado</div>';
+    }
 
     activeList.innerHTML = active.map(u => renderUserRow(u, true)).join('') ||
       '<div style="padding:16px;color:var(--ink-3);font-family:monospace;font-size:11px;text-align:center;">Sin vendedores activos</div>';
@@ -8491,6 +8572,21 @@
     } else {
       document.getElementById('usersInactiveBlock').style.display = 'none';
     }
+  }
+
+  // Fila simplificada del admin (solo PIN + editar)
+  function renderAdminRow(user) {
+    return `
+      <div class="user-row user-row-admin">
+        <div class="user-row-emoji">${user.emoji}</div>
+        <div class="user-row-info">
+          <div class="user-row-name">${user.name}</div>
+          <div class="user-row-title">acceso total al sistema</div>
+        </div>
+        <div class="user-row-pin">PIN ${user.pin}</div>
+        <button class="user-row-btn" onclick="openAdminPinModal('${user.id}')">✏ CAMBIAR PIN</button>
+      </div>
+    `;
   }
 
   function renderUserRow(user, isActive) {
@@ -8589,10 +8685,11 @@
     if (existingByKey && existingByKey.id !== userId) return alert(`Ya existe un usuario con key "${key}"`);
 
     // Únicos: PIN no puede duplicar los fijos ni otros users
-    if (pin === FIXED_USERS.admin.pin) return alert('PIN 0000 reservado para admin');
+    const adminUser = Object.values(state.users || {}).find(u => u.role === 'admin');
+    if (adminUser && adminUser.id !== userId && pin === adminUser.pin) return alert(`PIN ${pin} ya está en uso por admin`);
     if (pin === FIXED_USERS.estela.pin) return alert('PIN 3333 reservado para Estela');
-    const existingByPin = Object.values(state.users || {}).find(u => u.pin === pin);
-    if (existingByPin && existingByPin.id !== userId) return alert(`PIN ${pin} ya está en uso por ${existingByPin.name}`);
+    const existingByPin = Object.values(state.users || {}).find(u => u.pin === pin && u.id !== userId);
+    if (existingByPin) return alert(`PIN ${pin} ya está en uso por ${existingByPin.name}`);
 
     if (!state.users) state.users = {};
 
@@ -8654,6 +8751,61 @@
     const schemeSel = document.getElementById('userScheme');
     if (schemeSel) schemeSel.addEventListener('change', onUserSchemeChange);
   });
+
+  // ═══════════════════════════════════════════════════════════
+  // ADMIN PIN · modal simple para cambiar solo el PIN
+  // ═══════════════════════════════════════════════════════════
+  let adminPinEditContext = { userId: null };
+
+  function openAdminPinModal(userId) {
+    adminPinEditContext = { userId };
+    document.getElementById('adminPinNew').value = '';
+    document.getElementById('adminPinModalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('adminPinNew').focus(), 100);
+  }
+
+  function closeAdminPinModal() {
+    document.getElementById('adminPinModalOverlay').classList.remove('open');
+    adminPinEditContext = { userId: null };
+  }
+
+  async function saveAdminPin() {
+    const { userId } = adminPinEditContext;
+    if (!userId) return;
+    const newPin = document.getElementById('adminPinNew').value.trim();
+
+    if (!newPin || !/^\d{4}$/.test(newPin)) {
+      return alert('El PIN debe tener exactamente 4 dígitos');
+    }
+
+    // Validar que no colisione con estela
+    if (newPin === FIXED_USERS.estela.pin) {
+      return alert('PIN 3333 está reservado para Estela · elegí otro');
+    }
+
+    // Validar que no colisione con otros users
+    const existing = Object.values(state.users || {}).find(u => u.pin === newPin && u.id !== userId);
+    if (existing) {
+      return alert(`PIN ${newPin} ya está en uso por ${existing.name} · elegí otro`);
+    }
+
+    const u = state.users?.[userId];
+    if (!u || u.role !== 'admin') return;
+
+    // Confirmación final
+    if (!confirm(`¿Confirmar cambio de PIN de admin a ${newPin}?\n\nAsegurate que Guille y Cami sepan el nuevo PIN.`)) return;
+
+    state.users[userId] = { ...u, pin: newPin, updatedAt: Date.now() };
+    await saveUsers();
+    rebuildUserMaps();
+    closeAdminPinModal();
+    renderUsersSection();
+    showToast(`✓ PIN de admin cambiado a ${newPin}`, 'success');
+  }
+
+  window.openAdminPinModal = openAdminPinModal;
+  window.closeAdminPinModal = closeAdminPinModal;
+  window.saveAdminPin = saveAdminPin;
 
   // Expose
   window.openUserModal = openUserModal;
@@ -10284,11 +10436,24 @@
     ` : '');
   }
 
-  function renderOpsTable() {
+  // Estado paginación de la tabla maestra
+  let opsTableLimit = 10;
+  const OPS_TABLE_INITIAL = 10;
+  const OPS_TABLE_STEP = 20;
+
+  function loadMoreOpsTable() {
+    opsTableLimit += OPS_TABLE_STEP;
+    renderOpsTable(true);
+  }
+
+  function renderOpsTable(skipReset) {
     const fSeller = document.getElementById('opsFilterSeller').value;
     const fStatus = document.getElementById('opsFilterStatus').value;
     const fChannel = document.getElementById('opsFilterChannel').value;
     const fText = (document.getElementById('opsFilterText').value || '').toLowerCase().trim();
+
+    // Reset paginación cuando cambian filtros
+    if (!skipReset) opsTableLimit = OPS_TABLE_INITIAL;
 
     let sales = state.sales.slice();
     if (fSeller) sales = sales.filter(s => s.seller === fSeller);
@@ -10303,12 +10468,19 @@
     sales.sort((a, b) => (b.date + (b.id || '')).localeCompare(a.date + (a.id || '')));
 
     const body = document.getElementById('opsTableBody');
+    const loadMoreBtn = document.getElementById('mtLoadMoreBtn');
     if (sales.length === 0) {
       body.innerHTML = '';
       document.getElementById('opsTableFooter').textContent = '— sin resultados —';
+      if (loadMoreBtn) loadMoreBtn.style.display = 'none';
       return;
     }
-    body.innerHTML = sales.slice(0, 200).map(s => {
+
+    const total = sales.length;
+    const visible = Math.min(opsTableLimit, total);
+    const remaining = total - visible;
+
+    body.innerHTML = sales.slice(0, visible).map(s => {
       const items = (s.items && s.items.length > 0)
         ? s.items.map(it => `${it.qty} ${it.name}`).join(' · ')
         : (s.product || '—');
@@ -10332,9 +10504,22 @@
         </tr>
       `;
     }).join('');
+
     document.getElementById('opsTableFooter').textContent =
-      `${sales.length} resultados${sales.length > 200 ? ' · mostrando los primeros 200' : ''}`;
+      `mostrando ${visible} de ${total}${remaining > 0 ? ` · ${remaining} más disponibles` : ''}`;
+
+    if (loadMoreBtn) {
+      if (remaining > 0) {
+        loadMoreBtn.style.display = '';
+        const nextStep = Math.min(OPS_TABLE_STEP, remaining);
+        loadMoreBtn.textContent = `+ VER ${nextStep} MÁS (${remaining} restantes)`;
+      } else {
+        loadMoreBtn.style.display = 'none';
+      }
+    }
   }
+
+  window.loadMoreOpsTable = loadMoreOpsTable;
 
   // ═══════════════════════════════════════════════════════════
   // TABLA MAESTRA · sub-toggle de estados
