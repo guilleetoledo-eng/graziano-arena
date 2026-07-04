@@ -1158,6 +1158,112 @@
     .liq-detail-header { flex-direction: column; gap: 10px; align-items: flex-start; }
   }
 
+  /* ═════════════════════════════════════════════════════ */
+  /* GESTIÓN DE USUARIOS                                      */
+  /* ═════════════════════════════════════════════════════ */
+  .users-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+  .users-add-btn { padding: 10px 16px !important; font-size: 11px !important; letter-spacing: 0.15em !important; }
+  .users-block { margin-top: 18px; }
+  .users-block-title {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 8px 12px; background: var(--bg-soft);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.2em; color: var(--ink-3); font-weight: 700;
+    text-transform: uppercase; margin-bottom: 8px;
+    border-left: 3px solid var(--red);
+  }
+  .users-count { color: var(--red); font-weight: 700; }
+  .users-list { display: grid; gap: 8px; }
+  .user-row {
+    display: grid; grid-template-columns: auto 1fr auto auto auto auto; gap: 12px;
+    align-items: center; padding: 12px 16px;
+    background: var(--bg-card); border: 1.5px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .user-row.is-inactive {
+    background: var(--bg-soft); opacity: 0.65;
+  }
+  .user-row-emoji { font-size: 22px; line-height: 1; }
+  .user-row-info { display: flex; flex-direction: column; gap: 2px; }
+  .user-row-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); letter-spacing: 0.03em;
+  }
+  .user-row-title { font-size: 10.5px; color: var(--ink-3); letter-spacing: 0.05em; }
+  .user-row-pin {
+    padding: 4px 10px; background: var(--ink); color: white;
+    font-size: 11px; letter-spacing: 0.15em; font-weight: 700;
+  }
+  .user-row-scheme {
+    padding: 3px 8px; font-size: 9px; letter-spacing: 0.12em;
+    border: 1px solid var(--line); color: var(--ink-3);
+    text-transform: uppercase; font-weight: 700;
+  }
+  .user-row-scheme.new { color: var(--ink); border-color: var(--ink); }
+  .user-row-scheme.old { color: #7A3F00; border-color: #7A3F00; background: #FFEED4; }
+  .user-row-scheme.auto { color: var(--red); border-color: var(--red); }
+  .user-row-btn {
+    background: transparent; border: 1.5px solid var(--ink-4);
+    padding: 6px 10px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.1em; font-weight: 700;
+    transition: all 0.15s;
+  }
+  .user-row-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
+  .user-row-btn.danger:hover { background: var(--red); border-color: var(--red); }
+  .user-row-btn.success:hover { background: #1F8A3A; border-color: #1F8A3A; }
+
+  /* Modal Usuario */
+  .user-modal { max-width: 520px !important; }
+  .user-modal-banner {
+    background: var(--ink); color: white; padding: 8px 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase;
+    margin: -20px -20px 12px;
+  }
+  .user-modal-actions {
+    display: flex; gap: 10px; margin-top: 20px;
+  }
+  .user-modal-actions button { flex: 1; }
+  .user-key-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.05em; margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Mobile users */
+  @media (max-width: 700px) {
+    .user-row {
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+    }
+    .user-row-scheme, .user-row-pin { display: none; }
+    .users-header { flex-direction: column; }
+    .users-add-btn { width: 100%; }
+  }
+
+  /* HISTORIA DEL CLUB · sub-títulos */
+  .hc-sub-title {
+    display: flex; align-items: baseline; gap: 12px;
+    padding: 10px 14px; margin-bottom: 14px;
+    background: var(--bg-soft); border-left: 4px solid var(--red);
+    flex-wrap: wrap;
+  }
+  .hc-sub-icon { font-size: 20px; line-height: 1; }
+  .hc-sub-text {
+    font-family: 'Archivo Black', sans-serif; font-size: 14px;
+    color: var(--ink); letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .hc-sub-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink-3); letter-spacing: 0.06em;
+    margin-left: auto;
+  }
+  @media (max-width: 700px) {
+    .hc-sub-hint { margin-left: 0; width: 100%; }
+  }
+
   /* HOF */
   .hof {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
@@ -1279,7 +1385,11 @@
   @media (max-width: 600px) {
     .form-grid-2 { grid-template-columns: 1fr; }
   }
-  .seller-toggle { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .seller-toggle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 6px;
+  }
   .seller-toggle button {
     padding: 14px; background: var(--bg); border: 1.5px solid var(--line);
     color: var(--ink); font-family: 'Archivo Black', sans-serif;
@@ -3201,8 +3311,8 @@
   <!-- Toggle TABLERO / OPERACIONES / VENDEDORES (solo admin) -->
   <div class="view-toggle" id="viewToggle" style="display:none;">
     <button class="vt-btn active" id="vt-tablero" onclick="switchView('tablero')">🏆 TABLERO</button>
-    <button class="vt-btn" id="vt-operaciones" onclick="switchView('operaciones')">⚙ OPERACIONES</button>
     <button class="vt-btn" id="vt-vendedores" onclick="switchView('vendedores')">👥 VENDEDORES</button>
+    <button class="vt-btn" id="vt-operaciones" onclick="switchView('operaciones')">⚙ ADMINISTRACIÓN</button>
   </div>
 
   <div id="tableroView">
@@ -3735,10 +3845,24 @@
 
   <div class="section-title">
     <span class="section-title-num">/06</span>
-    <span class="section-title-text">HALL OF FAME</span>
+    <span class="section-title-text">HISTORIA DEL CLUB</span>
     <span class="section-title-line"></span>
   </div>
 
+  <!-- Sub-bloque: CORONAS ACTIVAS -->
+  <div class="hc-sub-title">
+    <span class="hc-sub-icon">👑</span>
+    <span class="hc-sub-text">CORONAS ACTIVAS</span>
+    <span class="hc-sub-hint">récords que se pelean entre los vendedores</span>
+  </div>
+  <div class="crown-board" id="crownBoard"></div>
+
+  <!-- Sub-bloque: HALL OF FAME -->
+  <div class="hc-sub-title" style="margin-top: 36px;">
+    <span class="hc-sub-icon">🏆</span>
+    <span class="hc-sub-text">HALL OF FAME</span>
+    <span class="hc-sub-hint">meses cerrados · leyendas del corralón</span>
+  </div>
   <div class="hof">
     <div class="hof-card">
       <div class="hof-label">★ Récord Ticket del Mes</div>
@@ -3764,11 +3888,11 @@
 
   </div><!-- /tableroView -->
 
-  <!-- ===== CENTRO DE OPERACIONES ===== -->
+  <!-- ===== ADMINISTRACIÓN ===== -->
   <div id="operationsView" style="display:none;">
     <div class="ops-header">
-      <div class="ops-eyebrow">⚙ ADMIN · GUILLE / CAMI</div>
-      <h2 class="ops-title">CENTRO DE OPERACIONES</h2>
+      <div class="ops-eyebrow">⚙ ADMIN · GESTIÓN DEL SISTEMA</div>
+      <h2 class="ops-title">ADMINISTRACIÓN</h2>
       <div class="ops-period-row">
         <span class="ops-period" id="opsPeriod">JUNIO 2026 · 29 DÍAS RESTANTES</span>
         <div class="ops-month-selector">
@@ -3879,13 +4003,35 @@
       <div class="ops-table-footer" id="opsTableFooter">— sin resultados —</div>
     </div>
 
-    <!-- PIZARRA DE CORONAS -->
+    <!-- SECCIÓN USUARIOS · solo admin -->
     <div class="ops-section ops-section-full">
-      <div class="ops-section-header">
-        <h3>🏛 PIZARRA DE CORONAS</h3>
-        <span class="ops-section-sub">récords históricos que se pelean entre los vendedores</span>
+      <div class="ops-section-header users-header">
+        <div>
+          <h3>👥 GESTIÓN DE USUARIOS</h3>
+          <span class="ops-section-sub">agregá, editá o desactivá vendedores del sistema</span>
+        </div>
+        <button class="btn-primary users-add-btn" onclick="openUserModal()">+ AGREGAR VENDEDOR</button>
       </div>
-      <div class="crown-board" id="crownBoard"></div>
+
+      <div class="users-block">
+        <div class="users-block-title">
+          <span>✓ ACTIVOS</span>
+          <span class="users-count" id="usersActiveCount">0</span>
+        </div>
+        <div class="users-list" id="usersActiveList">
+          <!-- dinámico -->
+        </div>
+      </div>
+
+      <div class="users-block" id="usersInactiveBlock" style="display:none;">
+        <div class="users-block-title">
+          <span>✗ INACTIVOS</span>
+          <span class="users-count" id="usersInactiveCount">0</span>
+        </div>
+        <div class="users-list" id="usersInactiveList">
+          <!-- dinámico -->
+        </div>
+      </div>
     </div>
 
     <!-- PANEL DE CONFIGURACIÓN · solo admin -->
@@ -4000,7 +4146,7 @@
     </div>
 
     <div class="footer">
-      <span><strong>◢ GRAZIANO MATERIALES</strong> · CENTRO DE OPERACIONES</span>
+      <span><strong>◢ GRAZIANO MATERIALES</strong> · ADMINISTRACIÓN</span>
       <span id="opsLastUpdate">— SIN ACTUALIZAR —</span>
     </div>
   </div><!-- /operationsView -->
@@ -4047,11 +4193,11 @@
       </div>
     </div>
 
-    <!-- 03 PROYECCIÓN DE CIERRE -->
+    <!-- 03 RANKING & PROYECCIÓN (merge de Rendimiento + Proyección) -->
     <div class="ops-section ops-section-full">
       <div class="ops-section-header">
-        <h3>🎯 PROYECCIÓN DE CIERRE DE MES</h3>
-        <span class="ops-section-sub">si el ritmo se mantiene, así termina el mes</span>
+        <h3>🎯 RANKING & PROYECCIÓN</h3>
+        <span class="ops-section-sub">estado actual · proyección de cierre · comisión estimada</span>
       </div>
       <div class="projection-table" id="projectionTable">
         <!-- relleno dinámico -->
@@ -4140,6 +4286,57 @@
       <div class="advance-modal-actions">
         <button class="btn-secondary" onclick="closeAdvanceModal()">CANCELAR</button>
         <button class="btn-primary" onclick="saveAdvance()" id="btnSaveAdvance">✓ GUARDAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Agregar/Editar Usuario -->
+  <div class="modal-overlay" id="userModalOverlay" onclick="closeUserModal()">
+    <div class="modal user-modal" onclick="event.stopPropagation()">
+      <div class="user-modal-banner">
+        <span id="userModalMode">▸ AGREGAR VENDEDOR</span>
+      </div>
+      <button class="modal-close" onclick="closeUserModal()">✕</button>
+      <h2 id="userModalTitle">NUEVO VENDEDOR</h2>
+      <div class="modal-sub" id="userModalSub">— identidad y accesos —</div>
+
+      <div class="form-row">
+        <label>📛 Nombre</label>
+        <input type="text" id="userName" placeholder="ej: MARIANO" maxlength="20">
+      </div>
+      <div class="form-row">
+        <label>🎭 Título</label>
+        <input type="text" id="userTitle" placeholder="ej: EL PROFESOR" maxlength="30">
+      </div>
+      <div class="form-row">
+        <label>🎨 Emoji</label>
+        <input type="text" id="userEmoji" placeholder="🐺" maxlength="4">
+      </div>
+      <div class="form-row">
+        <label>🔑 Key (id interno)</label>
+        <input type="text" id="userKey" placeholder="ej: mariano" maxlength="15" pattern="[a-z0-9]+">
+        <div class="user-key-hint">solo minúsculas y números · no editable después</div>
+      </div>
+      <div class="form-row">
+        <label>🔒 PIN (4 dígitos)</label>
+        <input type="text" id="userPin" placeholder="1234" maxlength="4" pattern="[0-9]{4}">
+      </div>
+      <div class="form-row">
+        <label>⚙ Esquema comisión</label>
+        <select id="userScheme">
+          <option value="new">Nuevo (5/6/7/8% + arena)</option>
+          <option value="old">Viejo ($300k base + 3%)</option>
+          <option value="auto">Auto (viejo→nuevo desde fecha)</option>
+        </select>
+      </div>
+      <div class="form-row" id="userSchemeStartRow" style="display:none;">
+        <label>📅 Cambio a nuevo desde</label>
+        <input type="month" id="userSchemeStart">
+      </div>
+
+      <div class="user-modal-actions">
+        <button class="btn-secondary" onclick="closeUserModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveUser()" id="btnSaveUser">✓ GUARDAR</button>
       </div>
     </div>
   </div>
@@ -4246,12 +4443,8 @@
 
     <div class="form-row">
       <label>Vendedor</label>
-      <div class="seller-toggle">
-        <button id="btn-lauti" onclick="selectSeller('lauti')">LAUTI 🎯</button>
-        <button id="btn-bauti" onclick="selectSeller('bauti')">BAUTI 🧱</button>
-        <button id="btn-leo" onclick="selectSeller('leo')">LEO 🦴</button>
-        <button id="btn-kevin" onclick="selectSeller('kevin')">KEVIN 🏹</button>
-        <button id="btn-estela" onclick="selectSeller('estela')">ESTELA</button>
+      <div class="seller-toggle" id="sellerToggleContainer">
+        <!-- Botones generados dinámicamente por rebuildSellerButtons() -->
       </div>
     </div>
 
@@ -4554,14 +4747,111 @@
   CONFIG.newScheme.tiers.forEach(t => { if (t.to >= 1e308) t.to = Infinity; });
   CONFIG.newScheme.arena.forEach(t => { if (t.to >= 1e308) t.to = Infinity; });
 
-  const PINS = { lauti: '1111', bauti: '2222', leo: '4444', kevin: '5555', estela: '3333', admin: '0000' };
-  const SELLER_META = {
-    lauti:  { name: 'LAUTI',  title: 'EL CAZADOR',   emoji: '🎯' },
-    bauti:  { name: 'BAUTI',  title: 'EL CONSTANTE', emoji: '🧱' },
-    leo:    { name: 'LEO',    title: 'LA HIENA',     emoji: '🦴' },
-    kevin:  { name: 'KEVIN',  title: 'EL LÍDER',     emoji: '🏹' },
-    estela: { name: 'ESTELA', title: 'LA DUEÑA',     emoji: '🏪' }
+  // ═══════════════════════════════════════════════════════════
+  // SISTEMA DE USUARIOS · dinámico desde Firebase
+  // ═══════════════════════════════════════════════════════════
+  // Defaults iniciales (se usan solo al migrar por primera vez)
+  const DEFAULT_USERS = [
+    { key: 'lauti', name: 'LAUTI', title: 'EL CAZADOR',   emoji: '🎯', pin: '1111', role: 'seller', active: true, order: 1, commissionScheme: 'auto' },
+    { key: 'bauti', name: 'BAUTI', title: 'EL CONSTANTE', emoji: '🧱', pin: '2222', role: 'seller', active: true, order: 2, commissionScheme: 'new' },
+    { key: 'leo',   name: 'LEO',   title: 'LA HIENA',     emoji: '🦴', pin: '4444', role: 'seller', active: true, order: 3, commissionScheme: 'new' },
+    { key: 'kevin', name: 'KEVIN', title: 'EL LÍDER',     emoji: '🏹', pin: '5555', role: 'seller', active: true, order: 4, commissionScheme: 'new' }
+  ];
+  // Los NO-vendedores (Estela + admin) son fijos, no editables
+  const FIXED_USERS = {
+    estela: { key: 'estela', name: 'ESTELA', title: 'LA DUEÑA', emoji: '🏪', pin: '3333', role: 'estela', active: true, order: 99, fixed: true },
+    admin:  { key: 'admin',  name: 'ADMIN',  title: '',         emoji: '★',  pin: '0000', role: 'admin',  active: true, order: 0,  fixed: true }
   };
+
+  // PINS y SELLER_META se rellenan dinámicamente desde users
+  const PINS = { estela: '3333', admin: '0000' };
+  const SELLER_META = {
+    estela: { name: 'ESTELA', title: 'LA DUEÑA', emoji: '🏪' }
+  };
+
+  // Función que re-arma PINS y SELLER_META desde state.users
+  function rebuildUserMaps() {
+    // Limpiar y volver a llenar
+    Object.keys(PINS).forEach(k => { if (k !== 'estela' && k !== 'admin') delete PINS[k]; });
+    Object.keys(SELLER_META).forEach(k => { if (k !== 'estela') delete SELLER_META[k]; });
+
+    // Fijos siempre presentes
+    PINS.estela = FIXED_USERS.estela.pin;
+    PINS.admin = FIXED_USERS.admin.pin;
+    SELLER_META.estela = { name: 'ESTELA', title: 'LA DUEÑA', emoji: '🏪' };
+
+    // Vendedores activos desde state.users
+    const users = state.users || {};
+    Object.values(users).forEach(u => {
+      if (!u.active) return;
+      if (u.role !== 'seller') return;
+      PINS[u.key] = u.pin;
+      SELLER_META[u.key] = { name: u.name, title: u.title, emoji: u.emoji };
+    });
+
+    // Actualizar CONFIG.competitiveSellers dinámicamente
+    CONFIG.competitiveSellers = Object.values(users)
+      .filter(u => u.active && u.role === 'seller')
+      .sort((a,b) => (a.order||99) - (b.order||99))
+      .map(u => u.key);
+  }
+
+  // Helpers para acceder a users
+  function getActiveUsers() {
+    const users = state.users || {};
+    return Object.values(users)
+      .filter(u => u.active && u.role === 'seller')
+      .sort((a,b) => (a.order||99) - (b.order||99));
+  }
+  function getAllUsers() {
+    const users = state.users || {};
+    return Object.values(users)
+      .sort((a,b) => (a.order||99) - (b.order||99));
+  }
+  function getUserByKey(key) {
+    if (!state.users) return null;
+    return Object.values(state.users).find(u => u.key === key) || null;
+  }
+  function isUserActive(key) {
+    const u = getUserByKey(key);
+    return !!u?.active;
+  }
+
+  // ¿el currentUser es un vendedor (no admin, no view, no estela)?
+  function isSellerUser(key) {
+    if (!key || key === 'admin' || key === 'view' || key === 'estela') return false;
+    return !!getUserByKey(key);
+  }
+  // ¿es cualquier vendedor incluyendo estela (para permisos que aplican a ambos)?
+  function isAnySellerOrEstela(key) {
+    return isSellerUser(key) || key === 'estela';
+  }
+
+  // Guardar users en Firebase
+  async function saveUsers() {
+    try {
+      await db.ref('users').set(state.users || {});
+    } catch(e) { console.warn('saveUsers error', e); }
+  }
+
+  // Migración inicial · crea los 4 vendedores default en Firebase la primera vez
+  function migrateUsersIfNeeded() {
+    if (state.users && Object.keys(state.users).length > 0) return false;
+    console.log('▸ Migrando usuarios · creando 4 vendedores default');
+    state.users = {};
+    DEFAULT_USERS.forEach(u => {
+      const id = 'usr-' + u.key;
+      state.users[id] = {
+        id,
+        ...u,
+        joinedAt: Date.now(),
+        updatedAt: Date.now()
+      };
+    });
+    saveUsers();
+    return true;
+  }
+
   // Emojis por POSICIÓN en el ranking (dinámicos, no identidad fija)
   const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺', 4: '🪦' };
   function positionEmoji(rank) { return RANK_EMOJI[rank] || ''; }
@@ -4676,6 +4966,22 @@
       }
       if (currentUser === 'admin' && currentView === 'vendedores') renderVendedores();
     }, (err) => { console.warn('Firebase liquidations read error', err); });
+
+    // Listener users (dinámico · con migración inicial)
+    db.ref('users').on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data && Object.keys(data).length > 0) {
+        state.users = data;
+      } else {
+        state.users = {};
+      }
+      // Migración inicial (crea 4 default si no hay)
+      migrateUsersIfNeeded();
+      // Reconstruir maps derivados
+      rebuildUserMaps();
+      // Re-render si ya hay usuario logueado
+      if (currentUser) renderAll();
+    }, (err) => { console.warn('Firebase users read error', err); });
   }
 
   // ===== HELPERS =====
@@ -4915,6 +5221,19 @@
     backToSelect();
   }
 
+  // Reconstruye los botones del modal de venta según usuarios activos
+  function rebuildSellerButtons() {
+    const container = document.getElementById('sellerToggleContainer');
+    if (!container) return;
+    const active = getActiveUsers();
+    let html = active.map(u =>
+      `<button id="btn-${u.key}" onclick="selectSeller('${u.key}')">${u.name} ${u.emoji}</button>`
+    ).join('');
+    // Estela siempre al final (es fija)
+    html += `<button id="btn-estela" onclick="selectSeller('estela')">ESTELA 🏪</button>`;
+    container.innerHTML = html;
+  }
+
   function applyUserMode() {
     const chip = document.getElementById('userChip');
     const fabGroup = document.getElementById('fabGroup');
@@ -4922,23 +5241,20 @@
     const adminActions = document.getElementById('adminActions');
     const modalTitle = document.getElementById('modalTitle');
     const modalSub = document.getElementById('modalSub');
-    const btnLauti = document.getElementById('btn-lauti');
-    const btnBauti = document.getElementById('btn-bauti');
-    const btnLeo = document.getElementById('btn-leo');
-    const btnKevin = document.getElementById('btn-kevin');
-    const btnEstela = document.getElementById('btn-estela');
     const tabsRow = document.getElementById('tabsRow');
 
-    const labels = {
-      view: '👁 PANTALLA',
-      lauti: '👤 LAUTI',
-      bauti: '👤 BAUTI',
-      leo: '👤 LEO',
-      kevin: '👤 KEVIN',
-      estela: '👤 ESTELA',
-      admin: '★ ADMIN'
-    };
-    chip.textContent = (labels[currentUser] || '👤 USUARIO') + ' · CAMBIAR';
+    // Rebuild botones dinámicamente cada vez que se aplica user mode
+    rebuildSellerButtons();
+
+    // Label del chip (dinámico desde users)
+    const user = getUserByKey(currentUser);
+    let chipLabel;
+    if (currentUser === 'view') chipLabel = '👁 PANTALLA';
+    else if (currentUser === 'admin') chipLabel = '★ ADMIN';
+    else if (user) chipLabel = `👤 ${user.name}`;
+    else if (currentUser === 'estela') chipLabel = '👤 ESTELA';
+    else chipLabel = '👤 USUARIO';
+    chip.textContent = chipLabel + ' · CAMBIAR';
     chip.classList.toggle('viewer', currentUser === 'view');
 
     if (currentUser === 'view') {
@@ -4957,23 +5273,24 @@
     if (viewToggle) viewToggle.style.display = (currentUser === 'admin') ? 'flex' : 'none';
     switchView('tablero');
 
+    // Habilitar/deshabilitar botones según rol
+    const allSellerKeys = getActiveUsers().map(u => u.key).concat(['estela']);
     if (currentUser === 'admin') {
       modalTitle.textContent = 'PANEL ADMIN';
       modalSub.textContent = '— GUILLE / CAMI · CONTROL TOTAL —';
-      btnLauti.disabled = false;
-      btnBauti.disabled = false;
-      btnLeo.disabled = false;
-      btnKevin.disabled = false;
-      btnEstela.disabled = false;
-    } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
+      // Admin habilita todos
+      allSellerKeys.forEach(k => {
+        const btn = document.getElementById('btn-' + k);
+        if (btn) btn.disabled = false;
+      });
+    } else if (currentUser === 'estela' || getUserByKey(currentUser)) {
+      // Vendedor o Estela
       modalTitle.textContent = 'CARGAR VENTA';
       modalSub.textContent = `— ${currentUser.toUpperCase()} —`;
-      // Cada vendedor solo puede tener su propio botón habilitado
-      btnLauti.disabled = currentUser !== 'lauti';
-      btnBauti.disabled = currentUser !== 'bauti';
-      btnLeo.disabled = currentUser !== 'leo';
-      btnKevin.disabled = currentUser !== 'kevin';
-      btnEstela.disabled = currentUser !== 'estela';
+      allSellerKeys.forEach(k => {
+        const btn = document.getElementById('btn-' + k);
+        if (btn) btn.disabled = k !== currentUser;
+      });
       selectSeller(currentUser);
     }
   }
@@ -5402,11 +5719,25 @@
   // Estela: no aplica
   function getCommissionScheme(seller, monthKey) {
     if (seller === 'estela') return 'none';
+    if (seller === 'admin') return 'none';
+
+    // Lee del user en Firebase
+    const user = getUserByKey(seller);
+    if (user && user.commissionScheme) {
+      // 'auto' = usa fecha de switch (para Lauti/legacy)
+      if (user.commissionScheme === 'auto') {
+        const switchDate = user.schemeStartDate || CONFIG.newSchemeStartLauti;
+        return monthKey >= switchDate ? 'new' : 'old';
+      }
+      // 'old' o 'new' explícito
+      return user.commissionScheme;
+    }
+
+    // Fallback (backward compat)
     if (seller === 'lauti') {
-      // Compara strings 'YYYY-MM'
       return monthKey >= CONFIG.newSchemeStartLauti ? 'new' : 'old';
     }
-    return 'new';  // bauti, leo
+    return 'new';
   }
 
   // Cálculo escalonado de comisión NUEVA (tiers + arena + viático)
@@ -6846,7 +7177,7 @@
 
     let visible = [];
     if (currentUser === 'admin') visible = allPending();
-    else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin') visible = pendingSales(currentUser);
+    else if (isSellerUser(currentUser)) visible = pendingSales(currentUser);
 
     if (visible.length === 0) {
       section.style.display = 'none';
@@ -6857,7 +7188,7 @@
 
     const opts = {
       canApprove: currentUser === 'admin',
-      canCancel: currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin',
+      canCancel: isSellerUser(currentUser),
     };
 
     container.innerHTML = visible
@@ -6876,7 +7207,7 @@
       return;
     }
     const opts = {
-      canVoid: currentUser === 'admin' || currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela',
+      canVoid: currentUser === 'admin' || isSellerUser(currentUser) || currentUser === 'estela',
       canDelete: false,
     };
     container.innerHTML = approved
@@ -7329,7 +7660,7 @@
     console.log('▸ openModal · currentUser=', currentUser, '· selectedSellerForSale (antes)=', selectedSellerForSale);
     // 🛡 SINCRONIZACIÓN FORZADA: si el usuario logueado es un vendedor,
     // el seller seleccionado SIEMPRE debe ser ese vendedor.
-    if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
+    if (isSellerUser(currentUser) || currentUser === 'estela') {
       selectedSellerForSale = currentUser;
     }
     // Refresh INMEDIATO de precios (force=true para ignorar cache)
@@ -7344,14 +7675,14 @@
     // Si el usuario es Estela, forzar selección de Estela y activar modo simplificado
     if (currentUser === 'estela') {
       selectSeller('estela');
-    } else if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin') {
+    } else if (isSellerUser(currentUser)) {
       selectSeller(currentUser);
     } else {
       // Admin: estado por defecto · mostrar banner
       document.getElementById('saleModal').classList.remove('estela-mode');
       updateSellerBanner();
     }
-    if (currentUser === 'lauti' || currentUser === 'bauti' || currentUser === 'leo' || currentUser === 'kevin' || currentUser === 'estela') {
+    if (isSellerUser(currentUser) || currentUser === 'estela') {
       const myPending = pendingSales(currentUser).length;
       switchTab(myPending > 0 ? 'pending' : 'approved');
     } else {
@@ -7389,17 +7720,18 @@
   }
 
   function selectSeller(s) {
-    if (currentUser === 'lauti' && s !== 'lauti') return;
-    if (currentUser === 'bauti' && s !== 'bauti') return;
-    if (currentUser === 'leo' && s !== 'leo') return;
-    if (currentUser === 'kevin' && s !== 'kevin') return;
-    if (currentUser === 'estela' && s !== 'estela') return;
+    // Guard: vendedor solo puede seleccionarse a sí mismo
+    if (currentUser !== 'admin' && currentUser !== 'view' && currentUser !== s) return;
+
     selectedSellerForSale = s;
     console.log('▸ selectSeller(', s, ') · currentUser=', currentUser);
-    ['lauti', 'bauti', 'leo', 'kevin', 'estela'].forEach(k => {
-      const btn = document.getElementById('btn-' + k);
-      if (btn) btn.classList.toggle('active', s === k);
+
+    // Actualizar clase active en todos los botones existentes (dinámicos)
+    document.querySelectorAll('#sellerToggleContainer button').forEach(btn => {
+      const key = btn.id.replace('btn-', '');
+      btn.classList.toggle('active', s === key);
     });
+
     // Modo simplificado para Estela
     document.getElementById('saleModal').classList.toggle('estela-mode', s === 'estela');
     if (s === 'estela') {
@@ -8014,9 +8346,207 @@
     renderOpsByChannel(mk);
     renderOpsByPayment(mk);
     renderOpsTable();
+    renderUsersSection();
     populateConfigPanel();
     renderCrownBoard();
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // GESTIÓN DE USUARIOS · render + CRUD
+  // ═══════════════════════════════════════════════════════════
+  let userEditContext = { userId: null };
+
+  function renderUsersSection() {
+    const activeList = document.getElementById('usersActiveList');
+    const inactiveList = document.getElementById('usersInactiveList');
+    if (!activeList) return;
+
+    const all = getAllUsers();
+    const active = all.filter(u => u.active && u.role === 'seller');
+    const inactive = all.filter(u => !u.active && u.role === 'seller');
+
+    document.getElementById('usersActiveCount').textContent = active.length;
+    document.getElementById('usersInactiveCount').textContent = inactive.length;
+
+    activeList.innerHTML = active.map(u => renderUserRow(u, true)).join('') ||
+      '<div style="padding:16px;color:var(--ink-3);font-family:monospace;font-size:11px;text-align:center;">Sin vendedores activos</div>';
+
+    if (inactive.length > 0) {
+      document.getElementById('usersInactiveBlock').style.display = '';
+      inactiveList.innerHTML = inactive.map(u => renderUserRow(u, false)).join('');
+    } else {
+      document.getElementById('usersInactiveBlock').style.display = 'none';
+    }
+  }
+
+  function renderUserRow(user, isActive) {
+    const schemeCls = user.commissionScheme || 'new';
+    const schemeLabel = schemeCls === 'auto' ? 'AUTO' : schemeCls === 'old' ? 'VIEJO' : 'NUEVO';
+    const cls = isActive ? '' : 'is-inactive';
+    const btnAction = isActive
+      ? `<button class="user-row-btn danger" onclick="toggleUserActive('${user.id}')">✗ DESACTIVAR</button>`
+      : `<button class="user-row-btn success" onclick="toggleUserActive('${user.id}')">✓ REACTIVAR</button>`;
+    return `
+      <div class="user-row ${cls}">
+        <div class="user-row-emoji">${user.emoji}</div>
+        <div class="user-row-info">
+          <div class="user-row-name">${user.name}</div>
+          <div class="user-row-title">${user.title || '—'}</div>
+        </div>
+        <div class="user-row-scheme ${schemeCls}">${schemeLabel}</div>
+        <div class="user-row-pin">PIN ${user.pin}</div>
+        <button class="user-row-btn" onclick="openUserModal('${user.id}')">✏ EDITAR</button>
+        ${btnAction}
+      </div>
+    `;
+  }
+
+  function openUserModal(userId) {
+    userEditContext = { userId: userId || null };
+    const isEdit = !!userId;
+    document.getElementById('userModalMode').textContent = isEdit ? '▸ EDITAR VENDEDOR' : '▸ AGREGAR VENDEDOR';
+    document.getElementById('userModalTitle').textContent = isEdit ? 'EDITAR VENDEDOR' : 'NUEVO VENDEDOR';
+    document.getElementById('btnSaveUser').textContent = isEdit ? '✓ ACTUALIZAR' : '✓ AGREGAR';
+
+    const keyInput = document.getElementById('userKey');
+    if (isEdit) {
+      const u = state.users?.[userId];
+      if (!u) return;
+      document.getElementById('userName').value = u.name;
+      document.getElementById('userTitle').value = u.title || '';
+      document.getElementById('userEmoji').value = u.emoji;
+      keyInput.value = u.key;
+      keyInput.disabled = true; // no editar key existente
+      document.getElementById('userPin').value = u.pin;
+      document.getElementById('userScheme').value = u.commissionScheme || 'new';
+      document.getElementById('userSchemeStart').value = u.schemeStartDate || '';
+      document.getElementById('userModalSub').textContent = `— ${u.emoji} ${u.name} —`;
+    } else {
+      document.getElementById('userName').value = '';
+      document.getElementById('userTitle').value = '';
+      document.getElementById('userEmoji').value = '';
+      keyInput.value = '';
+      keyInput.disabled = false;
+      document.getElementById('userPin').value = '';
+      document.getElementById('userScheme').value = 'new';
+      document.getElementById('userSchemeStart').value = '';
+      document.getElementById('userModalSub').textContent = '— identidad y accesos —';
+    }
+    // Mostrar campo fecha si esquema=auto
+    onUserSchemeChange();
+    document.getElementById('userModalOverlay').classList.add('open');
+    setTimeout(() => document.getElementById('userName').focus(), 100);
+  }
+
+  function onUserSchemeChange() {
+    const scheme = document.getElementById('userScheme').value;
+    document.getElementById('userSchemeStartRow').style.display = scheme === 'auto' ? '' : 'none';
+  }
+
+  function closeUserModal() {
+    document.getElementById('userModalOverlay').classList.remove('open');
+    userEditContext = { userId: null };
+    document.getElementById('userKey').disabled = false;
+  }
+
+  async function saveUser() {
+    const { userId } = userEditContext;
+    const isEdit = !!userId;
+    const name = document.getElementById('userName').value.trim().toUpperCase();
+    const title = document.getElementById('userTitle').value.trim().toUpperCase();
+    const emoji = document.getElementById('userEmoji').value.trim();
+    const key = document.getElementById('userKey').value.trim().toLowerCase();
+    const pin = document.getElementById('userPin').value.trim();
+    const scheme = document.getElementById('userScheme').value;
+    const schemeStart = document.getElementById('userSchemeStart').value;
+
+    // Validaciones
+    if (!name) return alert('Ingresá un nombre');
+    if (!emoji) return alert('Elegí un emoji');
+    if (!key || !/^[a-z0-9]+$/.test(key)) return alert('Key inválida · solo minúsculas y números');
+    if (!pin || !/^\d{4}$/.test(pin)) return alert('PIN debe tener 4 dígitos');
+    if (scheme === 'auto' && !schemeStart) return alert('Si el esquema es AUTO, elegí la fecha de cambio');
+
+    // Reservados
+    if (['admin', 'view', 'estela'].includes(key)) return alert(`Key "${key}" reservada · usá otra`);
+
+    // Únicos: key no puede duplicarse (excepto en edit del mismo user)
+    const existingByKey = Object.values(state.users || {}).find(u => u.key === key);
+    if (existingByKey && existingByKey.id !== userId) return alert(`Ya existe un usuario con key "${key}"`);
+
+    // Únicos: PIN no puede duplicar los fijos ni otros users
+    if (pin === FIXED_USERS.admin.pin) return alert('PIN 0000 reservado para admin');
+    if (pin === FIXED_USERS.estela.pin) return alert('PIN 3333 reservado para Estela');
+    const existingByPin = Object.values(state.users || {}).find(u => u.pin === pin);
+    if (existingByPin && existingByPin.id !== userId) return alert(`PIN ${pin} ya está en uso por ${existingByPin.name}`);
+
+    if (!state.users) state.users = {};
+
+    if (isEdit) {
+      const u = state.users[userId];
+      if (!u) return;
+      state.users[userId] = {
+        ...u,
+        name, title, emoji, pin,
+        commissionScheme: scheme,
+        schemeStartDate: scheme === 'auto' ? schemeStart : null,
+        updatedAt: Date.now()
+      };
+    } else {
+      // Nuevo usuario
+      const id = 'usr-' + key;
+      if (state.users[id]) return alert('Ya existe un usuario con esa key');
+      const maxOrder = Math.max(0, ...Object.values(state.users).map(u => u.order || 0));
+      state.users[id] = {
+        id, key, name, title, emoji, pin,
+        role: 'seller',
+        active: true,
+        commissionScheme: scheme,
+        schemeStartDate: scheme === 'auto' ? schemeStart : null,
+        order: maxOrder + 1,
+        joinedAt: Date.now(),
+        updatedAt: Date.now()
+      };
+    }
+
+    await saveUsers();
+    rebuildUserMaps();
+    closeUserModal();
+    renderUsersSection();
+    renderAll();
+    showToast(isEdit ? `✓ ${name} actualizado` : `✓ ${name} agregado al equipo`, 'success');
+  }
+
+  async function toggleUserActive(userId) {
+    const u = state.users?.[userId];
+    if (!u) return;
+    const willActivate = !u.active;
+
+    if (!willActivate) {
+      // Desactivar: pedir confirmación
+      if (!confirm(`¿Desactivar a ${u.name}?\n\nEl historial de ventas queda intacto, pero ${u.name} no va a poder loguearse ni cargar ventas nuevas.\n\nSe puede reactivar en cualquier momento.`)) return;
+    }
+
+    state.users[userId] = { ...u, active: willActivate, updatedAt: Date.now() };
+    await saveUsers();
+    rebuildUserMaps();
+    renderUsersSection();
+    renderAll();
+    showToast(willActivate ? `✓ ${u.name} reactivado` : `${u.name} desactivado`, willActivate ? 'success' : 'warn');
+  }
+
+  // Bind onchange del scheme select cuando el modal existe
+  document.addEventListener('DOMContentLoaded', () => {
+    const schemeSel = document.getElementById('userScheme');
+    if (schemeSel) schemeSel.addEventListener('change', onUserSchemeChange);
+  });
+
+  // Expose
+  window.openUserModal = openUserModal;
+  window.closeUserModal = closeUserModal;
+  window.saveUser = saveUser;
+  window.toggleUserActive = toggleUserActive;
+  window.onUserSchemeChange = onUserSchemeChange;
 
   // ===== SECCIÓN VENDEDORES =====
 
@@ -8065,12 +8595,12 @@
     let noSales = ranking.filter(r => r.total === 0);
     withSales.forEach((r, i) => {
       const med = i < 3 ? medals[i] : '  ';
-      const name = SELLER_META[r.key].name;
+      const name = (SELLER_META[r.key]?.name || r.key.toUpperCase());
       const pad = name.padEnd(8, ' ');
       sellerLines += `${med} ${pad} ${fmtMoney(r.total)}  ·  ${r.count} venta${r.count === 1 ? '' : 's'}\n`;
     });
     noSales.forEach(r => {
-      const name = SELLER_META[r.key].name;
+      const name = (SELLER_META[r.key]?.name || r.key.toUpperCase());
       sellerLines += `🚨 ${name.padEnd(8, ' ')} Sin ventas\n`;
     });
 
@@ -8104,7 +8634,7 @@
       const avgDaily = todayNum > 1 ? monthTotal / (todayNum - 1) : 0;
       const todayTotal = bySeller[seller].total;
       if (avgDaily > 0 && todayTotal > avgDaily * 1.5 && bySeller[seller].count >= 2) {
-        const name = SELLER_META[seller].name;
+        const name = (SELLER_META[seller]?.name || seller.toUpperCase());
         if (!outstandingLines.some(l => l.startsWith(name))) {
           outstandingLines.push(`${name} vendió por encima de su promedio diario`);
         }
@@ -8114,7 +8644,7 @@
     const lazyLines = [];
     CONFIG.competitiveSellers.forEach(seller => {
       if (bySeller[seller].count === 0) {
-        const name = SELLER_META[seller].name;
+        const name = (SELLER_META[seller]?.name || seller.toUpperCase());
         lazyLines.push(`${name} no cargó ventas hoy`);
       }
     });
@@ -8185,7 +8715,7 @@
 
       if (histAvg > 0 && last7Avg < histAvg * 0.5 && historical.length >= 10) {
         const drop = Math.round((1 - last7Avg / histAvg) * 100);
-        const name = SELLER_META[seller].name;
+        const name = (SELLER_META[seller]?.name || seller.toUpperCase());
         alerts.push({
           level: 'bad',
           icon: '⚠',
@@ -8197,7 +8727,7 @@
       const lastSale = allSales.slice().sort((a, b) => new Date(b.date) - new Date(a.date))[0];
       const daysSinceLastSale = Math.floor((today - new Date(lastSale.date + 'T00:00:00')) / 86400000);
       if (daysSinceLastSale >= 3) {
-        const name = SELLER_META[seller].name;
+        const name = (SELLER_META[seller]?.name || seller.toUpperCase());
         alerts.push({
           level: 'warn',
           icon: '🛌',
@@ -8221,7 +8751,7 @@
       const projected = dayOfMonth > 0 ? (currentMonthTotal / dayOfMonth) * daysInMonth : 0;
 
       if (bestMonthTotal > 0 && projected > bestMonthTotal && currentMonthTotal > bestMonthTotal * 0.5) {
-        const name = SELLER_META[seller].name;
+        const name = (SELLER_META[seller]?.name || seller.toUpperCase());
         alerts.push({
           level: 'good',
           icon: '💡',
@@ -8257,24 +8787,37 @@
     const dayOfMonth = today.getDate();
     const allSellers = [...CONFIG.competitiveSellers, 'estela'];
 
+    let totalCommission = 0;
     const rows = allSellers.map(seller => {
       const sales = state.sales.filter(s => s.seller === seller && s.status === 'approved' && monthKeyOf(s.date) === mk);
       const actual = sales.reduce((a, v) => a + v.amount, 0);
       const projected = dayOfMonth > 0 ? (actual / dayOfMonth) * daysInMonth : 0;
       const target = seller === 'estela' ? CONFIG.estelaTarget : CONFIG.target;
+      const actualPct = target > 0 ? (actual / target) * 100 : 0;
       const projectedPct = target > 0 ? (projected / target) * 100 : 0;
+
+      // Comisión estimada sobre facturado actual (usa escalón del user)
+      let commSelf = 0;
+      if (seller !== 'estela') {
+        const cr = calcCommission(seller, actual, mk);
+        commSelf = cr?.total || 0;
+        totalCommission += commSelf;
+      }
 
       let statusCls = 'bad';
       if (projectedPct >= 95) statusCls = 'good';
       else if (projectedPct >= 70) statusCls = 'warn';
 
-      const name = SELLER_META[seller].name;
+      const name = SELLER_META[seller]?.name || seller.toUpperCase();
+      const commCell = seller === 'estela' ? '<td style="color:var(--ink-3)">—</td>' : `<td>${fmtMoney(commSelf)}</td>`;
+
       return `
         <tr>
           <td>${name}</td>
-          <td>${fmtMoney(actual)}</td>
+          <td>${fmtMoney(actual)} <span style="color:var(--ink-3);font-size:10px;">(${actualPct.toFixed(0)}%)</span></td>
           <td>${fmtMoney(projected)}</td>
           <td>${fmtMoney(target)}</td>
+          ${commCell}
           <td><span class="proj-status ${statusCls}">${projectedPct.toFixed(0)}%</span></td>
         </tr>
       `;
@@ -8287,21 +8830,23 @@
     const onlineProjected = dayOfMonth > 0 ? (onlineActual / dayOfMonth) * daysInMonth : 0;
     const onlineTarget = CONFIG.target * CONFIG.competitiveSellers.length;
     const onlinePct = onlineTarget > 0 ? (onlineProjected / onlineTarget) * 100 : 0;
+    const onlineActualPct = onlineTarget > 0 ? (onlineActual / onlineTarget) * 100 : 0;
 
     container.innerHTML = `
       <table class="projection-table">
         <thead>
           <tr>
-            <th>Vendedor</th><th>Facturado</th><th>Proyección</th><th>Meta</th><th>Status</th>
+            <th>Vendedor</th><th>Facturado (%)</th><th>Proyección</th><th>Meta</th><th>Comisión</th><th>Status</th>
           </tr>
         </thead>
         <tbody>
           ${rows}
           <tr class="total">
             <td>TOTAL ONLINE</td>
-            <td>${fmtMoney(onlineActual)}</td>
+            <td>${fmtMoney(onlineActual)} <span style="color:var(--ink-3);font-size:10px;">(${onlineActualPct.toFixed(0)}%)</span></td>
             <td>${fmtMoney(onlineProjected)}</td>
             <td>${fmtMoney(onlineTarget)}</td>
+            <td>${fmtMoney(totalCommission)}</td>
             <td><span class="proj-status ${onlinePct >= 95 ? 'good' : onlinePct >= 70 ? 'warn' : 'bad'}">${onlinePct.toFixed(0)}%</span></td>
           </tr>
         </tbody>
@@ -8397,7 +8942,7 @@
       return `
         <div class="tendency-row ${cls}">
           <div class="tendency-header">
-            <div class="tendency-name">${SELLER_META[seller].emoji}  ${SELLER_META[seller].name}</div>
+            <div class="tendency-name">${(SELLER_META[seller]?.emoji || '👤')}  ${(SELLER_META[seller]?.name || seller.toUpperCase())}</div>
             <div class="tendency-comment">${comment}</div>
           </div>
           <div class="tendency-bars">${barsHTML}</div>
@@ -8448,7 +8993,7 @@
         statusText = 'sin costo cargado';
       }
 
-      const name = SELLER_META[seller].name;
+      const name = (SELLER_META[seller]?.name || seller.toUpperCase());
       return `
         <tr>
           <td>${name}</td>
@@ -8904,11 +9449,11 @@
     const current = state.liquidations[periodKey][seller];
 
     if (current?.paid) {
-      if (!confirm(`¿Desmarcar liquidación de ${SELLER_META[seller].name} de este período?`)) return;
+      if (!confirm(`¿Desmarcar liquidación de ${(SELLER_META[seller]?.name || seller.toUpperCase())} de este período?`)) return;
       delete state.liquidations[periodKey][seller];
       await saveLiquidationsData();
       renderLiquidations(true);
-      showToast(`${SELLER_META[seller].name} · liquidación desmarcada`, 'warn');
+      showToast(`${(SELLER_META[seller]?.name || seller.toUpperCase())} · liquidación desmarcada`, 'warn');
     } else {
       const liq = calcLiquidation(seller, periodKey);
       state.liquidations[periodKey][seller] = {
@@ -8926,7 +9471,7 @@
       renderLiquidations(true);
       playChaChing();
       triggerConfetti(25);
-      showToast(`✓ ${SELLER_META[seller].name} · liquidación registrada`, 'success');
+      showToast(`✓ ${(SELLER_META[seller]?.name || seller.toUpperCase())} · liquidación registrada`, 'success');
     }
   }
 
