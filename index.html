@@ -8042,13 +8042,13 @@
     const todayStr = today.toISOString().slice(0, 10);
     input.value = todayStr;
 
-    if (currentUser === 'admin') {
-      // Admin: sin restricciones
+    if (currentUser === 'admin' || currentUser === 'estela') {
+      // Admin y Estela: sin restricciones (Estela suele cargar en atraso)
       input.removeAttribute('min');
       input.removeAttribute('max');
       input.disabled = false;
       if (hint) hint.textContent = 'sin restricción · podés cargar retroactivo';
-    } else if (isSellerUser(currentUser) || currentUser === 'estela') {
+    } else if (isSellerUser(currentUser)) {
       // Vendedor: solo puede seleccionar días del MES EN CURSO hasta hoy
       const firstDayOfMonth = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-01`;
       input.min = firstDayOfMonth;
@@ -8072,8 +8072,8 @@
     const today = new Date().toISOString().slice(0, 10);
     const val = input.value;
 
-    // Solo mostrar banner cuando es admin y la fecha NO es hoy
-    if (currentUser === 'admin' && val && val !== today) {
+    // Mostrar banner cuando es admin/estela y la fecha NO es hoy
+    if ((currentUser === 'admin' || currentUser === 'estela') && val && val !== today) {
       warn.style.display = '';
       if (warnDate) {
         try {
