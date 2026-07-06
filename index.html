@@ -1370,6 +1370,101 @@
     .mt-count { min-width: 18px; padding: 1px 5px; font-size: 9px; }
   }
 
+  /* ═════════════════════════════════════════════════════ */
+  /* TRANSFERIR VENTA · modal admin                          */
+  /* ═════════════════════════════════════════════════════ */
+  .transfer-modal { max-width: 560px !important; }
+  .transfer-modal-banner {
+    background: var(--red); color: white; padding: 8px 20px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.2em; font-weight: 700; text-transform: uppercase;
+    margin: -20px -20px 12px;
+  }
+  .transfer-info-card {
+    background: var(--bg-soft); border: 1.5px solid var(--ink);
+    padding: 12px 16px; margin: 12px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink); line-height: 1.6;
+  }
+  .transfer-info-card .tic-row {
+    display: flex; justify-content: space-between; gap: 12px;
+    padding: 2px 0;
+  }
+  .transfer-info-card .tic-lbl {
+    color: var(--ink-3); letter-spacing: 0.08em; font-size: 10.5px;
+    text-transform: uppercase;
+  }
+  .transfer-info-card .tic-val { color: var(--ink); font-weight: 700; }
+  .transfer-info-card .tic-current {
+    border-top: 1px dashed var(--line); margin-top: 6px; padding-top: 6px;
+  }
+  .transfer-info-card .tic-current .tic-val {
+    color: var(--red);
+    font-family: 'Archivo Black', sans-serif; font-size: 14px; letter-spacing: 0.02em;
+  }
+
+  .transfer-warn {
+    background: linear-gradient(90deg, #FFEDEC 0%, #FFD9D7 100%);
+    border-left: 3px solid var(--red);
+    padding: 10px 14px; margin: 12px 0 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    color: var(--ink); line-height: 1.5;
+  }
+  .transfer-warn.is-liquidated {
+    background: linear-gradient(90deg, #FFF7E0 0%, #FFEEC5 100%);
+    border-left-color: #B45309; color: #7A3F00;
+  }
+
+  .transfer-sellers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+  }
+  .transfer-seller-btn {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    padding: 12px 10px; cursor: pointer;
+    font-family: 'Archivo Black', sans-serif; font-size: 12px;
+    color: var(--ink); letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transition: all 0.15s;
+  }
+  .transfer-seller-btn:hover { background: var(--bg-soft); }
+  .transfer-seller-btn.active {
+    background: var(--red); color: white; border-color: var(--red);
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .transfer-seller-btn .tsb-emoji { font-size: 22px; }
+
+  .transfer-modal-actions {
+    display: flex; gap: 10px; margin-top: 16px;
+  }
+  .transfer-modal-actions button { flex: 1; }
+  .transfer-modal-actions .btn-primary:disabled {
+    opacity: 0.45; cursor: not-allowed;
+  }
+
+  /* Botón ↔ en tabla maestra */
+  .ops-btn-transfer {
+    background: transparent; border: 1.5px solid var(--ink);
+    padding: 4px 8px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink); font-weight: 700;
+    letter-spacing: 0.05em; transition: all 0.15s;
+    margin-left: 4px;
+  }
+  .ops-btn-transfer:hover {
+    background: var(--red); color: white; border-color: var(--red);
+  }
+
+  /* Ícono transferida junto al vendedor en la tabla */
+  .td-transferred-icon {
+    display: inline-block; margin-left: 6px;
+    cursor: help; opacity: 0.55;
+    font-size: 12px;
+  }
+  .td-transferred-icon:hover { opacity: 1; }
+
   /* HISTORIA DEL CLUB · sub-títulos */
   .hc-sub-title {
     display: flex; align-items: baseline; gap: 12px;
@@ -1497,6 +1592,19 @@
     letter-spacing: 0.25em; color: var(--ink-3); margin-bottom: 6px;
     text-transform: uppercase;
   }
+  .date-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--ink-4); font-weight: 400; letter-spacing: 0.08em;
+    margin-left: 8px; text-transform: none; font-style: italic;
+  }
+  .date-backdated-warn {
+    margin-top: 8px; padding: 10px 12px;
+    background: linear-gradient(90deg, #FFF7E0 0%, #FFEEC5 100%);
+    border-left: 3px solid #B45309;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: #7A3F00; letter-spacing: 0.04em;
+  }
+  .date-backdated-warn strong { color: #B45309; font-weight: 700; }
   .form-row input, .form-row select, .form-row textarea {
     width: 100%; padding: 14px 16px;
     background: var(--bg); border: 1.5px solid var(--line);
@@ -4542,6 +4650,42 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Transferir Venta (solo admin) -->
+  <div class="modal-overlay" id="transferModalOverlay" onclick="closeTransferModal()">
+    <div class="modal transfer-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner">▸ TRANSFERIR VENTA</div>
+      <button class="modal-close" onclick="closeTransferModal()">✕</button>
+      <h2>REASIGNAR VENTA</h2>
+      <div class="modal-sub">— cambiá el vendedor titular de esta venta —</div>
+
+      <div class="transfer-info-card" id="transferSaleInfo">
+        <!-- dinámico · info de la venta actual -->
+      </div>
+
+      <div class="transfer-warn">
+        ⚠ Al transferir se recalculan ranking, coronas y comisiones del mes actual.
+        Si el mes ya fue liquidado, el ajuste no es retroactivo.
+      </div>
+
+      <div class="form-row">
+        <label>Transferir a</label>
+        <div class="transfer-sellers-grid" id="transferSellersGrid">
+          <!-- botones dinámicos · vendedores + estela · sin el actual -->
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Motivo (opcional)</label>
+        <input type="text" id="transferReason" placeholder="ej: Lauti pidió que la ponga a nombre de Bauti...">
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-secondary" onclick="closeTransferModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="confirmTransferSale()" id="btnConfirmTransfer" disabled>✓ CONFIRMAR TRANSFERENCIA</button>
+      </div>
+    </div>
+  </div>
 </div><!-- /mainContainer -->
 
 <div class="fab-group fab-hidden" id="fabGroup">
@@ -4809,8 +4953,11 @@
         <textarea id="saleObs" rows="2" placeholder="Notas adicionales..."></textarea>
       </div>
       <div class="form-row">
-        <label>Fecha de la venta</label>
-        <input type="date" id="saleDate">
+        <label>Fecha de la venta <span class="date-hint" id="saleDateHint"></span></label>
+        <input type="date" id="saleDate" onchange="onSaleDateChange()">
+        <div class="date-backdated-warn" id="saleDateBackdatedWarn" style="display:none;">
+          ⚠ Cargando venta con fecha <strong id="saleDateWarnDate"></strong> · retroactiva
+        </div>
       </div>
     </div>
 
@@ -7884,6 +8031,65 @@
   }
 
   // ===== ACTIONS =====
+  // Configura el input de fecha según rol del usuario
+  // Vendedor/Estela: solo puede cargar dentro del mes actual (mín 1º del mes, máx hoy)
+  // Admin: sin restricciones · puede cargar fecha vieja o futura
+  function setupSaleDateForRole() {
+    const input = document.getElementById('saleDate');
+    const hint = document.getElementById('saleDateHint');
+    if (!input) return;
+    const today = new Date();
+    const todayStr = today.toISOString().slice(0, 10);
+    input.value = todayStr;
+
+    if (currentUser === 'admin') {
+      // Admin: sin restricciones
+      input.removeAttribute('min');
+      input.removeAttribute('max');
+      input.disabled = false;
+      if (hint) hint.textContent = 'sin restricción · podés cargar retroactivo';
+    } else if (isSellerUser(currentUser) || currentUser === 'estela') {
+      // Vendedor: solo puede seleccionar días del MES EN CURSO hasta hoy
+      const firstDayOfMonth = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-01`;
+      input.min = firstDayOfMonth;
+      input.max = todayStr;
+      input.disabled = false;
+      if (hint) hint.textContent = 'entre el 1° del mes y hoy';
+    } else {
+      input.disabled = true;
+      if (hint) hint.textContent = '';
+    }
+    // Reset warning
+    onSaleDateChange();
+  }
+
+  // Se dispara al cambiar fecha manualmente. Muestra banner de retroactivo cuando aplica.
+  function onSaleDateChange() {
+    const input = document.getElementById('saleDate');
+    const warn = document.getElementById('saleDateBackdatedWarn');
+    const warnDate = document.getElementById('saleDateWarnDate');
+    if (!input || !warn) return;
+    const today = new Date().toISOString().slice(0, 10);
+    const val = input.value;
+
+    // Solo mostrar banner cuando es admin y la fecha NO es hoy
+    if (currentUser === 'admin' && val && val !== today) {
+      warn.style.display = '';
+      if (warnDate) {
+        try {
+          const d = new Date(val + 'T00:00:00');
+          warnDate.textContent = d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+        } catch (e) { warnDate.textContent = val; }
+      }
+    } else {
+      warn.style.display = 'none';
+    }
+    // Refrescar preview WhatsApp si existe
+    if (typeof updateSalePreview === 'function') updateSalePreview();
+  }
+
+  window.onSaleDateChange = onSaleDateChange;
+
   async function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
     console.log('▸ openModal · currentUser=', currentUser, '· selectedSellerForSale (antes)=', selectedSellerForSale);
@@ -7894,7 +8100,8 @@
     }
     // Refresh INMEDIATO de precios (force=true para ignorar cache)
     refreshPrices(true);
-    document.getElementById('saleDate').valueAsDate = new Date();
+    // Setear fecha según rol · con restricciones para vendedores
+    setupSaleDateForRole();
     saleItems = [];
     renderSaleItems();
     setModality('ENVÍO');
@@ -9860,6 +10067,128 @@
   window.toggleLiqPaid = toggleLiqPaid;
   window.copyLiqWhatsApp = copyLiqWhatsApp;
 
+  // ═══════════════════════════════════════════════════════════
+  // TRANSFERIR VENTA · admin puede reasignar seller
+  // ═══════════════════════════════════════════════════════════
+  let transferContext = { saleId: null, targetSeller: null };
+
+  function openTransferModal(saleId) {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === saleId);
+    if (!sale) return;
+    transferContext = { saleId, targetSeller: null };
+
+    // Info de la venta actual
+    const currentMeta = SELLER_META[sale.seller] || { name: sale.seller.toUpperCase(), emoji: '👤' };
+    const items = (sale.items && sale.items.length > 0)
+      ? sale.items.map(it => `${it.qty} ${it.name}`).join(' · ')
+      : (sale.product || '—');
+    const infoHTML = `
+      <div class="tic-row"><span class="tic-lbl">Fecha</span><span class="tic-val">${sale.date}</span></div>
+      <div class="tic-row"><span class="tic-lbl">Cliente</span><span class="tic-val">${escapeHtml(sale.client || '—')}</span></div>
+      <div class="tic-row"><span class="tic-lbl">Producto</span><span class="tic-val" style="max-width:280px;text-align:right;">${escapeHtml(items).slice(0, 60)}</span></div>
+      <div class="tic-row"><span class="tic-lbl">Monto</span><span class="tic-val">${fmtMoney(sale.amount)}</span></div>
+      <div class="tic-row tic-current"><span class="tic-lbl">Vendedor actual</span><span class="tic-val">${currentMeta.emoji} ${currentMeta.name}</span></div>
+    `;
+    document.getElementById('transferSaleInfo').innerHTML = infoHTML;
+
+    // Warning · si el mes está liquidado
+    const saleMonthKey = monthKeyOf(sale.date);
+    const liqKey = makeLiqPeriodKey(saleMonthKey, 'FULL');
+    const liq = state.liquidations?.[liqKey]?.[sale.seller];
+    const warnEl = document.querySelector('.transfer-warn');
+    if (liq?.paid) {
+      warnEl.classList.add('is-liquidated');
+      warnEl.innerHTML = `🔒 <strong>MES LIQUIDADO</strong> · Este mes (${saleMonthKey}) ya fue liquidado para ${currentMeta.name}. La transferencia se registra pero NO ajusta pagos ni comisiones ya cobradas.`;
+    } else {
+      warnEl.classList.remove('is-liquidated');
+      warnEl.innerHTML = `⚠ Al transferir se recalculan ranking, coronas y comisiones del mes actual. Si el mes ya fue liquidado, el ajuste no es retroactivo.`;
+    }
+
+    // Botones vendedores destino (incluye estela, excluye el actual)
+    const targets = [...getActiveUsers(), FIXED_USERS.estela]
+      .filter(u => u.key !== sale.seller);
+    const grid = document.getElementById('transferSellersGrid');
+    grid.innerHTML = targets.map(u => `
+      <button class="transfer-seller-btn" data-target="${u.key}" onclick="selectTransferTarget('${u.key}')">
+        <span class="tsb-emoji">${u.emoji}</span>
+        <span>${u.name}</span>
+      </button>
+    `).join('');
+
+    // Reset
+    document.getElementById('transferReason').value = '';
+    document.getElementById('btnConfirmTransfer').disabled = true;
+    document.getElementById('transferModalOverlay').classList.add('open');
+  }
+
+  function selectTransferTarget(targetKey) {
+    transferContext.targetSeller = targetKey;
+    document.querySelectorAll('.transfer-seller-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.target === targetKey);
+    });
+    document.getElementById('btnConfirmTransfer').disabled = false;
+  }
+
+  function closeTransferModal() {
+    document.getElementById('transferModalOverlay').classList.remove('open');
+    transferContext = { saleId: null, targetSeller: null };
+  }
+
+  async function confirmTransferSale() {
+    const { saleId, targetSeller } = transferContext;
+    if (!saleId || !targetSeller) return;
+    const sale = state.sales.find(s => s.id === saleId);
+    if (!sale) return;
+
+    const fromMeta = SELLER_META[sale.seller] || { name: sale.seller.toUpperCase() };
+    const toMeta = SELLER_META[targetSeller] || { name: targetSeller.toUpperCase() };
+    const reason = document.getElementById('transferReason').value.trim();
+
+    if (!confirm(`¿Confirmar transferencia?\n\n${fromMeta.name} → ${toMeta.name}\n\nMonto: ${fmtMoney(sale.amount)}\nFecha: ${sale.date}\nCliente: ${sale.client || '—'}`)) return;
+
+    const before = computeAll();
+    const prevSeller = sale.seller;
+
+    // Registrar historial de transferencia
+    if (!sale.transferHistory) sale.transferHistory = [];
+    sale.transferHistory.push({
+      from: prevSeller,
+      to: targetSeller,
+      at: Date.now(),
+      by: currentUser,
+      reason: reason || null
+    });
+    sale.seller = targetSeller;
+    sale.updatedAt = Date.now();
+
+    await saveState();
+    closeTransferModal();
+    const after = computeAll();
+    checkUnlocks(before, after, targetSeller);
+    renderAll();
+
+    showToast(`✓ Venta transferida · ${fromMeta.name} → ${toMeta.name}`, 'success');
+  }
+
+  // Tooltip con historial de transferencias
+  function buildTransferHistoryTooltip(sale) {
+    if (!sale.transferHistory) return '';
+    const lines = sale.transferHistory.map(t => {
+      const fromMeta = SELLER_META[t.from] || { name: t.from.toUpperCase() };
+      const toMeta = SELLER_META[t.to] || { name: t.to.toUpperCase() };
+      const date = new Date(t.at).toLocaleDateString('es-AR');
+      const reason = t.reason ? ` · ${t.reason}` : '';
+      return `${date} · ${fromMeta.name} → ${toMeta.name}${reason}`;
+    });
+    return 'Historial de transferencias:\n' + lines.join('\n');
+  }
+
+  window.openTransferModal = openTransferModal;
+  window.selectTransferTarget = selectTransferTarget;
+  window.closeTransferModal = closeTransferModal;
+  window.confirmTransferSale = confirmTransferSale;
+
   function renderCrownBoard() {
     const container = document.getElementById('crownBoard');
     if (!container) return;
@@ -10533,10 +10862,18 @@
       if (s.status === 'pending') {
         action = `<button class="ops-btn-approve" style="padding:4px 10px;font-size:9.5px;" onclick="approveSale('${s.id}')">✓</button>`;
       }
+      // Botón transferir · solo admin, no en canceladas/anuladas
+      if (currentUser === 'admin' && s.status !== 'cancelled' && s.status !== 'voided') {
+        action += `<button class="ops-btn-transfer" onclick="openTransferModal('${s.id}')" title="Transferir venta">↔</button>`;
+      }
+      // Ícono si la venta fue transferida alguna vez
+      const transferBadge = (s.transferHistory && s.transferHistory.length > 0)
+        ? `<span class="td-transferred-icon" title="${buildTransferHistoryTooltip(s)}">↔</span>`
+        : '';
       return `
         <tr>
           <td>${s.date}</td>
-          <td class="td-seller">${s.seller}</td>
+          <td class="td-seller">${s.seller}${transferBadge}</td>
           <td>${escapeHtml(s.client || '—')}</td>
           <td class="td-products" title="${escapeHtml(items)}">${escapeHtml(items)}</td>
           <td>${escapeHtml(s.channel || '—')}</td>
