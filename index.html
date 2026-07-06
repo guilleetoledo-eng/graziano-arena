@@ -84,6 +84,8 @@
     padding-bottom: 28px; border-bottom: 1px solid var(--line);
   }
   .login-brand svg { width: 56px; height: 56px; }
+  .login-brand { justify-content: center; }
+  .login-logo { width: min(300px, 72vw); height: auto; display: block; object-fit: contain; }
   .login-brand .txt {
     text-align: left; line-height: 1;
   }
@@ -184,8 +186,14 @@
     background: var(--bg-card); margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
     box-shadow: 6px 6px 0 var(--ink);
   }
-  .brand { display: flex; align-items: center; gap: 14px; }
-  .brand-logo { width: 44px; height: 44px; flex-shrink: 0; }
+  .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .brand-logo { height: 42px; width: auto; max-width: 210px; flex-shrink: 0; display: block; object-fit: contain; }
+  .brand-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 8.5px;
+    letter-spacing: 0.28em; line-height: 1.5; color: var(--ink-3);
+    text-transform: uppercase; padding-left: 14px;
+    border-left: 1px solid var(--line-soft); flex-shrink: 0;
+  }
   .brand-text { display: flex; flex-direction: column; line-height: 1; }
   .brand-text .name {
     font-family: 'Archivo Black', sans-serif; font-size: 22px;
@@ -3311,6 +3319,54 @@
     .login-brand .name { font-size: 18px; }
     .login-title { font-size: clamp(36px, 13vw, 64px) !important; margin-bottom: 4px; }
     .login-eyebrow { margin-bottom: 18px; font-size: 9.5px; letter-spacing: 0.3em; }
+    .login-logo { width: min(260px, 78vw); }
+  }
+
+  /* ==== REFUERZO MOBILE (logo + tablas anchas + pantallas chicas) ==== */
+  @media (max-width: 760px) {
+    /* Logo y marca en el top-bar */
+    .top-bar { row-gap: 12px; }
+    .brand { gap: 10px; width: 100%; }
+    .brand-logo { height: 36px; max-width: 170px; }
+    .brand-tag { font-size: 8px; letter-spacing: 0.22em; padding-left: 10px; }
+
+    /* Tablas anchas -> scroll horizontal en vez de cortarse */
+    .projection-table, .margin-table, .ops-salaries-table {
+      display: block; width: 100%; max-width: 100%;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+    }
+    .projection-table thead th, .margin-table thead th,
+    .ops-salaries-table thead th,
+    .projection-table tbody td, .margin-table tbody td,
+    .ops-salaries-table tbody td,
+    .ops-salaries-table tfoot td {
+      white-space: nowrap;
+    }
+    /* Pista visual de que se puede deslizar */
+    .projection-table::-webkit-scrollbar,
+    .margin-table::-webkit-scrollbar,
+    .ops-salaries-table::-webkit-scrollbar { height: 6px; }
+    .projection-table::-webkit-scrollbar-thumb,
+    .margin-table::-webkit-scrollbar-thumb,
+    .ops-salaries-table::-webkit-scrollbar-thumb { background: var(--line-soft); border-radius: 3px; }
+
+    /* Toggle de vistas: permitir deslizar si no entra */
+    .view-toggle { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .vt-btn { white-space: nowrap; }
+  }
+
+  /* Celulares angostos */
+  @media (max-width: 400px) {
+    .container { padding: 14px 11px 96px; }
+    .brand-tag { display: none; }
+    .brand-logo { height: 34px; max-width: 150px; }
+    .top-meta { gap: 12px; }
+    .top-meta-item .value { font-size: 12px; }
+    .top-meta-item .label { font-size: 8px; letter-spacing: 0.18em; }
+    .user-chip { font-size: 10px; padding: 7px 10px; letter-spacing: 0.12em; }
+    .vt-btn { padding: 11px 6px; font-size: 9px; letter-spacing: 0.06em; }
+    .login-logo { width: min(220px, 82vw); }
   }
 </style>
 </head>
@@ -3322,25 +3378,7 @@
 
     <div class="pin-screen" id="selectScreen" style="display:flex;">
       <div class="login-brand">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="brick-login" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FF4A3A"/>
-              <stop offset="100%" stop-color="#C71808"/>
-            </linearGradient>
-          </defs>
-          <g transform="translate(15,30)">
-            <rect x="20" y="20" width="38" height="22" fill="url(#brick-login)" rx="1" transform="rotate(-8 39 31)"/>
-            <rect x="0" y="32" width="48" height="26" fill="url(#brick-login)" rx="1" transform="rotate(8 24 45)"/>
-            <circle cx="30" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
-            <circle cx="42" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
-            <circle cx="50" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
-          </g>
-        </svg>
-        <div class="txt">
-          <div class="name">GRAZIANO</div>
-          <div class="sub">ARENA DE VENTAS</div>
-        </div>
+        <img class="login-logo" src="./logograzianomateriales.png" alt="Graziano Materiales" />
       </div>
       <div class="login-eyebrow">— ¿QUIÉN ENTRA? —</div>
       <div class="login-grid" style="width:100%;">
@@ -3391,25 +3429,8 @@
 
   <div class="top-bar">
     <div class="brand">
-      <svg class="brand-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="brick" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FF4A3A"/>
-            <stop offset="100%" stop-color="#C71808"/>
-          </linearGradient>
-        </defs>
-        <g transform="translate(15,30)">
-          <rect x="20" y="20" width="38" height="22" fill="url(#brick)" rx="1" transform="rotate(-8 39 31)"/>
-          <rect x="0" y="32" width="48" height="26" fill="url(#brick)" rx="1" transform="rotate(8 24 45)"/>
-          <circle cx="30" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
-          <circle cx="42" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
-          <circle cx="50" cy="29" r="1.5" fill="#5A0805" transform="rotate(-8 39 31)"/>
-        </g>
-      </svg>
-      <div class="brand-text">
-        <span class="name">GRAZIANO</span>
-        <span class="sub">MATERIALES · SISTEMA DE INCENTIVOS</span>
-      </div>
+      <img class="brand-logo" src="./logograzianomateriales.png" alt="Graziano Materiales" />
+      <span class="brand-tag">SISTEMA DE<br>INCENTIVOS</span>
     </div>
     <div class="top-meta">
       <div class="top-meta-item">
