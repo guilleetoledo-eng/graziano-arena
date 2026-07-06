@@ -4840,6 +4840,13 @@
         <label>Monto total ($)</label>
         <input type="number" id="saleEstelaAmount" placeholder="ej: 350000" min="0" step="100" autocomplete="off">
       </div>
+      <div class="form-row">
+        <label>📅 Fecha de la venta <span class="date-hint" id="saleDateHintEstela"></span></label>
+        <input type="date" id="saleDateEstela" onchange="onSaleDateChangeEstela()">
+        <div class="date-backdated-warn" id="saleDateBackdatedWarnEstela" style="display:none;">
+          ⚠ Cargando venta con fecha <strong id="saleDateWarnDateEstela"></strong> · retroactiva
+        </div>
+      </div>
       <div class="estela-hint">↳ Modo simplificado · solo cliente + monto. La venta queda aprobada automáticamente.</div>
     </div>
 
@@ -8037,10 +8044,13 @@
   function setupSaleDateForRole() {
     const input = document.getElementById('saleDate');
     const hint = document.getElementById('saleDateHint');
+    const inputEstela = document.getElementById('saleDateEstela');
+    const hintEstela = document.getElementById('saleDateHintEstela');
     if (!input) return;
     const today = new Date();
     const todayStr = today.toISOString().slice(0, 10);
     input.value = todayStr;
+    if (inputEstela) inputEstela.value = todayStr;
 
     if (currentUser === 'admin' || currentUser === 'estela') {
       // Admin y Estela: sin restricciones (Estela suele cargar en atraso)
@@ -8048,6 +8058,12 @@
       input.removeAttribute('max');
       input.disabled = false;
       if (hint) hint.textContent = 'sin restricción · podés cargar retroactivo';
+      if (inputEstela) {
+        inputEstela.removeAttribute('min');
+        inputEstela.removeAttribute('max');
+        inputEstela.disabled = false;
+      }
+      if (hintEstela) hintEstela.textContent = 'sin restricción · podés cargar retroactivo';
     } else if (isSellerUser(currentUser)) {
       // Vendedor: solo puede seleccionar días del MES EN CURSO hasta hoy
       const firstDayOfMonth = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-01`;
@@ -8061,7 +8077,34 @@
     }
     // Reset warning
     onSaleDateChange();
+    onSaleDateChangeEstela();
   }
+
+  // Sincroniza el input de Estela con el principal + muestra warning
+  function onSaleDateChangeEstela() {
+    const inputEstela = document.getElementById('saleDateEstela');
+    const inputMain = document.getElementById('saleDate');
+    const warn = document.getElementById('saleDateBackdatedWarnEstela');
+    const warnDate = document.getElementById('saleDateWarnDateEstela');
+    if (!inputEstela || !warn) return;
+    const val = inputEstela.value;
+    // Sincronizar con el input principal (que es el que lee submitSale)
+    if (inputMain && val) inputMain.value = val;
+    const today = new Date().toISOString().slice(0, 10);
+    if ((currentUser === 'admin' || currentUser === 'estela') && val && val !== today) {
+      warn.style.display = '';
+      if (warnDate) {
+        try {
+          const d = new Date(val + 'T00:00:00');
+          warnDate.textContent = d.toLocaleDateString('es-AR', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+        } catch (e) { warnDate.textContent = val; }
+      }
+    } else {
+      warn.style.display = 'none';
+    }
+  }
+
+  window.onSaleDateChangeEstela = onSaleDateChangeEstela;
 
   // Se dispara al cambiar fecha manualmente. Muestra banner de retroactivo cuando aplica.
   function onSaleDateChange() {
