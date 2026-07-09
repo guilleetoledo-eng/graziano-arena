@@ -7585,8 +7585,8 @@
     const now = new Date();
     if (monthLbl) monthLbl.textContent = `${MONTHS_ES[now.getMonth()]} ${now.getFullYear()}`;
 
-    // Todos los sellers a rankear
-    const sellers = ['lauti', 'bauti', 'leo', 'kevin', 'estela'];
+    // Todos los sellers a rankear (dinámico desde CONFIG.competitiveSellers)
+    const sellers = [...(CONFIG.competitiveSellers || []), 'estela'].filter(k => c[k]);
     const list = sellers
       .map(k => ({
         key: k,
@@ -7598,9 +7598,9 @@
 
     // Total del equipo
     const totalTeam = list.reduce((a, r) => a + r.total, 0);
-    totalEl.textContent = fmtMoney(totalTeam);
+    if (totalEl) totalEl.textContent = fmtMoney(totalTeam);
 
-    const someoneSells = list[0].total > 0;
+    const someoneSells = list.length > 0 && list[0].total > 0;
 
     rowsEl.innerHTML = list.map((r, i) => {
       const rank = someoneSells ? (i + 1) : null;
@@ -7785,7 +7785,7 @@
 
     // PRIVACIDAD: vendedor logueado solo ve SU card de cobros
     const isViewer = currentUser === 'view';
-    const sellerVisibility = ['lauti', 'bauti', 'leo', 'kevin'];
+    const sellerVisibility = CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin'];
     sellerVisibility.forEach(seller => {
       const card = document.getElementById(`cobros-${seller}`);
       if (!card) return;
@@ -7802,18 +7802,18 @@
     const currentPeriodLbl = payoutPeriodLabel(curWeek);
     const currentDateLbl = payoutDateLabel(curWeek);
 
-    ['lauti', 'bauti', 'leo', 'kevin'].forEach(seller => {
+    (CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin']).forEach(seller => {
       const sellerPayments = payments[seller] || {};
 
       // Emoji al lado del nombre
       const emojiEl = document.getElementById(`cobros-emoji-${seller}`);
       if (emojiEl) {
-        const ranking = ['lauti', 'bauti', 'leo', 'kevin']
-          .map(k => ({ key: k, total: c[k].total }))
+        const ranking = (CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin'])
+          .map(k => ({ key: k, total: c[k]?.total || 0 }))
           .sort((a, b) => b.total - a.total);
         const rank = ranking.findIndex(r => r.key === seller) + 1;
         const someoneHasSales = ranking[0].total > 0;
-        emojiEl.textContent = (someoneHasSales && c[seller].total > 0) ? positionEmoji(rank) : '';
+        emojiEl.textContent = (someoneHasSales && (c[seller]?.total || 0) > 0) ? positionEmoji(rank) : '';
       }
 
       // Timeline · adaptado a la frecuencia
@@ -8432,8 +8432,8 @@
     }
 
     // 4. Alcanzar al de adelante (si va atrás)
-    const ranking = ['lauti', 'bauti', 'leo', 'kevin']
-      .map(k => ({ key: k, total: c[k].total }))
+    const ranking = (CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin'])
+      .map(k => ({ key: k, total: c[k]?.total || 0 }))
       .sort((a, b) => b.total - a.total);
     const myIdx = ranking.findIndex(r => r.key === seller);
     if (myIdx > 0) {
@@ -8513,45 +8513,43 @@
     renderCountdownBanner(c);
     renderMySalary(c);
 
-    // Ranking entre TODOS los vendedores (incluyendo Estela)
+    // Ranking entre TODOS los vendedores activos + Estela
     // Por monto absoluto · usa el TOTAL (aprobadas + pendientes)
-    const rankingSellers = ['lauti', 'bauti', 'leo', 'kevin', 'estela'];
+    const activeCompetitive = CONFIG.competitiveSellers || [];
+    const rankingSellers = [...activeCompetitive, 'estela'].filter(k => c[k]);
     const ranking = rankingSellers
-      .map(k => ({ key: k, total: c[k].total }))
+      .map(k => ({ key: k, total: c[k]?.total || 0 }))
       .sort((a, b) => b.total - a.total);
-    // rankMap[key] = posición (1, 2, 3, 4, 5) o null si nadie tiene ventas
+    // rankMap[key] = posición o null si nadie tiene ventas
     const rankMap = {};
-    const someoneHasSales = ranking[0].total > 0;
+    const someoneHasSales = ranking.length > 0 && ranking[0].total > 0;
     ranking.forEach((r, i) => {
-      // Si alguien tiene ventas, TODOS reciben número (aunque estén en $0, van al final)
       rankMap[r.key] = someoneHasSales ? (i + 1) : null;
     });
 
-    renderSeller('lauti', c.lauti, c.firstPlace === 'lauti');
-    renderSeller('bauti', c.bauti, c.firstPlace === 'bauti');
-    renderSeller('leo',   c.leo,   c.firstPlace === 'leo');
-    renderSeller('kevin', c.kevin, c.firstPlace === 'kevin');
-    renderEstela(c.estela);
+    // Renderizar cada vendedor competitivo (dinámico)
+    activeCompetitive.forEach(key => {
+      if (c[key]) {
+        renderSeller(key, c[key], c.firstPlace === key);
+      }
+    });
+    if (c.estela) renderEstela(c.estela);
 
-    // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🥺 #3 · 🪦 #4)
-    // Además: reordenar cards en el DOM usando CSS order según ranking
-    ['lauti', 'bauti', 'leo', 'kevin'].forEach(k => {
+    // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🤡 #3 · 💀 #4 · 🪦 #5)
+    activeCompetitive.forEach(k => {
       const r = rankMap[k];
       const rankEl = document.getElementById('rank-' + k);
       const emojiEl = document.getElementById('emoji-' + k);
       const cardEl = document.getElementById('card-' + k);
       if (someoneHasSales) {
-        rankEl.textContent = String(r);
-        // Emoji siempre visible cuando el equipo tiene ventas (aunque este vendedor esté en $0)
-        emojiEl.textContent = positionEmoji(r);
-        // Aplicar orden CSS: incluso los que están en $0 van al final
+        if (rankEl) rankEl.textContent = String(r);
+        if (emojiEl) emojiEl.textContent = positionEmoji(r);
         if (cardEl) cardEl.style.order = r;
       } else {
-        rankEl.textContent = '—';
-        emojiEl.textContent = '';
-        // Sin ventas de nadie: orden natural
+        if (rankEl) rankEl.textContent = '—';
+        if (emojiEl) emojiEl.textContent = '';
         if (cardEl) {
-          const defaultOrder = ['lauti', 'bauti', 'leo', 'kevin'].indexOf(k) + 1;
+          const defaultOrder = activeCompetitive.indexOf(k) + 1;
           cardEl.style.order = defaultOrder;
         }
       }
@@ -8574,10 +8572,15 @@
       estelaCardEl.style.order = someoneHasSales ? rankMap['estela'] : 99;
     }
 
-    // Marcar visualmente el líder en el duelo
+    // Marcar visualmente el líder en el duelo (dinámico)
     const dueloEl = document.querySelector('.duelo');
-    dueloEl.classList.remove('leader-lauti', 'leader-bauti', 'leader-leo', 'leader-kevin');
-    if (c.firstPlace) dueloEl.classList.add('leader-' + c.firstPlace);
+    if (dueloEl) {
+      // Remover TODAS las clases leader-* existentes
+      Array.from(dueloEl.classList).forEach(cls => {
+        if (cls.startsWith('leader-')) dueloEl.classList.remove(cls);
+      });
+      if (c.firstPlace) dueloEl.classList.add('leader-' + c.firstPlace);
+    }
 
     renderRulesCard(c);
     renderAchievementsCard(c);
@@ -9235,8 +9238,8 @@
     // una venta cargada por un vendedor se atribuya a otro.
     const sellerForSale = isAdmin ? selectedSellerForSale : currentUser;
 
-    // Validación defensiva: el seller resultante debe ser uno válido
-    const validSellers = ['lauti', 'bauti', 'leo', 'kevin', 'estela'];
+    // Validación defensiva: el seller resultante debe ser uno válido (dinámico)
+    const validSellers = [...(CONFIG.competitiveSellers || []), 'estela'];
     if (!validSellers.includes(sellerForSale)) {
       showToast('ERROR · seller inválido: ' + sellerForSale, 'warn');
       console.error('❌ submitSale: seller inválido', { currentUser, selectedSellerForSale, sellerForSale });
