@@ -7461,7 +7461,7 @@
     rowsEl.innerHTML = list.map((r, i) => {
       const rank = someoneSells ? (i + 1) : null;
       const isZero = r.total === 0;
-      const rankEmoji = (rank && !isZero) ? positionEmoji(rank) : '';
+      const rankEmoji = rank ? positionEmoji(rank) : '';
       const rankNum = rank ? `#${rank}` : '#—';
       const rowCls = isZero ? 'tt-row rank-0' :
                      rank === 1 ? 'tt-row rank-1' :
@@ -8377,8 +8377,8 @@
       const cardEl = document.getElementById('card-' + k);
       if (someoneHasSales) {
         rankEl.textContent = String(r);
-        // Emoji solo si tiene ventas · si está en $0 va como #— sin emoji
-        emojiEl.textContent = c[k].total > 0 ? positionEmoji(r) : '';
+        // Emoji siempre visible cuando el equipo tiene ventas (aunque este vendedor esté en $0)
+        emojiEl.textContent = positionEmoji(r);
         // Aplicar orden CSS: incluso los que están en $0 van al final
         if (cardEl) cardEl.style.order = r;
       } else {
@@ -8397,7 +8397,7 @@
     const estelaRankEmoji = document.getElementById('estela-rank-emoji');
     const estelaRankNum = document.getElementById('estela-rank');
     const estelaCardEl = document.getElementById('card-estela');
-    if (someoneHasSales && c.estela.total > 0) {
+    if (someoneHasSales) {
       const r = rankMap['estela'];
       if (estelaRankRow) estelaRankRow.style.display = '';
       if (estelaRankEmoji) estelaRankEmoji.textContent = positionEmoji(r);
