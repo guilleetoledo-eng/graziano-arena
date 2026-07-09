@@ -11048,11 +11048,11 @@
       return { total, count, ticketAvg, best, pct, target };
     };
     const sellers = [
-      { key: 'lauti',  name: `LAUTI ${SELLER_META.lauti.emoji}`,   data: computeForMonth('lauti'),  target: CONFIG.target },
-      { key: 'bauti',  name: `BAUTI ${SELLER_META.bauti.emoji}`,   data: computeForMonth('bauti'),  target: CONFIG.target },
-      { key: 'leo',    name: `LEO ${SELLER_META.leo.emoji}`,       data: computeForMonth('leo'),    target: CONFIG.target },
-      { key: 'kevin',  name: `KEVIN ${SELLER_META.kevin.emoji}`,   data: computeForMonth('kevin'),  target: CONFIG.target },
-      { key: 'estela', name: 'ESTELA',                              data: computeForMonth('estela'), target: CONFIG.estelaTarget }
+      { key: 'lauti',  name: `LAUTI ${SELLER_META.lauti?.emoji || '🎯'}`,   data: computeForMonth('lauti'),  target: CONFIG.target },
+      { key: 'bauti',  name: `BAUTI ${SELLER_META.bauti?.emoji || '🧱'}`,   data: computeForMonth('bauti'),  target: CONFIG.target },
+      { key: 'leo',    name: `LEO ${SELLER_META.leo?.emoji || '🦴'}`,       data: computeForMonth('leo'),    target: CONFIG.target },
+      { key: 'kevin',  name: `KEVIN ${SELLER_META.kevin?.emoji || '🏹'}`,   data: computeForMonth('kevin'),  target: CONFIG.target },
+      { key: 'estela', name: 'ESTELA',                                       data: computeForMonth('estela'), target: CONFIG.estelaTarget }
     ];
     document.getElementById('opsBySeller').innerHTML = sellers.map(s => {
       const pct = Math.min(150, s.data.pct * 100);
