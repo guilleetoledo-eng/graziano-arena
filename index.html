@@ -4202,7 +4202,7 @@
           <div class="cw-stats">
             <span>Facturado <strong id="cw-facturado-lauti">$0</strong></span>
             <span class="cw-pipe">·</span>
-            <span>3% <strong id="cw-comision-lauti">$0</strong></span>
+            <span><span id="cw-comision-label-lauti">Com.</span> <strong id="cw-comision-lauti">$0</strong></span>
           </div>
           <div class="cw-amount-block">
             <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
@@ -7881,6 +7881,13 @@
       document.getElementById(`cw-comision-${seller}`).textContent = fmtMoney(payout.comision);
       document.getElementById(`cw-amount-${seller}`).textContent = fmtMoney(payout.comision);
       autoScaleAmount(`cw-amount-${seller}`, payout.comision, 'cw-amount');
+
+      // Label de comisión según esquema del vendedor · dinámico
+      const labelCommEl = document.getElementById(`cw-comision-label-${seller}`);
+      if (labelCommEl) {
+        const scheme = getCommissionScheme(seller, currentMonthKey());
+        labelCommEl.textContent = scheme === 'old' ? '3%' : 'Com.';
+      }
 
       // Cambiar label "A COBRAR EL ..."
       const labelEl = document.querySelector(`#cobros-${seller} .cw-amount-label`);
