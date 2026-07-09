@@ -312,6 +312,13 @@
   /* Card de Estela adentro del grid: mismo tamaño que los vendedores */
   .duelo.trio .estela-card {
     box-shadow: 6px 6px 0 var(--ink);
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 32px 28px;
+    border-left: 1.5px solid var(--ink);
+  }
+  .duelo.trio .estela-card::before {
+    display: none;
   }
   .seller-card {
     position: relative; padding: 32px 28px;
@@ -3120,6 +3127,33 @@
     color: var(--ink-3); margin-bottom: 14px;
     letter-spacing: 0.05em;
   }
+  .arena-tramo {
+    background: var(--bg-card); border: 1px solid var(--line);
+    padding: 10px 12px; margin-bottom: 10px;
+  }
+  .arena-tramo-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--red); font-weight: 700;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .arena-tramo-grid {
+    display: grid; grid-template-columns: 1fr 100px;
+    gap: 10px; align-items: end;
+  }
+  .arena-tramo-grid .cfg-field { margin-bottom: 0; }
+  .arena-preview {
+    background: var(--bg-soft); border-left: 3px solid var(--red);
+    padding: 10px 12px; margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink-3); line-height: 1.6;
+  }
+  .arena-preview .ap-title {
+    font-weight: 700; color: var(--ink); letter-spacing: 0.1em;
+    text-transform: uppercase; font-size: 9px; margin-bottom: 4px;
+  }
+  .arena-preview .ap-error {
+    color: var(--red); font-weight: 700;
+  }
   .cfg-field { margin-bottom: 12px; }
   .cfg-field label {
     display: block; font-family: 'JetBrains Mono', monospace;
@@ -4061,7 +4095,7 @@
       </div>
       <div class="estela-progress">
         <div class="estela-progress-header">
-          <span class="estela-prog-label">Tracking · meta $4M</span>
+          <span class="estela-prog-label" id="estelaMetaLabel">Tracking · meta $4M</span>
           <span class="estela-prog-pct" id="pct-estela">0%</span>
         </div>
         <div class="estela-progress-track">
@@ -4521,22 +4555,54 @@
         <!-- ARENA -->
         <div class="cfg-block">
           <div class="cfg-block-title">BONUS ARENA</div>
-          <div class="cfg-block-sub">Premio extra que se suma al escalón al pasar la meta</div>
-          <div class="cfg-field cfg-row">
-            <label>De 13,5M a 14,5M</label>
-            <input type="number" id="cfgArena1" step="0.1" min="0" max="100">
-            <span class="cfg-unit">%</span>
+          <div class="cfg-block-sub">Umbrales + porcentaje que se suma al escalón por cada tramo</div>
+
+          <div class="arena-tramo">
+            <div class="arena-tramo-title">TRAMO 1 · desde el umbral</div>
+            <div class="arena-tramo-grid">
+              <div class="cfg-field">
+                <label>Umbral 1 ($)</label>
+                <input type="number" id="cfgArenaTh1" step="100000" min="0" oninput="onArenaThresholdChange()">
+              </div>
+              <div class="cfg-field cfg-row">
+                <label>Bonus</label>
+                <input type="number" id="cfgArena1" step="0.1" min="0" max="100">
+                <span class="cfg-unit">%</span>
+              </div>
+            </div>
           </div>
-          <div class="cfg-field cfg-row">
-            <label>De 14,5M a 15,5M</label>
-            <input type="number" id="cfgArena2" step="0.1" min="0" max="100">
-            <span class="cfg-unit">%</span>
+
+          <div class="arena-tramo">
+            <div class="arena-tramo-title">TRAMO 2 · desde el umbral</div>
+            <div class="arena-tramo-grid">
+              <div class="cfg-field">
+                <label>Umbral 2 ($)</label>
+                <input type="number" id="cfgArenaTh2" step="100000" min="0" oninput="onArenaThresholdChange()">
+              </div>
+              <div class="cfg-field cfg-row">
+                <label>Bonus</label>
+                <input type="number" id="cfgArena2" step="0.1" min="0" max="100">
+                <span class="cfg-unit">%</span>
+              </div>
+            </div>
           </div>
-          <div class="cfg-field cfg-row">
-            <label>Desde 15,5M</label>
-            <input type="number" id="cfgArena3" step="0.1" min="0" max="100">
-            <span class="cfg-unit">%</span>
+
+          <div class="arena-tramo">
+            <div class="arena-tramo-title">TRAMO 3 · desde el umbral · sin techo</div>
+            <div class="arena-tramo-grid">
+              <div class="cfg-field">
+                <label>Umbral 3 ($)</label>
+                <input type="number" id="cfgArenaTh3" step="100000" min="0" oninput="onArenaThresholdChange()">
+              </div>
+              <div class="cfg-field cfg-row">
+                <label>Bonus</label>
+                <input type="number" id="cfgArena3" step="0.1" min="0" max="100">
+                <span class="cfg-unit">%</span>
+              </div>
+            </div>
           </div>
+
+          <div class="arena-preview" id="arenaPreview"></div>
         </div>
 
         <!-- VIÁTICO + BONOS -->
@@ -6846,6 +6912,13 @@
     document.getElementById('best-estela').textContent = fmtMoney(data.best);
     document.getElementById('pct-estela').textContent = Math.round(data.pct * 100) + '%';
     document.getElementById('bar-estela').style.width = Math.min(100, data.pct * 100) + '%';
+    // Label de meta dinámico según CONFIG.estelaTarget
+    const metaLbl = document.getElementById('estelaMetaLabel');
+    if (metaLbl) {
+      const t = CONFIG.estelaTarget || 4000000;
+      const mShort = t >= 1000000 ? `$${(t/1000000).toFixed(t % 1000000 === 0 ? 0 : 1)}M` : `$${(t/1000).toFixed(0)}k`;
+      metaLbl.textContent = `Tracking · meta ${mShort}`;
+    }
     const pending = pendingSales('estela');
     document.getElementById('pending-num-estela').textContent = pending.length;
   }
@@ -11017,11 +11090,15 @@
     T('cfgArena1', (CONFIG.newScheme.arena[0].rate * 100).toFixed(1));
     T('cfgArena2', (CONFIG.newScheme.arena[1].rate * 100).toFixed(1));
     T('cfgArena3', (CONFIG.newScheme.arena[2].rate * 100).toFixed(1));
+    T('cfgArenaTh1', CONFIG.newScheme.arena[0].from);
+    T('cfgArenaTh2', CONFIG.newScheme.arena[1].from);
+    T('cfgArenaTh3', CONFIG.newScheme.arena[2].from);
     T('cfgViatico', CONFIG.newScheme.viatico);
     T('cfgViaticoThreshold', CONFIG.newScheme.viaticoThreshold);
     T('cfgBonusFirst', CONFIG.bonusFirstPlace);
     T('cfgBonusTeam', CONFIG.bonusTeamGoal);
     updateConfigPreview();
+    updateArenaPreview();
   }
 
   function readConfigFromForm() {
@@ -11032,6 +11109,7 @@
       estelaTarget: G('cfgEstelaTarget'),
       tiers:  [G('cfgTier1')/100, G('cfgTier2')/100, G('cfgTier3')/100, G('cfgTier4')/100],
       arena:  [G('cfgArena1')/100, G('cfgArena2')/100, G('cfgArena3')/100],
+      arenaTh: [G('cfgArenaTh1'), G('cfgArenaTh2'), G('cfgArenaTh3')],
       viatico: G('cfgViatico'),
       viaticoThreshold: G('cfgViaticoThreshold'),
       bonusFirstPlace: G('cfgBonusFirst'),
@@ -11046,10 +11124,12 @@
       { from: 10000000, to: 15000000,  rate: formCfg.tiers[2] },
       { from: 15000000, to: Infinity,  rate: formCfg.tiers[3] }
     ];
+    // Arena con umbrales dinámicos
+    const th = formCfg.arenaTh || [13500000, 14500000, 15500000];
     const arena = [
-      { from: 13500000, to: 14500000, rate: formCfg.arena[0] },
-      { from: 14500000, to: 15500000, rate: formCfg.arena[1] },
-      { from: 15500000, to: Infinity, rate: formCfg.arena[2] }
+      { from: th[0], to: th[1],    rate: formCfg.arena[0] },
+      { from: th[1], to: th[2],    rate: formCfg.arena[1] },
+      { from: th[2], to: Infinity, rate: formCfg.arena[2] }
     ];
     let base = 0;
     for (const t of tiers) {
@@ -11064,6 +11144,38 @@
     const via = facturado > formCfg.viaticoThreshold ? formCfg.viatico : 0;
     return Math.round(base + extra + via);
   }
+
+  // Preview del bloque BONUS ARENA · muestra los tramos calculados en vivo
+  function updateArenaPreview() {
+    const preview = document.getElementById('arenaPreview');
+    if (!preview) return;
+    const form = readConfigFromForm();
+    const [th1, th2, th3] = form.arenaTh;
+    const [r1, r2, r3] = form.arena;
+
+    // Validación: los umbrales deben ser ascendentes
+    if (th1 >= th2 || th2 >= th3) {
+      preview.innerHTML = `
+        <div class="ap-title">▸ TRAMOS RESULTANTES</div>
+        <div class="ap-error">⚠ Los umbrales deben ir de menor a mayor (${fmtMoney(th1)} → ${fmtMoney(th2)} → ${fmtMoney(th3)})</div>
+      `;
+      return;
+    }
+    preview.innerHTML = `
+      <div class="ap-title">▸ TRAMOS RESULTANTES</div>
+      Tramo 1: ${fmtMoney(th1)} → ${fmtMoney(th2)} · <strong>${(r1*100).toFixed(1)}%</strong><br>
+      Tramo 2: ${fmtMoney(th2)} → ${fmtMoney(th3)} · <strong>${(r2*100).toFixed(1)}%</strong><br>
+      Tramo 3: ${fmtMoney(th3)} → ∞ · <strong>${(r3*100).toFixed(1)}%</strong>
+    `;
+  }
+
+  // Handler onchange de los umbrales
+  function onArenaThresholdChange() {
+    updateArenaPreview();
+    if (typeof updateConfigPreview === 'function') updateConfigPreview();
+  }
+
+  window.onArenaThresholdChange = onArenaThresholdChange;
 
   function updateConfigPreview() {
     const form = readConfigFromForm();
@@ -11094,11 +11206,22 @@
       st.className = 'cfg-status error';
       return;
     }
+    // Validación: umbrales arena deben ser ascendentes
+    const [th1, th2, th3] = form.arenaTh;
+    if (th1 >= th2 || th2 >= th3) {
+      const st = document.getElementById('cfgStatus');
+      st.textContent = '✗ umbrales arena deben ir de menor a mayor';
+      st.className = 'cfg-status error';
+      return;
+    }
     CONFIG.target = form.target;
     CONFIG.teamTarget = form.teamTarget;
     CONFIG.estelaTarget = form.estelaTarget;
     form.tiers.forEach((r, i) => CONFIG.newScheme.tiers[i].rate = r);
-    form.arena.forEach((r, i) => CONFIG.newScheme.arena[i].rate = r);
+    // Actualizar rates + umbrales del arena
+    CONFIG.newScheme.arena[0] = { from: th1, to: th2,       rate: form.arena[0] };
+    CONFIG.newScheme.arena[1] = { from: th2, to: th3,       rate: form.arena[1] };
+    CONFIG.newScheme.arena[2] = { from: th3, to: Infinity,  rate: form.arena[2] };
     CONFIG.newScheme.viatico = form.viatico;
     CONFIG.newScheme.viaticoThreshold = form.viaticoThreshold;
     CONFIG.bonusFirstPlace = form.bonusFirstPlace;
@@ -11110,6 +11233,7 @@
         estelaTarget: form.estelaTarget,
         tiersRates: form.tiers,
         arenaRates: form.arena,
+        arenaThresholds: form.arenaTh,
         viatico: form.viatico,
         viaticoThreshold: form.viaticoThreshold,
         bonusFirstPlace: form.bonusFirstPlace,
@@ -11136,7 +11260,10 @@
     CONFIG.teamTarget = DEFAULT_CONFIG.teamTarget;
     CONFIG.estelaTarget = DEFAULT_CONFIG.estelaTarget;
     DEFAULT_CONFIG.newScheme.tiers.forEach((t, i) => CONFIG.newScheme.tiers[i].rate = t.rate);
-    DEFAULT_CONFIG.newScheme.arena.forEach((t, i) => CONFIG.newScheme.arena[i].rate = t.rate);
+    // Restaurar arena completa (from + to + rate)
+    DEFAULT_CONFIG.newScheme.arena.forEach((t, i) => {
+      CONFIG.newScheme.arena[i] = { from: t.from, to: t.to, rate: t.rate };
+    });
     CONFIG.newScheme.viatico = DEFAULT_CONFIG.newScheme.viatico;
     CONFIG.newScheme.viaticoThreshold = DEFAULT_CONFIG.newScheme.viaticoThreshold;
     CONFIG.bonusFirstPlace = DEFAULT_CONFIG.bonusFirstPlace;
@@ -11149,11 +11276,15 @@
     const ids = ['cfgTarget','cfgTeamTarget','cfgEstelaTarget',
                  'cfgTier1','cfgTier2','cfgTier3','cfgTier4',
                  'cfgArena1','cfgArena2','cfgArena3',
+                 'cfgArenaTh1','cfgArenaTh2','cfgArenaTh3',
                  'cfgViatico','cfgViaticoThreshold',
                  'cfgBonusFirst','cfgBonusTeam'];
     ids.forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.addEventListener('input', updateConfigPreview);
+      if (el) {
+        el.addEventListener('input', updateConfigPreview);
+        el.addEventListener('input', updateArenaPreview);
+      }
     });
   }
 
@@ -11167,6 +11298,17 @@
     }
     if (Array.isArray(remote.arenaRates) && remote.arenaRates.length === 3) {
       remote.arenaRates.forEach((r, i) => CONFIG.newScheme.arena[i].rate = r);
+    }
+    // Aplicar umbrales dinámicos si vienen del remote
+    if (Array.isArray(remote.arenaThresholds) && remote.arenaThresholds.length === 3) {
+      const [th1, th2, th3] = remote.arenaThresholds;
+      if (th1 < th2 && th2 < th3) {
+        CONFIG.newScheme.arena[0].from = th1;
+        CONFIG.newScheme.arena[0].to   = th2;
+        CONFIG.newScheme.arena[1].from = th2;
+        CONFIG.newScheme.arena[1].to   = th3;
+        CONFIG.newScheme.arena[2].from = th3;
+      }
     }
     if (typeof remote.viatico === 'number')          CONFIG.newScheme.viatico = remote.viatico;
     if (typeof remote.viaticoThreshold === 'number') CONFIG.newScheme.viaticoThreshold = remote.viaticoThreshold;
