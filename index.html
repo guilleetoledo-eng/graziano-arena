@@ -1456,6 +1456,17 @@
   .ops-btn-transfer:hover {
     background: var(--red); color: white; border-color: var(--red);
   }
+  .ops-btn-editdate {
+    background: transparent; border: 1.5px solid var(--ink);
+    padding: 4px 8px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink); font-weight: 700;
+    letter-spacing: 0.05em; transition: all 0.15s;
+    margin-left: 4px;
+  }
+  .ops-btn-editdate:hover {
+    background: #B45309; color: white; border-color: #B45309;
+  }
 
   /* Ícono transferida junto al vendedor en la tabla */
   .td-transferred-icon {
@@ -4686,6 +4697,39 @@
       </div>
     </div>
   </div>
+  <!-- Modal Corregir Fecha (solo admin) -->
+  <div class="modal-overlay" id="editDateModalOverlay" onclick="closeEditDateModal()">
+    <div class="modal transfer-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background: #B45309;">▸ CORREGIR FECHA DE VENTA</div>
+      <button class="modal-close" onclick="closeEditDateModal()">✕</button>
+      <h2>CAMBIAR FECHA</h2>
+      <div class="modal-sub">— corregí la fecha si se cargó mal —</div>
+
+      <div class="transfer-info-card" id="editDateSaleInfo">
+        <!-- dinámico -->
+      </div>
+
+      <div class="transfer-warn">
+        ⚠ Cambiar la fecha puede afectar ranking, coronas y en qué mes cae la venta.
+        Si el mes original ya está liquidado, revisá antes de confirmar.
+      </div>
+
+      <div class="form-row">
+        <label>📅 Nueva fecha</label>
+        <input type="date" id="editDateNew">
+      </div>
+
+      <div class="form-row">
+        <label>Motivo (opcional)</label>
+        <input type="text" id="editDateReason" placeholder="ej: se cargó con fecha 09/jul pero fue el 08/jul...">
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-secondary" onclick="closeEditDateModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="confirmEditDate()">✓ CONFIRMAR FECHA</button>
+      </div>
+    </div>
+  </div>
 </div><!-- /mainContainer -->
 
 <div class="fab-group fab-hidden" id="fabGroup">
@@ -5984,6 +6028,15 @@
   function monthKeyOf(dateStr) {
     // "2026-05-15" → "2026-05"
     return dateStr ? String(dateStr).slice(0, 7) : currentMonthKey();
+  }
+  // Fecha "YYYY-MM-DD" en zona horaria LOCAL (evita bug de UTC en Argentina UTC-3)
+  function todayLocalISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  // Igual pero con offset de días (ej: hace 7 días)
+  function localISO(dateObj) {
+    return `${dateObj.getFullYear()}-${String(dateObj.getMonth()+1).padStart(2,'0')}-${String(dateObj.getDate()).padStart(2,'0')}`;
   }
   function currentMonthKey() {
     const d = new Date();
@@ -7670,7 +7723,7 @@
     // Últimos 7 días
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
-    const sevenDaysAgoStr = sevenDaysAgo.toISOString().slice(0, 10);
+    const sevenDaysAgoStr = localISO(sevenDaysAgo);
     const last7Sales = sales.filter(s => s.date >= sevenDaysAgoStr);
     const last7Total = last7Sales.reduce((a, v) => a + v.amount, 0);
     const last7Days = Math.min(7, dayOfMonth);
@@ -8048,7 +8101,7 @@
     const hintEstela = document.getElementById('saleDateHintEstela');
     if (!input) return;
     const today = new Date();
-    const todayStr = today.toISOString().slice(0, 10);
+    const todayStr = localISO(today);
     input.value = todayStr;
     if (inputEstela) inputEstela.value = todayStr;
 
@@ -8090,7 +8143,7 @@
     const val = inputEstela.value;
     // Sincronizar con el input principal (que es el que lee submitSale)
     if (inputMain && val) inputMain.value = val;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayLocalISO();
     if ((currentUser === 'admin' || currentUser === 'estela') && val && val !== today) {
       warn.style.display = '';
       if (warnDate) {
@@ -8112,7 +8165,7 @@
     const warn = document.getElementById('saleDateBackdatedWarn');
     const warnDate = document.getElementById('saleDateWarnDate');
     if (!input || !warn) return;
-    const today = new Date().toISOString().slice(0, 10);
+    const today = todayLocalISO();
     const val = input.value;
 
     // Mostrar banner cuando es admin/estela y la fecha NO es hoy
@@ -9116,7 +9169,7 @@
       `▸ ACTUALIZADO ${new Date().toLocaleString('es-AR')}`;
     const dailyDate = document.getElementById('dailySummaryDate');
     if (dailyDate && !dailyDate.value) {
-      dailyDate.value = new Date().toISOString().slice(0, 10);
+      dailyDate.value = todayLocalISO();
     }
     renderDailySummary();
     renderAlerts();
@@ -9224,7 +9277,7 @@
 
   function renderDailySummary() {
     const dateStr = document.getElementById('dailySummaryDate')?.value
-      || new Date().toISOString().slice(0, 10);
+      || todayLocalISO();
     const text = buildDailySummaryText(dateStr);
     const card = document.getElementById('dailySummaryCard');
     if (card) card.textContent = text;
@@ -9442,7 +9495,7 @@
       for (let i = 89; i >= 0; i--) {
         const d = new Date(today);
         d.setDate(d.getDate() - i);
-        const ds = d.toISOString().slice(0, 10);
+        const ds = localISO(d);
         const dayTotal = sales.filter(s => s.date === ds).reduce((a, v) => a + v.amount, 0);
         days.push(dayTotal);
       }
@@ -9941,7 +9994,7 @@
         document.getElementById('advanceNote').value = adv.note || '';
       }
     } else {
-      document.getElementById('advanceDate').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('advanceDate').value = todayLocalISO();
       document.getElementById('advanceAmount').value = '';
       document.getElementById('advanceNote').value = '';
     }
@@ -10231,6 +10284,79 @@
   window.selectTransferTarget = selectTransferTarget;
   window.closeTransferModal = closeTransferModal;
   window.confirmTransferSale = confirmTransferSale;
+
+  // ═══════════════════════════════════════════════════════════
+  // CORREGIR FECHA · admin puede cambiar la fecha de una venta
+  // ═══════════════════════════════════════════════════════════
+  let editDateContext = { saleId: null };
+
+  function openEditDateModal(saleId) {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === saleId);
+    if (!sale) return;
+    editDateContext = { saleId };
+
+    const currentMeta = SELLER_META[sale.seller] || { name: sale.seller.toUpperCase(), emoji: '👤' };
+    const items = (sale.items && sale.items.length > 0)
+      ? sale.items.map(it => `${it.qty} ${it.name}`).join(' · ')
+      : (sale.product || '—');
+    const infoHTML = `
+      <div class="tic-row"><span class="tic-lbl">Vendedor</span><span class="tic-val">${currentMeta.emoji} ${currentMeta.name}</span></div>
+      <div class="tic-row"><span class="tic-lbl">Cliente</span><span class="tic-val">${escapeHtml(sale.client || '—')}</span></div>
+      <div class="tic-row"><span class="tic-lbl">Producto</span><span class="tic-val" style="max-width:280px;text-align:right;">${escapeHtml(items).slice(0, 60)}</span></div>
+      <div class="tic-row"><span class="tic-lbl">Monto</span><span class="tic-val">${fmtMoney(sale.amount)}</span></div>
+      <div class="tic-row tic-current"><span class="tic-lbl">Fecha actual</span><span class="tic-val">${sale.date}</span></div>
+    `;
+    document.getElementById('editDateSaleInfo').innerHTML = infoHTML;
+    document.getElementById('editDateNew').value = sale.date;
+    document.getElementById('editDateReason').value = '';
+    document.getElementById('editDateModalOverlay').classList.add('open');
+  }
+
+  function closeEditDateModal() {
+    document.getElementById('editDateModalOverlay').classList.remove('open');
+    editDateContext = { saleId: null };
+  }
+
+  async function confirmEditDate() {
+    const { saleId } = editDateContext;
+    if (!saleId) return;
+    const sale = state.sales.find(s => s.id === saleId);
+    if (!sale) return;
+    const newDate = document.getElementById('editDateNew').value;
+    if (!newDate) return alert('Elegí una fecha');
+    if (newDate === sale.date) return alert('La fecha nueva es igual a la actual · no hay cambios');
+    const reason = document.getElementById('editDateReason').value.trim();
+
+    if (!confirm(`¿Confirmar cambio de fecha?\n\n${sale.date} → ${newDate}\n\nCliente: ${sale.client || '—'}\nMonto: ${fmtMoney(sale.amount)}`)) return;
+
+    const before = computeAll();
+    const prevDate = sale.date;
+
+    // Guardar historial de cambios de fecha
+    if (!sale.dateHistory) sale.dateHistory = [];
+    sale.dateHistory.push({
+      from: prevDate,
+      to: newDate,
+      at: Date.now(),
+      by: currentUser,
+      reason: reason || null
+    });
+    sale.date = newDate;
+    sale.updatedAt = Date.now();
+
+    await saveState();
+    closeEditDateModal();
+    const after = computeAll();
+    checkUnlocks(before, after, sale.seller);
+    renderAll();
+
+    showToast(`✓ Fecha corregida · ${prevDate} → ${newDate}`, 'success');
+  }
+
+  window.openEditDateModal = openEditDateModal;
+  window.closeEditDateModal = closeEditDateModal;
+  window.confirmEditDate = confirmEditDate;
 
   function renderCrownBoard() {
     const container = document.getElementById('crownBoard');
@@ -10908,6 +11034,7 @@
       // Botón transferir · solo admin, no en canceladas/anuladas
       if (currentUser === 'admin' && s.status !== 'cancelled' && s.status !== 'voided') {
         action += `<button class="ops-btn-transfer" onclick="openTransferModal('${s.id}')" title="Transferir venta">↔</button>`;
+        action += `<button class="ops-btn-editdate" onclick="openEditDateModal('${s.id}')" title="Corregir fecha">📅</button>`;
       }
       // Ícono si la venta fue transferida alguna vez
       const transferBadge = (s.transferHistory && s.transferHistory.length > 0)
