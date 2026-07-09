@@ -7783,12 +7783,34 @@
     const isAdmin = currentUser === 'admin';
     const payments = state.weeklyPayments?.[periodKey] || {};
 
+    // Determinar qué cards mostrar:
+    // - Vendedores ACTIVOS: siempre visibles
+    // - Vendedores DESACTIVADOS: visibles SOLO si tienen ventas del mes actual
+    // - Vendedores nunca creados: nunca visibles
+    const activeSellers = CONFIG.competitiveSellers || [];
+    const currentMk = currentMonthKey();
+    const allCardKeys = ['lauti', 'bauti', 'leo', 'kevin'];
+    const sellersToRender = allCardKeys.filter(seller => {
+      // ¿Está activo? sí → renderizar
+      if (activeSellers.includes(seller)) return true;
+      // ¿Está inactivo pero tiene ventas este mes? sí → renderizar (respeta pagos pendientes)
+      const hasSalesThisMonth = state.sales.some(s =>
+        s.seller === seller && monthKeyOf(s.date) === currentMk
+      );
+      return hasSalesThisMonth;
+    });
+
     // PRIVACIDAD: vendedor logueado solo ve SU card de cobros
     const isViewer = currentUser === 'view';
-    const sellerVisibility = CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin'];
-    sellerVisibility.forEach(seller => {
+    allCardKeys.forEach(seller => {
       const card = document.getElementById(`cobros-${seller}`);
       if (!card) return;
+      // Primero: si el vendedor no está en sellersToRender, ocultarlo siempre
+      if (!sellersToRender.includes(seller)) {
+        card.style.display = 'none';
+        return;
+      }
+      // Luego: aplicar privacidad
       if (isAdmin || isViewer) {
         card.style.display = '';
       } else if (currentUser === seller) {
@@ -7802,7 +7824,7 @@
     const currentPeriodLbl = payoutPeriodLabel(curWeek);
     const currentDateLbl = payoutDateLabel(curWeek);
 
-    (CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin']).forEach(seller => {
+    sellersToRender.forEach(seller => {
       const sellerPayments = payments[seller] || {};
 
       // Emoji al lado del nombre
@@ -8523,6 +8545,16 @@
     // Ranking entre TODOS los vendedores activos + Estela
     // Por monto absoluto · usa el TOTAL (aprobadas + pendientes)
     const activeCompetitive = CONFIG.competitiveSellers || [];
+
+    // OCULTAR cards de vendedores desactivados en /01 CARA A CARA
+    // Recorre TODAS las cards del HTML (los 4 hardcoded) y muestra solo los activos
+    ['lauti', 'bauti', 'leo', 'kevin'].forEach(k => {
+      const cardEl = document.getElementById('card-' + k);
+      if (cardEl) {
+        cardEl.style.display = activeCompetitive.includes(k) ? '' : 'none';
+      }
+    });
+
     const rankingSellers = [...activeCompetitive, 'estela'].filter(k => c[k]);
     const ranking = rankingSellers
       .map(k => ({ key: k, total: c[k]?.total || 0 }))
