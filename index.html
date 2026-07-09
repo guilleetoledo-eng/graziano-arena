@@ -889,6 +889,126 @@
   }
 
   /* ═════════════════════════════════════════════════════ */
+  /* /02 TABLA TOP VENDEDORES · vista compacta para grupo   */
+  /* ═════════════════════════════════════════════════════ */
+  .top-table-card {
+    background: var(--bg-card); border: 1.5px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 24px 28px 20px;
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .tt-header {
+    padding-bottom: 14px; margin-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .tt-title {
+    font-family: 'Anton', sans-serif; font-size: 22px;
+    letter-spacing: 0.03em; color: var(--ink);
+    text-transform: uppercase;
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  }
+  .tt-title #ttMonthLabel { color: var(--red); }
+  .tt-subtitle {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.15em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+  .tt-rows {
+    display: grid; gap: 8px;
+  }
+  .tt-row {
+    display: grid;
+    grid-template-columns: 32px 40px auto 1fr auto auto;
+    gap: 10px 12px;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--ink);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tt-row.rank-1 {
+    background: linear-gradient(90deg, #FFF7E0 0%, #FFEEC5 100%);
+    border-left-color: #DAA520;
+  }
+  .tt-row.rank-2 {
+    background: linear-gradient(90deg, #F1F1F1 0%, #E5E5E5 100%);
+    border-left-color: #999;
+  }
+  .tt-row.rank-3 {
+    background: linear-gradient(90deg, #FDE8DA 0%, #F8D5BE 100%);
+    border-left-color: #B87333;
+  }
+  .tt-row.rank-0 {
+    background: var(--bg-soft);
+    border-left-color: var(--ink-4);
+    opacity: 0.65;
+  }
+  .tt-rank-emoji { font-size: 20px; line-height: 1; text-align: center; }
+  .tt-rank-num {
+    font-family: 'Archivo Black', sans-serif; font-size: 18px;
+    color: var(--red); letter-spacing: 0.02em;
+  }
+  .tt-row.rank-0 .tt-rank-num { color: var(--ink-4); font-size: 15px; }
+  .tt-seller-emoji { font-size: 22px; line-height: 1; }
+  .tt-seller-name {
+    font-family: 'Archivo Black', sans-serif; font-size: 16px;
+    color: var(--ink); letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .tt-amount {
+    font-family: 'Anton', sans-serif; font-size: 24px;
+    color: var(--ink); letter-spacing: 0.01em;
+    text-align: right; line-height: 1;
+  }
+  .tt-row.rank-0 .tt-amount { color: var(--ink-4); font-size: 18px; }
+  .tt-ops {
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.05em; text-align: right;
+    font-weight: 700;
+  }
+  .tt-footer {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-top: 14px; margin-top: 14px;
+    border-top: 2px solid var(--ink);
+  }
+  .tt-total-lbl {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink); letter-spacing: 0.15em;
+    text-transform: uppercase; font-weight: 700;
+  }
+  .tt-total-val {
+    font-family: 'Anton', sans-serif; font-size: 30px;
+    color: var(--red); letter-spacing: 0.01em;
+  }
+
+  /* Mobile · tabla optimizada para screenshot */
+  @media (max-width: 700px) {
+    .top-table-card {
+      padding: 18px 16px 14px;
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .tt-title { font-size: 18px; }
+    .tt-row {
+      grid-template-columns: 26px 32px auto 1fr;
+      grid-template-rows: auto auto;
+      gap: 4px 10px;
+      padding: 8px 10px;
+    }
+    .tt-seller-emoji { grid-column: 2; grid-row: 1; }
+    .tt-rank-emoji { grid-column: 1; grid-row: 1; font-size: 16px; }
+    .tt-rank-num { grid-column: 1; grid-row: 2; font-size: 14px; text-align: center; }
+    .tt-seller-name { grid-column: 3; grid-row: 1; font-size: 13px; }
+    .tt-amount { grid-column: 4; grid-row: 1; font-size: 18px; }
+    .tt-ops { grid-column: 3 / span 2; grid-row: 2; text-align: right; font-size: 9.5px; }
+    .tt-footer {
+      flex-direction: row; padding-top: 10px; margin-top: 10px;
+    }
+    .tt-total-lbl { font-size: 10px; }
+    .tt-total-val { font-size: 22px; }
+  }
+
+  /* ═════════════════════════════════════════════════════ */
   /* LIQUIDACIONES · sección /06                              */
   /* ═════════════════════════════════════════════════════ */
   .liq-header {
@@ -1717,6 +1837,20 @@
     font-size: 10px; font-weight: 700;
     margin-left: 4px;
     box-shadow: 2px 2px 0 rgba(0,0,0,0.35);
+  }
+  .estela-rank-row {
+    display: flex; align-items: baseline; gap: 4px;
+    margin-bottom: 10px; align-self: flex-start;
+    font-family: 'Archivo Black', sans-serif;
+  }
+  .estela-rank-emoji { font-size: 32px; line-height: 1; margin-right: 4px; transform: translateY(-2px); }
+  .estela-rank-hash {
+    font-family: 'Archivo Black', sans-serif; font-size: 34px;
+    color: var(--red); line-height: 1; opacity: 0.85;
+  }
+  .estela-rank-num {
+    font-family: 'Anton', sans-serif; font-size: 44px;
+    color: var(--red); line-height: 1; letter-spacing: -0.01em;
   }
   .estela-name {
     font-family: 'Anton', sans-serif; font-size: 44px;
@@ -3893,9 +4027,10 @@
     <div class="estela-card" id="card-estela">
       <div class="estela-header">
         <div class="estela-left">
-          <div class="estela-badge">
-            <span>TRACKER · DUEÑA</span>
-            <span class="estela-rank-badge" id="estela-rank" style="display:none;">#—</span>
+          <div class="estela-rank-row" id="estela-rank-row" style="display:none;">
+            <span class="estela-rank-emoji" id="estela-rank-emoji"></span>
+            <span class="estela-rank-hash">#</span>
+            <span class="estela-rank-num" id="estela-rank">—</span>
           </div>
           <div class="estela-name">ESTELA</div>
           <div class="estela-title">EL FRENTE DEL LOCAL</div>
@@ -3936,8 +4071,31 @@
 
   <!-- (ESTELA movida arriba dentro de .duelo.trio para orden dinámico) -->
 
-  <div class="section-title cobros-section-title" id="cobrosSectionTitle">
+  <!-- ═════════════════════════════════════════════ -->
+  <!-- /02 TABLA TOP VENDEDORES · captura para grupo -->
+  <!-- ═════════════════════════════════════════════ -->
+  <div class="section-title">
     <span class="section-title-num">/02</span>
+    <span class="section-title-text">TABLA TOP VENDEDORES</span>
+    <span class="section-title-line"></span>
+  </div>
+
+  <div class="top-table-card" id="topTableCard">
+    <div class="tt-header">
+      <div class="tt-title">RANKING · <span id="ttMonthLabel">JULIO 2026</span></div>
+      <div class="tt-subtitle">Facturado del mes · aprobadas + pendientes</div>
+    </div>
+    <div class="tt-rows" id="topTableRows">
+      <!-- filas dinámicas -->
+    </div>
+    <div class="tt-footer">
+      <div class="tt-total-lbl">▸ TOTAL EQUIPO</div>
+      <div class="tt-total-val" id="ttTotalTeam">$0</div>
+    </div>
+  </div>
+
+  <div class="section-title cobros-section-title" id="cobrosSectionTitle">
+    <span class="section-title-num">/03</span>
     <span class="section-title-text" id="cobrosSectionLabel">COBROS SEMANALES</span>
     <div class="cobros-toggle">
       <button class="ct-btn active" data-freq="weekly"     onclick="setCobrosFreq('weekly')">SEM</button>
@@ -4083,7 +4241,7 @@
   </div>
 
   <div class="section-title">
-    <span class="section-title-num">/03</span>
+    <span class="section-title-num">/04</span>
     <span class="section-title-text">VENTAS POR CANAL</span>
     <span class="section-title-line"></span>
   </div>
@@ -4116,7 +4274,7 @@
   </div>
 
   <div class="section-title">
-    <span class="section-title-num">/04</span>
+    <span class="section-title-num">/05</span>
     <span class="section-title-text">REGLAS DEL JUEGO</span>
     <span class="section-title-line"></span>
   </div>
@@ -4126,7 +4284,7 @@
   </div>
 
   <div class="section-title">
-    <span class="section-title-num">/05</span>
+    <span class="section-title-num">/06</span>
     <span class="section-title-text">LOGROS POR DESBLOQUEAR</span>
     <span class="section-title-line"></span>
   </div>
@@ -4136,7 +4294,7 @@
   </div>
 
   <div class="section-title">
-    <span class="section-title-num">/06</span>
+    <span class="section-title-num">/07</span>
     <span class="section-title-text">HISTORIA DEL CLUB</span>
     <span class="section-title-line"></span>
   </div>
@@ -5312,7 +5470,7 @@
   }
 
   // Emojis por POSICIÓN en el ranking (dinámicos, no identidad fija)
-  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺', 4: '🪦' };
+  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺', 4: '🪦', 5: '😇' };
   function positionEmoji(rank) { return RANK_EMOJI[rank] || ''; }
   const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
@@ -7249,6 +7407,60 @@
     }
   }
 
+  // ═══════════════════════════════════════════════════════════
+  // TABLA TOP VENDEDORES · vista compacta para captura de grupo
+  // ═══════════════════════════════════════════════════════════
+  function renderTopTable(c) {
+    if (!c) c = computeAll();
+    const rowsEl = document.getElementById('topTableRows');
+    const totalEl = document.getElementById('ttTotalTeam');
+    const monthLbl = document.getElementById('ttMonthLabel');
+    if (!rowsEl) return;
+
+    // Label del mes en curso
+    const now = new Date();
+    if (monthLbl) monthLbl.textContent = `${MONTHS_ES[now.getMonth()]} ${now.getFullYear()}`;
+
+    // Todos los sellers a rankear
+    const sellers = ['lauti', 'bauti', 'leo', 'kevin', 'estela'];
+    const list = sellers
+      .map(k => ({
+        key: k,
+        total: c[k]?.total || 0,
+        count: c[k]?.count || 0,
+        meta: SELLER_META[k] || { name: k.toUpperCase(), emoji: '👤' }
+      }))
+      .sort((a, b) => b.total - a.total);
+
+    // Total del equipo
+    const totalTeam = list.reduce((a, r) => a + r.total, 0);
+    totalEl.textContent = fmtMoney(totalTeam);
+
+    const someoneSells = list[0].total > 0;
+
+    rowsEl.innerHTML = list.map((r, i) => {
+      const rank = someoneSells ? (i + 1) : null;
+      const isZero = r.total === 0;
+      const rankEmoji = (rank && !isZero) ? positionEmoji(rank) : '';
+      const rankNum = rank ? `#${rank}` : '#—';
+      const rowCls = isZero ? 'tt-row rank-0' :
+                     rank === 1 ? 'tt-row rank-1' :
+                     rank === 2 ? 'tt-row rank-2' :
+                     rank === 3 ? 'tt-row rank-3' :
+                     'tt-row';
+      return `
+        <div class="${rowCls}">
+          <span class="tt-rank-emoji">${rankEmoji}</span>
+          <span class="tt-rank-num">${rankNum}</span>
+          <span class="tt-seller-emoji">${r.meta.emoji}</span>
+          <span class="tt-seller-name">${r.meta.name}</span>
+          <span class="tt-amount">${fmtMoney(r.total)}</span>
+          <span class="tt-ops">${r.count} ops</span>
+        </div>
+      `;
+    }).join('');
+  }
+
   function renderChannelStrip() {
     const approved = allApproved();
     const total = approved.reduce((s, v) => s + v.amount, 0);
@@ -8160,15 +8372,18 @@
       }
     });
 
-    // Estela también recibe orden dinámico (para su card en /01 CARA A CARA visual queda igual pero tiene su rank)
-    const estelaRankEl = document.getElementById('estela-rank');
+    // Estela también recibe orden dinámico + emoji
+    const estelaRankRow = document.getElementById('estela-rank-row');
+    const estelaRankEmoji = document.getElementById('estela-rank-emoji');
+    const estelaRankNum = document.getElementById('estela-rank');
     const estelaCardEl = document.getElementById('card-estela');
-    if (estelaRankEl && someoneHasSales) {
-      estelaRankEl.textContent = '#' + rankMap['estela'];
-      estelaRankEl.style.display = '';
-    } else if (estelaRankEl) {
-      estelaRankEl.textContent = '';
-      estelaRankEl.style.display = 'none';
+    if (someoneHasSales && c.estela.total > 0) {
+      const r = rankMap['estela'];
+      if (estelaRankRow) estelaRankRow.style.display = '';
+      if (estelaRankEmoji) estelaRankEmoji.textContent = positionEmoji(r);
+      if (estelaRankNum) estelaRankNum.textContent = String(r);
+    } else {
+      if (estelaRankRow) estelaRankRow.style.display = 'none';
     }
     if (estelaCardEl) {
       estelaCardEl.style.order = someoneHasSales ? rankMap['estela'] : 99;
@@ -8183,6 +8398,7 @@
     renderAchievementsCard(c);
     renderHOF();
     renderChannelStrip();
+    renderTopTable(c);
     renderCobros(c);
     renderPendingBanner();
     renderPendingList();
