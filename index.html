@@ -305,7 +305,14 @@
 
   /* ==== DUELO ==== */
   .duelo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
-  .duelo.trio { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+  .duelo.trio {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  /* Card de Estela adentro del grid: mismo tamaño que los vendedores */
+  .duelo.trio .estela-card {
+    box-shadow: 6px 6px 0 var(--ink);
+  }
   .seller-card {
     position: relative; padding: 32px 28px;
     background: var(--bg-card);
@@ -1698,10 +1705,18 @@
   }
   .estela-left { display: flex; flex-direction: column; gap: 4px; }
   .estela-badge {
-    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 9px; letter-spacing: 0.3em; color: white;
     background: var(--ink); padding: 4px 10px;
     align-self: flex-start; margin-bottom: 6px;
+  }
+  .estela-rank-badge {
+    background: var(--red); color: white;
+    padding: 2px 7px; letter-spacing: 0.1em;
+    font-size: 10px; font-weight: 700;
+    margin-left: 4px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.35);
   }
   .estela-name {
     font-family: 'Anton', sans-serif; font-size: 44px;
@@ -3873,48 +3888,53 @@
         <span class="num" id="pending-num-kevin">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-kevin">$0</span>
       </div>
     </div>
+
+    <!-- ESTELA · TRACKER (dueña) · adentro del grid para orden dinámico -->
+    <div class="estela-card" id="card-estela">
+      <div class="estela-header">
+        <div class="estela-left">
+          <div class="estela-badge">
+            <span>TRACKER · DUEÑA</span>
+            <span class="estela-rank-badge" id="estela-rank" style="display:none;">#—</span>
+          </div>
+          <div class="estela-name">ESTELA</div>
+          <div class="estela-title">EL FRENTE DEL LOCAL</div>
+        </div>
+        <div class="estela-amount">
+          <span class="currency">$</span><span id="amount-estela">0</span>
+        </div>
+      </div>
+      <div class="estela-progress">
+        <div class="estela-progress-header">
+          <span class="estela-prog-label">Tracking · meta $4M</span>
+          <span class="estela-prog-pct" id="pct-estela">0%</span>
+        </div>
+        <div class="estela-progress-track">
+          <div class="estela-progress-fill" id="bar-estela" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="estela-stats">
+        <div class="estela-stat">
+          <div class="es-label">Operaciones</div>
+          <div class="es-value" id="count-estela">0</div>
+        </div>
+        <div class="estela-stat">
+          <div class="es-label">Ticket prom.</div>
+          <div class="es-value" id="ticket-estela">$0</div>
+        </div>
+        <div class="estela-stat">
+          <div class="es-label">Mejor venta</div>
+          <div class="es-value" id="best-estela">$0</div>
+        </div>
+        <div class="estela-stat">
+          <div class="es-label">Pendientes</div>
+          <div class="es-value" id="pending-num-estela">0</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- ESTELA · TRACKER (dueña) -->
-  <div class="estela-card" id="card-estela">
-    <div class="estela-header">
-      <div class="estela-left">
-        <div class="estela-badge">TRACKER · DUEÑA</div>
-        <div class="estela-name">ESTELA</div>
-        <div class="estela-title">EL FRENTE DEL LOCAL</div>
-      </div>
-      <div class="estela-amount">
-        <span class="currency">$</span><span id="amount-estela">0</span>
-      </div>
-    </div>
-    <div class="estela-progress">
-      <div class="estela-progress-header">
-        <span class="estela-prog-label">Tracking · meta $4M</span>
-        <span class="estela-prog-pct" id="pct-estela">0%</span>
-      </div>
-      <div class="estela-progress-track">
-        <div class="estela-progress-fill" id="bar-estela" style="width:0%"></div>
-      </div>
-    </div>
-    <div class="estela-stats">
-      <div class="estela-stat">
-        <div class="es-label">Operaciones</div>
-        <div class="es-value" id="count-estela">0</div>
-      </div>
-      <div class="estela-stat">
-        <div class="es-label">Ticket prom.</div>
-        <div class="es-value" id="ticket-estela">$0</div>
-      </div>
-      <div class="estela-stat">
-        <div class="es-label">Mejor venta</div>
-        <div class="es-value" id="best-estela">$0</div>
-      </div>
-      <div class="estela-stat">
-        <div class="es-label">Pendientes</div>
-        <div class="es-value" id="pending-num-estela">0</div>
-      </div>
-    </div>
-  </div>
+  <!-- (ESTELA movida arriba dentro de .duelo.trio para orden dinámico) -->
 
   <div class="section-title cobros-section-title" id="cobrosSectionTitle">
     <span class="section-title-num">/02</span>
@@ -6099,9 +6119,22 @@
   }
 
   function computeSeller(key) {
+    // APROBADAS (para comisión, cash duro)
     const sales = approvedSales(key);
-    const total = sales.reduce((a, v) => a + v.amount, 0);
-    const count = sales.length;
+    const totalApproved = sales.reduce((a, v) => a + v.amount, 0);
+    const countApproved = sales.length;
+
+    // PENDIENTES del mes (solo para display, NO para comisión)
+    const mk = currentMonthKey();
+    const pendingSalesArr = state.sales.filter(s =>
+      s.seller === key && s.status === 'pending' && monthKeyOf(s.date) === mk
+    );
+    const totalPending = pendingSalesArr.reduce((a, v) => a + v.amount, 0);
+    const countPending = pendingSalesArr.length;
+
+    // TOTAL para display (aprobadas + pendientes) · lo que se usa en cards, ranking, progress
+    const total = totalApproved + totalPending;
+    const count = countApproved + countPending;
     const ticketAvg = count ? total / count : 0;
     const isTracker = !CONFIG.competitiveSellers.includes(key);
     const seller_target = isTracker ? CONFIG.estelaTarget : CONFIG.target;
@@ -6109,21 +6142,27 @@
     const excess = Math.max(0, total - seller_target);
     const best = sales.reduce((m, v) => Math.max(m, v.amount), 0);
 
+    // Comisiones: SOLO SOBRE APROBADAS (no se paga por pendientes)
     const baseSalary = isTracker ? 0 : CONFIG.baseSalary;
-    const baseComm = isTracker ? 0 : (total * CONFIG.baseCommission);
-    const bonusTarget = (!isTracker && total >= CONFIG.target) ? CONFIG.bonusOnTarget : 0;
+    const baseComm = isTracker ? 0 : (totalApproved * CONFIG.baseCommission);
+    const bonusTarget = (!isTracker && totalApproved >= CONFIG.target) ? CONFIG.bonusOnTarget : 0;
 
     let extraComm = 0;
     if (!isTracker) {
       for (const tier of CONFIG.tiers) {
-        if (total > tier.from) {
-          const inTier = Math.min(total, tier.to) - tier.from;
+        if (totalApproved > tier.from) {
+          const inTier = Math.min(totalApproved, tier.to) - tier.from;
           extraComm += inTier * tier.rate;
         }
       }
     }
 
-    return { total, count, ticketAvg, pct, excess, best, baseSalary, baseComm, bonusTarget, extraComm, isTracker, seller_target };
+    return {
+      total, count, ticketAvg, pct, excess, best,
+      totalApproved, countApproved,
+      totalPending, countPending,
+      baseSalary, baseComm, bonusTarget, extraComm, isTracker, seller_target
+    };
   }
 
   function computeAll() {
@@ -6533,35 +6572,29 @@
   }
 
   function renderSeller(key, data, isLeader) {
+    // Monto grande = TOTAL (aprobadas + pendientes)
     document.getElementById(`amount-${key}`).textContent = fmtFull(data.total);
     autoScaleAmount(`amount-${key}`, data.total, 'seller-amount');
 
-    // Contar pendientes del mes actual del seller
-    const mk = currentMonthKey();
-    const pendings = state.sales.filter(s =>
-      s.seller === key && s.status === 'pending' && monthKeyOf(s.date) === mk
-    );
-    const pendingCount = pendings.length;
-    const pendingTotal = pendings.reduce((a, s) => a + s.amount, 0);
-
-    // Operaciones = confirmadas + pendientes (para ver ritmo real)
-    const totalOps = data.count + pendingCount;
-    document.getElementById(`count-${key}`).textContent = totalOps;
-
-    // Ticket promedio: solo aprobadas si hay, si no promedio del total
+    // Operaciones = total (aprobadas + pendientes)
+    document.getElementById(`count-${key}`).textContent = data.count;
     document.getElementById(`ticket-${key}`).textContent = fmtMoney(data.ticketAvg);
 
-    // Subtítulo con desglose
+    // Subtítulo con desglose confirmadas vs pendientes
     const sublineEl = document.getElementById(`subline-${key}`);
     if (sublineEl) {
-      if (pendingCount === 0 && data.count === 0) {
+      const cA = data.countApproved || 0;
+      const cP = data.countPending || 0;
+      const tA = data.totalApproved || 0;
+      const tP = data.totalPending || 0;
+      if (cA === 0 && cP === 0) {
         sublineEl.innerHTML = '';
-      } else if (pendingCount === 0) {
-        sublineEl.innerHTML = `<span class="ss-confirmed">✓ ${data.count} confirmadas · ${fmtMoney(data.total)}</span>`;
-      } else if (data.count === 0) {
-        sublineEl.innerHTML = `<span class="ss-pending">⏳ ${pendingCount} pendientes · +${fmtMoney(pendingTotal)}</span>`;
+      } else if (cP === 0) {
+        sublineEl.innerHTML = `<span class="ss-confirmed">✓ ${cA} confirmadas · ${fmtMoney(tA)}</span>`;
+      } else if (cA === 0) {
+        sublineEl.innerHTML = `<span class="ss-pending">⏳ ${cP} pendientes · +${fmtMoney(tP)}</span>`;
       } else {
-        sublineEl.innerHTML = `<span class="ss-confirmed">✓ ${data.count} confirmadas · ${fmtMoney(data.total)}</span><span class="ss-sep">·</span><span class="ss-pending">⏳ ${pendingCount} pend. · +${fmtMoney(pendingTotal)}</span>`;
+        sublineEl.innerHTML = `<span class="ss-confirmed">✓ ${cA} confirmadas · ${fmtMoney(tA)}</span><span class="ss-sep">·</span><span class="ss-pending">⏳ ${cP} pend. · +${fmtMoney(tP)}</span>`;
       }
     }
 
@@ -8083,13 +8116,19 @@
     renderCountdownBanner(c);
     renderMySalary(c);
 
-    // Ranking entre los 3 vendedores online
-    const ranking = ['lauti', 'bauti', 'leo', 'kevin']
+    // Ranking entre TODOS los vendedores (incluyendo Estela)
+    // Por monto absoluto · usa el TOTAL (aprobadas + pendientes)
+    const rankingSellers = ['lauti', 'bauti', 'leo', 'kevin', 'estela'];
+    const ranking = rankingSellers
       .map(k => ({ key: k, total: c[k].total }))
       .sort((a, b) => b.total - a.total);
+    // rankMap[key] = posición (1, 2, 3, 4, 5) o null si nadie tiene ventas
     const rankMap = {};
-    ranking.forEach((r, i) => { rankMap[r.key] = r.total > 0 ? (i + 1) : null; });
     const someoneHasSales = ranking[0].total > 0;
+    ranking.forEach((r, i) => {
+      // Si alguien tiene ventas, TODOS reciben número (aunque estén en $0, van al final)
+      rankMap[r.key] = someoneHasSales ? (i + 1) : null;
+    });
 
     renderSeller('lauti', c.lauti, c.firstPlace === 'lauti');
     renderSeller('bauti', c.bauti, c.firstPlace === 'bauti');
@@ -8097,28 +8136,43 @@
     renderSeller('kevin', c.kevin, c.firstPlace === 'kevin');
     renderEstela(c.estela);
 
-    // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🥺 #3)
+    // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🥺 #3 · 🪦 #4)
     // Además: reordenar cards en el DOM usando CSS order según ranking
     ['lauti', 'bauti', 'leo', 'kevin'].forEach(k => {
       const r = rankMap[k];
       const rankEl = document.getElementById('rank-' + k);
       const emojiEl = document.getElementById('emoji-' + k);
       const cardEl = document.getElementById('card-' + k);
-      if (someoneHasSales && r) {
+      if (someoneHasSales) {
         rankEl.textContent = String(r);
-        emojiEl.textContent = positionEmoji(r);
-        // Aplicar orden CSS: el #1 va primero (order:1), el #4 último (order:4)
+        // Emoji solo si tiene ventas · si está en $0 va como #— sin emoji
+        emojiEl.textContent = c[k].total > 0 ? positionEmoji(r) : '';
+        // Aplicar orden CSS: incluso los que están en $0 van al final
         if (cardEl) cardEl.style.order = r;
       } else {
         rankEl.textContent = '—';
         emojiEl.textContent = '';
-        // Sin ventas: orden por índice original (para no reordenar arbitrariamente)
+        // Sin ventas de nadie: orden natural
         if (cardEl) {
           const defaultOrder = ['lauti', 'bauti', 'leo', 'kevin'].indexOf(k) + 1;
           cardEl.style.order = defaultOrder;
         }
       }
     });
+
+    // Estela también recibe orden dinámico (para su card en /01 CARA A CARA visual queda igual pero tiene su rank)
+    const estelaRankEl = document.getElementById('estela-rank');
+    const estelaCardEl = document.getElementById('card-estela');
+    if (estelaRankEl && someoneHasSales) {
+      estelaRankEl.textContent = '#' + rankMap['estela'];
+      estelaRankEl.style.display = '';
+    } else if (estelaRankEl) {
+      estelaRankEl.textContent = '';
+      estelaRankEl.style.display = 'none';
+    }
+    if (estelaCardEl) {
+      estelaCardEl.style.order = someoneHasSales ? rankMap['estela'] : 99;
+    }
 
     // Marcar visualmente el líder en el duelo
     const dueloEl = document.querySelector('.duelo');
