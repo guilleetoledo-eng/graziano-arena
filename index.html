@@ -3081,6 +3081,26 @@
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
     color: rgba(255,255,255,0.4); font-style: italic;
   }
+  .crown-board-item.is-inactive {
+    opacity: 0.7;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.02),
+      rgba(255,255,255,0.02) 8px,
+      rgba(255,255,255,0.06) 8px,
+      rgba(255,255,255,0.06) 16px
+    );
+  }
+  .crown-inactive-badge {
+    display: inline-block; margin-left: 6px;
+    padding: 2px 7px;
+    background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.85);
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    vertical-align: middle;
+  }
   .cfg-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
     margin-bottom: 24px;
@@ -5470,7 +5490,7 @@
   }
 
   // Emojis por POSICIÓN en el ranking (dinámicos, no identidad fija)
-  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🥺', 4: '🪦', 5: '😇' };
+  const RANK_EMOJI = { 1: '👑', 2: '🧅', 3: '🤡', 4: '💀', 5: '🪦' };
   function positionEmoji(rank) { return RANK_EMOJI[rank] || ''; }
   const MONTHS_ES = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
@@ -10699,12 +10719,17 @@
       const sinceText = data.sinceMonthKey
         ? `desde ${monthLabel(data.sinceMonthKey)}`
         : '';
+      // Detectar si el holder está INACTIVO (existe en users pero active=false)
+      const holderUser = getUserByKey ? getUserByKey(data.holder) : null;
+      const isInactiveHolder = holderUser && !holderUser.active && holderUser.role === 'seller';
+      const inactiveBadge = isInactiveHolder ? `<span class="crown-inactive-badge">⏸ INACTIVO</span>` : '';
+      const itemCls = isInactiveHolder ? 'crown-board-item is-inactive' : 'crown-board-item';
       return `
-        <div class="crown-board-item">
+        <div class="${itemCls}">
           <div class="crown-board-emoji">${c.emoji}</div>
           <div class="crown-board-body">
             <div class="crown-board-title">${c.title}</div>
-            <div class="crown-board-holder">${meta.emoji} ${meta.name} · ${valueText}</div>
+            <div class="crown-board-holder">${meta.emoji} ${meta.name} · ${valueText} ${inactiveBadge}</div>
             <div class="crown-board-since">${sinceText}</div>
           </div>
         </div>
@@ -11660,7 +11685,17 @@
     if (!state.crowns) state.crowns = {};
     if (!state.crownEvents) state.crownEvents = {};
     const changes = []; // [{crownId, newHolder, oldHolder, value, oldValue}]
-    const allApproved = state.sales.filter(s => s.status === 'approved' && CONFIG.competitiveSellers.includes(s.seller));
+
+    // IMPORTANTE: incluye ventas de vendedores ACTIVOS + INACTIVOS.
+    // Esto preserva récords históricos de vendedores desactivados.
+    // Para robar una corona hay que superar el récord original (activo o histórico).
+    const allSellerKeys = new Set([
+      ...CONFIG.competitiveSellers,
+      ...Object.values(state.users || {}).filter(u => u.role === 'seller').map(u => u.key)
+    ]);
+    const allApproved = state.sales.filter(s =>
+      s.status === 'approved' && allSellerKeys.has(s.seller)
+    );
 
     // Helper: registra un crownEvent (robo o mejora)
     // Solo se registra si NO estamos en modo inicial (crown ya existía antes)
