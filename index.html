@@ -316,9 +316,29 @@
     margin-bottom: 0;
     padding: 32px 28px;
     border-left: 1.5px solid var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
   .duelo.trio .estela-card::before {
     display: none;
+  }
+  .duelo.trio .estela-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .duelo.trio .estela-name {
+    font-size: 36px;
+  }
+  .duelo.trio .estela-amount {
+    font-size: 32px;
+    margin-top: 8px;
+  }
+  .duelo.trio .estela-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
   .seller-card {
     position: relative; padding: 32px 28px;
@@ -3816,7 +3836,7 @@
     <div class="global-cell">
       <span class="label">Cumplimiento</span>
       <span class="value" id="globalPct">0%</span>
-      <span class="sub" id="globalGap">faltan $30M</span>
+      <span class="sub" id="globalGap">faltan —</span>
     </div>
     <div class="global-cell" id="globalCostCell">
       <span class="label">Proyección Costo</span>
@@ -6386,18 +6406,55 @@
     const excess = Math.max(0, total - seller_target);
     const best = sales.reduce((m, v) => Math.max(m, v.amount), 0);
 
-    // Comisiones: SOLO SOBRE APROBADAS (no se paga por pendientes)
-    const baseSalary = isTracker ? 0 : CONFIG.baseSalary;
-    const baseComm = isTracker ? 0 : (totalApproved * CONFIG.baseCommission);
-    const bonusTarget = (!isTracker && totalApproved >= CONFIG.target) ? CONFIG.bonusOnTarget : 0;
+    // ═══════════════════════════════════════════════════════════
+    // CÁLCULO DE COMISIÓN según esquema vigente del vendedor
+    // Esquema VIEJO (Lauti hasta jun/2026): $300k base + 3% + arena + viático + bonus meta
+    // Esquema NUEVO (Bauti/Leo/Kevin/Lauti desde jul/2026): 0 base + escalonado 5/6/7/8% + arena + viático
+    // ═══════════════════════════════════════════════════════════
+    let baseSalary = 0, baseComm = 0, bonusTarget = 0, extraComm = 0, viatico = 0;
 
-    let extraComm = 0;
     if (!isTracker) {
-      for (const tier of CONFIG.tiers) {
-        if (totalApproved > tier.from) {
-          const inTier = Math.min(totalApproved, tier.to) - tier.from;
-          extraComm += inTier * tier.rate;
+      const scheme = getCommissionScheme(key, currentMonthKey());
+
+      if (scheme === 'old') {
+        // ESQUEMA VIEJO
+        baseSalary = CONFIG.baseSalary;
+        baseComm = totalApproved * CONFIG.baseCommission; // 3%
+        bonusTarget = (totalApproved >= CONFIG.target) ? CONFIG.bonusOnTarget : 0;
+        // Arena en esquema viejo también aplica
+        for (const tier of (CONFIG.newScheme?.arena || CONFIG.tiers || [])) {
+          if (totalApproved > tier.from) {
+            const inTier = Math.min(totalApproved, tier.to) - tier.from;
+            extraComm += inTier * tier.rate;
+          }
         }
+        // Viático viejo si supera el umbral
+        if (totalApproved > (CONFIG.newScheme?.viaticoThreshold || 7000000)) {
+          viatico = CONFIG.newScheme?.viatico || 100000;
+        }
+      } else {
+        // ESQUEMA NUEVO · sin base, escalonado + arena + viático
+        baseSalary = 0;
+        // Tramos escalón nuevo
+        for (const tier of (CONFIG.newScheme?.tiers || [])) {
+          if (totalApproved > tier.from) {
+            const inTier = Math.min(totalApproved, tier.to) - tier.from;
+            baseComm += inTier * tier.rate;
+          }
+        }
+        // Arena
+        for (const tier of (CONFIG.newScheme?.arena || [])) {
+          if (totalApproved > tier.from) {
+            const inTier = Math.min(totalApproved, tier.to) - tier.from;
+            extraComm += inTier * tier.rate;
+          }
+        }
+        // Viático
+        if (totalApproved > (CONFIG.newScheme?.viaticoThreshold || 7000000)) {
+          viatico = CONFIG.newScheme?.viatico || 100000;
+        }
+        // bonusTarget (bonus meta) también aplica al esquema nuevo si llega a meta
+        bonusTarget = (totalApproved >= CONFIG.target) ? CONFIG.bonusOnTarget : 0;
       }
     }
 
@@ -6405,43 +6462,54 @@
       total, count, ticketAvg, pct, excess, best,
       totalApproved, countApproved,
       totalPending, countPending,
-      baseSalary, baseComm, bonusTarget, extraComm, isTracker, seller_target
+      baseSalary, baseComm, bonusTarget, extraComm, viatico,
+      isTracker, seller_target
     };
   }
 
   function computeAll() {
-    const lauti  = computeSeller('lauti');
-    const bauti  = computeSeller('bauti');
-    const leo    = computeSeller('leo');
-    const kevin  = computeSeller('kevin');
-    const estela = computeSeller('estela');
-    // Tercia: si los 4 vendedores online llegan a la meta
-    const allMet = lauti.total >= CONFIG.target && bauti.total >= CONFIG.target && leo.total >= CONFIG.target && kevin.total >= CONFIG.target;
+    // Compute todos los users activos + estela dinámicamente
+    const result = { estela: computeSeller('estela') };
+    CONFIG.competitiveSellers.forEach(key => {
+      result[key] = computeSeller(key);
+    });
+
+    // ¿Todos los competitivos llegaron a meta? (bonus equipo)
+    const allMet = CONFIG.competitiveSellers.length > 0 &&
+      CONFIG.competitiveSellers.every(key => result[key].total >= CONFIG.target);
     const teamBonus = allMet ? CONFIG.bonusTeamGoal : 0;
 
-    // Primer puesto entre los 4 vendedores online
-    const totals = [
-      { key: 'lauti', total: lauti.total },
-      { key: 'bauti', total: bauti.total },
-      { key: 'leo',   total: leo.total },
-      { key: 'kevin', total: kevin.total }
-    ].sort((a, b) => b.total - a.total);
-    let firstPlace = (totals[0].total > 0 && totals[0].total > totals[1].total) ? totals[0].key : null;
+    // Primer puesto entre los competitivos (para bonus #1)
+    const totals = CONFIG.competitiveSellers
+      .map(key => ({ key, total: result[key].total }))
+      .sort((a, b) => b.total - a.total);
+    const firstPlace = (totals.length > 0 && totals[0].total > 0 &&
+                        (totals.length === 1 || totals[0].total > totals[1].total))
+                       ? totals[0].key : null;
 
-    [lauti, bauti, leo, kevin].forEach(s => { s.teamBonus = teamBonus; s.firstBonus = 0; });
-    estela.teamBonus = 0; estela.firstBonus = 0;
-    if (firstPlace === 'lauti') lauti.firstBonus = CONFIG.bonusFirstPlace;
-    if (firstPlace === 'bauti') bauti.firstBonus = CONFIG.bonusFirstPlace;
-    if (firstPlace === 'leo')   leo.firstBonus   = CONFIG.bonusFirstPlace;
-    if (firstPlace === 'kevin') kevin.firstBonus = CONFIG.bonusFirstPlace;
+    // Aplicar bonus a cada vendedor
+    CONFIG.competitiveSellers.forEach(key => {
+      result[key].teamBonus = teamBonus;
+      result[key].firstBonus = 0;
+    });
+    result.estela.teamBonus = 0;
+    result.estela.firstBonus = 0;
+    if (firstPlace) result[firstPlace].firstBonus = CONFIG.bonusFirstPlace;
 
-    lauti.totalEarn = lauti.baseSalary + lauti.baseComm + lauti.bonusTarget + lauti.extraComm + lauti.teamBonus + lauti.firstBonus;
-    bauti.totalEarn = bauti.baseSalary + bauti.baseComm + bauti.bonusTarget + bauti.extraComm + bauti.teamBonus + bauti.firstBonus;
-    leo.totalEarn   = leo.baseSalary   + leo.baseComm   + leo.bonusTarget   + leo.extraComm   + leo.teamBonus   + leo.firstBonus;
-    kevin.totalEarn = kevin.baseSalary + kevin.baseComm + kevin.bonusTarget + kevin.extraComm + kevin.teamBonus + kevin.firstBonus;
-    estela.totalEarn = 0;
+    // Calcular totalEarn de cada vendedor (todo lo pagable)
+    CONFIG.competitiveSellers.forEach(key => {
+      const s = result[key];
+      s.totalEarn = (s.baseSalary || 0)
+                  + (s.baseComm || 0)
+                  + (s.extraComm || 0)
+                  + (s.viatico || 0)
+                  + (s.bonusTarget || 0)
+                  + (s.teamBonus || 0)
+                  + (s.firstBonus || 0);
+    });
+    result.estela.totalEarn = 0;
 
-    return { lauti, bauti, leo, kevin, estela, bothMet: allMet, allMet, firstPlace };
+    return { ...result, bothMet: allMet, allMet, firstPlace };
   }
 
   // ===== COMISIÓN: ESQUEMA POR VENDEDOR + MES =====
@@ -7871,18 +7939,39 @@
   }
 
   function renderGlobals(c) {
-    const total = c.lauti.total + c.bauti.total;
+    // TOTAL FACTURADO = suma de TODOS los vendedores competitivos activos
+    const total = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.total || 0), 0);
+    const totalCount = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.count || 0), 0);
+
+    // META DE EQUIPO · leído de CONFIG (dinámico)
     const targetTotal = CONFIG.teamTarget;
-    const pct = total / targetTotal;
+    const pct = targetTotal > 0 ? total / targetTotal : 0;
     const gap = Math.max(0, targetTotal - total);
-    const totalCount = c.lauti.count + c.bauti.count;
-    const totalCost = (c.lauti.totalEarn - CONFIG.baseSalary) + (c.bauti.totalEarn - CONFIG.baseSalary);
+
+    // COSTO DE INCENTIVOS = todo lo pagable por vendedor menos base fija
+    // (base solo la tiene Lauti hasta junio 2026 · esquema viejo · no se cuenta como "incentivo")
+    // Incluye: comisión + arena + viático + bonus #1 + bonus equipo (por cada vendedor)
+    const totalCost = CONFIG.competitiveSellers.reduce((sum, key) => {
+      const s = c[key];
+      if (!s) return sum;
+      // totalEarn ya incluye baseSalary + baseComm + bonusTarget + extraComm + teamBonus + firstBonus
+      // Restamos baseSalary para dejar solo los INCENTIVOS variables
+      const bs = s.baseSalary || 0;
+      return sum + Math.max(0, (s.totalEarn || 0) - bs);
+    }, 0);
+
+    // Meta como label corta
+    const targetShort = targetTotal >= 1000000
+      ? `$${(targetTotal/1000000).toFixed(targetTotal % 1000000 === 0 ? 0 : 1)}M`
+      : `$${(targetTotal/1000).toFixed(0)}k`;
 
     document.getElementById('globalTotal').textContent = fmtMoney(total);
     document.getElementById('globalCount').textContent = `${totalCount} operaciones`;
-    document.getElementById('globalTarget').textContent = '$30M';
+    document.getElementById('globalTarget').textContent = targetShort;
     document.getElementById('globalPct').textContent = Math.round(pct * 100) + '%';
-    document.getElementById('globalGap').textContent = gap > 0 ? `faltan $${fmtFull(gap)}` : `excedente $${fmtFull(total - targetTotal)}`;
+    document.getElementById('globalGap').textContent = gap > 0
+      ? `faltan ${fmtMoney(gap)}`
+      : `excedente ${fmtMoney(total - targetTotal)}`;
     document.getElementById('globalCost').textContent = fmtMoney(totalCost);
   }
 
