@@ -357,10 +357,18 @@
   .seller-amount .currency { color: var(--ink-4); font-size: 0.55em; vertical-align: top; margin-right: 6px; }
   .seller-meta-line {
     font-family: 'JetBrains Mono', monospace; font-size: 11px;
-    color: var(--ink-3); margin-bottom: 24px;
+    color: var(--ink-3); margin-bottom: 6px;
   }
   .seller-meta-line .sep { color: var(--ink-5); margin: 0 10px; }
   .seller-meta-line .val { color: var(--ink); font-weight: 700; }
+  .seller-subline {
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    color: var(--ink-3); margin-bottom: 24px; min-height: 14px;
+    letter-spacing: 0.02em;
+  }
+  .seller-subline .ss-confirmed { color: #1F8A3A; font-weight: 700; }
+  .seller-subline .ss-pending { color: #B45309; font-weight: 700; }
+  .seller-subline .ss-sep { color: var(--ink-5); margin: 0 8px; }
 
   /* PROGRESS */
   .progress-block { margin: 16px 0 28px; }
@@ -3307,7 +3315,7 @@
     .cobros-grid { grid-template-columns: 1fr; }
     .duelo { grid-template-columns: 1fr; display: flex; flex-direction: column; }
     .duelo.trio { gap: 12px; }
-    .duelo.leader-bauti { flex-direction: column-reverse; }
+    /* En mobile las cards siguen el mismo order dinámico del ranking */
     .vs-badge { width: auto; height: 60px; }
     .vs-text { transform: rotate(0); font-size: 36px; }
     .seller-card { padding: 24px 20px; box-shadow: 4px 4px 0 var(--ink); }
@@ -3707,6 +3715,7 @@
         <span class="val" id="count-lauti">0</span> OPERACIONES <span class="sep">·</span>
         TICKET PROM. <span class="val" id="ticket-lauti">$0</span>
       </div>
+      <div class="seller-subline" id="subline-lauti"></div>
       <div class="progress-block">
         <div class="progress-header">
           <span class="progress-label">Meta · $13,5M</span>
@@ -3749,6 +3758,7 @@
         <span class="val" id="count-bauti">0</span> OPERACIONES <span class="sep">·</span>
         TICKET PROM. <span class="val" id="ticket-bauti">$0</span>
       </div>
+      <div class="seller-subline" id="subline-bauti"></div>
       <div class="progress-block">
         <div class="progress-header">
           <span class="progress-label">Meta · $13,5M</span>
@@ -3791,6 +3801,7 @@
         <span class="val" id="count-leo">0</span> OPERACIONES <span class="sep">·</span>
         TICKET PROM. <span class="val" id="ticket-leo">$0</span>
       </div>
+      <div class="seller-subline" id="subline-leo"></div>
       <div class="progress-block">
         <div class="progress-header">
           <span class="progress-label">Meta · $13,5M</span>
@@ -3833,6 +3844,7 @@
         <span class="val" id="count-kevin">0</span> OPERACIONES <span class="sep">·</span>
         TICKET PROM. <span class="val" id="ticket-kevin">$0</span>
       </div>
+      <div class="seller-subline" id="subline-kevin"></div>
       <div class="progress-block">
         <div class="progress-header">
           <span class="progress-label">Meta · $13,5M</span>
@@ -6523,8 +6535,36 @@
   function renderSeller(key, data, isLeader) {
     document.getElementById(`amount-${key}`).textContent = fmtFull(data.total);
     autoScaleAmount(`amount-${key}`, data.total, 'seller-amount');
-    document.getElementById(`count-${key}`).textContent = data.count;
+
+    // Contar pendientes del mes actual del seller
+    const mk = currentMonthKey();
+    const pendings = state.sales.filter(s =>
+      s.seller === key && s.status === 'pending' && monthKeyOf(s.date) === mk
+    );
+    const pendingCount = pendings.length;
+    const pendingTotal = pendings.reduce((a, s) => a + s.amount, 0);
+
+    // Operaciones = confirmadas + pendientes (para ver ritmo real)
+    const totalOps = data.count + pendingCount;
+    document.getElementById(`count-${key}`).textContent = totalOps;
+
+    // Ticket promedio: solo aprobadas si hay, si no promedio del total
     document.getElementById(`ticket-${key}`).textContent = fmtMoney(data.ticketAvg);
+
+    // Subtítulo con desglose
+    const sublineEl = document.getElementById(`subline-${key}`);
+    if (sublineEl) {
+      if (pendingCount === 0 && data.count === 0) {
+        sublineEl.innerHTML = '';
+      } else if (pendingCount === 0) {
+        sublineEl.innerHTML = `<span class="ss-confirmed">✓ ${data.count} confirmadas · ${fmtMoney(data.total)}</span>`;
+      } else if (data.count === 0) {
+        sublineEl.innerHTML = `<span class="ss-pending">⏳ ${pendingCount} pendientes · +${fmtMoney(pendingTotal)}</span>`;
+      } else {
+        sublineEl.innerHTML = `<span class="ss-confirmed">✓ ${data.count} confirmadas · ${fmtMoney(data.total)}</span><span class="ss-sep">·</span><span class="ss-pending">⏳ ${pendingCount} pend. · +${fmtMoney(pendingTotal)}</span>`;
+      }
+    }
+
     document.getElementById(`pct-${key}`).textContent = Math.round(data.pct * 100) + '%';
     document.getElementById(`bar-${key}`).style.width = Math.min(100, data.pct * 100) + '%';
     document.getElementById(`excess-${key}`).textContent = data.excess > 0 ? '+' + fmtMoney(data.excess) : '$0';
@@ -8058,16 +8098,25 @@
     renderEstela(c.estela);
 
     // Emojis y ranks: por posición dinámica (👑 #1 · 🧅 #2 · 🥺 #3)
+    // Además: reordenar cards en el DOM usando CSS order según ranking
     ['lauti', 'bauti', 'leo', 'kevin'].forEach(k => {
       const r = rankMap[k];
       const rankEl = document.getElementById('rank-' + k);
       const emojiEl = document.getElementById('emoji-' + k);
+      const cardEl = document.getElementById('card-' + k);
       if (someoneHasSales && r) {
         rankEl.textContent = String(r);
         emojiEl.textContent = positionEmoji(r);
+        // Aplicar orden CSS: el #1 va primero (order:1), el #4 último (order:4)
+        if (cardEl) cardEl.style.order = r;
       } else {
         rankEl.textContent = '—';
         emojiEl.textContent = '';
+        // Sin ventas: orden por índice original (para no reordenar arbitrariamente)
+        if (cardEl) {
+          const defaultOrder = ['lauti', 'bauti', 'leo', 'kevin'].indexOf(k) + 1;
+          cardEl.style.order = defaultOrder;
+        }
       }
     });
 
