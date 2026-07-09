@@ -6928,35 +6928,38 @@
     }
     if (crownEl) crownEl.innerHTML = crownChipsFor(key);
 
-    // Cálculo de comisión según esquema vigente (nuevo o viejo)
-    const comm = calcCommission(key, data.total);
+    // ═══════════════════════════════════════════════════════════
+    // Cálculo de comisión · USA los datos de computeSeller (fuente única)
+    // computeSeller ya calculó todo con el esquema correcto sobre totalApproved
+    // ═══════════════════════════════════════════════════════════
+    const scheme = getCommissionScheme(key, currentMonthKey());
     const earnEl = document.getElementById(`earn-${key}`);
     const breakdownEl = document.getElementById(`breakdown-${key}`);
-    let totalEarn = 0;
+    let totalEarn = data.totalEarn || 0;
     let parts = [];
-    if (comm && comm.scheme === 'new') {
-      // Esquema NUEVO: 5/6/7/8 + arena + viático
-      totalEarn = comm.total;
+
+    if (scheme === 'new') {
+      // Esquema NUEVO · sin base
       parts.push(`<span class="scheme-tag new">NUEVO</span>`);
-      parts.push(`Base $${fmtFull(comm.base)}`);
-      if (comm.arena)   parts.push(`<span class="plus">+arena $${fmtFull(comm.arena)}</span>`);
-      if (comm.viatico) parts.push(`<span class="plus">+viático $${fmtFull(comm.viatico)}</span>`);
-      if (data.firstBonus) { totalEarn += data.firstBonus; parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`); }
-      if (data.teamBonus)  { totalEarn += data.teamBonus;  parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`); }
-    } else if (comm && comm.scheme === 'old') {
-      // Esquema VIEJO: 3% + base + escalonado + viático
-      totalEarn = comm.total;
+      if (data.baseComm)   parts.push(`Escalón $${fmtFull(Math.round(data.baseComm))}`);
+      if (data.extraComm)  parts.push(`<span class="plus">+arena $${fmtFull(Math.round(data.extraComm))}</span>`);
+      if (data.viatico)    parts.push(`<span class="plus">+viático $${fmtFull(data.viatico)}</span>`);
+      if (data.bonusTarget)parts.push(`<span class="plus">+meta $${fmtFull(data.bonusTarget)}</span>`);
+      if (data.firstBonus) parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
+      if (data.teamBonus)  parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
+    } else if (scheme === 'old') {
+      // Esquema VIEJO · con base $300k + 3%
       parts.push(`<span class="scheme-tag old">VIEJO</span>`);
-      parts.push(`Base $${fmtFull(comm.baseSalary)}`);
-      parts.push(`3% $${fmtFull(comm.base)}`);
-      if (comm.bonusTarget) parts.push(`<span class="plus">+meta $${fmtFull(comm.bonusTarget)}</span>`);
-      if (comm.arena)       parts.push(`<span class="plus">+extra $${fmtFull(comm.arena)}</span>`);
-      if (comm.viatico)     parts.push(`<span class="plus">+viático $${fmtFull(comm.viatico)}</span>`);
-      if (data.firstBonus) { totalEarn += data.firstBonus; parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`); }
-      if (data.teamBonus)  { totalEarn += data.teamBonus;  parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`); }
+      parts.push(`Base $${fmtFull(data.baseSalary || 0)}`);
+      if (data.baseComm)    parts.push(`3% $${fmtFull(Math.round(data.baseComm))}`);
+      if (data.bonusTarget) parts.push(`<span class="plus">+meta $${fmtFull(data.bonusTarget)}</span>`);
+      if (data.extraComm)   parts.push(`<span class="plus">+extra $${fmtFull(Math.round(data.extraComm))}</span>`);
+      if (data.viatico)     parts.push(`<span class="plus">+viático $${fmtFull(data.viatico)}</span>`);
+      if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
+      if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
     }
-    earnEl.textContent = fmtMoney(totalEarn);
-    breakdownEl.innerHTML = parts.join(' · ');
+    if (earnEl) earnEl.textContent = fmtMoney(Math.round(totalEarn));
+    if (breakdownEl) breakdownEl.innerHTML = parts.join(' · ');
 
     document.getElementById(`card-${key}`).classList.toggle('leader', isLeader);
 
@@ -8439,7 +8442,7 @@
       if (diff > 0 && diff < 5000000) {
         milestones.push({
           icon: '🎯',
-          title: `ALCANZAR A ${SELLER_META[ahead.key].name}`,
+          title: `ALCANZAR A ${(SELLER_META[ahead.key]?.name || ahead.key.toUpperCase())}`,
           detail: `Te lleva ${fmtMoney(diff)}`,
           extra: `Sumás 1 puesto`
         });
@@ -9727,7 +9730,7 @@
     }
     if (withSales.length > 0 && withSales[0].total > 0) {
       const leader = withSales[0];
-      const leaderName = SELLER_META[leader.key].name;
+      const leaderName = (SELLER_META[leader.key]?.name || leader.key.toUpperCase());
       if (leader.count >= 3 && (!withSales[1] || leader.total > withSales[1].total * 1.5)) {
         outstandingLines.push(`${leaderName} hizo ${leader.count} ventas hoy · lidera el día`);
       }
@@ -11410,13 +11413,14 @@
     if (!mk) mk = activeOpsMonth();
     const container = document.getElementById('opsSalaries');
     if (!container) return;
-    const sellers = ['lauti', 'bauti', 'leo', 'kevin'];
+    // Sellers = todos los competitivos dinámicos (no hardcoded)
+    const sellers = CONFIG.competitiveSellers || ['lauti', 'bauti', 'leo', 'kevin'];
     const rows = sellers.map(key => {
       const sales = state.sales.filter(s => s.seller === key && s.status === 'approved' && monthKeyOf(s.date) === mk);
       const facturado = sales.reduce((a, v) => a + v.amount, 0);
       const comm = calcCommission(key, facturado, mk);
       if (!comm) return '';
-      const meta = SELLER_META[key];
+      const meta = SELLER_META[key] || { name: key.toUpperCase(), emoji: '👤' };
       if (comm.scheme === 'new') {
         return `
           <tr>
@@ -11430,7 +11434,6 @@
         `;
       } else {
         const baseAndComm = comm.baseSalary + comm.base;
-        const extras = comm.bonusTarget + comm.arena + comm.viatico;
         return `
           <tr>
             <td><strong>${meta.emoji} ${meta.name}</strong><br><span class="ops-scheme-tag old">VIEJO</span></td>
