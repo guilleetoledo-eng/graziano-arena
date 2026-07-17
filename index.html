@@ -3070,6 +3070,89 @@
   }
   .ops-grid-2 .ops-section { margin-bottom: 24px; }
   .ops-section-full { margin-top: 32px; }
+
+  /* ═══ /09 COBROS Y ADELANTOS ═══ */
+  .cya-container {
+    display: flex; flex-direction: column; gap: 20px;
+    margin-top: 8px;
+  }
+  .cya-block {
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    padding: 20px 24px;
+  }
+  .cya-block-header {
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .cya-block-title {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--red); letter-spacing: 0.15em; font-weight: 700;
+    text-transform: uppercase;
+  }
+  .cya-block-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 9.5px;
+    color: var(--ink-3); margin-top: 4px; letter-spacing: 0.05em;
+  }
+  .cya-content { display: flex; flex-direction: column; gap: 12px; }
+  .cya-seller-group {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--ink);
+    padding: 14px 16px;
+  }
+  .cya-seller-title {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .cya-seller-name {
+    font-family: 'Anton', sans-serif; font-size: 20px;
+    letter-spacing: 0.02em; color: var(--ink);
+  }
+  .cya-seller-total {
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    color: var(--ink-3); font-weight: 700;
+  }
+  .cya-seller-total strong { color: var(--red); }
+  .cya-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 10px; margin-bottom: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .cya-item-info { display: flex; flex-direction: column; gap: 2px; }
+  .cya-item-main { color: var(--ink); font-weight: 700; }
+  .cya-item-sub {
+    font-size: 10px; color: var(--ink-3); letter-spacing: 0.05em;
+  }
+  .cya-item-amount {
+    font-weight: 700; color: var(--red);
+    margin-right: 12px;
+  }
+  .cya-btn {
+    background: transparent; border: 1.5px solid var(--ink-3);
+    padding: 4px 8px; font-size: 12px; cursor: pointer;
+    color: var(--ink-3); transition: all 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cya-btn:hover { background: var(--red); color: white; border-color: var(--red); }
+  .cya-btn-bulk {
+    margin-top: 8px; padding: 8px 12px;
+    font-size: 10px; letter-spacing: 0.1em; font-weight: 700;
+    text-transform: uppercase; width: 100%;
+    border: 1.5px solid var(--red); color: var(--red);
+    background: transparent;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cya-btn-bulk:hover { background: var(--red); color: white; }
+  .cya-empty {
+    padding: 24px 16px; text-align: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-3); font-style: italic;
+    border: 1px dashed var(--line); background: var(--bg-soft);
+  }
   .ops-config-section { margin-top: 32px; }
   /* PIZARRA DE CORONAS */
   .crown-board {
@@ -4696,9 +4779,7 @@
       <div class="ops-filters">
         <select id="opsFilterSeller" onchange="renderOpsTable()">
           <option value="">Todos los vendedores</option>
-          <option value="lauti">Lauti</option>
-          <option value="bauti">Bauti</option>
-          <option value="estela">Estela</option>
+          <!-- Options generadas dinámicamente en initOpsFilterSeller() -->
         </select>
         <select id="opsFilterStatus" onchange="renderOpsTable()" style="display:none;">
           <option value="">Todos los estados</option>
@@ -4843,6 +4924,53 @@
       <!-- Panel de detalle expandible -->
       <div class="liq-detail-panel" id="liqDetailPanel" style="display:none;">
         <!-- contenido dinámico -->
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 07 COBROS Y ADELANTOS · gestión histórica                    -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ops-section ops-section-full">
+      <div class="ops-section-header">
+        <div>
+          <h3>🔧 COBROS Y ADELANTOS</h3>
+          <span class="ops-section-sub">gestión de datos históricos · usar con cuidado</span>
+        </div>
+      </div>
+
+      <div class="cya-container">
+        <!-- Bloque 1: COBROS SEMANALES -->
+        <div class="cya-block">
+          <div class="cya-block-header">
+            <div class="cya-block-title">▸ COBROS SEMANALES REGISTRADOS</div>
+            <div class="cya-block-sub">Descuentos que se aplican al liquidar</div>
+          </div>
+          <div class="cya-content" id="cyaWeeklyContent">
+            <!-- Contenido dinámico -->
+          </div>
+        </div>
+
+        <!-- Bloque 2: ADELANTOS -->
+        <div class="cya-block">
+          <div class="cya-block-header">
+            <div class="cya-block-title">▸ ADELANTOS MANUALES</div>
+            <div class="cya-block-sub">Pagos anticipados que se descuentan del neto</div>
+          </div>
+          <div class="cya-content" id="cyaAdvancesContent">
+            <!-- Contenido dinámico -->
+          </div>
+        </div>
+
+        <!-- Bloque 3: LIQUIDACIONES MARCADAS -->
+        <div class="cya-block">
+          <div class="cya-block-header">
+            <div class="cya-block-title">▸ LIQUIDACIONES MARCADAS COMO PAGADAS</div>
+            <div class="cya-block-sub">Períodos ya liquidados · desmarcar solo si fue por error</div>
+          </div>
+          <div class="cya-content" id="cyaLiquidationsContent">
+            <!-- Contenido dinámico -->
+          </div>
+        </div>
       </div>
     </div>
 
@@ -11451,7 +11579,248 @@
   }
 
   // SUELDOS PROYECTADOS · admin only
+  // ═══════════════════════════════════════════════════════════
+  // COBROS Y ADELANTOS · gestión histórica
+  // ═══════════════════════════════════════════════════════════
+
+  function renderCyaSection() {
+    renderCyaWeekly();
+    renderCyaAdvances();
+    renderCyaLiquidations();
+  }
+
+  // ── COBROS SEMANALES ────────────────────────────────
+  function renderCyaWeekly() {
+    const container = document.getElementById('cyaWeeklyContent');
+    if (!container) return;
+
+    const wp = state.weeklyPayments || {};
+    const monthKeys = Object.keys(wp).sort().reverse();
+
+    if (monthKeys.length === 0) {
+      container.innerHTML = `<div class="cya-empty">No hay cobros semanales registrados</div>`;
+      return;
+    }
+
+    let html = '';
+    monthKeys.forEach(mk => {
+      const sellersInMonth = wp[mk] || {};
+      Object.keys(sellersInMonth).forEach(seller => {
+        const weeksData = sellersInMonth[seller];
+        if (!weeksData) return;
+        // weeksData puede ser array o object · normalizamos
+        const entries = [];
+        if (Array.isArray(weeksData)) {
+          weeksData.forEach((w, idx) => {
+            if (w && w.paid) entries.push({ week: idx, ...w });
+          });
+        } else {
+          Object.keys(weeksData).forEach(k => {
+            const w = weeksData[k];
+            if (w && w.paid) entries.push({ week: parseInt(k), ...w });
+          });
+        }
+        if (entries.length === 0) return;
+
+        const meta = SELLER_META[seller] || { name: seller.toUpperCase(), emoji: '👤' };
+        const total = entries.reduce((a, e) => a + (e.amount || 0), 0);
+        const mkLabel = monthLabel(mk);
+
+        html += `
+          <div class="cya-seller-group">
+            <div class="cya-seller-title">
+              <span class="cya-seller-name">${meta.emoji} ${meta.name} · ${mkLabel}</span>
+              <span class="cya-seller-total">Total: <strong>${fmtMoney(total)}</strong></span>
+            </div>
+        `;
+        entries.forEach(e => {
+          const paidDate = e.paidAt ? new Date(e.paidAt).toLocaleDateString('es-AR') : '—';
+          html += `
+            <div class="cya-item">
+              <div class="cya-item-info">
+                <div class="cya-item-main">✓ Semana ${e.week}</div>
+                <div class="cya-item-sub">Marcado ${paidDate}${e.paidBy ? ' · por ' + e.paidBy : ''}</div>
+              </div>
+              <div style="display:flex;align-items:center;">
+                <span class="cya-item-amount">${fmtMoney(e.amount || 0)}</span>
+                <button class="cya-btn" onclick="cyaDeleteWeeklyPayment('${mk}','${seller}',${e.week})" title="Borrar">🗑</button>
+              </div>
+            </div>
+          `;
+        });
+        html += `
+            <button class="cya-btn-bulk" onclick="cyaDeleteAllWeeklyForSellerMonth('${mk}','${seller}')">
+              🗑 Borrar TODOS los cobros de ${meta.name} en ${mkLabel}
+            </button>
+          </div>
+        `;
+      });
+    });
+
+    if (!html) {
+      container.innerHTML = `<div class="cya-empty">No hay cobros semanales registrados</div>`;
+    } else {
+      container.innerHTML = html;
+    }
+  }
+
+  async function cyaDeleteWeeklyPayment(monthKey, seller, week) {
+    if (currentUser !== 'admin') return;
+    if (!confirm(`¿Borrar cobro de la semana ${week} de ${seller.toUpperCase()} en ${monthKey}?\n\nEsto recalculará la liquidación de ese período.`)) return;
+    if (!state.weeklyPayments?.[monthKey]?.[seller]) return;
+    // Manejo defensivo si es array o object
+    const target = state.weeklyPayments[monthKey][seller];
+    if (Array.isArray(target)) {
+      target[week] = null;
+    } else {
+      delete target[week];
+    }
+    await saveState();
+    showToast('✓ Cobro borrado', 'success');
+    renderAll();
+  }
+
+  async function cyaDeleteAllWeeklyForSellerMonth(monthKey, seller) {
+    if (currentUser !== 'admin') return;
+    if (!confirm(`¿Borrar TODOS los cobros semanales de ${seller.toUpperCase()} en ${monthKey}?\n\nEsta acción no se puede deshacer.`)) return;
+    if (!confirm(`Confirmá una vez más: se van a borrar todos los cobros de ${seller.toUpperCase()} en ${monthKey}.`)) return;
+    if (state.weeklyPayments?.[monthKey]) {
+      delete state.weeklyPayments[monthKey][seller];
+    }
+    await saveState();
+    showToast(`✓ Cobros de ${seller.toUpperCase()} borrados`, 'success');
+    renderAll();
+  }
+
+  // ── ADELANTOS ────────────────────────────────
+  function renderCyaAdvances() {
+    const container = document.getElementById('cyaAdvancesContent');
+    if (!container) return;
+
+    const advances = state.advances || {};
+    let html = '';
+
+    Object.keys(advances).sort().forEach(seller => {
+      const sellerAdv = advances[seller] || {};
+      const entries = Object.entries(sellerAdv).sort((a, b) => (b[1].date || '').localeCompare(a[1].date || ''));
+      if (entries.length === 0) return;
+
+      const meta = SELLER_META[seller] || { name: seller.toUpperCase(), emoji: '👤' };
+      const total = entries.reduce((a, [, adv]) => a + (adv.amount || 0), 0);
+
+      html += `
+        <div class="cya-seller-group">
+          <div class="cya-seller-title">
+            <span class="cya-seller-name">${meta.emoji} ${meta.name}</span>
+            <span class="cya-seller-total">Total: <strong>${fmtMoney(total)}</strong></span>
+          </div>
+      `;
+      entries.forEach(([id, adv]) => {
+        html += `
+          <div class="cya-item">
+            <div class="cya-item-info">
+              <div class="cya-item-main">${adv.date || '—'}</div>
+              <div class="cya-item-sub">${adv.note || 'sin nota'}${adv.by ? ' · por ' + adv.by : ''}</div>
+            </div>
+            <div style="display:flex;align-items:center;">
+              <span class="cya-item-amount">${fmtMoney(adv.amount || 0)}</span>
+              <button class="cya-btn" onclick="cyaDeleteAdvance('${seller}','${id}')" title="Borrar">🗑</button>
+            </div>
+          </div>
+        `;
+      });
+      html += `
+          <button class="cya-btn-bulk" onclick="cyaDeleteAllAdvancesForSeller('${seller}')">
+            🗑 Borrar TODOS los adelantos de ${meta.name}
+          </button>
+        </div>
+      `;
+    });
+
+    if (!html) {
+      container.innerHTML = `<div class="cya-empty">No hay adelantos registrados</div>`;
+    } else {
+      container.innerHTML = html;
+    }
+  }
+
+  async function cyaDeleteAdvance(seller, id) {
+    if (currentUser !== 'admin') return;
+    if (!confirm(`¿Borrar este adelanto de ${seller.toUpperCase()}?\n\nEsto recalculará la liquidación de ese período.`)) return;
+    if (state.advances?.[seller]?.[id]) {
+      delete state.advances[seller][id];
+    }
+    await saveState();
+    showToast('✓ Adelanto borrado', 'success');
+    renderAll();
+  }
+
+  async function cyaDeleteAllAdvancesForSeller(seller) {
+    if (currentUser !== 'admin') return;
+    if (!confirm(`¿Borrar TODOS los adelantos de ${seller.toUpperCase()}?\n\nEsta acción no se puede deshacer.`)) return;
+    if (!confirm(`Confirmá una vez más: se van a borrar todos los adelantos de ${seller.toUpperCase()}.`)) return;
+    if (state.advances) {
+      delete state.advances[seller];
+    }
+    await saveState();
+    showToast(`✓ Adelantos de ${seller.toUpperCase()} borrados`, 'success');
+    renderAll();
+  }
+
+  // ── LIQUIDACIONES MARCADAS ────────────────────────────────
+  function renderCyaLiquidations() {
+    const container = document.getElementById('cyaLiquidationsContent');
+    if (!container) return;
+
+    const liqs = state.liquidations || {};
+    const periodKeys = Object.keys(liqs).sort().reverse();
+
+    let html = '';
+    periodKeys.forEach(pk => {
+      const inPeriod = liqs[pk] || {};
+      Object.entries(inPeriod).forEach(([seller, rec]) => {
+        if (!rec?.paid) return;
+        const meta = SELLER_META[seller] || { name: seller.toUpperCase(), emoji: '👤' };
+        const paidDate = rec.paidAt ? new Date(rec.paidAt).toLocaleDateString('es-AR') : '—';
+        html += `
+          <div class="cya-item">
+            <div class="cya-item-info">
+              <div class="cya-item-main">${meta.emoji} ${meta.name} · ${pk}</div>
+              <div class="cya-item-sub">Marcado ${paidDate}${rec.paidBy ? ' · por ' + rec.paidBy : ''}${rec.amount ? ' · pagó ' + fmtMoney(rec.amount) : ''}</div>
+            </div>
+            <button class="cya-btn" onclick="cyaUnmarkLiquidation('${pk}','${seller}')">↩ Desmarcar</button>
+          </div>
+        `;
+      });
+    });
+
+    if (!html) {
+      container.innerHTML = `<div class="cya-empty">No hay liquidaciones marcadas como pagadas</div>`;
+    } else {
+      container.innerHTML = html;
+    }
+  }
+
+  async function cyaUnmarkLiquidation(periodKey, seller) {
+    if (currentUser !== 'admin') return;
+    if (!confirm(`¿Desmarcar la liquidación de ${seller.toUpperCase()} en ${periodKey}?\n\nEsto reactivará el pago pendiente.`)) return;
+    if (state.liquidations?.[periodKey]?.[seller]) {
+      delete state.liquidations[periodKey][seller];
+    }
+    await saveState();
+    showToast(`✓ Liquidación desmarcada`, 'success');
+    renderAll();
+  }
+
+  window.cyaDeleteWeeklyPayment = cyaDeleteWeeklyPayment;
+  window.cyaDeleteAllWeeklyForSellerMonth = cyaDeleteAllWeeklyForSellerMonth;
+  window.cyaDeleteAdvance = cyaDeleteAdvance;
+  window.cyaDeleteAllAdvancesForSeller = cyaDeleteAllAdvancesForSeller;
+  window.cyaUnmarkLiquidation = cyaUnmarkLiquidation;
+
   function renderOpsSalaries(mk) {
+    // Llamamos también al render de la sección Cobros y Adelantos
+    renderCyaSection();
     if (!mk) mk = activeOpsMonth();
     const container = document.getElementById('opsSalaries');
     if (!container) return;
@@ -11608,6 +11977,8 @@
   }
 
   function renderOpsTable(skipReset) {
+    // Asegurar que el dropdown de vendedores esté poblado dinámicamente
+    populateSellerFilter();
     const fSeller = document.getElementById('opsFilterSeller').value;
     const fStatus = document.getElementById('opsFilterStatus').value;
     const fChannel = document.getElementById('opsFilterChannel').value;
@@ -11746,6 +12117,43 @@
       });
       const dd = document.getElementById('opsFilterStatus');
       if (dd) dd.value = masterFilterActive;
+    }
+    populateSellerFilter();
+  }
+
+  // Pobla dinámicamente el dropdown de vendedores en Tabla Maestra
+  // Incluye vendedores ACTIVOS + INACTIVOS que tengan ventas (para poder filtrar histórico)
+  function populateSellerFilter() {
+    const sel = document.getElementById('opsFilterSeller');
+    if (!sel) return;
+    const currentValue = sel.value;
+
+    // Sellers con ventas en el sistema (todos los que aparecieron alguna vez)
+    const sellersInSales = new Set(state.sales.map(s => s.seller));
+    // Sellers activos actuales (por si algún activo no tiene ventas todavía)
+    const activeSellers = new Set([...(CONFIG.competitiveSellers || []), 'estela']);
+    // Union: activos + los que tienen ventas históricas
+    const allSellers = new Set([...activeSellers, ...sellersInSales]);
+
+    // Ordenamos: activos primero (por orden de CONFIG.competitiveSellers), después Estela, después inactivos
+    const activeOrdered = (CONFIG.competitiveSellers || []).filter(k => allSellers.has(k));
+    const inactive = [...allSellers].filter(k => !activeSellers.has(k)).sort();
+    const orderedList = [...activeOrdered, 'estela', ...inactive].filter(k => allSellers.has(k));
+
+    // Reconstruir opciones
+    const optHtml = ['<option value="">Todos los vendedores</option>']
+      .concat(orderedList.map(k => {
+        const meta = SELLER_META[k] || { name: k.toUpperCase() };
+        const isInactive = !activeSellers.has(k) && k !== 'estela';
+        const label = isInactive ? `${meta.name} ⏸` : meta.name;
+        return `<option value="${k}">${label}</option>`;
+      }))
+      .join('');
+    sel.innerHTML = optHtml;
+
+    // Restaurar valor previo si sigue siendo válido
+    if (currentValue && orderedList.includes(currentValue)) {
+      sel.value = currentValue;
     }
   }
 
