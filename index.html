@@ -5616,10 +5616,8 @@
 
     // Obtener vendedores activos (Lauti, Bauti, Leo, Kevin, Emi... según CRUD)
     const activeSellers = getActiveUsers();
-    // Estela: busco su registro (rol especial 'estela')
-    const estela = state.users
-      ? Object.values(state.users).find(u => u.role === 'estela' && u.active)
-      : null;
+    // Estela: usa FIXED_USERS (es fija · lógica especial de dueña)
+    const estela = FIXED_USERS?.estela || null;
 
     // Construir HTML:
     // 1) PANTALLA (fijo)
