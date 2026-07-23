@@ -3814,30 +3814,11 @@
         <img class="login-logo" src="./logograzianomateriales.png" alt="Graziano Materiales" />
       </div>
       <div class="login-eyebrow">— ¿QUIÉN ENTRA? —</div>
-      <div class="login-grid" style="width:100%;">
+      <div class="login-grid" id="loginGrid" style="width:100%;">
+        <!-- Botones generados dinámicamente en renderLoginScreen() -->
         <button class="login-btn primary" onclick="enterAs('view')">
           PANTALLA
           <span class="role">Solo mirar — sin login</span>
-        </button>
-        <button class="login-btn" onclick="askPin('lauti')">
-          LAUTI 🎯
-          <span class="role">El Cazador — Cargar mis ventas</span>
-        </button>
-        <button class="login-btn" onclick="askPin('bauti')">
-          BAUTI 🧱
-          <span class="role">El Constante — Cargar mis ventas</span>
-        </button>
-        <button class="login-btn" onclick="askPin('leo')">
-          LEO 🦴
-          <span class="role">La Hiena — Cargar mis ventas</span>
-        </button>
-        <button class="login-btn" onclick="askPin('kevin')">
-          KEVIN 🏹
-          <span class="role">El Líder — Cargar mis ventas</span>
-        </button>
-        <button class="login-btn" onclick="askPin('estela')" style="grid-column:1/-1;">
-          ESTELA 🏪
-          <span class="role">La Dueña — Cargar mis ventas / Tracker</span>
         </button>
         <button class="login-btn" style="grid-column:1/-1;" onclick="askPin('admin')">
           ADMIN
@@ -5626,6 +5607,71 @@
   }
 
   // Helpers para acceder a users
+  // ═══════════════════════════════════════════════════════════
+  // LOGIN SCREEN · botones dinámicos según usuarios activos
+  // ═══════════════════════════════════════════════════════════
+  function renderLoginScreen() {
+    const grid = document.getElementById('loginGrid');
+    if (!grid) return;
+
+    // Obtener vendedores activos (Lauti, Bauti, Leo, Kevin, Emi... según CRUD)
+    const activeSellers = getActiveUsers();
+    // Estela: busco su registro (rol especial 'estela')
+    const estela = state.users
+      ? Object.values(state.users).find(u => u.role === 'estela' && u.active)
+      : null;
+
+    // Construir HTML:
+    // 1) PANTALLA (fijo)
+    // 2) Cada vendedor activo (dinámico)
+    // 3) Estela (si activa, full width)
+    // 4) ADMIN (fijo, full width)
+    let html = '';
+
+    // PANTALLA
+    html += `
+      <button class="login-btn primary" onclick="enterAs('view')">
+        PANTALLA
+        <span class="role">Solo mirar — sin login</span>
+      </button>
+    `;
+
+    // Vendedores activos
+    activeSellers.forEach(u => {
+      const nombre = (u.name || u.key || '').toUpperCase();
+      const titulo = u.title || '';
+      const emoji = u.emoji || '';
+      html += `
+        <button class="login-btn" onclick="askPin('${u.key}')">
+          ${nombre} ${emoji}
+          <span class="role">${titulo} — Cargar mis ventas</span>
+        </button>
+      `;
+    });
+
+    // Estela (si existe)
+    if (estela) {
+      const nombre = (estela.name || 'ESTELA').toUpperCase();
+      const emoji = estela.emoji || '🏪';
+      html += `
+        <button class="login-btn" onclick="askPin('${estela.key}')" style="grid-column:1/-1;">
+          ${nombre} ${emoji}
+          <span class="role">${estela.title || 'La Dueña'} — Cargar mis ventas / Tracker</span>
+        </button>
+      `;
+    }
+
+    // ADMIN (fijo)
+    html += `
+      <button class="login-btn" style="grid-column:1/-1;" onclick="askPin('admin')">
+        ADMIN
+        <span class="role">Guille / Cami — control total</span>
+      </button>
+    `;
+
+    grid.innerHTML = html;
+  }
+
   function getActiveUsers() {
     const users = state.users || {};
     return Object.values(users)
@@ -5830,6 +5876,8 @@
       migrateUsersIfNeeded();
       // Reconstruir maps derivados
       rebuildUserMaps();
+      // Actualizar pantalla de login (si aún está visible)
+      renderLoginScreen();
       // Re-render si ya hay usuario logueado
       if (currentUser) renderAll();
     }, (err) => { console.warn('Firebase users read error', err); });
@@ -5949,6 +5997,8 @@
     document.getElementById('selectScreen').style.display = 'flex';
     document.getElementById('pinScreen').classList.remove('show');
     pinTargetUser = null;
+    // Re-render de botones dinámicos (por si hubo cambios en usuarios)
+    renderLoginScreen();
   }
   document.addEventListener('DOMContentLoaded', () => {
     // Registrar Service Worker (PWA) · con auto-update agresivo
