@@ -7060,13 +7060,23 @@
   }
 
   function renderSeller(key, data, isLeader) {
+    // Defensivo: si el vendedor no tiene HTML card (ej: Emi recién creado sin card en el HTML)
+    // skip para no romper renderAll y el resto de renders (Estela, etc)
+    const amountEl = document.getElementById(`amount-${key}`);
+    if (!amountEl) {
+      // No hay card en el DOM · vendedor nuevo agregado dinámicamente
+      // (para agregar visualmente su card habría que editar el HTML)
+      return;
+    }
     // Monto grande = TOTAL (aprobadas + pendientes)
-    document.getElementById(`amount-${key}`).textContent = fmtFull(data.total);
+    amountEl.textContent = fmtFull(data.total);
     autoScaleAmount(`amount-${key}`, data.total, 'seller-amount');
 
     // Operaciones = total (aprobadas + pendientes)
-    document.getElementById(`count-${key}`).textContent = data.count;
-    document.getElementById(`ticket-${key}`).textContent = fmtMoney(data.ticketAvg);
+    const countEl = document.getElementById(`count-${key}`);
+    const ticketEl = document.getElementById(`ticket-${key}`);
+    if (countEl) countEl.textContent = data.count;
+    if (ticketEl) ticketEl.textContent = fmtMoney(data.ticketAvg);
 
     // Subtítulo con desglose confirmadas vs pendientes
     const sublineEl = document.getElementById(`subline-${key}`);
@@ -7086,23 +7096,29 @@
       }
     }
 
-    document.getElementById(`pct-${key}`).textContent = Math.round(data.pct * 100) + '%';
-    document.getElementById(`bar-${key}`).style.width = Math.min(100, data.pct * 100) + '%';
-    document.getElementById(`excess-${key}`).textContent = data.excess > 0 ? '+' + fmtMoney(data.excess) : '$0';
-    document.getElementById(`best-${key}`).textContent = fmtMoney(data.best);
+    const pctEl = document.getElementById(`pct-${key}`);
+    const barEl = document.getElementById(`bar-${key}`);
+    const excessEl = document.getElementById(`excess-${key}`);
+    const bestEl = document.getElementById(`best-${key}`);
+    if (pctEl) pctEl.textContent = Math.round(data.pct * 100) + '%';
+    if (barEl) barEl.style.width = Math.min(100, data.pct * 100) + '%';
+    if (excessEl) excessEl.textContent = data.excess > 0 ? '+' + fmtMoney(data.excess) : '$0';
+    if (bestEl) bestEl.textContent = fmtMoney(data.best);
 
     // CHAPEO DE CORONAS: inyectar chapas al lado del nombre (siempre visibles, todas)
     const card = document.getElementById(`card-${key}`);
-    let crownEl = card.querySelector('.seller-crowns');
-    if (!crownEl) {
-      const nameBlock = card.querySelector('.seller-name-block');
-      if (nameBlock) {
-        crownEl = document.createElement('div');
-        crownEl.className = 'seller-crowns';
-        nameBlock.appendChild(crownEl);
+    if (card) {
+      let crownEl = card.querySelector('.seller-crowns');
+      if (!crownEl) {
+        const nameBlock = card.querySelector('.seller-name-block');
+        if (nameBlock) {
+          crownEl = document.createElement('div');
+          crownEl.className = 'seller-crowns';
+          nameBlock.appendChild(crownEl);
+        }
       }
+      if (crownEl) crownEl.innerHTML = crownChipsFor(key);
     }
-    if (crownEl) crownEl.innerHTML = crownChipsFor(key);
 
     // ═══════════════════════════════════════════════════════════
     // Cálculo de comisión · USA los datos de computeSeller (fuente única)
@@ -7137,18 +7153,25 @@
     if (earnEl) earnEl.textContent = fmtMoney(Math.round(totalEarn));
     if (breakdownEl) breakdownEl.innerHTML = parts.join(' · ');
 
-    document.getElementById(`card-${key}`).classList.toggle('leader', isLeader);
+    const leaderCard = document.getElementById(`card-${key}`);
+    if (leaderCard) leaderCard.classList.toggle('leader', isLeader);
 
     // Pending pill
     const pending = pendingSales(key);
     const pill = document.getElementById(`pending-${key}`);
-    if (pending.length > 0) {
-      pill.style.display = 'inline-block';
-      document.getElementById(`pending-num-${key}`).textContent = pending.length;
-      const pendingTotal = pending.reduce((a,v) => a + v.amount, 0);
-      document.getElementById(`pending-amount-${key}`).textContent = fmtMoney(pendingTotal);
-    } else {
-      pill.style.display = 'none';
+    if (pill) {
+      if (pending.length > 0) {
+        pill.style.display = 'inline-block';
+        const pnumEl = document.getElementById(`pending-num-${key}`);
+        const pamtEl = document.getElementById(`pending-amount-${key}`);
+        if (pnumEl) pnumEl.textContent = pending.length;
+        if (pamtEl) {
+          const pendingTotal = pending.reduce((a,v) => a + v.amount, 0);
+          pamtEl.textContent = fmtMoney(pendingTotal);
+        }
+      } else {
+        pill.style.display = 'none';
+      }
     }
   }
 
