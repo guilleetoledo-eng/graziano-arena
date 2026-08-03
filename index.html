@@ -2694,6 +2694,51 @@
     background: #FFF7E0; border-left: 3px solid #E5A800;
     font-size: 11px; color: #6B5400; line-height: 1.5;
   }
+
+  /* TOGGLE ESTELA · rápida / completa */
+  .estela-flow-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .estela-flow-toggle button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px 10px;
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-3);
+    line-height: 1.2;
+  }
+  .estela-flow-toggle button:hover:not(.active) {
+    border-color: var(--ink);
+  }
+  .estela-flow-toggle button.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .estela-flow-toggle .ef-icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+  .estela-flow-toggle .ef-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  .estela-flow-toggle .ef-sub {
+    font-size: 9px;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+  }
   #saleEstelaAmount {
     font-family: 'Archivo Black', sans-serif; font-size: 22px;
     text-align: right; letter-spacing: 0.02em;
@@ -3741,6 +3786,90 @@
     text-transform: uppercase;
     margin-bottom: 16px;
     display: flex; justify-content: space-between; align-items: baseline;
+  }
+
+  /* FACTURADO TOTAL banner (aprobadas + pendientes) */
+  .ma-facturado-total {
+    background: rgba(255,59,31,0.06);
+    border: 1.5px solid var(--red);
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 4px 20px;
+    align-items: center;
+  }
+  .ma-ft-label {
+    grid-column: 1;
+    grid-row: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .ma-ft-hint {
+    font-weight: 400;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    font-size: 9px;
+    text-transform: none;
+    margin-left: 6px;
+  }
+  .ma-ft-value {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    text-align: right;
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    letter-spacing: 0.02em;
+    color: var(--red);
+    line-height: 1;
+  }
+  .ma-ft-breakdown {
+    grid-column: 1;
+    grid-row: 2;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+  }
+  .ma-divider {
+    height: 1px;
+    background: var(--line);
+    margin: 12px 0;
+  }
+  .ma-subheader {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: #1F8A3A;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .ma-subheader-sub {
+    font-weight: 400;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    font-size: 9.5px;
+    text-transform: none;
+  }
+  @media (max-width: 700px) {
+    .ma-facturado-total {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto;
+      text-align: center;
+    }
+    .ma-ft-label { grid-column: 1; grid-row: 1; text-align: center; }
+    .ma-ft-value { grid-column: 1; grid-row: 2; text-align: center; font-size: 28px; }
+    .ma-ft-breakdown { grid-column: 1; grid-row: 3; text-align: center; }
   }
   .ma-summary-sub {
     font-weight: 400; color: var(--ink-3);
@@ -5860,8 +5989,23 @@
         <div class="ma-summary-card">
           <div class="ma-summary-header">
             ▸ RESUMEN GLOBAL
-            <span class="ma-summary-sub" id="maSummarySub">— solo ventas aprobadas —</span>
+            <span class="ma-summary-sub" id="maSummarySub">— confirmadas + pendientes —</span>
           </div>
+
+          <!-- Banner Facturado Total (aprob + pendientes) -->
+          <div class="ma-facturado-total">
+            <div class="ma-ft-label">FACTURADO TOTAL <span class="ma-ft-hint">aprobadas + pendientes</span></div>
+            <div class="ma-ft-value" id="maFacturadoTotal">$0</div>
+            <div class="ma-ft-breakdown" id="maFacturadoBreakdown">— sin datos —</div>
+          </div>
+
+          <div class="ma-divider"></div>
+
+          <div class="ma-subheader">
+            ✓ OPERACIONES CONFIRMADAS
+            <span class="ma-subheader-sub">— solo aprobadas · base para calcular margen —</span>
+          </div>
+
           <div class="ma-summary-grid">
             <div class="ma-metric">
               <div class="ma-metric-label">FACTURADO</div>
@@ -6637,6 +6781,23 @@
       </div>
     </div>
 
+    <!-- TOGGLE ESTELA · rápida / completa (solo visible cuando Estela está seleccionada) -->
+    <div class="form-row estela-mode-toggle" id="estelaModeToggleRow" style="display:none;">
+      <label>¿Cómo cargás?</label>
+      <div class="estela-flow-toggle">
+        <button type="button" id="btnEstelaFlowFast" class="active" onclick="setEstelaFlow('fast')">
+          <span class="ef-icon">⚡</span>
+          <span class="ef-label">CARGA RÁPIDA</span>
+          <span class="ef-sub">cliente + monto</span>
+        </button>
+        <button type="button" id="btnEstelaFlowFull" onclick="setEstelaFlow('full')">
+          <span class="ef-icon">📋</span>
+          <span class="ef-label">CARGA COMPLETA</span>
+          <span class="ef-sub">con productos · calcula margen</span>
+        </button>
+      </div>
+    </div>
+
     <!-- CLIENTE -->
     <div class="form-section">
       <h3>▸ CLIENTE</h3>
@@ -7284,6 +7445,14 @@
         renderCatalog();
       }
     }, (err) => { console.warn('Firebase products read error', err); });
+
+    // Listener preferencia de Estela (rápida/completa)
+    db.ref('preferences/estela/flowMode').on('value', (snapshot) => {
+      const mode = snapshot.val();
+      if (mode === 'fast' || mode === 'full') {
+        estelaFlowMode = mode;
+      }
+    }, (err) => { console.warn('Firebase estela pref read error', err); });
   }
 
   // ===== HELPERS =====
@@ -10419,10 +10588,25 @@
       btn.classList.toggle('active', s === key);
     });
 
-    // Modo simplificado para Estela
-    document.getElementById('saleModal').classList.toggle('estela-mode', s === 'estela');
+    // Toggle Rápida/Completa · solo visible para Estela
+    const estelaToggleRow = document.getElementById('estelaModeToggleRow');
+    if (estelaToggleRow) {
+      estelaToggleRow.style.display = (s === 'estela') ? '' : 'none';
+    }
+
+    // Modo simplificado para Estela · depende del flow elegido
     if (s === 'estela') {
-      setTimeout(() => document.getElementById('saleEstelaAmount')?.focus(), 50);
+      // Aplicar el flow guardado (default: fast)
+      applyEstelaFlow(estelaFlowMode);
+      setTimeout(() => {
+        const targetInput = (estelaFlowMode === 'fast')
+          ? document.getElementById('saleEstelaAmount')
+          : document.getElementById('saleClient');
+        targetInput?.focus();
+      }, 50);
+    } else {
+      // Vendedores normales: siempre modo completo
+      document.getElementById('saleModal').classList.remove('estela-mode');
     }
     updateSellerBanner();
     updateSalePreview();
@@ -10577,6 +10761,48 @@
   // ===== NUEVO FORMULARIO DE VENTA =====
   let saleItems = []; // { idx, qty, p }
   let saleModality = 'ENVÍO';
+
+  // Flow de Estela: 'fast' (rápido) o 'full' (completo)
+  // Preferencia guardada en Firebase (por usuario Estela)
+  let estelaFlowMode = 'fast'; // default
+
+  function applyEstelaFlow(mode) {
+    const modal = document.getElementById('saleModal');
+    const btnFast = document.getElementById('btnEstelaFlowFast');
+    const btnFull = document.getElementById('btnEstelaFlowFull');
+    if (!modal) return;
+    if (mode === 'full') {
+      // Modo completo: mismo flujo que vendedores (sin estela-mode)
+      modal.classList.remove('estela-mode');
+      btnFast?.classList.remove('active');
+      btnFull?.classList.add('active');
+    } else {
+      // Modo rápido: activa clases estela-only y oculta non-estela
+      modal.classList.add('estela-mode');
+      btnFast?.classList.add('active');
+      btnFull?.classList.remove('active');
+    }
+  }
+
+  async function setEstelaFlow(mode) {
+    if (mode !== 'fast' && mode !== 'full') return;
+    estelaFlowMode = mode;
+    applyEstelaFlow(mode);
+    // Guardar preferencia en Firebase para que se recuerde en cualquier dispositivo
+    try {
+      await db.ref('preferences/estela/flowMode').set(mode);
+    } catch (e) {
+      console.warn('No se pudo guardar preferencia estela flow', e);
+    }
+    // Focus adecuado según flow
+    setTimeout(() => {
+      const targetInput = (mode === 'fast')
+        ? document.getElementById('saleEstelaAmount')
+        : document.getElementById('saleClient');
+      targetInput?.focus();
+    }, 100);
+  }
+  window.setEstelaFlow = setEstelaFlow;
 
   function setModality(mod) {
     saleModality = mod;
@@ -10901,9 +11127,11 @@
     const client = document.getElementById('saleClient').value.trim();
     if (!client) { showToast('FALTA EL CLIENTE', 'warn'); document.getElementById('saleClient').focus(); return; }
     const isEstela = currentUser === 'estela' || selectedSellerForSale === 'estela';
+    // Estela puede elegir · si eligió "full", cae al flujo normal con items
+    const estelaUsesFastFlow = isEstela && estelaFlowMode === 'fast';
 
-    // === ESTELA: flujo simplificado ===
-    if (isEstela) {
+    // === ESTELA · flujo RÁPIDO (solo cliente + monto) ===
+    if (estelaUsesFastFlow) {
       const manualAmount = parseFloat(document.getElementById('saleEstelaAmount').value) || 0;
       if (manualAmount <= 0) { showToast('MONTO INVÁLIDO', 'warn'); document.getElementById('saleEstelaAmount').focus(); return; }
       const date = document.getElementById('saleDate').value || new Date().toISOString().slice(0,10);
@@ -10936,7 +11164,7 @@
       return;
     }
 
-    // === Flujo normal (Lauti / Bauti / Admin) ===
+    // === Flujo COMPLETO (Lauti / Bauti / Leo / Kevin / Emi / Admin / Estela-full) ===
     if (saleItems.length === 0) { showToast('AGREGÁ AL MENOS UN PRODUCTO', 'warn'); return; }
 
     const shipping = parseFloat(document.getElementById('saleShipping').value) || 0;
@@ -10999,7 +11227,8 @@
       date, client, channel,
       product: productSummary,
       paymentMethod,
-      status: isAdmin ? 'approved' : 'pending',
+      // Estela en flow full también queda auto-aprobada (es dueña)
+      status: (isAdmin || sellerForSale === 'estela') ? 'approved' : 'pending',
       submittedBy: currentUser,
       submittedAt: Date.now(),
       dni, phone, invoice,
@@ -11022,7 +11251,7 @@
         catalogId: b.catalogId || null
       }))
     };
-    if (isAdmin) {
+    if (isAdmin || sellerForSale === 'estela') {
       newSale.approvedBy = currentUser;
       newSale.approvedAt = Date.now();
     }
@@ -14648,7 +14877,8 @@
   }
 
   // Helper: agregar métricas de todas las ventas en un mes
-  // Retorna { facturado, costo, marginDollar, marginPct, count, salesWithCost, salesTotal }
+  // Retorna { facturado, costo, marginDollar, marginPct, count, salesWithCost, salesTotal,
+  //          facturadoPendiente, countPendiente, facturadoTotal }
   function aggregateMonthMetrics(mk, onlyApproved) {
     const sales = (state.sales || []).filter(s => {
       if (!s || !s.date) return false;
@@ -14658,6 +14888,14 @@
       if (s.status === 'cancelled' || s.status === 'voided') return false;
       return true;
     });
+
+    // Pendientes del mismo mes (para banner de Facturado Total)
+    const pendingSales = (state.sales || []).filter(s => {
+      if (!s || !s.date) return false;
+      if (String(s.date).slice(0, 7) !== mk) return false;
+      return s.status === 'pending';
+    });
+    const facturadoPendiente = pendingSales.reduce((a, s) => a + (s.amount || 0), 0);
 
     let facturado = 0;
     let costo = 0;
@@ -14680,7 +14918,11 @@
       marginPct,
       count: sales.length,
       salesWithCost,
-      salesTotal: sales.length
+      salesTotal: sales.length,
+      // Pendientes
+      facturadoPendiente,
+      countPendiente: pendingSales.length,
+      facturadoTotal: facturado + facturadoPendiente
     };
   }
 
@@ -14809,6 +15051,11 @@
       document.getElementById('maMarginPctDelta').textContent = '';
       document.getElementById('maCoverage').textContent = 'Sin ventas aún.';
       document.getElementById('maAlertsBlock').style.display = 'none';
+      // Reset banner facturado total
+      const ftEl = document.getElementById('maFacturadoTotal');
+      const bdEl = document.getElementById('maFacturadoBreakdown');
+      if (ftEl) ftEl.textContent = '$0';
+      if (bdEl) bdEl.textContent = '— sin ventas —';
       return;
     }
 
@@ -14818,7 +15065,21 @@
 
     // Sub del resumen
     document.getElementById('maSummarySub').textContent =
-      `${cur.salesTotal} ventas aprobadas · ${cur.salesWithCost} con costo cargado`;
+      `${cur.salesTotal} confirmadas${cur.countPendiente > 0 ? ` · ${cur.countPendiente} pendientes` : ''} · ${cur.salesWithCost} con costo cargado`;
+
+    // Banner Facturado Total (aprobadas + pendientes)
+    const maFacturadoTotal = document.getElementById('maFacturadoTotal');
+    const maFacturadoBreakdown = document.getElementById('maFacturadoBreakdown');
+    if (maFacturadoTotal) maFacturadoTotal.textContent = fmtMoney(cur.facturadoTotal);
+    if (maFacturadoBreakdown) {
+      if (cur.countPendiente > 0) {
+        maFacturadoBreakdown.innerHTML = `${fmtMoney(cur.facturado)} confirmado + <strong style="color:#B45309;">${fmtMoney(cur.facturadoPendiente)}</strong> pendiente (${cur.countPendiente} op.)`;
+      } else if (cur.facturado > 0) {
+        maFacturadoBreakdown.innerHTML = `${fmtMoney(cur.facturado)} confirmado · sin pendientes`;
+      } else {
+        maFacturadoBreakdown.textContent = '— sin ventas —';
+      }
+    }
 
     // Métricas grandes
     document.getElementById('maFacturado').textContent = fmtMoney(cur.facturado);
