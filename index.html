@@ -3787,6 +3787,164 @@
     font-size: 11px; color: var(--ink-3);
     letter-spacing: 0.05em; font-style: italic;
   }
+
+  /* Tabla productos · Sub-fase 5B */
+  .ma-products-block {
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    border-left: 3px solid var(--ink);
+    padding: 20px 24px;
+  }
+  .ma-block-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: var(--ink); font-weight: 700;
+    text-transform: uppercase;
+    flex-wrap: wrap; gap: 10px;
+  }
+  .ma-block-sub {
+    font-weight: 400; color: var(--ink-3);
+    letter-spacing: 0.05em; font-size: 10px;
+    text-transform: none; margin-left: 8px;
+  }
+  .ma-block-controls {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ma-sort-label {
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+  .ma-block-controls select {
+    padding: 6px 10px;
+    border: 1.5px solid var(--line);
+    background: var(--bg-card);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink);
+    font-weight: 700;
+  }
+  .ma-products-table-wrap {
+    overflow-x: auto;
+  }
+  .ma-products-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+  }
+  .ma-products-table thead th {
+    text-align: left;
+    padding: 8px 10px;
+    background: var(--bg-soft);
+    border-bottom: 2px solid var(--ink);
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--ink-3); font-weight: 700;
+    text-transform: uppercase;
+  }
+  .ma-products-table thead th.num { text-align: right; }
+  .ma-products-table tbody td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .ma-products-table tbody tr:hover { background: var(--bg-soft); }
+  .ma-products-table td.num { text-align: right; }
+  .ma-products-table td.td-mpct { font-weight: 700; }
+  .ma-products-table td.td-mpct.high { color: #1a6b2f; }
+  .ma-products-table td.td-mpct.med { color: #856400; }
+  .ma-products-table td.td-mpct.low { color: #a12020; }
+  .ma-products-table td.td-mpct.negative {
+    color: white; background: #cc0000;
+    padding: 4px 8px;
+  }
+  .ma-products-table td.td-trend {
+    font-size: 10px; text-align: right;
+  }
+  .ma-products-table td.td-trend.up { color: #1a6b2f; font-weight: 700; }
+  .ma-products-table td.td-trend.down { color: #a12020; font-weight: 700; }
+  .ma-products-table td.td-trend.neutral { color: var(--ink-3); }
+  .ma-products-table td.td-trend.new-item { color: #4285f4; font-weight: 700; }
+  .ma-products-table td.td-product-name {
+    font-weight: 700;
+  }
+  .ma-products-table td.td-product-id {
+    font-size: 9px; color: var(--ink-3);
+    display: block; letter-spacing: 0.05em;
+    font-weight: 400;
+  }
+  .ma-products-table td.td-warn {
+    color: #B45309; font-size: 9px;
+    font-weight: 700;
+    display: inline-block; margin-left: 4px;
+  }
+  .ma-loadmore-btn {
+    width: 100%; padding: 10px;
+    background: transparent; border: 1.5px dashed var(--line);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    cursor: pointer; text-transform: uppercase;
+    margin-top: 12px;
+    transition: all 0.15s;
+  }
+  .ma-loadmore-btn:hover { background: var(--bg-soft); border-color: var(--ink); }
+
+  /* MOBILE: cards en vez de tabla */
+  .ma-products-cards { display: none; }
+  @media (max-width: 700px) {
+    .ma-products-table-wrap { display: none; }
+    .ma-products-cards {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .ma-product-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--ink);
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .ma-product-card.low { border-left-color: #a12020; }
+    .ma-product-card.negative {
+      border-left-color: #cc0000;
+      background: rgba(204,0,0,0.04);
+    }
+    .ma-product-card.high { border-left-color: #1F8A3A; }
+    .ma-pc-name {
+      font-weight: 700; color: var(--ink);
+      font-size: 12.5px;
+      margin-bottom: 2px;
+    }
+    .ma-pc-id {
+      font-size: 9px; color: var(--ink-3);
+      letter-spacing: 0.05em; margin-bottom: 8px;
+    }
+    .ma-pc-row {
+      display: flex; justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .ma-pc-row:last-child { border-bottom: none; }
+    .ma-pc-label { color: var(--ink-3); }
+    .ma-pc-value { color: var(--ink); font-weight: 700; }
+    .ma-pc-value.high { color: #1a6b2f; }
+    .ma-pc-value.med { color: #856400; }
+    .ma-pc-value.low { color: #a12020; }
+    .ma-pc-value.negative { color: white; background: #cc0000; padding: 1px 6px; }
+    .ma-pc-trend {
+      display: block; margin-top: 4px; font-size: 10px;
+      padding: 4px 6px;
+      background: var(--bg-card);
+      text-align: center;
+    }
+    .ma-pc-trend.up { color: #1a6b2f; }
+    .ma-pc-trend.down { color: #a12020; }
+    .ma-pc-trend.new-item { color: #4285f4; }
+    .ma-block-header { flex-direction: column; align-items: stretch; gap: 8px; }
+    .ma-block-controls { width: 100%; }
+    .ma-block-controls select { flex: 1; }
+  }
   @media (max-width: 700px) {
     .ma-summary-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .ma-metric-value { font-size: 20px; }
@@ -5491,6 +5649,123 @@
       <div class="ops-table-footer" id="opsTableFooter">— sin resultados —</div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- ANÁLISIS DE MÁRGENES · Fase 5                                 -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ops-section ops-section-full margin-analysis-section">
+      <div class="ops-section-header">
+        <div>
+          <h3>📈 ANÁLISIS DE MÁRGENES</h3>
+          <span class="ops-section-sub">rentabilidad por producto y vendedor · para decidir qué precios tocar</span>
+        </div>
+        <div class="ma-month-selector">
+          <label class="ma-selector-label">MES</label>
+          <select id="maMonthSelect" onchange="renderMarginAnalysis()">
+            <!-- opciones dinámicas -->
+          </select>
+        </div>
+      </div>
+
+      <div class="ma-container">
+        <!-- Resumen global -->
+        <div class="ma-summary-card">
+          <div class="ma-summary-header">
+            ▸ RESUMEN GLOBAL
+            <span class="ma-summary-sub" id="maSummarySub">— solo ventas aprobadas —</span>
+          </div>
+          <div class="ma-summary-grid">
+            <div class="ma-metric">
+              <div class="ma-metric-label">FACTURADO</div>
+              <div class="ma-metric-value" id="maFacturado">$0</div>
+              <div class="ma-metric-delta" id="maFacturadoDelta"></div>
+            </div>
+            <div class="ma-metric">
+              <div class="ma-metric-label">COSTO TOTAL</div>
+              <div class="ma-metric-value" id="maCosto">$0</div>
+              <div class="ma-metric-delta" id="maCostoDelta"></div>
+            </div>
+            <div class="ma-metric">
+              <div class="ma-metric-label">MARGEN $</div>
+              <div class="ma-metric-value" id="maMarginD">$0</div>
+              <div class="ma-metric-delta" id="maMarginDelta"></div>
+            </div>
+            <div class="ma-metric ma-metric-highlight">
+              <div class="ma-metric-label">MARGEN %</div>
+              <div class="ma-metric-value" id="maMarginP">0.0%</div>
+              <div class="ma-metric-delta" id="maMarginPctDelta"></div>
+            </div>
+          </div>
+          <div class="ma-coverage" id="maCoverage">
+            <!-- info de cobertura de costos · dinámica -->
+          </div>
+        </div>
+
+        <!-- Alertas -->
+        <div class="ma-alerts-block" id="maAlertsBlock" style="display:none;">
+          <div class="ma-alerts-header">
+            ⚠ ALERTAS
+            <span class="ma-alerts-count" id="maAlertsCount">0</span>
+          </div>
+          <div class="ma-alerts-list" id="maAlertsList">
+            <!-- dinámico -->
+          </div>
+        </div>
+
+        <!-- Tabla por producto -->
+        <div class="ma-products-block" id="maProductsBlock" style="display:none;">
+          <div class="ma-block-header">
+            <div>
+              ▸ POR PRODUCTO
+              <span class="ma-block-sub" id="maProductsSub">— top 20 —</span>
+            </div>
+            <div class="ma-block-controls">
+              <label class="ma-sort-label">ORDEN</label>
+              <select id="maProductsSort" onchange="renderMarginAnalysis(true)">
+                <option value="facturado">Facturado (desc)</option>
+                <option value="margin_pct_desc">Margen % (mayor)</option>
+                <option value="margin_pct_asc">Margen % (menor)</option>
+                <option value="margin_dollar">Margen $ (mayor)</option>
+                <option value="qty">Volumen (cantidad)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Desktop: tabla -->
+          <div class="ma-products-table-wrap">
+            <table class="ma-products-table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th class="num">Ventas</th>
+                  <th class="num">Facturado</th>
+                  <th class="num">Costo</th>
+                  <th class="num">Margen $</th>
+                  <th class="num">Margen %</th>
+                  <th class="num">vs mes ant.</th>
+                </tr>
+              </thead>
+              <tbody id="maProductsTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Mobile: cards -->
+          <div class="ma-products-cards" id="maProductsCards"></div>
+
+          <div class="ma-products-loadmore" id="maProductsLoadmoreWrap" style="display:none;">
+            <button class="ma-loadmore-btn" onclick="maLoadMoreProducts()">
+              + VER 20 MÁS (<span id="maProductsRemaining">0</span> restantes)
+            </button>
+          </div>
+        </div>
+
+        <!-- Placeholder para tabla vendedores (siguiente sub-fase) -->
+        <div class="ma-placeholder" id="maPlaceholder" style="display:none;">
+          <div class="ma-placeholder-title">👥 Tabla por vendedor</div>
+          <div class="ma-placeholder-sub">Se implementa en la sub-fase 5C</div>
+        </div>
+      </div>
+    </div>
+
     <div class="footer">
       <span><strong>◢ GRAZIANO MATERIALES</strong> · ADMINISTRACIÓN</span>
       <span id="opsLastUpdate">— SIN ACTUALIZAR —</span>
@@ -5643,76 +5918,6 @@
           <div class="cya-content" id="cyaLiquidationsContent">
             <!-- Contenido dinámico -->
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════ -->
-    <!-- 08 ANÁLISIS DE MÁRGENES                                       -->
-    <!-- ═══════════════════════════════════════════════════════════ -->
-    <div class="ops-section ops-section-full margin-analysis-section">
-      <div class="ops-section-header">
-        <div>
-          <h3>📈 ANÁLISIS DE MÁRGENES</h3>
-          <span class="ops-section-sub">rentabilidad por producto y vendedor · para decidir qué precios tocar</span>
-        </div>
-        <div class="ma-month-selector">
-          <label class="ma-selector-label">MES</label>
-          <select id="maMonthSelect" onchange="renderMarginAnalysis()">
-            <!-- opciones dinámicas -->
-          </select>
-        </div>
-      </div>
-
-      <div class="ma-container">
-        <!-- Resumen global -->
-        <div class="ma-summary-card">
-          <div class="ma-summary-header">
-            ▸ RESUMEN GLOBAL
-            <span class="ma-summary-sub" id="maSummarySub">— solo ventas aprobadas —</span>
-          </div>
-          <div class="ma-summary-grid">
-            <div class="ma-metric">
-              <div class="ma-metric-label">FACTURADO</div>
-              <div class="ma-metric-value" id="maFacturado">$0</div>
-              <div class="ma-metric-delta" id="maFacturadoDelta"></div>
-            </div>
-            <div class="ma-metric">
-              <div class="ma-metric-label">COSTO TOTAL</div>
-              <div class="ma-metric-value" id="maCosto">$0</div>
-              <div class="ma-metric-delta" id="maCostoDelta"></div>
-            </div>
-            <div class="ma-metric">
-              <div class="ma-metric-label">MARGEN $</div>
-              <div class="ma-metric-value" id="maMarginD">$0</div>
-              <div class="ma-metric-delta" id="maMarginDelta"></div>
-            </div>
-            <div class="ma-metric ma-metric-highlight">
-              <div class="ma-metric-label">MARGEN %</div>
-              <div class="ma-metric-value" id="maMarginP">0.0%</div>
-              <div class="ma-metric-delta" id="maMarginPctDelta"></div>
-            </div>
-          </div>
-          <div class="ma-coverage" id="maCoverage">
-            <!-- info de cobertura de costos · dinámica -->
-          </div>
-        </div>
-
-        <!-- Alertas -->
-        <div class="ma-alerts-block" id="maAlertsBlock" style="display:none;">
-          <div class="ma-alerts-header">
-            ⚠ ALERTAS
-            <span class="ma-alerts-count" id="maAlertsCount">0</span>
-          </div>
-          <div class="ma-alerts-list" id="maAlertsList">
-            <!-- dinámico -->
-          </div>
-        </div>
-
-        <!-- Placeholder para tabla productos + tabla vendedores (siguiente sub-fase) -->
-        <div class="ma-placeholder" id="maPlaceholder" style="display:none;">
-          <div class="ma-placeholder-title">📊 Tablas de productos y vendedores</div>
-          <div class="ma-placeholder-sub">Se implementan en la siguiente sub-fase (5B + 5C)</div>
         </div>
       </div>
     </div>
@@ -13952,9 +14157,12 @@
     return alerts;
   }
 
-  function renderMarginAnalysis() {
+  function renderMarginAnalysis(skipReset) {
     // Solo admin usa este panel
     if (currentUser !== 'admin') return;
+
+    // Reset paginación al cambiar mes u orden
+    if (!skipReset) maProductsLimit = 20;
 
     populateMaMonthSelect();
     const mk = maSelectedMonth;
@@ -14055,20 +14263,342 @@
       `).join('');
     }
 
-    // Mostrar placeholder para siguientes sub-fases (5B y 5C)
+    // Sub-fase 5B · renderizar tabla por producto (que también agrega sus alertas específicas)
+    renderMaProducts(mk, prevMk);
+
+    // Placeholder solo para sub-fase 5C (vendedor)
     const placeholder = document.getElementById('maPlaceholder');
     if (placeholder) placeholder.style.display = 'block';
   }
 
   window.renderMarginAnalysis = renderMarginAnalysis;
 
+  // ═══════════════════════════════════════════════════════════
+  // Sub-fase 5B: agregación y render por PRODUCTO
+  // ═══════════════════════════════════════════════════════════
+
+  // Estado paginación
+  let maProductsLimit = 20;
+
+  // Agregar métricas por producto para un mes
+  // Retorna array de { key, name, catalogId, qty, facturado, costo, marginDollar, marginPct, saleCount }
+  function aggregateProductMetrics(mk, onlyApproved) {
+    const map = {}; // key → agregado
+    const sales = (state.sales || []).filter(s => {
+      if (!s || !s.date) return false;
+      if (String(s.date).slice(0, 7) !== mk) return false;
+      if (onlyApproved && s.status !== 'approved') return false;
+      if (s.status === 'cancelled' || s.status === 'voided') return false;
+      return true;
+    });
+
+    sales.forEach(s => {
+      if (!s.items || s.items.length === 0) return;
+      s.items.forEach(it => {
+        const qty = it.qty || 0;
+        const price = (typeof it.price === 'number') ? it.price : 0;
+        const cost = (typeof it.cost === 'number') ? it.cost : 0;
+        // Key = catalogId si existe, si no name normalizado
+        const key = it.catalogId || String(it.name || '').trim().toLowerCase();
+        if (!key) return;
+        if (!map[key]) {
+          map[key] = {
+            key,
+            name: it.name || key,
+            catalogId: it.catalogId || null,
+            qty: 0,
+            facturado: 0,
+            costo: 0,
+            saleCount: 0,
+            hasCostData: false,
+            salesWithCost: 0
+          };
+        }
+        map[key].qty += qty;
+        map[key].facturado += price * qty;
+        map[key].costo += cost * qty;
+        map[key].saleCount++;
+        if (cost > 0) {
+          map[key].hasCostData = true;
+          map[key].salesWithCost++;
+        }
+      });
+    });
+
+    // Calcular márgenes
+    Object.values(map).forEach(p => {
+      p.marginDollar = p.facturado - p.costo;
+      p.marginPct = p.facturado > 0 ? (p.marginDollar / p.facturado) * 100 : 0;
+    });
+
+    return Object.values(map);
+  }
+
+  // Ordenar array de productos según el criterio elegido
+  function sortProductsArray(arr, sortKey) {
+    const sorted = arr.slice();
+    switch (sortKey) {
+      case 'margin_pct_desc':
+        sorted.sort((a, b) => b.marginPct - a.marginPct);
+        break;
+      case 'margin_pct_asc':
+        // Solo productos con costo cargado tienen sentido acá
+        sorted.sort((a, b) => {
+          // Priorizar los que tienen costo
+          if (a.hasCostData && !b.hasCostData) return -1;
+          if (!a.hasCostData && b.hasCostData) return 1;
+          return a.marginPct - b.marginPct;
+        });
+        break;
+      case 'margin_dollar':
+        sorted.sort((a, b) => b.marginDollar - a.marginDollar);
+        break;
+      case 'qty':
+        sorted.sort((a, b) => b.qty - a.qty);
+        break;
+      case 'facturado':
+      default:
+        sorted.sort((a, b) => b.facturado - a.facturado);
+        break;
+    }
+    return sorted;
+  }
+
+  // Renderizar tabla y cards de productos
+  function renderMaProducts(mk, prevMk) {
+    const block = document.getElementById('maProductsBlock');
+    if (!block) return;
+
+    const cur = aggregateProductMetrics(mk, MA_ONLY_APPROVED);
+    if (cur.length === 0) {
+      block.style.display = 'none';
+      return;
+    }
+    block.style.display = 'block';
+
+    const prev = prevMk ? aggregateProductMetrics(prevMk, MA_ONLY_APPROVED) : [];
+    const prevByKey = {};
+    prev.forEach(p => { prevByKey[p.key] = p; });
+
+    // Ordenar
+    const sortSel = document.getElementById('maProductsSort');
+    const sortKey = sortSel ? sortSel.value : 'facturado';
+    const sorted = sortProductsArray(cur, sortKey);
+
+    // Actualizar sub-label
+    const subEl = document.getElementById('maProductsSub');
+    if (subEl) {
+      const total = sorted.length;
+      const withCost = sorted.filter(p => p.hasCostData).length;
+      subEl.textContent = `— ${total} productos vendidos · ${withCost} con costo cargado —`;
+    }
+
+    // Paginar
+    const total = sorted.length;
+    const visible = Math.min(maProductsLimit, total);
+    const remaining = total - visible;
+    const visibleList = sorted.slice(0, visible);
+
+    // Renderizar tabla desktop
+    const tbody = document.getElementById('maProductsTableBody');
+    if (tbody) {
+      tbody.innerHTML = visibleList.map(p => {
+        const prevP = prevByKey[p.key];
+        const trend = computeTrendCell(p, prevP);
+        const marginClsName = p.hasCostData ? marginClass(p.marginPct) : 'no-cost';
+        const marginPctText = p.hasCostData ? p.marginPct.toFixed(1) + '%' : '—';
+        const costoText = p.hasCostData ? fmtMoney(p.costo) : '—';
+        const marginDollarText = p.hasCostData ? fmtMoney(p.marginDollar) : '—';
+        const noCostBadge = !p.hasCostData ? ' <span class="td-warn" title="Ventas de este producto sin costo cargado">⚠ sin costo</span>' : '';
+        const catalogIdText = p.catalogId ? `${p.catalogId}` : 'sin ID';
+        return `
+          <tr>
+            <td>
+              <span class="td-product-name">${escapeHtml(p.name)}</span>
+              <span class="td-product-id">${catalogIdText}${noCostBadge}</span>
+            </td>
+            <td class="num">${p.qty}</td>
+            <td class="num">${fmtMoney(p.facturado)}</td>
+            <td class="num">${costoText}</td>
+            <td class="num">${marginDollarText}</td>
+            <td class="num td-mpct ${marginClsName}">${marginPctText}</td>
+            <td class="num td-trend ${trend.cls}">${trend.text}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Renderizar cards mobile
+    const cards = document.getElementById('maProductsCards');
+    if (cards) {
+      cards.innerHTML = visibleList.map(p => {
+        const prevP = prevByKey[p.key];
+        const trend = computeTrendCell(p, prevP);
+        const marginClsName = p.hasCostData ? marginClass(p.marginPct) : '';
+        const cardCls = 'ma-product-card ' + marginClsName;
+        const marginPctText = p.hasCostData ? p.marginPct.toFixed(1) + '%' : 'sin costo';
+        const costoText = p.hasCostData ? fmtMoney(p.costo) : '—';
+        const marginDollarText = p.hasCostData ? fmtMoney(p.marginDollar) : '—';
+        const catalogIdText = p.catalogId ? p.catalogId : 'sin ID en catálogo';
+        return `
+          <div class="${cardCls}">
+            <div class="ma-pc-name">${escapeHtml(p.name)}</div>
+            <div class="ma-pc-id">${catalogIdText}</div>
+            <div class="ma-pc-row"><span class="ma-pc-label">Ventas</span><span class="ma-pc-value">${p.qty} · ${p.saleCount} op.</span></div>
+            <div class="ma-pc-row"><span class="ma-pc-label">Facturado</span><span class="ma-pc-value">${fmtMoney(p.facturado)}</span></div>
+            <div class="ma-pc-row"><span class="ma-pc-label">Costo</span><span class="ma-pc-value">${costoText}</span></div>
+            <div class="ma-pc-row"><span class="ma-pc-label">Margen $</span><span class="ma-pc-value">${marginDollarText}</span></div>
+            <div class="ma-pc-row"><span class="ma-pc-label">Margen %</span><span class="ma-pc-value ${marginClsName}">${marginPctText}</span></div>
+            ${trend.text !== '—' ? `<div class="ma-pc-trend ${trend.cls}">${trend.text}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Load more
+    const lm = document.getElementById('maProductsLoadmoreWrap');
+    const remEl = document.getElementById('maProductsRemaining');
+    if (lm && remEl) {
+      if (remaining > 0) {
+        lm.style.display = 'block';
+        remEl.textContent = remaining;
+      } else {
+        lm.style.display = 'none';
+      }
+    }
+
+    // Agregar alertas específicas de productos al bloque general
+    addProductAlerts(sorted, prevByKey);
+  }
+
+  // Calcular celda de tendencia vs mes anterior
+  function computeTrendCell(cur, prev) {
+    if (!prev) {
+      return { text: 'nuevo', cls: 'new-item' };
+    }
+    if (!cur.hasCostData && !prev.hasCostData) {
+      return { text: '—', cls: 'neutral' };
+    }
+    if (cur.hasCostData && !prev.hasCostData) {
+      return { text: 'ahora con costo', cls: 'new-item' };
+    }
+    if (!cur.hasCostData && prev.hasCostData) {
+      return { text: 'sin costo actual', cls: 'neutral' };
+    }
+    const ppDiff = cur.marginPct - prev.marginPct;
+    if (Math.abs(ppDiff) < 0.5) return { text: '→', cls: 'neutral' };
+    const arrow = ppDiff > 0 ? '↑' : '↓';
+    const sign = ppDiff > 0 ? '+' : '';
+    const cls = ppDiff > 0 ? 'up' : 'down';
+    return { text: `${arrow} ${sign}${ppDiff.toFixed(1)}pp`, cls };
+  }
+
+  // Agregar alertas específicas de productos al bloque general de alertas
+  function addProductAlerts(currentProducts, prevByKey) {
+    const alertsList = document.getElementById('maAlertsList');
+    const alertsBlock = document.getElementById('maAlertsBlock');
+    const alertsCount = document.getElementById('maAlertsCount');
+    if (!alertsList) return;
+
+    // Recolectar alertas de productos (top 3 más relevantes)
+    const productAlerts = [];
+
+    // 1) Márgenes negativos (más críticos)
+    const negativos = currentProducts.filter(p => p.hasCostData && p.marginPct < 0)
+      .sort((a, b) => b.facturado - a.facturado)
+      .slice(0, 3);
+    negativos.forEach(p => {
+      productAlerts.push({
+        level: 'critical',
+        emoji: '🚨',
+        text: `<strong>${escapeHtml(p.name)}</strong>: margen ${p.marginPct.toFixed(1)}% (perdiendo plata · ${fmtMoney(-p.marginDollar)})`,
+        priority: 100
+      });
+    });
+
+    // 2) Márgenes bajos (< 15%) con facturación significativa
+    const bajos = currentProducts.filter(p => p.hasCostData && p.marginPct >= 0 && p.marginPct < 15 && p.facturado > 100000)
+      .sort((a, b) => b.facturado - a.facturado)
+      .slice(0, 3);
+    bajos.forEach(p => {
+      productAlerts.push({
+        level: 'critical',
+        emoji: '⚠',
+        text: `<strong>${escapeHtml(p.name)}</strong>: margen ${p.marginPct.toFixed(1)}% (subir precio · facturó ${fmtMoney(p.facturado)})`,
+        priority: 90
+      });
+    });
+
+    // 3) Caídas fuertes de margen vs mes anterior
+    const caidas = [];
+    currentProducts.forEach(p => {
+      const prev = prevByKey[p.key];
+      if (!prev || !p.hasCostData || !prev.hasCostData) return;
+      const ppDiff = p.marginPct - prev.marginPct;
+      if (ppDiff <= -3 && p.facturado > 100000) {
+        caidas.push({
+          product: p,
+          ppDiff,
+          prevMarginPct: prev.marginPct
+        });
+      }
+    });
+    caidas.sort((a, b) => a.ppDiff - b.ppDiff).slice(0, 3).forEach(c => {
+      productAlerts.push({
+        level: 'critical',
+        emoji: '⚠',
+        text: `<strong>${escapeHtml(c.product.name)}</strong>: margen cayó ${Math.abs(c.ppDiff).toFixed(1)}pp (de ${c.prevMarginPct.toFixed(1)}% a ${c.product.marginPct.toFixed(1)}%)`,
+        priority: 80
+      });
+    });
+
+    // 4) Oportunidades (margen >= 30% con volumen)
+    const oportunidades = currentProducts.filter(p => p.hasCostData && p.marginPct >= 30 && p.facturado > 100000)
+      .sort((a, b) => b.marginPct - a.marginPct)
+      .slice(0, 2);
+    oportunidades.forEach(p => {
+      productAlerts.push({
+        level: 'opportunity',
+        emoji: '🎯',
+        text: `<strong>${escapeHtml(p.name)}</strong>: margen ${p.marginPct.toFixed(1)}% · producto muy rentable (empujar volumen)`,
+        priority: 30
+      });
+    });
+
+    if (productAlerts.length === 0) return;
+
+    // Combinar con alertas globales existentes (ya renderizadas)
+    // Solo agregar si el bloque ya está visible o si las alertas son suficientes
+    productAlerts.sort((a, b) => b.priority - a.priority);
+    const topProductAlerts = productAlerts.slice(0, 5);
+
+    // Insertar debajo de las globales
+    topProductAlerts.forEach(a => {
+      const div = document.createElement('div');
+      div.className = 'ma-alert ' + a.level;
+      div.innerHTML = `<span style="font-size:16px;">${a.emoji}</span><span>${a.text}</span>`;
+      alertsList.appendChild(div);
+    });
+
+    // Mostrar bloque si estaba oculto
+    if (alertsBlock) alertsBlock.style.display = 'block';
+    if (alertsCount) {
+      const currentCount = alertsList.children.length;
+      alertsCount.textContent = currentCount;
+    }
+  }
+
+  function maLoadMoreProducts() {
+    maProductsLimit += 20;
+    renderMarginAnalysis(true);
+  }
+  window.maLoadMoreProducts = maLoadMoreProducts;
+
   function renderOpsSalaries(mk) {
     // Llamamos también al render de la sección Cobros y Adelantos
     renderCyaSection();
     // Y al catálogo si estamos en modo admin
     if (currentUser === 'admin') renderCatalog();
-    // Renderizar Análisis de Márgenes
-    renderMarginAnalysis();
     if (!mk) mk = activeOpsMonth();
     const container = document.getElementById('opsSalaries');
     if (!container) return;
@@ -14273,6 +14803,8 @@
   function renderOpsTable(skipReset) {
     // Asegurar que el dropdown de vendedores esté poblado dinámicamente
     populateSellerFilter();
+    // Renderizar Análisis de Márgenes (misma vista Administración)
+    if (currentUser === 'admin') renderMarginAnalysis();
     const fSeller = document.getElementById('opsFilterSeller').value;
     const fStatus = document.getElementById('opsFilterStatus').value;
     const fChannel = document.getElementById('opsFilterChannel').value;
