@@ -3550,6 +3550,36 @@
     font-size: 12px; color: var(--ink);
     line-height: 1.8;
   }
+
+  /* SALE MODAL · info admin de costos y margen por item */
+  .bi-admin-cost {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+    margin-top: 4px;
+    padding: 4px 8px;
+    background: rgba(66,133,244,0.08);
+    border-left: 2px solid #4285f4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+  .bi-admin-cost-lbl {
+    color: var(--ink-3); text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .bi-admin-cost-val {
+    color: var(--ink); font-weight: 700;
+  }
+  .bi-admin-margin {
+    padding: 1px 6px; border-radius: 2px;
+    font-weight: 700;
+  }
+  .bi-admin-margin-high { background: #d4f5d4; color: #1a6b2f; }
+  .bi-admin-margin-med { background: #fff4d4; color: #856400; }
+  .bi-admin-margin-low { background: #ffd4d4; color: #a12020; }
+  .bi-admin-margin-negative { background: #cc0000; color: white; }
+  .bi-admin-warn {
+    color: #B45309; font-weight: 700;
+    cursor: help;
+  }
   /* PIZARRA DE CORONAS */
   .crown-board {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -9527,6 +9557,11 @@
     } else {
       warn.style.display = 'none';
     }
+    // Recalcular costos de los items · costos varían por fecha
+    if (typeof recalcSaleItemCosts === 'function') {
+      recalcSaleItemCosts();
+      if (typeof renderSaleItems === 'function') renderSaleItems();
+    }
     // Refrescar preview WhatsApp si existe
     if (typeof updateSalePreview === 'function') updateSalePreview();
   }
@@ -9808,6 +9843,59 @@
     }).join('');
   }
 
+  // Helper: buscar producto en el catálogo Firebase por nombre (fuzzy)
+  // Retorna el objeto product (con priceHistory) o null
+  function findCatalogProductByName(productName) {
+    if (!productName || !state.products) return null;
+    const norm = (s) => String(s || '').toLowerCase().trim()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const targetNorm = norm(productName);
+    const products = Object.values(state.products);
+    // Match exacto normalizado primero
+    const exact = products.find(p => norm(p.name) === targetNorm);
+    if (exact) return exact;
+    // Match parcial · el nombre del PRODUCT está contenido en el catalog o viceversa
+    const partial = products.find(p => {
+      const pn = norm(p.name);
+      return pn && (pn.includes(targetNorm) || targetNorm.includes(pn));
+    });
+    return partial || null;
+  }
+
+  // Helper: obtener el costo del catálogo Firebase para un producto legacy y una fecha
+  // Retorna { cost, price, catalogId, catalogName } o null si no hay match
+  function getCatalogCostForItem(legacyProduct, saleDate) {
+    if (!legacyProduct || !legacyProduct.n) return null;
+    const cat = findCatalogProductByName(legacyProduct.n);
+    if (!cat) return null;
+    const vigente = getVigenteAt(cat, saleDate);
+    if (!vigente) return null;
+    return {
+      cost: vigente.cost || 0,
+      price: vigente.price || 0,
+      catalogId: cat.id,
+      catalogName: cat.name
+    };
+  }
+
+  // Recalcular costos de todos los items de la venta actual · usa la fecha vigente
+  function recalcSaleItemCosts() {
+    const dateInput = document.getElementById('saleDate');
+    const saleDate = (dateInput && dateInput.value) || todayLocalISO();
+    saleItems.forEach(it => {
+      const p = PRODUCTS[it.idx];
+      const catalogData = getCatalogCostForItem(p, saleDate);
+      if (catalogData) {
+        it.cost = catalogData.cost;
+        it.catalogId = catalogData.catalogId;
+      } else {
+        // Fallback: costo legacy del PRODUCTS array o 0
+        it.cost = (p && p.co) ? p.co : 0;
+        it.catalogId = null;
+      }
+    });
+  }
+
   function addSaleProduct(idx) {
     const p = PRODUCTS[idx];
     if (!p) return;
@@ -9818,8 +9906,23 @@
       return;
     }
     const existing = saleItems.find(b => b.idx === idx);
-    if (existing) existing.qty += 1;
-    else saleItems.push({ idx, qty: 1, p: p.p });
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      // Nuevo item · buscar costo en catálogo Firebase con la fecha de la venta
+      const dateInput = document.getElementById('saleDate');
+      const saleDate = (dateInput && dateInput.value) || todayLocalISO();
+      const catalogData = getCatalogCostForItem(p, saleDate);
+      const cost = catalogData ? catalogData.cost : (p.co || 0);
+      const catalogId = catalogData ? catalogData.catalogId : null;
+      saleItems.push({
+        idx,
+        qty: 1,
+        p: p.p,             // precio del producto legacy (editable en modal)
+        cost,               // costo desde catálogo Firebase (auto)
+        catalogId           // ref al producto Firebase (null si no matcheó)
+      });
+    }
     document.getElementById('saleSearch').value = '';
     document.getElementById('saleResults').classList.remove('visible');
     renderSaleItems();
@@ -9848,14 +9951,35 @@
     if (saleItems.length === 0) {
       list.innerHTML = '<div class="budget-empty">Sin productos. Buscá uno arriba.</div>';
     } else {
+      const isAdminView = currentUser === 'admin';
       list.innerHTML = saleItems.map(b => {
         const p = PRODUCTS[b.idx];
         const sub = b.p * b.qty;
+        // Cost info · solo para admin
+        let adminInfo = '';
+        if (isAdminView) {
+          const cost = (typeof b.cost === 'number') ? b.cost : ((p && p.co) || 0);
+          const margin = b.p - cost;
+          const marginPct = calcMarginPct(cost, b.p);
+          const marginCls = marginClass(marginPct);
+          const inCatalog = !!b.catalogId;
+          adminInfo = `
+            <div class="bi-admin-cost">
+              <span class="bi-admin-cost-lbl">costo</span>
+              <span class="bi-admin-cost-val">$${fmtFull(cost)}</span>
+              <span class="bi-admin-margin bi-admin-margin-${marginCls}">
+                ${margin >= 0 ? '+' : ''}$${fmtFull(margin)} (${marginPct.toFixed(1)}%)
+              </span>
+              ${!inCatalog ? '<span class="bi-admin-warn" title="Producto no encontrado en catálogo Firebase">⚠</span>' : ''}
+            </div>
+          `;
+        }
         return `
           <div class="budget-item">
             <div class="bi-name">
               ${escapeHtml(p.n)}
               <span class="bi-unit">${escapeHtml(p.u)}</span>
+              ${adminInfo}
             </div>
             <div class="bi-qty-control">
               <button class="bi-qty-btn" onclick="changeSaleQty(${b.idx}, -1)">−</button>
@@ -10121,7 +10245,8 @@
         unit: PRODUCTS[b.idx].u,
         qty: b.qty,
         price: b.p,
-        cost: PRODUCTS[b.idx].co || 0
+        cost: (typeof b.cost === 'number') ? b.cost : (PRODUCTS[b.idx].co || 0),
+        catalogId: b.catalogId || null
       }))
     };
     if (isAdmin) {
