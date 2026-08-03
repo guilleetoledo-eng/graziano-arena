@@ -3154,6 +3154,172 @@
     border: 1px dashed var(--line); background: var(--bg-soft);
   }
   .ops-config-section { margin-top: 32px; }
+
+  /* ═══════════════════════════════════════════════════════════ */
+  /* CATÁLOGO DE PRODUCTOS                                        */
+  /* ═══════════════════════════════════════════════════════════ */
+  .ops-catalog-section { margin-top: 32px; }
+  .cat-stats { display: flex; gap: 8px; align-items: center; }
+  .cat-count-badge {
+    background: var(--ink); color: white;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    padding: 4px 10px; letter-spacing: 0.12em;
+    font-weight: 700; border-radius: 2px;
+  }
+  .cat-count-badge.cat-inactive {
+    background: var(--ink-4);
+  }
+  .cat-toolbar {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px; margin: 16px 0 8px;
+    flex-wrap: wrap;
+  }
+  .cat-toolbar input {
+    flex: 1; min-width: 200px;
+    padding: 10px 12px; border: 1.5px solid var(--line);
+    background: var(--bg-card); font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--ink);
+  }
+  .cat-toolbar input:focus {
+    outline: none; border-color: var(--red);
+  }
+  .cat-toolbar-actions { display: flex; gap: 8px; }
+  .cat-btn-primary, .cat-btn-secondary {
+    padding: 10px 14px; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid var(--ink);
+  }
+  .cat-btn-primary {
+    background: var(--red); color: white; border-color: var(--red);
+  }
+  .cat-btn-primary:hover {
+    background: #cc1e19; border-color: #cc1e19;
+  }
+  .cat-btn-secondary {
+    background: transparent; color: var(--ink);
+  }
+  .cat-btn-secondary:hover {
+    background: var(--ink); color: white;
+  }
+  .cat-filter-toggle {
+    display: flex; gap: 4px; margin-bottom: 12px;
+  }
+  .cat-fb-btn {
+    padding: 6px 12px; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; font-weight: 700;
+    background: transparent; border: 1.5px solid var(--line);
+    color: var(--ink-3); cursor: pointer;
+    transition: all 0.15s; text-transform: uppercase;
+  }
+  .cat-fb-btn.active {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+  .cat-fb-btn:hover:not(.active) {
+    border-color: var(--ink);
+  }
+  .cat-table {
+    border: 1.5px solid var(--line);
+    background: var(--bg-card);
+  }
+  .cat-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 120px 80px 90px;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  }
+  .cat-row:last-child { border-bottom: none; }
+  .cat-row.cat-header {
+    background: var(--bg-soft);
+    font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; font-size: 10px;
+    color: var(--ink-3);
+  }
+  .cat-row.cat-inactive-row {
+    opacity: 0.55;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--bg-card),
+      var(--bg-card) 6px,
+      var(--bg-soft) 6px,
+      var(--bg-soft) 12px
+    );
+  }
+  .cat-cell-id {
+    font-weight: 700; color: var(--red);
+    font-size: 13px;
+  }
+  .cat-cell-name {
+    font-weight: 700; color: var(--ink);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .cat-cell-name .cat-vigent {
+    font-weight: 400; font-size: 10px;
+    color: var(--ink-3); letter-spacing: 0.05em;
+  }
+  .cat-cell-cost, .cat-cell-price {
+    text-align: right; font-weight: 700;
+  }
+  .cat-cell-price { color: #1F8A3A; }
+  .cat-cell-cost { color: var(--ink); }
+  .cat-cell-margin {
+    text-align: right; font-weight: 700;
+    padding: 4px 8px; border-radius: 3px;
+    font-size: 11px;
+  }
+  .cat-cell-margin.high { background: #d4f5d4; color: #1a6b2f; }
+  .cat-cell-margin.med { background: #fff4d4; color: #856400; }
+  .cat-cell-margin.low { background: #ffd4d4; color: #a12020; }
+  .cat-cell-margin.negative { background: #ff6666; color: white; }
+  .cat-cell-action {
+    text-align: center;
+  }
+  .cat-btn-edit {
+    background: transparent; border: 1.5px solid var(--ink);
+    padding: 4px 10px; font-size: 10px; cursor: pointer;
+    color: var(--ink); font-weight: 700;
+    letter-spacing: 0.05em; transition: all 0.15s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cat-btn-edit:hover {
+    background: var(--ink); color: white;
+  }
+  .cat-empty {
+    padding: 40px 20px; text-align: center;
+    color: var(--ink-3); font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-style: italic;
+  }
+  .cat-loadmore { margin-top: 12px; }
+  .cat-loadmore-btn {
+    width: 100%; padding: 12px;
+    background: transparent; border: 1.5px dashed var(--line);
+    color: var(--ink); font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    cursor: pointer; text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .cat-loadmore-btn:hover {
+    background: var(--bg-soft); border-color: var(--ink);
+  }
+  @media (max-width: 700px) {
+    .cat-row {
+      grid-template-columns: 60px 1fr 80px 70px;
+      grid-template-rows: auto auto;
+      gap: 6px;
+      font-size: 11px;
+    }
+    .cat-cell-id { grid-column: 1; grid-row: 1; }
+    .cat-cell-name { grid-column: 2 / span 3; grid-row: 1; }
+    .cat-cell-cost { grid-column: 1; grid-row: 2; text-align: left; }
+    .cat-cell-price { grid-column: 2; grid-row: 2; text-align: left; }
+    .cat-cell-margin { grid-column: 3; grid-row: 2; }
+    .cat-cell-action { grid-column: 4; grid-row: 2; }
+    .cat-row.cat-header { display: none; }
+  }
   /* PIZARRA DE CORONAS */
   .crown-board {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -4584,6 +4750,46 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- CATÁLOGO DE PRODUCTOS · solo admin                             -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ops-section ops-section-full ops-catalog-section">
+      <div class="ops-section-header">
+        <div>
+          <h3>📦 CATÁLOGO DE PRODUCTOS</h3>
+          <span class="ops-section-sub">precios y costos vigentes · usados en carga de ventas</span>
+        </div>
+        <div class="cat-stats">
+          <span class="cat-count-badge"><span id="catCountActive">0</span> ACTIVOS</span>
+          <span class="cat-count-badge cat-inactive"><span id="catCountInactive">0</span> INACTIVOS</span>
+        </div>
+      </div>
+
+      <div class="cat-toolbar">
+        <input type="text" id="catSearch" placeholder="🔍 buscar por ID o nombre..." oninput="filterCatalog()">
+        <div class="cat-toolbar-actions">
+          <button class="cat-btn-primary" onclick="openProductModal()">+ NUEVO PRODUCTO</button>
+          <button class="cat-btn-secondary" onclick="importFromSheets()" title="Importar del Sistema de Ventas ULTIMA">📥 IMPORTAR SHEETS</button>
+        </div>
+      </div>
+
+      <div class="cat-filter-toggle">
+        <button class="cat-fb-btn active" data-catfilter="active" onclick="setCatFilter('active')">✓ ACTIVOS</button>
+        <button class="cat-fb-btn" data-catfilter="inactive" onclick="setCatFilter('inactive')">✗ INACTIVOS</button>
+        <button class="cat-fb-btn" data-catfilter="all" onclick="setCatFilter('all')">◈ TODOS</button>
+      </div>
+
+      <div class="cat-table" id="catalogTable">
+        <div class="cat-empty">Cargando catálogo... si no hay productos, usá "IMPORTAR SHEETS"</div>
+      </div>
+
+      <div class="cat-loadmore" id="catLoadMoreWrap" style="display:none;">
+        <button class="cat-loadmore-btn" onclick="catLoadMore()">
+          + VER 20 MÁS (<span id="catRemaining">0</span> restantes)
+        </button>
+      </div>
+    </div>
+
     <!-- PANEL DE CONFIGURACIÓN · solo admin -->
     <div class="ops-section ops-section-full ops-config-section">
       <div class="ops-section-header">
@@ -5769,7 +5975,8 @@
   let state = {
     sales: [], // {id, seller, amount, date, status: 'pending'|'approved', submittedBy, submittedAt}
     hofPrev: { name: 'LAUTI', amount: 10000000, label: 'Abril 2026' },
-    weeklyPayments: {} // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, bauti: {...} } }
+    weeklyPayments: {}, // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, bauti: {...} } }
+    products: {} // { P001: {id, name, active, priceHistory: [{from, cost, price, by}], updatedAt} }
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
@@ -5879,6 +6086,16 @@
       // Re-render si ya hay usuario logueado
       if (currentUser) renderAll();
     }, (err) => { console.warn('Firebase users read error', err); });
+
+    // Listener catálogo de productos
+    db.ref('products').on('value', (snapshot) => {
+      const data = snapshot.val();
+      state.products = (data && typeof data === 'object') ? data : {};
+      // Re-render del catálogo si estamos en vista admin
+      if (currentUser === 'admin' && typeof renderCatalog === 'function') {
+        renderCatalog();
+      }
+    }, (err) => { console.warn('Firebase products read error', err); });
   }
 
   // ===== HELPERS =====
@@ -11889,9 +12106,187 @@
   window.cyaDeleteAllAdvancesForSeller = cyaDeleteAllAdvancesForSeller;
   window.cyaUnmarkLiquidation = cyaUnmarkLiquidation;
 
+  // ═══════════════════════════════════════════════════════════
+  // CATÁLOGO DE PRODUCTOS · vista + CRUD
+  // ═══════════════════════════════════════════════════════════
+  let catState = {
+    filter: 'active',   // 'active' | 'inactive' | 'all'
+    search: '',
+    visibleLimit: 20    // paginación
+  };
+
+  // Helper: obtener el precio/costo vigente para una fecha
+  function getVigenteAt(product, dateStr) {
+    if (!product || !product.priceHistory || product.priceHistory.length === 0) return null;
+    const target = dateStr || todayLocalISO();
+    // Ordenar por fecha ascendente y tomar el último que sea <= target
+    const sorted = [...product.priceHistory].sort((a, b) => (a.from || '').localeCompare(b.from || ''));
+    let vigente = null;
+    for (const entry of sorted) {
+      if ((entry.from || '') <= target) vigente = entry;
+      else break;
+    }
+    return vigente;
+  }
+
+  // Helper: precio/costo actual (hoy)
+  function getVigenteActual(product) {
+    return getVigenteAt(product, todayLocalISO());
+  }
+
+  // Helper: margen % dado costo y precio
+  function calcMarginPct(cost, price) {
+    if (!price || price === 0) return 0;
+    return ((price - cost) / price) * 100;
+  }
+
+  // Helper: clase CSS para el margen según nivel
+  function marginClass(pct) {
+    if (pct < 0) return 'negative';
+    if (pct < 15) return 'low';
+    if (pct < 25) return 'med';
+    return 'high';
+  }
+
+  function renderCatalog() {
+    const container = document.getElementById('catalogTable');
+    if (!container) return;
+
+    const products = Object.values(state.products || {});
+    const activeCount = products.filter(p => p.active).length;
+    const inactiveCount = products.filter(p => !p.active).length;
+
+    // Actualizar contadores
+    const cA = document.getElementById('catCountActive');
+    const cI = document.getElementById('catCountInactive');
+    if (cA) cA.textContent = activeCount;
+    if (cI) cI.textContent = inactiveCount;
+
+    // Aplicar filtros
+    let filtered = products;
+    if (catState.filter === 'active') filtered = filtered.filter(p => p.active);
+    else if (catState.filter === 'inactive') filtered = filtered.filter(p => !p.active);
+
+    // Búsqueda
+    if (catState.search) {
+      const q = catState.search.toLowerCase();
+      filtered = filtered.filter(p => {
+        return (p.id || '').toLowerCase().includes(q) ||
+               (p.name || '').toLowerCase().includes(q);
+      });
+    }
+
+    // Ordenar por ID
+    filtered.sort((a, b) => (a.id || '').localeCompare(b.id || ''));
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="cat-empty">No hay productos que coincidan · usá "IMPORTAR SHEETS" para cargar desde tu planilla</div>';
+      const lm = document.getElementById('catLoadMoreWrap');
+      if (lm) lm.style.display = 'none';
+      return;
+    }
+
+    // Paginación
+    const total = filtered.length;
+    const visible = filtered.slice(0, catState.visibleLimit);
+    const remaining = total - visible.length;
+
+    let html = `
+      <div class="cat-row cat-header">
+        <div>ID</div>
+        <div>Producto</div>
+        <div style="text-align:right;">Costo</div>
+        <div style="text-align:right;">Precio</div>
+        <div style="text-align:right;">Margen</div>
+        <div style="text-align:center;">Acción</div>
+      </div>
+    `;
+
+    visible.forEach(p => {
+      const vigente = getVigenteActual(p);
+      const cost = vigente?.cost || 0;
+      const price = vigente?.price || 0;
+      const margin = calcMarginPct(cost, price);
+      const marginCls = marginClass(margin);
+      const rowCls = p.active ? 'cat-row' : 'cat-row cat-inactive-row';
+      const vigentText = vigente?.from
+        ? `vigente desde ${vigente.from}`
+        : 'sin precios cargados';
+      html += `
+        <div class="${rowCls}">
+          <div class="cat-cell-id">${escapeHtml(p.id)}</div>
+          <div class="cat-cell-name">
+            ${escapeHtml(p.name || '')}
+            <span class="cat-vigent">${vigentText}${!p.active ? ' · ⏸ inactivo' : ''}</span>
+          </div>
+          <div class="cat-cell-cost">${cost > 0 ? fmtMoney(cost) : '—'}</div>
+          <div class="cat-cell-price">${price > 0 ? fmtMoney(price) : '—'}</div>
+          <div class="cat-cell-margin ${marginCls}">${vigente ? margin.toFixed(1) + '%' : '—'}</div>
+          <div class="cat-cell-action">
+            <button class="cat-btn-edit" onclick="openProductModal('${p.id}')">✏ EDITAR</button>
+          </div>
+        </div>
+      `;
+    });
+
+    container.innerHTML = html;
+
+    // Load more
+    const lm = document.getElementById('catLoadMoreWrap');
+    const catRem = document.getElementById('catRemaining');
+    if (remaining > 0) {
+      if (lm) lm.style.display = 'block';
+      if (catRem) catRem.textContent = remaining;
+    } else {
+      if (lm) lm.style.display = 'none';
+    }
+  }
+
+  function setCatFilter(filter) {
+    catState.filter = filter;
+    catState.visibleLimit = 20;
+    document.querySelectorAll('.cat-filter-toggle .cat-fb-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.catfilter === filter);
+    });
+    renderCatalog();
+  }
+
+  function filterCatalog() {
+    const input = document.getElementById('catSearch');
+    catState.search = input ? input.value : '';
+    catState.visibleLimit = 20;
+    renderCatalog();
+  }
+
+  function catLoadMore() {
+    catState.visibleLimit += 20;
+    renderCatalog();
+  }
+
+  // Placeholders para sub-fases 1B y 1C · avisan que están pendientes
+  function openProductModal(productId) {
+    alert('El modal de edición se implementa en la siguiente sub-fase.\n\n' +
+          'Por ahora podés ver los productos importados.\n\n' +
+          (productId ? `Producto seleccionado: ${productId}` : 'Nuevo producto'));
+  }
+
+  async function importFromSheets() {
+    alert('El import desde el Sistema de Ventas ULTIMA se implementa en la siguiente sub-fase.\n\n' +
+          'Va a leer tu histórico de precios y cargar el catálogo completo automáticamente.');
+  }
+
+  // Exponer al scope global
+  window.setCatFilter = setCatFilter;
+  window.filterCatalog = filterCatalog;
+  window.catLoadMore = catLoadMore;
+  window.openProductModal = openProductModal;
+  window.importFromSheets = importFromSheets;
+
   function renderOpsSalaries(mk) {
     // Llamamos también al render de la sección Cobros y Adelantos
     renderCyaSection();
+    // Y al catálogo si estamos en modo admin
+    if (currentUser === 'admin') renderCatalog();
     if (!mk) mk = activeOpsMonth();
     const container = document.getElementById('opsSalaries');
     if (!container) return;
