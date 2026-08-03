@@ -3580,6 +3580,58 @@
     color: #B45309; font-weight: 700;
     cursor: help;
   }
+
+  /* TABLA MAESTRA · toggle margen + celdas */
+  .mt-margin-toggle {
+    padding: 10px 14px;
+    background: rgba(66,133,244,0.06);
+    border-left: 3px solid #4285f4;
+    margin: 8px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .mt-margin-toggle-label {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer; user-select: none;
+    color: var(--ink);
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .mt-margin-toggle-label input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: #4285f4;
+  }
+  .mt-margin-toggle-hint {
+    font-weight: 400; color: var(--ink-3);
+    letter-spacing: 0.05em; margin-left: auto;
+    text-transform: none;
+  }
+  .ops-table td.td-cost,
+  .ops-table td.td-margin-dollar {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .ops-table td.td-margin-pct {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+  .ops-table td.td-margin-pct.high { color: #1a6b2f; }
+  .ops-table td.td-margin-pct.med { color: #856400; }
+  .ops-table td.td-margin-pct.low { color: #a12020; }
+  .ops-table td.td-margin-pct.negative {
+    color: white; background: #cc0000;
+    padding: 4px 8px;
+  }
+  .ops-table td.td-no-cost {
+    text-align: right;
+    color: var(--ink-3);
+    font-style: italic;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
   /* PIZARRA DE CORONAS */
   .crown-board {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -5243,6 +5295,16 @@
         </select>
         <input type="text" id="opsFilterText" placeholder="Buscar cliente, producto..." oninput="renderOpsTable()">
       </div>
+
+      <!-- Toggle admin: mostrar columnas de margen -->
+      <div class="mt-margin-toggle" id="mtMarginToggle" style="display:none;">
+        <label class="mt-margin-toggle-label">
+          <input type="checkbox" id="mtShowMargin" onchange="toggleShowMargin()">
+          <span>💰 Ver costos y margen</span>
+          <span class="mt-margin-toggle-hint">solo admin · sensible</span>
+        </label>
+      </div>
+
       <div class="ops-table-wrap">
         <table class="ops-table">
           <thead>
@@ -5254,6 +5316,9 @@
               <th>Canal</th>
               <th>Modalidad</th>
               <th class="num">Total</th>
+              <th class="num col-margin" style="display:none;">Costo</th>
+              <th class="num col-margin" style="display:none;">Margen $</th>
+              <th class="num col-margin" style="display:none;">Margen %</th>
               <th>Estado</th>
               <th></th>
             </tr>
@@ -13641,6 +13706,52 @@
     renderOpsTable(true);
   }
 
+  // Estado del toggle de columnas de margen
+  let showMarginCols = (() => {
+    try { return localStorage.getItem('mtShowMargin') === '1'; }
+    catch (e) { return false; }
+  })();
+
+  // Helper: calcular margen de una venta agregado
+  // Retorna { cost, marginDollar, marginPct, hasCostData }
+  function computeSaleMargin(sale) {
+    if (!sale.items || sale.items.length === 0) {
+      return { cost: 0, marginDollar: 0, marginPct: 0, hasCostData: false };
+    }
+    let totalCost = 0;
+    let totalRevenue = 0;
+    let anyCost = false;
+    sale.items.forEach(it => {
+      const qty = it.qty || 0;
+      const price = (typeof it.price === 'number') ? it.price : 0;
+      const cost = (typeof it.cost === 'number') ? it.cost : 0;
+      totalCost += cost * qty;
+      totalRevenue += price * qty;
+      if (cost > 0) anyCost = true;
+    });
+    const marginDollar = totalRevenue - totalCost;
+    const marginPct = totalRevenue > 0 ? (marginDollar / totalRevenue) * 100 : 0;
+    return {
+      cost: totalCost,
+      marginDollar,
+      marginPct,
+      hasCostData: anyCost
+    };
+  }
+
+  function toggleShowMargin() {
+    const checkbox = document.getElementById('mtShowMargin');
+    showMarginCols = !!(checkbox && checkbox.checked);
+    try { localStorage.setItem('mtShowMargin', showMarginCols ? '1' : '0'); } catch (e) {}
+    // Toggle visibilidad de columnas
+    document.querySelectorAll('.col-margin').forEach(el => {
+      el.style.display = showMarginCols ? '' : 'none';
+    });
+    // Re-render para aplicar cell visibility
+    renderOpsTable(true);
+  }
+  window.toggleShowMargin = toggleShowMargin;
+
   function renderOpsTable(skipReset) {
     // Asegurar que el dropdown de vendedores esté poblado dinámicamente
     populateSellerFilter();
@@ -13648,6 +13759,17 @@
     const fStatus = document.getElementById('opsFilterStatus').value;
     const fChannel = document.getElementById('opsFilterChannel').value;
     const fText = (document.getElementById('opsFilterText').value || '').toLowerCase().trim();
+
+    // Toggle de columnas de margen · solo admin
+    const marginToggle = document.getElementById('mtMarginToggle');
+    if (marginToggle) {
+      marginToggle.style.display = (currentUser === 'admin') ? '' : 'none';
+    }
+    const cb = document.getElementById('mtShowMargin');
+    if (cb) cb.checked = showMarginCols;
+    document.querySelectorAll('.col-margin').forEach(el => {
+      el.style.display = (showMarginCols && currentUser === 'admin') ? '' : 'none';
+    });
 
     // Reset paginación cuando cambian filtros
     if (!skipReset) opsTableLimit = OPS_TABLE_INITIAL;
@@ -13677,6 +13799,8 @@
     const visible = Math.min(opsTableLimit, total);
     const remaining = total - visible;
 
+    const shouldShowMargin = showMarginCols && currentUser === 'admin';
+
     body.innerHTML = sales.slice(0, visible).map(s => {
       const items = (s.items && s.items.length > 0)
         ? s.items.map(it => `${it.qty} ${it.name}`).join(' · ')
@@ -13696,6 +13820,27 @@
       const transferBadge = (s.transferHistory && s.transferHistory.length > 0)
         ? `<span class="td-transferred-icon" title="${buildTransferHistoryTooltip(s)}">↔</span>`
         : '';
+
+      // Columnas de margen · solo si está activado
+      let marginCells = '';
+      if (shouldShowMargin) {
+        const m = computeSaleMargin(s);
+        if (m.hasCostData) {
+          const marginClsName = marginClass(m.marginPct);
+          marginCells = `
+            <td class="td-cost col-margin">${fmtMoney(m.cost)}</td>
+            <td class="td-margin-dollar col-margin">${fmtMoney(m.marginDollar)}</td>
+            <td class="td-margin-pct ${marginClsName} col-margin">${m.marginPct.toFixed(1)}%</td>
+          `;
+        } else {
+          marginCells = `
+            <td class="td-no-cost col-margin">sin costo</td>
+            <td class="td-no-cost col-margin">—</td>
+            <td class="td-no-cost col-margin">—</td>
+          `;
+        }
+      }
+
       return `
         <tr>
           <td>${s.date}</td>
@@ -13705,6 +13850,7 @@
           <td>${escapeHtml(s.channel || '—')}</td>
           <td>${modIcon}</td>
           <td class="td-amount">${fmtMoney(s.amount)}</td>
+          ${marginCells}
           <td class="td-status ${s.status}">${statusLabel}</td>
           <td>${action}</td>
         </tr>
