@@ -3422,6 +3422,134 @@
   .btn-danger:hover {
     background: #cc0000; color: white;
   }
+
+  /* IMPORT MODAL */
+  .import-modal { max-width: 640px; max-height: 90vh; overflow-y: auto; }
+  .import-instructions {
+    background: var(--bg-soft);
+    border-left: 3px solid #4285f4;
+    padding: 14px 16px; margin-bottom: 20px;
+  }
+  .import-step-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.15em; color: #4285f4;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .import-steps {
+    font-size: 13px; color: var(--ink); line-height: 1.7;
+    margin: 0; padding-left: 20px;
+  }
+  .import-steps li { margin-bottom: 6px; }
+  .import-uploader {
+    display: flex; flex-direction: column; gap: 14px;
+    margin-bottom: 20px;
+  }
+  .import-upload-block {
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    padding: 14px 16px;
+  }
+  .import-upload-label {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .import-upload-status {
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .import-upload-status.loaded { color: #1F8A3A; font-weight: 700; }
+  .import-upload-block input[type="file"] {
+    width: 100%; padding: 8px;
+    background: var(--bg-soft);
+    border: 1.5px dashed var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; cursor: pointer;
+  }
+  .import-preview-summary {
+    background: var(--bg-soft);
+    border-left: 3px solid #1F8A3A;
+    padding: 16px 18px; margin-bottom: 16px;
+  }
+  .import-summary-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .import-summary-row:last-child { border-bottom: none; }
+  .import-summary-row strong { color: var(--red); font-size: 13px; }
+  .import-alerts {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 16px;
+  }
+  .import-alert {
+    padding: 10px 14px;
+    background: #fff4d4;
+    border-left: 3px solid #B45309;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #856400;
+  }
+  .import-alert.danger {
+    background: #ffd4d4;
+    border-left-color: #cc0000;
+    color: #a12020;
+  }
+  .import-detail-toggle {
+    margin-bottom: 12px; text-align: center;
+  }
+  .import-detail-toggle .btn-secondary {
+    width: auto; margin: 0 auto;
+  }
+  .import-detail-list {
+    max-height: 300px; overflow-y: auto;
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    padding: 8px;
+  }
+  .import-detail-item {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .import-detail-item:last-child { border-bottom: none; }
+  .import-detail-item.merge { background: rgba(255,193,7,0.08); }
+  .import-detail-item.new { background: rgba(31,138,58,0.08); }
+  .import-detail-id { font-weight: 700; color: var(--red); }
+  .import-detail-changes { font-size: 10px; color: var(--ink-3); text-align: right; }
+  .import-detail-badge {
+    background: var(--ink-3); color: white;
+    font-size: 9px; padding: 2px 6px; border-radius: 2px;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    margin-left: 6px;
+  }
+  .import-detail-badge.merge { background: #B45309; }
+  .import-detail-badge.new { background: #1F8A3A; }
+  .import-result {
+    padding: 24px;
+    text-align: center;
+    background: var(--bg-soft);
+    border-left: 3px solid #1F8A3A;
+  }
+  .import-result-icon { font-size: 42px; margin-bottom: 12px; }
+  .import-result-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px; margin-bottom: 8px;
+    color: var(--ink);
+  }
+  .import-result-stats {
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink);
+    line-height: 1.8;
+  }
   /* PIZARRA DE CORONAS */
   .crown-board {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -5509,6 +5637,92 @@
         <button class="btn-danger" id="prodDeactivateBtn" onclick="toggleProductActive()" style="display:none;">🗑 DESACTIVAR</button>
         <button class="btn-secondary" onclick="closeProductModal()">CANCELAR</button>
         <button class="btn-primary" onclick="saveProduct()">✓ GUARDAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL IMPORT · desde CSVs del Sheets                          -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="importModalOverlay" onclick="closeImportModal()">
+    <div class="modal import-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background: #4285f4;">▸ IMPORTAR DEL SISTEMA DE VENTAS</div>
+      <button class="modal-close" onclick="closeImportModal()">✕</button>
+      <h2>IMPORTAR CATÁLOGO</h2>
+      <div class="modal-sub">— desde tu planilla Sistema de Ventas ULTIMA —</div>
+
+      <!-- STEP 1: instrucciones + upload -->
+      <div id="importStep1">
+        <div class="import-instructions">
+          <div class="import-step-title">📋 Paso a paso:</div>
+          <ol class="import-steps">
+            <li>Abrí tu planilla <strong>Sistema de Ventas ULTIMA</strong></li>
+            <li>Andá a la hoja <strong>Histórico precios</strong></li>
+            <li>Menú <strong>Archivo → Descargar → Valores separados por comas (.csv)</strong></li>
+            <li>Subí ese archivo abajo</li>
+            <li>Después repetí con la hoja <strong>Catálogo</strong> (para saber cuáles están activos)</li>
+          </ol>
+        </div>
+
+        <div class="import-uploader">
+          <div class="import-upload-block">
+            <div class="import-upload-label">
+              <strong>📊 Histórico precios (CSV)</strong>
+              <span class="import-upload-status" id="histFileStatus">sin cargar</span>
+            </div>
+            <input type="file" id="histFileInput" accept=".csv" onchange="handleHistFile(this)">
+          </div>
+
+          <div class="import-upload-block">
+            <div class="import-upload-label">
+              <strong>📚 Catálogo (CSV) · opcional</strong>
+              <span class="import-upload-status" id="catFileStatus">sin cargar</span>
+            </div>
+            <input type="file" id="catFileInput" accept=".csv" onchange="handleCatFile(this)">
+            <span class="form-help">si no lo subís, todos se importan como ACTIVOS</span>
+          </div>
+        </div>
+
+        <div class="transfer-modal-actions">
+          <button class="btn-secondary" onclick="closeImportModal()">CANCELAR</button>
+          <button class="btn-primary" id="importPreviewBtn" onclick="previewImport()" disabled>▸ VISTA PREVIA</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: preview -->
+      <div id="importStep2" style="display:none;">
+        <div class="import-preview-summary" id="importSummary">
+          <!-- dinámico -->
+        </div>
+
+        <div class="import-alerts" id="importAlerts">
+          <!-- dinámico -->
+        </div>
+
+        <div class="import-detail-toggle">
+          <button class="btn-secondary" onclick="toggleImportDetail()">
+            <span id="importDetailToggleLabel">▾ VER DETALLE DE PRODUCTOS</span>
+          </button>
+        </div>
+
+        <div class="import-detail-list" id="importDetail" style="display:none;">
+          <!-- dinámico -->
+        </div>
+
+        <div class="transfer-modal-actions">
+          <button class="btn-secondary" onclick="backToImportStep1()">← VOLVER</button>
+          <button class="btn-primary" onclick="confirmImport()">✓ CONFIRMAR E IMPORTAR</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: resultado -->
+      <div id="importStep3" style="display:none;">
+        <div class="import-result" id="importResult">
+          <!-- dinámico -->
+        </div>
+        <div class="transfer-modal-actions">
+          <button class="btn-primary" onclick="closeImportModal()">✓ LISTO</button>
+        </div>
       </div>
     </div>
   </div>
@@ -12686,16 +12900,461 @@
   window.saveProduct = saveProduct;
   window.toggleProductActive = toggleProductActive;
 
-  async function importFromSheets() {
-    alert('El import desde el Sistema de Ventas ULTIMA se implementa en la siguiente sub-fase.\n\n' +
-          'Va a leer tu histórico de precios y cargar el catálogo completo automáticamente.');
+  // ═══════════════════════════════════════════════════════════
+  // IMPORT desde CSVs del Sistema de Ventas ULTIMA
+  // ═══════════════════════════════════════════════════════════
+
+  // Estado del import
+  let importState = {
+    histRows: null,      // filas parseadas del histórico
+    catRows: null,       // filas parseadas del catálogo (activos)
+    preview: null        // objeto con productos consolidados
+  };
+
+  function importFromSheets() {
+    if (currentUser !== 'admin') return;
+    // Reset
+    importState = { histRows: null, catRows: null, preview: null };
+    document.getElementById('histFileInput').value = '';
+    document.getElementById('catFileInput').value = '';
+    document.getElementById('histFileStatus').textContent = 'sin cargar';
+    document.getElementById('histFileStatus').className = 'import-upload-status';
+    document.getElementById('catFileStatus').textContent = 'sin cargar';
+    document.getElementById('catFileStatus').className = 'import-upload-status';
+    document.getElementById('importPreviewBtn').disabled = true;
+    // Ir al step 1
+    document.getElementById('importStep1').style.display = 'block';
+    document.getElementById('importStep2').style.display = 'none';
+    document.getElementById('importStep3').style.display = 'none';
+    document.getElementById('importDetail').style.display = 'none';
+    document.getElementById('importDetailToggleLabel').textContent = '▾ VER DETALLE DE PRODUCTOS';
+    // Abrir
+    document.getElementById('importModalOverlay').classList.add('open');
   }
+
+  function closeImportModal() {
+    document.getElementById('importModalOverlay').classList.remove('open');
+  }
+
+  // Parser CSV robusto (maneja comas dentro de comillas, etc)
+  function parseCSV(text) {
+    const rows = [];
+    let currentRow = [];
+    let currentField = '';
+    let inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      const next = text[i+1];
+      if (inQuotes) {
+        if (ch === '"' && next === '"') {
+          currentField += '"';
+          i++;
+        } else if (ch === '"') {
+          inQuotes = false;
+        } else {
+          currentField += ch;
+        }
+      } else {
+        if (ch === '"') inQuotes = true;
+        else if (ch === ',') {
+          currentRow.push(currentField);
+          currentField = '';
+        } else if (ch === '\n' || ch === '\r') {
+          if (ch === '\r' && next === '\n') i++;
+          currentRow.push(currentField);
+          rows.push(currentRow);
+          currentRow = [];
+          currentField = '';
+        } else {
+          currentField += ch;
+        }
+      }
+    }
+    if (currentField !== '' || currentRow.length > 0) {
+      currentRow.push(currentField);
+      rows.push(currentRow);
+    }
+    return rows.filter(r => r.length > 0 && r.some(v => v && v.trim()));
+  }
+
+  function handleHistFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const text = e.target.result;
+        const rows = parseCSV(text);
+        // El CSV tiene header en las primeras filas · encontrar donde empiezan los datos
+        // Buscamos la fila que contenga "Fecha desde" o "ID Producto"
+        let headerIdx = -1;
+        for (let i = 0; i < Math.min(rows.length, 10); i++) {
+          const rowStr = rows[i].join(',').toLowerCase();
+          if (rowStr.includes('fecha') && rowStr.includes('id producto')) {
+            headerIdx = i;
+            break;
+          }
+        }
+        if (headerIdx === -1) {
+          alert('No se encontró la columna "Fecha desde" o "ID Producto" en el CSV.\n\n¿Seguro es la hoja "Histórico precios"?');
+          input.value = '';
+          return;
+        }
+        const dataRows = rows.slice(headerIdx + 1);
+        // Filtrar filas válidas (con al menos ID + costo)
+        const valid = dataRows.filter(r => {
+          const id = (r[1] || '').trim();
+          return id && /^P\d+$/i.test(id);
+        });
+        importState.histRows = valid;
+        const statusEl = document.getElementById('histFileStatus');
+        statusEl.textContent = `✓ ${valid.length} filas cargadas`;
+        statusEl.className = 'import-upload-status loaded';
+        updateImportPreviewButton();
+      } catch (err) {
+        alert('Error leyendo CSV: ' + err.message);
+        input.value = '';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+
+  function handleCatFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const text = e.target.result;
+        const rows = parseCSV(text);
+        // Buscar header con "ID Producto" y "Activo"
+        let headerIdx = -1;
+        for (let i = 0; i < Math.min(rows.length, 10); i++) {
+          const rowStr = rows[i].join(',').toLowerCase();
+          if (rowStr.includes('id producto') && rowStr.includes('activo')) {
+            headerIdx = i;
+            break;
+          }
+        }
+        if (headerIdx === -1) {
+          alert('No se encontró la columna "ID Producto" y "Activo" en el CSV.\n\n¿Seguro es la hoja "Catálogo"?');
+          input.value = '';
+          return;
+        }
+        const dataRows = rows.slice(headerIdx + 1);
+        const valid = dataRows.filter(r => {
+          const id = (r[0] || '').trim();
+          return id && /^P\d+$/i.test(id);
+        });
+        importState.catRows = valid;
+        const statusEl = document.getElementById('catFileStatus');
+        statusEl.textContent = `✓ ${valid.length} filas cargadas`;
+        statusEl.className = 'import-upload-status loaded';
+        updateImportPreviewButton();
+      } catch (err) {
+        alert('Error leyendo CSV: ' + err.message);
+        input.value = '';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+
+  function updateImportPreviewButton() {
+    const btn = document.getElementById('importPreviewBtn');
+    if (btn) btn.disabled = !importState.histRows;
+  }
+
+  // Convertir fecha "01/05/2026" o "2026-05-01" o Date a formato ISO "YYYY-MM-DD"
+  function normalizeDate(str) {
+    if (!str) return null;
+    const s = String(str).trim();
+    // Ya en ISO
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+    // Formato DD/MM/YYYY
+    let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (m) {
+      return `${m[3]}-${String(m[2]).padStart(2,'0')}-${String(m[1]).padStart(2,'0')}`;
+    }
+    // Formato MM/DD/YYYY (menos común pero por si)
+    // No aplicable en Argentina · lo dejamos
+    return null;
+  }
+
+  function previewImport() {
+    if (!importState.histRows) {
+      alert('Primero cargá el CSV del Histórico precios');
+      return;
+    }
+
+    // ────────────────────────────────────────────
+    // Consolidar por producto
+    // ────────────────────────────────────────────
+    const products = {};
+    const alerts = [];
+    let costZero = 0;
+    let invalidDate = 0;
+
+    importState.histRows.forEach((r, idx) => {
+      const fechaStr = (r[0] || '').trim();
+      const id = (r[1] || '').trim().toUpperCase();
+      const nombre = (r[2] || '').trim();
+      const costo = parseFloat((r[3] || '0').toString().replace(/[$,]/g, ''));
+      const precio = parseFloat((r[5] || '0').toString().replace(/[$,]/g, ''));
+      const cargadoPor = (r[6] || '').trim();
+
+      const fecha = normalizeDate(fechaStr);
+      if (!fecha) { invalidDate++; return; }
+      if (!id || !nombre) return;
+      if (costo === 0) costZero++;
+
+      if (!products[id]) {
+        products[id] = {
+          id, name: nombre, priceHistory: [], active: true
+        };
+      }
+      // Guardar nombre más reciente
+      products[id].name = nombre;
+      products[id].priceHistory.push({
+        from: fecha,
+        cost: costo,
+        price: precio,
+        by: cargadoPor || 'import'
+      });
+    });
+
+    // ────────────────────────────────────────────
+    // Aplicar Activo desde catálogo (si se subió)
+    // ────────────────────────────────────────────
+    if (importState.catRows) {
+      const activeMap = {};
+      importState.catRows.forEach(r => {
+        const id = (r[0] || '').trim().toUpperCase();
+        const activo = (r[5] || '').trim().toUpperCase();
+        // "SÍ", "SI", "S", "YES" = activo · resto = inactivo
+        activeMap[id] = /^(S[IÍ]?|YES|Y|TRUE|1)$/i.test(activo);
+      });
+      Object.keys(products).forEach(id => {
+        if (activeMap.hasOwnProperty(id)) {
+          products[id].active = activeMap[id];
+        }
+      });
+    }
+
+    // ────────────────────────────────────────────
+    // Ordenar historial por fecha ascendente
+    // ────────────────────────────────────────────
+    Object.values(products).forEach(p => {
+      p.priceHistory.sort((a, b) => (a.from || '').localeCompare(b.from || ''));
+    });
+
+    // ────────────────────────────────────────────
+    // Detectar conflictos con existentes
+    // ────────────────────────────────────────────
+    const existingIds = Object.keys(state.products || {});
+    const newIds = Object.keys(products).filter(id => !existingIds.includes(id));
+    const mergeIds = Object.keys(products).filter(id => existingIds.includes(id));
+
+    // Detectar nombres duplicados
+    const nameCount = {};
+    Object.values(products).forEach(p => {
+      const key = (p.name || '').toLowerCase().trim();
+      nameCount[key] = (nameCount[key] || 0) + 1;
+    });
+    const duplicateNames = Object.entries(nameCount).filter(([, c]) => c > 1);
+
+    // Detectar cambios en cada producto
+    const totalChanges = Object.values(products).reduce((sum, p) => sum + (p.priceHistory?.length || 0), 0);
+    const totalActive = Object.values(products).filter(p => p.active).length;
+    const totalInactive = Object.values(products).filter(p => !p.active).length;
+
+    // Guardar preview
+    importState.preview = {
+      products,
+      newIds,
+      mergeIds,
+      totalChanges,
+      totalActive,
+      totalInactive,
+      duplicateNames,
+      costZero,
+      invalidDate
+    };
+
+    // ────────────────────────────────────────────
+    // Renderizar resumen
+    // ────────────────────────────────────────────
+    const summaryEl = document.getElementById('importSummary');
+    summaryEl.innerHTML = `
+      <div class="import-summary-row"><span>Productos detectados</span><span><strong>${Object.keys(products).length}</strong></span></div>
+      <div class="import-summary-row"><span>Nuevos (no existen)</span><span>${newIds.length}</span></div>
+      <div class="import-summary-row"><span>A actualizar (merge histórico)</span><span>${mergeIds.length}</span></div>
+      <div class="import-summary-row"><span>Cambios de precio en total</span><span>${totalChanges}</span></div>
+      <div class="import-summary-row"><span>Activos</span><span>${totalActive}</span></div>
+      <div class="import-summary-row"><span>Inactivos</span><span>${totalInactive}</span></div>
+    `;
+
+    // ────────────────────────────────────────────
+    // Alertas
+    // ────────────────────────────────────────────
+    const alertsEl = document.getElementById('importAlerts');
+    const alertList = [];
+    if (duplicateNames.length > 0) {
+      alertList.push({ type: 'warn', text: `⚠ ${duplicateNames.length} nombre${duplicateNames.length !== 1 ? 's' : ''} duplicado${duplicateNames.length !== 1 ? 's' : ''} (dos productos con el mismo nombre)` });
+    }
+    if (costZero > 0) {
+      alertList.push({ type: 'warn', text: `⚠ ${costZero} entradas con costo $0 (se importan igual, revisar después)` });
+    }
+    if (invalidDate > 0) {
+      alertList.push({ type: 'danger', text: `⚠ ${invalidDate} filas con fecha inválida · se van a ignorar` });
+    }
+    if (mergeIds.length > 0) {
+      alertList.push({ type: 'warn', text: `ℹ ${mergeIds.length} producto${mergeIds.length !== 1 ? 's' : ''} ya existen · se van a MERGEAR (sumar al histórico sin borrar nada)` });
+    }
+    if (importState.catRows === null) {
+      alertList.push({ type: 'warn', text: 'ℹ No subiste el Catálogo · todos se importan como ACTIVOS' });
+    }
+    alertsEl.innerHTML = alertList.map(a =>
+      `<div class="import-alert${a.type === 'danger' ? ' danger' : ''}">${a.text}</div>`
+    ).join('');
+
+    // ────────────────────────────────────────────
+    // Detalle (por si expandís)
+    // ────────────────────────────────────────────
+    const detailEl = document.getElementById('importDetail');
+    const productsList = Object.values(products).sort((a, b) => (a.id || '').localeCompare(b.id || ''));
+    detailEl.innerHTML = productsList.map(p => {
+      const isMerge = mergeIds.includes(p.id);
+      const isNew = newIds.includes(p.id);
+      const cls = isNew ? 'new' : (isMerge ? 'merge' : '');
+      const badge = isNew ? '<span class="import-detail-badge new">NUEVO</span>' :
+                    (isMerge ? '<span class="import-detail-badge merge">MERGE</span>' : '');
+      const changes = p.priceHistory.length;
+      const last = p.priceHistory[p.priceHistory.length - 1];
+      return `
+        <div class="import-detail-item ${cls}">
+          <div class="import-detail-id">${p.id}${!p.active ? ' ⏸' : ''}</div>
+          <div>${escapeHtml(p.name)}${badge}</div>
+          <div class="import-detail-changes">${changes} cambio${changes !== 1 ? 's' : ''} · último: ${fmtMoney(last?.cost || 0)}/${fmtMoney(last?.price || 0)}</div>
+        </div>
+      `;
+    }).join('');
+
+    // Cambiar de step
+    document.getElementById('importStep1').style.display = 'none';
+    document.getElementById('importStep2').style.display = 'block';
+  }
+
+  function backToImportStep1() {
+    document.getElementById('importStep2').style.display = 'none';
+    document.getElementById('importStep1').style.display = 'block';
+  }
+
+  function toggleImportDetail() {
+    const el = document.getElementById('importDetail');
+    const lbl = document.getElementById('importDetailToggleLabel');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      lbl.textContent = '▴ OCULTAR DETALLE';
+    } else {
+      el.style.display = 'none';
+      lbl.textContent = '▾ VER DETALLE DE PRODUCTOS';
+    }
+  }
+
+  async function confirmImport() {
+    if (!importState.preview) return;
+    const preview = importState.preview;
+    const products = preview.products;
+
+    // Deshabilitar botón mientras corre
+    const btns = document.querySelectorAll('#importStep2 button');
+    btns.forEach(b => b.disabled = true);
+
+    let created = 0, merged = 0, errors = 0;
+
+    for (const id of Object.keys(products)) {
+      const importedP = products[id];
+      const existing = state.products?.[id];
+
+      try {
+        let productData;
+        if (existing) {
+          // MERGE: unir historiales
+          const existingHist = Array.isArray(existing.priceHistory) ? existing.priceHistory : [];
+          const importedHist = importedP.priceHistory || [];
+
+          // Combinar por fecha (evitar duplicados)
+          const historyMap = new Map();
+          existingHist.forEach(e => {
+            if (e && e.from) historyMap.set(e.from, e);
+          });
+          importedHist.forEach(e => {
+            if (e && e.from && !historyMap.has(e.from)) {
+              historyMap.set(e.from, e);
+            }
+          });
+          // Ordenar por fecha
+          const mergedHist = Array.from(historyMap.values()).sort((a, b) => (a.from || '').localeCompare(b.from || ''));
+
+          productData = {
+            ...existing,
+            name: importedP.name || existing.name,
+            active: importedP.active,
+            priceHistory: mergedHist,
+            updatedAt: Date.now()
+          };
+          merged++;
+        } else {
+          // NUEVO
+          productData = {
+            id,
+            name: importedP.name,
+            active: importedP.active,
+            priceHistory: importedP.priceHistory,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+          };
+          created++;
+        }
+        await db.ref('products/' + id).set(productData);
+      } catch (e) {
+        console.error('Error importando ' + id, e);
+        errors++;
+      }
+    }
+
+    // Reactivar botones
+    btns.forEach(b => b.disabled = false);
+
+    // Mostrar resultado
+    const resultEl = document.getElementById('importResult');
+    resultEl.innerHTML = `
+      <div class="import-result-icon">${errors === 0 ? '✅' : '⚠️'}</div>
+      <div class="import-result-title">${errors === 0 ? 'Import completado' : 'Import con errores'}</div>
+      <div class="import-result-stats">
+        ✓ ${created} productos nuevos creados<br>
+        🔄 ${merged} productos actualizados (merge de historial)<br>
+        ${errors > 0 ? `❌ ${errors} errores` : ''}
+      </div>
+    `;
+
+    document.getElementById('importStep2').style.display = 'none';
+    document.getElementById('importStep3').style.display = 'block';
+  }
+
+  window.importFromSheets = importFromSheets;
+  window.closeImportModal = closeImportModal;
+  window.handleHistFile = handleHistFile;
+  window.handleCatFile = handleCatFile;
+  window.previewImport = previewImport;
+  window.backToImportStep1 = backToImportStep1;
+  window.toggleImportDetail = toggleImportDetail;
+  window.confirmImport = confirmImport;
 
   // Exponer al scope global
   window.setCatFilter = setCatFilter;
   window.filterCatalog = filterCatalog;
   window.catLoadMore = catLoadMore;
-  window.importFromSheets = importFromSheets;
 
   function renderOpsSalaries(mk) {
     // Llamamos también al render de la sección Cobros y Adelantos
