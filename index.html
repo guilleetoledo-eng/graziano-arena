@@ -3581,6 +3581,77 @@
     cursor: help;
   }
 
+  /* BOTÓN BACKFILL */
+  .cat-btn-backfill {
+    padding: 10px 14px;
+    background: transparent;
+    color: #B45309;
+    border: 1.5px solid #B45309;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .cat-btn-backfill:hover {
+    background: #B45309; color: white;
+  }
+
+  /* MODAL BACKFILL */
+  .backfill-modal { max-width: 640px; max-height: 90vh; overflow-y: auto; }
+  .backfill-summary {
+    background: var(--bg-soft);
+    border-left: 3px solid #B45309;
+    padding: 16px 18px; margin-bottom: 16px;
+  }
+  .backfill-summary-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.15em;
+    color: #B45309; font-weight: 700;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .backfill-summary-grid {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .backfill-summary-row {
+    display: flex; justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .backfill-summary-row:last-child { border-bottom: none; }
+  .backfill-summary-row.hi strong { color: #1F8A3A; font-size: 14px; }
+  .backfill-summary-row.lo strong { color: var(--ink-3); font-size: 13px; }
+  .backfill-summary-row.warn strong { color: #B45309; font-size: 13px; }
+  .backfill-detail-toggle {
+    margin-bottom: 12px; text-align: center;
+  }
+  .backfill-detail-toggle .btn-secondary {
+    margin: 0 auto;
+  }
+  .backfill-nomatch-list {
+    max-height: 260px; overflow-y: auto;
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    padding: 8px;
+    margin-bottom: 16px;
+  }
+  .backfill-nomatch-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .backfill-nomatch-item:last-child { border-bottom: none; }
+  .backfill-nomatch-name { font-weight: 700; color: var(--ink); }
+  .backfill-nomatch-count {
+    color: #B45309; font-weight: 700;
+    text-align: right;
+  }
+
   /* TABLA MAESTRA · toggle margen + celdas */
   .mt-margin-toggle {
     padding: 10px 14px;
@@ -5518,6 +5589,7 @@
         <div class="cat-toolbar-actions">
           <button class="cat-btn-primary" onclick="openProductModal()">+ NUEVO PRODUCTO</button>
           <button class="cat-btn-secondary" onclick="importFromSheets()" title="Importar del Sistema de Ventas ULTIMA">📥 IMPORTAR SHEETS</button>
+          <button class="cat-btn-backfill" onclick="openBackfillModal()" title="Completar costos en ventas viejas usando el catálogo">🔧 BACKFILL COSTOS</button>
         </div>
       </div>
 
@@ -6395,6 +6467,64 @@
         </div>
         <div class="transfer-modal-actions">
           <button class="btn-primary" onclick="closeImportModal()">✓ LISTO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL BACKFILL · completar costos en ventas viejas            -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="backfillModalOverlay" onclick="closeBackfillModal()">
+    <div class="modal backfill-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background: #B45309;">🔧 BACKFILL DE COSTOS EN VENTAS VIEJAS</div>
+      <button class="modal-close" onclick="closeBackfillModal()">✕</button>
+      <h2>COMPLETAR COSTOS</h2>
+      <div class="modal-sub">— busca costo vigente al día de cada venta —</div>
+
+      <!-- Loading -->
+      <div id="backfillLoading" style="display:none;">
+        <div style="text-align:center; padding:40px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-3);">
+          Analizando ventas... ⏳
+        </div>
+      </div>
+
+      <!-- Análisis previo -->
+      <div id="backfillAnalysis" style="display:none;">
+        <div class="backfill-summary">
+          <div class="backfill-summary-header">▸ RESULTADO DEL ANÁLISIS</div>
+          <div class="backfill-summary-grid" id="backfillStats">
+            <!-- dinámico -->
+          </div>
+        </div>
+
+        <div id="backfillAlerts">
+          <!-- dinámico -->
+        </div>
+
+        <div class="backfill-detail-toggle" id="backfillDetailToggle" style="display:none;">
+          <button class="btn-secondary" onclick="toggleBackfillDetail()">
+            <span id="backfillDetailLabel">▾ VER PRODUCTOS SIN MATCH</span>
+          </button>
+        </div>
+
+        <div id="backfillDetailList" style="display:none;">
+          <!-- dinámico -->
+        </div>
+
+        <div class="transfer-modal-actions">
+          <button class="btn-secondary" onclick="closeBackfillModal()">CANCELAR</button>
+          <button class="btn-primary" id="backfillExecuteBtn" onclick="executeBackfill()">✓ EJECUTAR BACKFILL</button>
+        </div>
+      </div>
+
+      <!-- Resultado -->
+      <div id="backfillResult" style="display:none;">
+        <div class="import-result" id="backfillResultContent">
+          <!-- dinámico -->
+        </div>
+        <div class="transfer-modal-actions">
+          <button class="btn-primary" onclick="closeBackfillModal()">✓ LISTO</button>
         </div>
       </div>
     </div>
@@ -14118,6 +14248,361 @@
   window.backToImportStep1 = backToImportStep1;
   window.toggleImportDetail = toggleImportDetail;
   window.confirmImport = confirmImport;
+
+  // ═══════════════════════════════════════════════════════════
+  // BACKFILL DE COSTOS · completar ventas viejas
+  // ═══════════════════════════════════════════════════════════
+
+  let backfillState = {
+    analysis: null,       // resultado del análisis
+    salesToUpdate: null   // array de {saleIdx, itemIdx, cost, catalogId} o cambio de tipo
+  };
+
+  function openBackfillModal() {
+    if (currentUser !== 'admin') {
+      alert('Solo el admin puede ejecutar el backfill');
+      return;
+    }
+    // Reset
+    backfillState = { analysis: null, salesToUpdate: null };
+    document.getElementById('backfillLoading').style.display = 'block';
+    document.getElementById('backfillAnalysis').style.display = 'none';
+    document.getElementById('backfillResult').style.display = 'none';
+    document.getElementById('backfillDetailList').style.display = 'none';
+    document.getElementById('backfillModalOverlay').classList.add('open');
+
+    // Correr análisis (async con timeout para dar chance al render)
+    setTimeout(() => {
+      const analysis = analyzeSalesForBackfill();
+      backfillState.analysis = analysis;
+      renderBackfillAnalysis(analysis);
+      document.getElementById('backfillLoading').style.display = 'none';
+      document.getElementById('backfillAnalysis').style.display = 'block';
+    }, 50);
+  }
+
+  function closeBackfillModal() {
+    document.getElementById('backfillModalOverlay').classList.remove('open');
+  }
+  window.closeBackfillModal = closeBackfillModal;
+
+  function toggleBackfillDetail() {
+    const el = document.getElementById('backfillDetailList');
+    const lbl = document.getElementById('backfillDetailLabel');
+    if (el.style.display === 'none') {
+      el.style.display = 'block';
+      lbl.textContent = '▴ OCULTAR PRODUCTOS SIN MATCH';
+    } else {
+      el.style.display = 'none';
+      lbl.textContent = '▾ VER PRODUCTOS SIN MATCH';
+    }
+  }
+  window.toggleBackfillDetail = toggleBackfillDetail;
+
+  // Analizar todas las ventas y decidir cuáles se pueden actualizar
+  function analyzeSalesForBackfill() {
+    const sales = state.sales || [];
+    const products = state.products || {};
+    const hasProducts = Object.keys(products).length > 0;
+
+    let totalSales = 0;
+    let salesAlreadyComplete = 0;      // ya tienen cost > 0 en TODOS los items
+    let sellerSales = { withItems: 0, updatable: 0 };  // vendedores normales
+    let estelaSales = { total: 0, updatable: 0 };      // Estela (usa margen promedio del mes)
+    let noMatchProducts = {};          // nombre → count
+    let salesToUpdate = [];            // {saleIdx, action: 'items' | 'estela-margin', ...}
+
+    sales.forEach((sale, saleIdx) => {
+      if (!sale) return;
+      totalSales++;
+
+      const isEstela = sale.seller === 'estela';
+
+      if (isEstela) {
+        estelaSales.total++;
+        // Estela: si NO tiene margin storeado y monto > 0
+        // OPCIÓN 2 = B: margen promedio del equipo del mes
+        // Solo actualizar si NO tiene ya un cost pre-calculado
+        if (!sale.estelaBackfillCost || sale.estelaBackfillCost === 0) {
+          estelaSales.updatable++;
+          salesToUpdate.push({
+            saleIdx,
+            action: 'estela-margin',
+            date: sale.date,
+            amount: sale.amount || 0
+          });
+        } else {
+          salesAlreadyComplete++;
+        }
+        return;
+      }
+
+      // Vendedores normales: revisar items
+      if (!sale.items || sale.items.length === 0) return;
+      sellerSales.withItems++;
+
+      // Chequear si todos los items ya tienen cost > 0
+      const allComplete = sale.items.every(it => (typeof it.cost === 'number') && it.cost > 0);
+      if (allComplete) {
+        salesAlreadyComplete++;
+        return;
+      }
+
+      // Buscar match para cada item que necesita costo
+      const itemUpdates = [];
+      let allMatched = true;
+      sale.items.forEach((it, itemIdx) => {
+        if (typeof it.cost === 'number' && it.cost > 0) return; // ya tiene
+
+        // Buscar en catálogo
+        const cat = hasProducts ? findCatalogProductByName(it.name) : null;
+        if (!cat) {
+          // No match · trackear
+          const nm = (it.name || '').trim();
+          if (nm) {
+            noMatchProducts[nm] = (noMatchProducts[nm] || 0) + 1;
+          }
+          allMatched = false;
+          return;
+        }
+
+        const vigente = getVigenteAt(cat, sale.date);
+        if (!vigente || !vigente.cost || vigente.cost === 0) {
+          // Costo=0 · IGNORAR (según decisión A del usuario)
+          const nm = (it.name || '').trim();
+          if (nm) {
+            noMatchProducts[nm + ' (costo $0)'] = (noMatchProducts[nm + ' (costo $0)'] || 0) + 1;
+          }
+          allMatched = false;
+          return;
+        }
+
+        itemUpdates.push({
+          itemIdx,
+          cost: vigente.cost,
+          catalogId: cat.id
+        });
+      });
+
+      if (itemUpdates.length > 0) {
+        sellerSales.updatable++;
+        salesToUpdate.push({
+          saleIdx,
+          action: 'items',
+          itemUpdates
+        });
+      }
+    });
+
+    backfillState.salesToUpdate = salesToUpdate;
+
+    return {
+      totalSales,
+      salesAlreadyComplete,
+      sellerSales,
+      estelaSales,
+      noMatchProducts,
+      salesToUpdate: salesToUpdate.length,
+      hasProducts
+    };
+  }
+
+  function renderBackfillAnalysis(a) {
+    // Stats
+    const statsEl = document.getElementById('backfillStats');
+    statsEl.innerHTML = `
+      <div class="backfill-summary-row"><span>Ventas totales</span><span>${a.totalSales}</span></div>
+      <div class="backfill-summary-row lo"><span>Ya con costo completo</span><span><strong>${a.salesAlreadyComplete}</strong></span></div>
+      <div class="backfill-summary-row hi"><span>Se pueden actualizar (vendedores)</span><span><strong>${a.sellerSales.updatable}</strong></span></div>
+      <div class="backfill-summary-row hi"><span>Se pueden actualizar (Estela · margen promedio)</span><span><strong>${a.estelaSales.updatable}</strong></span></div>
+    `;
+
+    // Alertas
+    const alertsEl = document.getElementById('backfillAlerts');
+    const alertList = [];
+    if (!a.hasProducts) {
+      alertList.push({
+        type: 'danger',
+        text: '⚠ No hay productos en el catálogo · corré primero el IMPORT SHEETS'
+      });
+    }
+    const noMatchCount = Object.values(a.noMatchProducts).reduce((sum, c) => sum + c, 0);
+    if (noMatchCount > 0) {
+      alertList.push({
+        type: 'warn',
+        text: `⚠ ${noMatchCount} items no pudieron matchearse con el catálogo (${Object.keys(a.noMatchProducts).length} nombres únicos)`
+      });
+    }
+    if (a.estelaSales.updatable > 0) {
+      alertList.push({
+        type: 'info',
+        text: `ℹ Estela: ${a.estelaSales.updatable} ventas · se aproximarán con el margen promedio del equipo por mes`
+      });
+    }
+    if (alertList.length === 0 && a.salesToUpdate === 0) {
+      alertList.push({
+        type: 'success',
+        text: '✓ No hay ventas para actualizar · el sistema está al día'
+      });
+    }
+    alertsEl.innerHTML = alertList.map(al => `
+      <div class="import-alert${al.type === 'danger' ? ' danger' : ''}" style="${al.type === 'success' ? 'background:rgba(31,138,58,0.08);border-left-color:#1F8A3A;color:#1a6b2f;' : ''}">
+        ${al.text}
+      </div>
+    `).join('');
+
+    // Detalle sin match
+    const uniqueNoMatch = Object.entries(a.noMatchProducts);
+    const detailToggle = document.getElementById('backfillDetailToggle');
+    const detailList = document.getElementById('backfillDetailList');
+    if (uniqueNoMatch.length > 0) {
+      detailToggle.style.display = 'block';
+      uniqueNoMatch.sort((x, y) => y[1] - x[1]);
+      detailList.innerHTML = `
+        <div class="backfill-nomatch-list">
+          ${uniqueNoMatch.slice(0, 100).map(([name, count]) => `
+            <div class="backfill-nomatch-item">
+              <span class="backfill-nomatch-name">${escapeHtml(name)}</span>
+              <span class="backfill-nomatch-count">${count} item${count !== 1 ? 's' : ''}</span>
+            </div>
+          `).join('')}
+          ${uniqueNoMatch.length > 100 ? `<div style="padding:8px;font-style:italic;color:var(--ink-3);text-align:center;">... y ${uniqueNoMatch.length - 100} más</div>` : ''}
+        </div>
+      `;
+    } else {
+      detailToggle.style.display = 'none';
+      detailList.style.display = 'none';
+    }
+
+    // Deshabilitar botón si no hay nada para hacer
+    const btn = document.getElementById('backfillExecuteBtn');
+    if (a.salesToUpdate === 0) {
+      btn.disabled = true;
+      btn.textContent = '✓ NADA PARA HACER';
+    } else {
+      btn.disabled = false;
+      btn.textContent = `✓ EJECUTAR BACKFILL (${a.salesToUpdate} ventas)`;
+    }
+  }
+
+  // Calcular margen promedio del equipo (vendedores normales) para un mes
+  // Retorna % (ej 19.5). Si no hay data, retorna null.
+  function calcTeamAvgMarginForMonth(mk) {
+    const sales = (state.sales || []).filter(s => {
+      if (!s || !s.date) return false;
+      if (String(s.date).slice(0, 7) !== mk) return false;
+      if (s.seller === 'estela') return false; // excluir Estela
+      if (s.status === 'cancelled' || s.status === 'voided') return false;
+      return true;
+    });
+    let totalFacturado = 0;
+    let totalCosto = 0;
+    let hasData = false;
+    sales.forEach(s => {
+      const m = computeSaleMargin(s);
+      if (m.hasCostData) {
+        totalFacturado += s.amount || 0;
+        totalCosto += m.cost;
+        hasData = true;
+      }
+    });
+    if (!hasData || totalFacturado === 0) return null;
+    return ((totalFacturado - totalCosto) / totalFacturado) * 100;
+  }
+
+  async function executeBackfill() {
+    if (!backfillState.salesToUpdate || backfillState.salesToUpdate.length === 0) return;
+
+    const btns = document.querySelectorAll('#backfillAnalysis button');
+    btns.forEach(b => b.disabled = true);
+
+    // Cache de márgenes promedio por mes para Estela
+    const teamAvgByMonth = {};
+
+    let updated = 0;
+    let errors = 0;
+    const salesCopy = state.sales.slice();
+
+    for (const update of backfillState.salesToUpdate) {
+      try {
+        const sale = salesCopy[update.saleIdx];
+        if (!sale) { errors++; continue; }
+
+        if (update.action === 'items') {
+          // Actualizar items del vendedor
+          const newItems = sale.items.map((it, idx) => {
+            const u = update.itemUpdates.find(x => x.itemIdx === idx);
+            if (u) {
+              return { ...it, cost: u.cost, catalogId: u.catalogId };
+            }
+            return it;
+          });
+          salesCopy[update.saleIdx] = { ...sale, items: newItems };
+          updated++;
+        } else if (update.action === 'estela-margin') {
+          // Estela: aplicar margen promedio del equipo del mismo mes
+          const mk = String(update.date).slice(0, 7);
+          if (teamAvgByMonth[mk] === undefined) {
+            teamAvgByMonth[mk] = calcTeamAvgMarginForMonth(mk);
+          }
+          const pct = teamAvgByMonth[mk];
+          if (pct !== null) {
+            const amount = update.amount || 0;
+            const estCost = amount * (1 - pct / 100);
+            salesCopy[update.saleIdx] = {
+              ...sale,
+              estelaBackfillCost: estCost,
+              estelaBackfillPct: pct,
+              // Crear un item sintético para que computeSaleMargin funcione
+              items: [{
+                name: 'Estela · aproximación',
+                qty: 1,
+                price: amount,
+                cost: estCost,
+                catalogId: null,
+                _synthetic: true
+              }]
+            };
+            updated++;
+          }
+        }
+      } catch (e) {
+        console.error('Error en backfill', e);
+        errors++;
+      }
+    }
+
+    // Guardar en Firebase
+    state.sales = salesCopy;
+    try {
+      await saveState();
+    } catch (e) {
+      alert('Error guardando en Firebase: ' + e.message);
+      btns.forEach(b => b.disabled = false);
+      return;
+    }
+
+    // Mostrar resultado
+    const noMatch = Object.values(backfillState.analysis.noMatchProducts).reduce((sum, c) => sum + c, 0);
+    document.getElementById('backfillResultContent').innerHTML = `
+      <div class="import-result-icon">${errors === 0 ? '✅' : '⚠️'}</div>
+      <div class="import-result-title">${errors === 0 ? 'Backfill completado' : 'Backfill con errores'}</div>
+      <div class="import-result-stats">
+        ✓ ${updated} ventas actualizadas<br>
+        ${errors > 0 ? `❌ ${errors} errores<br>` : ''}
+        ${noMatch > 0 ? `⚠ ${noMatch} items sin match · agregá los productos al catálogo y volvé a correr` : ''}
+      </div>
+    `;
+    document.getElementById('backfillAnalysis').style.display = 'none';
+    document.getElementById('backfillResult').style.display = 'block';
+
+    // Re-render para reflejar los cambios
+    if (typeof renderMarginAnalysis === 'function') renderMarginAnalysis();
+    if (typeof renderOpsTable === 'function') renderOpsTable(true);
+  }
+
+  window.openBackfillModal = openBackfillModal;
+  window.executeBackfill = executeBackfill;
 
   // Exponer al scope global
   window.setCatFilter = setCatFilter;
