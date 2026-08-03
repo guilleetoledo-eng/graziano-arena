@@ -3320,6 +3320,108 @@
     .cat-cell-action { grid-column: 4; grid-row: 2; }
     .cat-row.cat-header { display: none; }
   }
+
+  /* MODAL PRODUCTO */
+  .product-modal {
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .form-row-inline {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .form-row .req { color: var(--red); font-weight: 900; }
+  .form-help {
+    display: block; font-size: 10px;
+    color: var(--ink-3); font-family: 'JetBrains Mono', monospace;
+    margin-top: 4px; letter-spacing: 0.05em;
+  }
+  .prod-price-block {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--red);
+    padding: 14px 16px;
+    margin: 16px 0;
+  }
+  .prod-price-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: var(--red); font-weight: 700;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .prod-margin-preview {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    padding: 10px 14px; margin: 10px 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pmp-label { font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; }
+  .pmp-value { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .pmp-value.high { color: #1F8A3A; }
+  .pmp-value.med { color: #B45309; }
+  .pmp-value.low { color: #cc0000; }
+  .pmp-value.negative { color: #cc0000; background: #ffd4d4; padding: 2px 6px; }
+
+  .prod-history-block {
+    background: var(--bg-soft);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-left: 3px solid var(--ink-3);
+  }
+  .prod-history-header {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: var(--ink); font-weight: 700;
+    text-transform: uppercase; margin-bottom: 12px;
+    display: flex; justify-content: space-between;
+  }
+  .prod-history-count {
+    font-weight: 400; color: var(--ink-3);
+    letter-spacing: 0.05em;
+  }
+  .prod-history-list {
+    display: flex; flex-direction: column; gap: 6px;
+    max-height: 200px; overflow-y: auto;
+  }
+  .prod-hist-item {
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr auto;
+    gap: 10px; align-items: center;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .prod-hist-item.current {
+    border-color: var(--red);
+    background: rgba(255,59,31,0.05);
+  }
+  .prod-hist-date { color: var(--ink-3); font-weight: 700; }
+  .prod-hist-cost { color: var(--ink); }
+  .prod-hist-price { color: #1F8A3A; font-weight: 700; }
+  .prod-hist-current-badge {
+    background: var(--red); color: white;
+    font-size: 8px; padding: 2px 6px; border-radius: 2px;
+    letter-spacing: 0.1em; font-weight: 700;
+  }
+
+  .btn-danger {
+    background: transparent; color: #cc0000;
+    border: 1.5px solid #cc0000;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; cursor: pointer;
+    transition: all 0.15s;
+    margin-right: auto;
+  }
+  .btn-danger:hover {
+    background: #cc0000; color: white;
+  }
   /* PIZARRA DE CORONAS */
   .crown-board {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -5338,6 +5440,75 @@
       <div class="transfer-modal-actions">
         <button class="btn-secondary" onclick="closeEditDateModal()">CANCELAR</button>
         <button class="btn-primary" onclick="confirmEditDate()">✓ CONFIRMAR FECHA</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL PRODUCTO · crear / editar                                -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="productModalOverlay" onclick="closeProductModal()">
+    <div class="modal product-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background: #1F8A3A;" id="productModalBanner">▸ NUEVO PRODUCTO</div>
+      <button class="modal-close" onclick="closeProductModal()">✕</button>
+      <h2 id="productModalTitle">CARGAR PRODUCTO</h2>
+      <div class="modal-sub">— datos del producto y precio vigente —</div>
+
+      <div class="form-row">
+        <label>ID del producto <span class="req">*</span></label>
+        <input type="text" id="prodId" placeholder="P001" maxlength="8" style="text-transform:uppercase;">
+        <span class="form-help">formato P### · ej P001, P042</span>
+      </div>
+
+      <div class="form-row">
+        <label>Nombre <span class="req">*</span></label>
+        <input type="text" id="prodName" placeholder="Cemento Loma Negra 25kg">
+      </div>
+
+      <div class="prod-price-block">
+        <div class="prod-price-header">▸ PRECIO Y COSTO VIGENTE</div>
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label>Costo unitario <span class="req">*</span></label>
+            <input type="number" id="prodCost" placeholder="0" min="0" step="1" oninput="updateProdMarginPreview()">
+          </div>
+          <div class="form-row">
+            <label>Precio unitario <span class="req">*</span></label>
+            <input type="number" id="prodPrice" placeholder="0" min="0" step="1" oninput="updateProdMarginPreview()">
+          </div>
+        </div>
+        <div class="prod-margin-preview" id="prodMarginPreview">
+          <span class="pmp-label">Margen:</span>
+          <span class="pmp-value" id="prodMarginValue">$0 (0%)</span>
+        </div>
+        <div class="form-row">
+          <label>Vigente desde</label>
+          <input type="date" id="prodVigentFrom">
+          <span class="form-help">se guarda como nueva entrada en el historial</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>
+          <input type="checkbox" id="prodActive" checked>
+          Activo · aparece en dropdown de ventas
+        </label>
+      </div>
+
+      <div class="prod-history-block" id="prodHistoryBlock" style="display:none;">
+        <div class="prod-history-header">
+          ▸ HISTORIAL DE PRECIOS
+          <span class="prod-history-count" id="prodHistoryCount">0 cambios</span>
+        </div>
+        <div class="prod-history-list" id="prodHistoryList">
+          <!-- dinámico -->
+        </div>
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-danger" id="prodDeactivateBtn" onclick="toggleProductActive()" style="display:none;">🗑 DESACTIVAR</button>
+        <button class="btn-secondary" onclick="closeProductModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveProduct()">✓ GUARDAR</button>
       </div>
     </div>
   </div>
@@ -12263,12 +12434,257 @@
     renderCatalog();
   }
 
-  // Placeholders para sub-fases 1B y 1C · avisan que están pendientes
+  // ═══════════════════════════════════════════════════════════
+  // MODAL PRODUCTO · crear / editar / desactivar
+  // ═══════════════════════════════════════════════════════════
+  let productModalContext = { productId: null, isNew: true };
+
   function openProductModal(productId) {
-    alert('El modal de edición se implementa en la siguiente sub-fase.\n\n' +
-          'Por ahora podés ver los productos importados.\n\n' +
-          (productId ? `Producto seleccionado: ${productId}` : 'Nuevo producto'));
+    if (currentUser !== 'admin') {
+      alert('Solo el admin puede editar productos');
+      return;
+    }
+
+    const isNew = !productId;
+    productModalContext = { productId, isNew };
+
+    const banner = document.getElementById('productModalBanner');
+    const title = document.getElementById('productModalTitle');
+    const deactBtn = document.getElementById('prodDeactivateBtn');
+    const idInput = document.getElementById('prodId');
+    const nameInput = document.getElementById('prodName');
+    const costInput = document.getElementById('prodCost');
+    const priceInput = document.getElementById('prodPrice');
+    const dateInput = document.getElementById('prodVigentFrom');
+    const activeInput = document.getElementById('prodActive');
+    const histBlock = document.getElementById('prodHistoryBlock');
+
+    if (isNew) {
+      // NUEVO PRODUCTO
+      banner.textContent = '▸ NUEVO PRODUCTO';
+      banner.style.background = '#1F8A3A';
+      title.textContent = 'CARGAR PRODUCTO';
+      deactBtn.style.display = 'none';
+      idInput.value = suggestNextProductId();
+      idInput.disabled = false;
+      nameInput.value = '';
+      costInput.value = '';
+      priceInput.value = '';
+      dateInput.value = todayLocalISO();
+      activeInput.checked = true;
+      histBlock.style.display = 'none';
+    } else {
+      // EDITAR PRODUCTO
+      const p = state.products[productId];
+      if (!p) {
+        alert('Producto no encontrado: ' + productId);
+        return;
+      }
+      banner.textContent = '▸ EDITAR PRODUCTO';
+      banner.style.background = '#B45309';
+      title.textContent = p.name || productId;
+      deactBtn.style.display = 'inline-block';
+      deactBtn.textContent = p.active ? '⏸ DESACTIVAR' : '✓ REACTIVAR';
+      idInput.value = p.id;
+      idInput.disabled = true;
+      nameInput.value = p.name || '';
+
+      // Precargar con los valores VIGENTES hoy (no crea entrada nueva a menos que cambies)
+      const vigente = getVigenteActual(p);
+      costInput.value = vigente?.cost || '';
+      priceInput.value = vigente?.price || '';
+      dateInput.value = todayLocalISO();
+      activeInput.checked = !!p.active;
+
+      renderProductHistory(p);
+      histBlock.style.display = 'block';
+    }
+
+    updateProdMarginPreview();
+    document.getElementById('productModalOverlay').classList.add('open');
   }
+
+  function closeProductModal() {
+    document.getElementById('productModalOverlay').classList.remove('open');
+    productModalContext = { productId: null, isNew: true };
+  }
+
+  function suggestNextProductId() {
+    const existing = Object.keys(state.products || {});
+    let maxNum = 0;
+    existing.forEach(id => {
+      const m = id.match(/^P(\d+)$/i);
+      if (m) {
+        const n = parseInt(m[1]);
+        if (n > maxNum) maxNum = n;
+      }
+    });
+    return 'P' + String(maxNum + 1).padStart(3, '0');
+  }
+
+  function updateProdMarginPreview() {
+    const cost = parseFloat(document.getElementById('prodCost')?.value) || 0;
+    const price = parseFloat(document.getElementById('prodPrice')?.value) || 0;
+    const marginDollar = price - cost;
+    const marginPct = calcMarginPct(cost, price);
+    const cls = marginClass(marginPct);
+    const el = document.getElementById('prodMarginValue');
+    if (el) {
+      el.className = 'pmp-value ' + cls;
+      el.textContent = `${fmtMoney(marginDollar)} (${marginPct.toFixed(1)}%)`;
+    }
+  }
+
+  function renderProductHistory(product) {
+    const listEl = document.getElementById('prodHistoryList');
+    const countEl = document.getElementById('prodHistoryCount');
+    if (!listEl || !product.priceHistory) {
+      if (countEl) countEl.textContent = '0 cambios';
+      if (listEl) listEl.innerHTML = '<div style="color:var(--ink-3);font-style:italic;padding:8px;">Sin cambios registrados</div>';
+      return;
+    }
+    // Ordenar desc por fecha
+    const sorted = [...product.priceHistory].sort((a, b) => (b.from || '').localeCompare(a.from || ''));
+    if (countEl) countEl.textContent = `${sorted.length} cambio${sorted.length !== 1 ? 's' : ''}`;
+
+    const today = todayLocalISO();
+    const vigente = getVigenteActual(product);
+    listEl.innerHTML = sorted.map(entry => {
+      const isCurrent = vigente && entry.from === vigente.from;
+      const cls = isCurrent ? 'prod-hist-item current' : 'prod-hist-item';
+      return `
+        <div class="${cls}">
+          <div class="prod-hist-date">${entry.from || '—'}</div>
+          <div class="prod-hist-cost">costo ${fmtMoney(entry.cost || 0)}</div>
+          <div class="prod-hist-price">precio ${fmtMoney(entry.price || 0)}</div>
+          ${isCurrent ? '<span class="prod-hist-current-badge">VIGENTE</span>' : '<span></span>'}
+        </div>
+      `;
+    }).join('');
+  }
+
+  async function saveProduct() {
+    if (currentUser !== 'admin') return;
+
+    const idInput = document.getElementById('prodId');
+    const nameInput = document.getElementById('prodName');
+    const costInput = document.getElementById('prodCost');
+    const priceInput = document.getElementById('prodPrice');
+    const dateInput = document.getElementById('prodVigentFrom');
+    const activeInput = document.getElementById('prodActive');
+
+    // Validaciones
+    const id = String(idInput.value || '').trim().toUpperCase();
+    const name = String(nameInput.value || '').trim();
+    const cost = parseFloat(costInput.value);
+    const price = parseFloat(priceInput.value);
+    const from = dateInput.value;
+    const active = activeInput.checked;
+
+    if (!id || !/^P\d{3,4}$/i.test(id)) {
+      alert('ID inválido · debe tener formato P### o P#### (ej: P001, P042)');
+      return;
+    }
+    if (!name) return alert('El nombre es obligatorio');
+    if (isNaN(cost) || cost < 0) return alert('Costo inválido');
+    if (isNaN(price) || price < 0) return alert('Precio inválido');
+    if (price > 0 && cost >= price) {
+      if (!confirm(`⚠ El costo (${fmtMoney(cost)}) es mayor o igual al precio (${fmtMoney(price)}).\n\nMargen: negativo\n\n¿Guardar de todos modos?`)) return;
+    }
+    if (!from) return alert('La fecha de vigencia es obligatoria');
+
+    const { isNew, productId } = productModalContext;
+
+    // Si es nuevo, verificar que el ID no exista
+    if (isNew && state.products[id]) {
+      return alert('Ya existe un producto con ID ' + id);
+    }
+
+    // Preparar entrada del historial
+    const newEntry = {
+      from: from,
+      cost: cost,
+      price: price,
+      by: currentUser,
+      at: Date.now()
+    };
+
+    let productData;
+    if (isNew) {
+      productData = {
+        id: id,
+        name: name,
+        active: active,
+        priceHistory: [newEntry],
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+    } else {
+      const existing = state.products[productId];
+      const history = Array.isArray(existing.priceHistory) ? [...existing.priceHistory] : [];
+
+      // Chequear si la fecha ya existe · si sí, actualizar esa entrada; si no, agregar nueva
+      const existingIdx = history.findIndex(h => h.from === from);
+      if (existingIdx >= 0) {
+        // Ya hay entrada en esa fecha · si cambió algo, actualizarla
+        if (history[existingIdx].cost === cost && history[existingIdx].price === price) {
+          // Nada cambió excepto quizás el nombre / activo
+        } else {
+          history[existingIdx] = { ...history[existingIdx], ...newEntry };
+        }
+      } else {
+        // Nueva fecha · agregar solo si cambió el costo o precio del vigente hoy
+        const vigenteHoy = getVigenteActual(existing);
+        if (!vigenteHoy || vigenteHoy.cost !== cost || vigenteHoy.price !== price) {
+          history.push(newEntry);
+        }
+      }
+
+      productData = {
+        ...existing,
+        id: productId,
+        name: name,
+        active: active,
+        priceHistory: history,
+        updatedAt: Date.now()
+      };
+    }
+
+    try {
+      await db.ref('products/' + productData.id).set(productData);
+      showToast(`✓ Producto ${isNew ? 'creado' : 'actualizado'}: ${productData.id}`, 'success');
+      closeProductModal();
+      // El listener re-renderea automáticamente
+    } catch (e) {
+      alert('Error guardando producto: ' + e.message);
+      console.error('saveProduct error', e);
+    }
+  }
+
+  async function toggleProductActive() {
+    const { productId, isNew } = productModalContext;
+    if (isNew || !productId) return;
+    const p = state.products[productId];
+    if (!p) return;
+    const nuevoEstado = !p.active;
+    const accion = nuevoEstado ? 'REACTIVAR' : 'DESACTIVAR';
+    if (!confirm(`¿${accion} el producto ${p.id} · ${p.name}?\n\n` +
+                 (nuevoEstado ? 'Va a volver a aparecer en el dropdown de ventas.' :
+                                'Va a DESAPARECER del dropdown de ventas pero se preserva el histórico.'))) return;
+    try {
+      await db.ref('products/' + productId).update({ active: nuevoEstado, updatedAt: Date.now() });
+      showToast(`✓ Producto ${nuevoEstado ? 'reactivado' : 'desactivado'}`, 'success');
+      closeProductModal();
+    } catch (e) {
+      alert('Error: ' + e.message);
+    }
+  }
+
+  window.openProductModal = openProductModal;
+  window.closeProductModal = closeProductModal;
+  window.updateProdMarginPreview = updateProdMarginPreview;
+  window.saveProduct = saveProduct;
+  window.toggleProductActive = toggleProductActive;
 
   async function importFromSheets() {
     alert('El import desde el Sistema de Ventas ULTIMA se implementa en la siguiente sub-fase.\n\n' +
@@ -12279,7 +12695,6 @@
   window.setCatFilter = setCatFilter;
   window.filterCatalog = filterCatalog;
   window.catLoadMore = catLoadMore;
-  window.openProductModal = openProductModal;
   window.importFromSheets = importFromSheets;
 
   function renderOpsSalaries(mk) {
