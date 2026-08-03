@@ -3945,6 +3945,123 @@
     .ma-block-controls { width: 100%; }
     .ma-block-controls select { flex: 1; }
   }
+
+  /* Tabla vendedores · Sub-fase 5C */
+  .ma-sellers-block {
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    border-left: 3px solid var(--red);
+    padding: 20px 24px;
+  }
+  .ma-sellers-table-wrap { overflow-x: auto; }
+  .ma-sellers-table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .ma-sellers-table thead th {
+    text-align: left;
+    padding: 10px 12px;
+    background: var(--bg-soft);
+    border-bottom: 2px solid var(--ink);
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--ink-3); font-weight: 700;
+    text-transform: uppercase;
+  }
+  .ma-sellers-table thead th.num { text-align: right; }
+  .ma-sellers-table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .ma-sellers-table tbody tr:hover { background: var(--bg-soft); }
+  .ma-sellers-table td.num { text-align: right; }
+  .ma-sellers-table td.td-seller-name {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ma-sellers-table td.td-seller-name .seller-emoji {
+    font-size: 16px;
+  }
+  .ma-sellers-table td.td-seller-name .seller-role-badge {
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-3); font-weight: 400;
+    letter-spacing: 0.05em; text-transform: none;
+  }
+  .ma-sellers-table td.td-mpct { font-weight: 700; }
+  .ma-sellers-table td.td-mpct.high { color: #1a6b2f; }
+  .ma-sellers-table td.td-mpct.med { color: #856400; }
+  .ma-sellers-table td.td-mpct.low { color: #a12020; }
+  .ma-sellers-table td.td-mpct.negative {
+    color: white; background: #cc0000; padding: 4px 8px;
+  }
+  .ma-sellers-table td.td-trend {
+    font-size: 10px; text-align: right; font-weight: 700;
+  }
+  .ma-sellers-table td.td-trend.up { color: #1a6b2f; }
+  .ma-sellers-table td.td-trend.down { color: #a12020; }
+  .ma-sellers-table td.td-trend.neutral { color: var(--ink-3); }
+  .ma-sellers-table td.td-trend.new-item { color: #4285f4; }
+  .ma-sellers-table tfoot td {
+    padding: 12px;
+    background: var(--bg-soft);
+    border-top: 2px solid var(--ink);
+    font-weight: 900;
+    font-size: 12px;
+  }
+  .ma-sellers-table tfoot td.num { text-align: right; }
+  .ma-sellers-cards { display: none; }
+  @media (max-width: 700px) {
+    .ma-sellers-table-wrap { display: none; }
+    .ma-sellers-cards {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .ma-seller-card {
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--ink);
+      padding: 14px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+    }
+    .ma-seller-card.low { border-left-color: #a12020; }
+    .ma-seller-card.high { border-left-color: #1F8A3A; }
+    .ma-seller-card.negative { border-left-color: #cc0000; background: rgba(204,0,0,0.04); }
+    .ma-sc-name {
+      font-family: 'Anton', sans-serif; font-size: 18px;
+      color: var(--ink); letter-spacing: 0.02em;
+      margin-bottom: 2px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .ma-sc-role {
+      font-size: 9px; color: var(--ink-3);
+      letter-spacing: 0.05em; margin-bottom: 10px;
+    }
+    .ma-sc-row {
+      display: flex; justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+    .ma-sc-row:last-child { border-bottom: none; }
+    .ma-sc-label { color: var(--ink-3); }
+    .ma-sc-value { color: var(--ink); font-weight: 700; }
+    .ma-sc-value.high { color: #1a6b2f; }
+    .ma-sc-value.med { color: #856400; }
+    .ma-sc-value.low { color: #a12020; }
+    .ma-sc-value.negative { color: white; background: #cc0000; padding: 1px 6px; }
+    .ma-sc-trend {
+      display: block; margin-top: 6px; font-size: 10px;
+      padding: 4px 6px;
+      background: var(--bg-card);
+      text-align: center;
+    }
+    .ma-sc-trend.up { color: #1a6b2f; }
+    .ma-sc-trend.down { color: #a12020; }
+    .ma-sc-trend.new-item { color: #4285f4; }
+  }
   @media (max-width: 700px) {
     .ma-summary-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .ma-metric-value { font-size: 20px; }
@@ -5758,10 +5875,35 @@
           </div>
         </div>
 
-        <!-- Placeholder para tabla vendedores (siguiente sub-fase) -->
-        <div class="ma-placeholder" id="maPlaceholder" style="display:none;">
-          <div class="ma-placeholder-title">👥 Tabla por vendedor</div>
-          <div class="ma-placeholder-sub">Se implementa en la sub-fase 5C</div>
+        <!-- Tabla por vendedor -->
+        <div class="ma-sellers-block" id="maSellersBlock" style="display:none;">
+          <div class="ma-block-header">
+            <div>
+              ▸ POR VENDEDOR
+              <span class="ma-block-sub" id="maSellersSub">— todos los que vendieron este mes —</span>
+            </div>
+          </div>
+
+          <!-- Desktop: tabla -->
+          <div class="ma-sellers-table-wrap">
+            <table class="ma-sellers-table">
+              <thead>
+                <tr>
+                  <th>Vendedor</th>
+                  <th class="num">Ventas</th>
+                  <th class="num">Facturado</th>
+                  <th class="num">Costo</th>
+                  <th class="num">Margen $</th>
+                  <th class="num">Margen %</th>
+                  <th class="num">vs mes ant.</th>
+                </tr>
+              </thead>
+              <tbody id="maSellersTableBody"></tbody>
+            </table>
+          </div>
+
+          <!-- Mobile: cards -->
+          <div class="ma-sellers-cards" id="maSellersCards"></div>
         </div>
       </div>
     </div>
@@ -14064,12 +14206,16 @@
     const months = getMonthsWithSales();
     if (months.length === 0) {
       sel.innerHTML = '<option value="">— sin ventas —</option>';
+      maSelectedMonth = null;
       return;
     }
-    // Determinar valor actual
-    let currentValue = maSelectedMonth || sel.value;
+    // Determinar valor actual · PRIORIDAD:
+    // 1) Lo que el usuario acaba de elegir en el select (sel.value)
+    // 2) El estado maSelectedMonth (mes recordado)
+    // 3) El primer mes disponible (más reciente)
+    let currentValue = sel.value || maSelectedMonth;
     if (!currentValue || !months.includes(currentValue)) {
-      currentValue = months[0]; // el más reciente
+      currentValue = months[0]; // fallback: mes más reciente
     }
     maSelectedMonth = currentValue;
     sel.innerHTML = months.map(mk =>
@@ -14266,9 +14412,8 @@
     // Sub-fase 5B · renderizar tabla por producto (que también agrega sus alertas específicas)
     renderMaProducts(mk, prevMk);
 
-    // Placeholder solo para sub-fase 5C (vendedor)
-    const placeholder = document.getElementById('maPlaceholder');
-    if (placeholder) placeholder.style.display = 'block';
+    // Sub-fase 5C · renderizar tabla por vendedor
+    renderMaSellers(mk, prevMk);
   }
 
   window.renderMarginAnalysis = renderMarginAnalysis;
@@ -14593,6 +14738,189 @@
     renderMarginAnalysis(true);
   }
   window.maLoadMoreProducts = maLoadMoreProducts;
+
+  // ═══════════════════════════════════════════════════════════
+  // Sub-fase 5C: agregación y render por VENDEDOR
+  // ═══════════════════════════════════════════════════════════
+
+  // Agregar métricas por vendedor para un mes
+  // Retorna array de { key, name, emoji, role, saleCount, facturado, costo, marginDollar, marginPct, hasCostData, salesWithCost }
+  function aggregateSellerMetrics(mk, onlyApproved) {
+    const map = {};
+    const sales = (state.sales || []).filter(s => {
+      if (!s || !s.date) return false;
+      if (String(s.date).slice(0, 7) !== mk) return false;
+      if (onlyApproved && s.status !== 'approved') return false;
+      if (s.status === 'cancelled' || s.status === 'voided') return false;
+      return true;
+    });
+
+    sales.forEach(s => {
+      const key = s.seller || 'sin-vendedor';
+      if (!map[key]) {
+        map[key] = {
+          key,
+          saleCount: 0,
+          facturado: 0,
+          costo: 0,
+          salesWithCost: 0,
+          hasCostData: false
+        };
+      }
+      const agg = map[key];
+      agg.saleCount++;
+      agg.facturado += (s.amount || 0);
+      const m = computeSaleMargin(s);
+      if (m.hasCostData) {
+        agg.costo += m.cost;
+        agg.salesWithCost++;
+        agg.hasCostData = true;
+      }
+    });
+
+    // Calcular márgenes + info del seller
+    Object.values(map).forEach(a => {
+      a.marginDollar = a.facturado - a.costo;
+      a.marginPct = a.facturado > 0 ? (a.marginDollar / a.facturado) * 100 : 0;
+      // Meta del vendedor (nombre, emoji, rol)
+      const meta = SELLER_META[a.key] || null;
+      if (a.key === 'estela') {
+        a.name = 'ESTELA';
+        a.emoji = '🏪';
+        a.role = 'La Dueña';
+      } else if (meta) {
+        a.name = meta.name || a.key.toUpperCase();
+        a.emoji = meta.emoji || '👤';
+        a.role = meta.title || '';
+      } else {
+        // Fallback · buscar en state.users si es admin/desconocido
+        const userObj = (state.users && Object.values(state.users).find(u => u.key === a.key));
+        a.name = (userObj?.name || a.key).toUpperCase();
+        a.emoji = userObj?.emoji || '👤';
+        a.role = userObj?.title || '';
+      }
+    });
+
+    return Object.values(map);
+  }
+
+  // Renderizar tabla y cards de vendedores
+  function renderMaSellers(mk, prevMk) {
+    const block = document.getElementById('maSellersBlock');
+    if (!block) return;
+
+    const cur = aggregateSellerMetrics(mk, MA_ONLY_APPROVED);
+    if (cur.length === 0) {
+      block.style.display = 'none';
+      return;
+    }
+    block.style.display = 'block';
+
+    const prev = prevMk ? aggregateSellerMetrics(prevMk, MA_ONLY_APPROVED) : [];
+    const prevByKey = {};
+    prev.forEach(p => { prevByKey[p.key] = p; });
+
+    // Ordenar por facturado desc
+    const sorted = cur.slice().sort((a, b) => b.facturado - a.facturado);
+
+    // Actualizar sub-label
+    const subEl = document.getElementById('maSellersSub');
+    if (subEl) {
+      const total = sorted.length;
+      const withCost = sorted.filter(s => s.hasCostData).length;
+      subEl.textContent = `— ${total} vendedores · ${withCost} con costo cargado —`;
+    }
+
+    // Totales para el footer
+    const totFacturado = sorted.reduce((a, s) => a + s.facturado, 0);
+    const totCosto = sorted.reduce((a, s) => a + s.costo, 0);
+    const totMarginDollar = totFacturado - totCosto;
+    const totMarginPct = totFacturado > 0 ? (totMarginDollar / totFacturado) * 100 : 0;
+    const totCount = sorted.reduce((a, s) => a + s.saleCount, 0);
+
+    // Renderizar tabla desktop
+    const tbody = document.getElementById('maSellersTableBody');
+    if (tbody) {
+      const rowsHtml = sorted.map(s => {
+        const prevS = prevByKey[s.key];
+        const trend = computeTrendCell(s, prevS);
+        const marginClsName = s.hasCostData ? marginClass(s.marginPct) : 'no-cost';
+        const marginPctText = s.hasCostData ? s.marginPct.toFixed(1) + '%' : '—';
+        const costoText = s.hasCostData ? fmtMoney(s.costo) : '—';
+        const marginDollarText = s.hasCostData ? fmtMoney(s.marginDollar) : '—';
+        return `
+          <tr>
+            <td class="td-seller-name">
+              <span class="seller-emoji">${s.emoji || '👤'}</span>
+              <span>${escapeHtml(s.name)}</span>
+              ${s.role ? `<span class="seller-role-badge">· ${escapeHtml(s.role)}</span>` : ''}
+            </td>
+            <td class="num">${s.saleCount}</td>
+            <td class="num">${fmtMoney(s.facturado)}</td>
+            <td class="num">${costoText}</td>
+            <td class="num">${marginDollarText}</td>
+            <td class="num td-mpct ${marginClsName}">${marginPctText}</td>
+            <td class="num td-trend ${trend.cls}">${trend.text}</td>
+          </tr>
+        `;
+      }).join('');
+      // Footer con totales
+      const globalMarginCls = totCosto > 0 ? marginClass(totMarginPct) : '';
+      const footerHtml = `
+        <tr>
+          <td>TOTAL EQUIPO</td>
+          <td class="num">${totCount}</td>
+          <td class="num">${fmtMoney(totFacturado)}</td>
+          <td class="num">${totCosto > 0 ? fmtMoney(totCosto) : '—'}</td>
+          <td class="num">${totCosto > 0 ? fmtMoney(totMarginDollar) : '—'}</td>
+          <td class="num td-mpct ${globalMarginCls}">${totCosto > 0 ? totMarginPct.toFixed(1) + '%' : '—'}</td>
+          <td class="num">—</td>
+        </tr>
+      `;
+      tbody.innerHTML = rowsHtml + `<tr class="ma-sellers-footer-inline">${footerHtml}</tr>`.replace('<tr class="ma-sellers-footer-inline"><tr>', '<tr class="ma-sellers-footer-inline">');
+      // Ojo · el reemplazo raro de arriba es solo por si acaso. Mejor lo hago simple:
+      tbody.innerHTML = rowsHtml + `
+        <tr class="ma-sellers-footer-row" style="background:var(--bg-soft);font-weight:900;border-top:2px solid var(--ink);">
+          <td>TOTAL EQUIPO</td>
+          <td class="num">${totCount}</td>
+          <td class="num">${fmtMoney(totFacturado)}</td>
+          <td class="num">${totCosto > 0 ? fmtMoney(totCosto) : '—'}</td>
+          <td class="num">${totCosto > 0 ? fmtMoney(totMarginDollar) : '—'}</td>
+          <td class="num td-mpct ${globalMarginCls}">${totCosto > 0 ? totMarginPct.toFixed(1) + '%' : '—'}</td>
+          <td class="num">—</td>
+        </tr>
+      `;
+    }
+
+    // Renderizar cards mobile
+    const cards = document.getElementById('maSellersCards');
+    if (cards) {
+      cards.innerHTML = sorted.map(s => {
+        const prevS = prevByKey[s.key];
+        const trend = computeTrendCell(s, prevS);
+        const marginClsName = s.hasCostData ? marginClass(s.marginPct) : '';
+        const cardCls = 'ma-seller-card ' + marginClsName;
+        const marginPctText = s.hasCostData ? s.marginPct.toFixed(1) + '%' : 'sin costo';
+        const costoText = s.hasCostData ? fmtMoney(s.costo) : '—';
+        const marginDollarText = s.hasCostData ? fmtMoney(s.marginDollar) : '—';
+        return `
+          <div class="${cardCls}">
+            <div class="ma-sc-name">
+              <span>${s.emoji || '👤'}</span>
+              <span>${escapeHtml(s.name)}</span>
+            </div>
+            ${s.role ? `<div class="ma-sc-role">${escapeHtml(s.role)}</div>` : ''}
+            <div class="ma-sc-row"><span class="ma-sc-label">Ventas</span><span class="ma-sc-value">${s.saleCount}</span></div>
+            <div class="ma-sc-row"><span class="ma-sc-label">Facturado</span><span class="ma-sc-value">${fmtMoney(s.facturado)}</span></div>
+            <div class="ma-sc-row"><span class="ma-sc-label">Costo</span><span class="ma-sc-value">${costoText}</span></div>
+            <div class="ma-sc-row"><span class="ma-sc-label">Margen $</span><span class="ma-sc-value">${marginDollarText}</span></div>
+            <div class="ma-sc-row"><span class="ma-sc-label">Margen %</span><span class="ma-sc-value ${marginClsName}">${marginPctText}</span></div>
+            ${trend.text !== '—' ? `<div class="ma-sc-trend ${trend.cls}">${trend.text}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+  }
 
   function renderOpsSalaries(mk) {
     // Llamamos también al render de la sección Cobros y Adelantos
