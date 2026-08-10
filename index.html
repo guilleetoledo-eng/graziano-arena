@@ -139,6 +139,272 @@
   .login-btn.primary .role { color: var(--ink-5); }
   .login-btn.primary:hover .role { color: var(--red-soft); }
 
+  /* Botón lista de precios · destacado */
+  .login-pricelist-btn {
+    margin-top: 20px !important;
+    width: 100%;
+    background: transparent !important;
+    border: 2px solid var(--red) !important;
+    color: var(--red) !important;
+    padding: 20px !important;
+    font-size: 22px !important;
+  }
+  .login-pricelist-btn .role {
+    color: var(--red) !important;
+    opacity: 0.7;
+  }
+  .login-pricelist-btn:hover {
+    background: var(--red) !important;
+    color: white !important;
+  }
+  .login-pricelist-btn:hover .role {
+    color: white !important; opacity: 0.9;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     VISTA LISTA DE PRECIOS
+     ═══════════════════════════════════════════════════════════ */
+  .pricelist-view {
+    background: var(--bg-page);
+    min-height: 100vh;
+    padding: 0;
+    color: var(--ink);
+  }
+  .pl-header {
+    background: var(--ink);
+    color: white;
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 16px;
+    position: sticky; top: 0; z-index: 10;
+    border-bottom: 3px solid var(--red);
+  }
+  .pl-back-btn {
+    background: transparent;
+    border: 1.5px solid white;
+    color: white;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: all 0.15s;
+  }
+  .pl-back-btn:hover {
+    background: white; color: var(--ink);
+  }
+  .pl-title-block {
+    flex: 1;
+  }
+  .pl-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  .pl-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  .pl-toolbar {
+    padding: 14px 20px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 10px;
+    position: sticky; top: 76px; z-index: 9;
+  }
+  #plSearch {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--line);
+    background: var(--bg-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  #plSearch:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+  .pl-filters {
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .pl-filter-btn {
+    padding: 6px 10px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .pl-filter-btn:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .pl-filter-btn.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .pl-filter-btn.stock.active { background: #1F8A3A; border-color: #1F8A3A; }
+  .pl-filter-btn.pasamanos.active { background: #E5A800; border-color: #E5A800; color: var(--ink); }
+  .pl-filter-btn.encargue.active { background: #4285f4; border-color: #4285f4; }
+
+  .pl-container {
+    padding: 16px 20px 80px;
+    max-width: 900px; margin: 0 auto;
+  }
+  .pl-category-block {
+    margin-bottom: 24px;
+  }
+  .pl-category-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    color: var(--red);
+    padding: 12px 0 8px;
+    border-bottom: 2px solid var(--red);
+    margin-bottom: 12px;
+    display: flex; align-items: baseline; gap: 10px;
+    text-transform: uppercase;
+  }
+  .pl-category-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    font-weight: 400;
+  }
+  .pl-product-list {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .pl-product-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--line);
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .pl-product-card.stock { border-left-color: #1F8A3A; }
+  .pl-product-card.pasamanos { border-left-color: #E5A800; }
+  .pl-product-card.encargue { border-left-color: #4285f4; }
+  .pl-product-header {
+    display: flex; justify-content: space-between;
+    align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .pl-product-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    flex: 1;
+  }
+  .pl-subcat-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    background: rgba(66,133,244,0.1);
+    color: #4285f4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-left: 6px;
+    border: 1px solid rgba(66,133,244,0.3);
+  }
+  .pl-product-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .pl-product-meta .pl-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+    margin-right: 4px;
+    font-weight: 700;
+  }
+  .pl-product-meta .pl-badge.stock { color: #1F8A3A; background: rgba(31,138,58,0.08); }
+  .pl-product-meta .pl-badge.pasamanos { color: #B45309; background: rgba(229,168,0,0.12); }
+  .pl-product-meta .pl-badge.encargue { color: #4285f4; background: rgba(66,133,244,0.08); }
+  .pl-product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    padding: 6px 0;
+  }
+  .pl-product-cell {
+    background: var(--bg-soft);
+    padding: 6px 8px;
+    display: flex; flex-direction: column; gap: 2px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .pl-cell-label {
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .pl-cell-value {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .pl-cell-value.price { color: #1F8A3A; }
+  .pl-cell-value.cost { color: #B45309; }
+  .pl-cell-value.margin.high { color: #1a6b2f; }
+  .pl-cell-value.margin.med { color: #856400; }
+  .pl-cell-value.margin.low { color: #a12020; }
+  .pl-cell-value.margin.negative { color: white; background: #cc0000; padding: 2px 4px; }
+  .pl-cell-value.minbonif { color: #4285f4; }
+  .pl-cell-value.dim { color: var(--ink-3); font-weight: 400; font-size: 11px; }
+  .pl-product-updated {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    text-align: right;
+  }
+  .pl-footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--ink);
+    color: white;
+    padding: 10px 20px;
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .pl-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ink-3);
+    font-style: italic;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  @media (max-width: 700px) {
+    .pl-product-grid { grid-template-columns: repeat(2, 1fr); }
+    .pl-title { font-size: 22px; }
+    .pl-back-btn { padding: 6px 10px; font-size: 10px; }
+  }
+
   .pin-screen {
     display: none; flex-direction: column; align-items: center; max-width: 380px; margin: 0 auto;
   }
@@ -3632,6 +3898,24 @@
     padding: 14px 16px;
     margin: 16px 0;
   }
+  .prod-categ-block {
+    background: rgba(66,133,244,0.06);
+    border-left: 3px solid #4285f4;
+    padding: 14px 16px;
+    margin: 16px 0;
+  }
+  .prod-categ-block .prod-price-header {
+    color: #4285f4;
+  }
+  .prod-categ-block select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1.5px solid var(--line);
+    background: var(--bg-card);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink);
+  }
   .prod-price-header {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px; letter-spacing: 0.15em;
@@ -3883,6 +4167,214 @@
   .cat-btn-backfill:hover {
     background: #B45309; color: white;
   }
+
+  /* ═══════════════════════════════════════════════════════════
+     TAXONOMÍA · Categorías + Tipos Entrega management
+     ═══════════════════════════════════════════════════════════ */
+  .taxonomy-block {
+    background: rgba(66,133,244,0.04);
+    border-left: 3px solid #4285f4;
+    margin: 12px 0;
+  }
+  .taxonomy-header {
+    padding: 12px 16px;
+    display: flex; justify-content: space-between; align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    font-weight: 700;
+    color: #4285f4;
+    text-transform: uppercase;
+  }
+  .taxonomy-header:hover { background: rgba(66,133,244,0.08); }
+  .tx-header-toggle { font-size: 14px; }
+  .taxonomy-content {
+    padding: 12px 16px 16px;
+    border-top: 1px dashed #4285f4;
+  }
+  .tx-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .tx-column {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .tx-col-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+  }
+  .tx-btn-new {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .tx-btn-new:hover { background: #cc0000; }
+  .tx-list {
+    display: flex; flex-direction: column; gap: 4px;
+    max-height: 320px; overflow-y: auto;
+  }
+  .tx-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .tx-item-info { display: flex; flex-direction: column; gap: 2px; }
+  .tx-item-name { font-weight: 700; color: var(--ink); }
+  .tx-item-meta {
+    font-size: 9.5px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+  }
+  .tx-item-sub {
+    font-size: 9.5px;
+    color: #4285f4;
+    letter-spacing: 0.03em;
+    margin-top: 2px;
+  }
+  .tx-item-actions { display: flex; gap: 4px; }
+  .tx-item-btn {
+    background: transparent;
+    border: 1.5px solid var(--line);
+    padding: 3px 7px;
+    cursor: pointer;
+    font-size: 11px;
+    color: var(--ink);
+    transition: all 0.15s;
+  }
+  .tx-item-btn:hover {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+  .tx-item-btn.del {
+    color: #cc0000;
+    border-color: #cc0000;
+  }
+  .tx-item-btn.del:hover {
+    background: #cc0000; color: white;
+  }
+  .tx-empty {
+    padding: 12px;
+    text-align: center;
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 10.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* MODAL categoría */
+  .category-modal { max-width: 560px; max-height: 90vh; overflow-y: auto; }
+  .tx-subcats-block {
+    background: var(--bg-soft);
+    border-left: 3px solid #4285f4;
+    padding: 12px 14px;
+    margin: 14px 0;
+  }
+  .tx-subcats-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #4285f4;
+    text-transform: uppercase;
+  }
+  .tx-subcats-list {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .tx-subcat-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 8px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+  }
+  .tx-subcat-item input {
+    padding: 5px 8px;
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    width: 100%;
+  }
+  .tx-subcat-empty {
+    padding: 8px;
+    text-align: center;
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 10.5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* MODAL tipo entrega */
+  .entry-type-modal { max-width: 500px; }
+  .et-preview {
+    padding: 12px 14px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--line);
+    display: flex; align-items: center; gap: 12px;
+    margin: 14px 0;
+  }
+  .et-preview-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .et-preview-badge {
+    padding: 6px 10px;
+    background: var(--bg-card);
+    border: 1.5px solid;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  input[type="color"] {
+    height: 38px; padding: 4px;
+    border: 1.5px solid var(--line);
+    background: var(--bg-card);
+    cursor: pointer;
+    width: 100%;
+  }
+  @media (max-width: 700px) {
+    .tx-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Sub-categoría en modal producto */
+  .prod-categ-block .form-row.subcat-row {
+    display: none;
+  }
+  .prod-categ-block .form-row.subcat-row.visible {
+    display: block;
+  }
+
 
   /* MODAL BACKFILL */
   .backfill-modal { max-width: 640px; max-height: 90vh; overflow-y: auto; }
@@ -5182,6 +5674,12 @@
           <span class="role">Guille / Cami — control total</span>
         </button>
       </div>
+
+      <!-- Botón lista de precios · sin login -->
+      <button class="login-btn login-pricelist-btn" onclick="openPriceListView()">
+        📋 LISTA DE PRECIOS
+        <span class="role">Consultar precios · sin login</span>
+      </button>
     </div>
 
     <div class="pin-screen" id="pinScreen">
@@ -5190,6 +5688,33 @@
       <div class="pin-sub" id="pinSub">— INGRESÁ TU PIN —</div>
       <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" class="pin-input" id="pinInput" autocomplete="off">
       <div class="pin-hint" id="pinHint">4 dígitos</div>
+    </div>
+
+    <!-- VISTA LISTA DE PRECIOS · sin login requerido -->
+    <div class="pricelist-view" id="pricelistView" style="display:none;">
+      <div class="pl-header">
+        <button class="pl-back-btn" onclick="closePriceListView()">← VOLVER AL LOGIN</button>
+        <div class="pl-title-block">
+          <div class="pl-title">📋 LISTA DE PRECIOS</div>
+          <div class="pl-sub">Graziano Materiales · uso interno</div>
+        </div>
+      </div>
+
+      <div class="pl-toolbar">
+        <input type="text" id="plSearch" placeholder="🔍 buscar producto..." oninput="renderPriceList()">
+        <div class="pl-filters" id="plFilters">
+          <!-- filtros dinámicos -->
+        </div>
+      </div>
+
+      <div class="pl-container" id="plContainer">
+        <!-- render dinámico -->
+      </div>
+
+      <div class="pl-footer">
+        <span>Actualizado: <span id="plLastUpdate">—</span></span>
+        <span class="pl-count" id="plCount">0 productos</span>
+      </div>
     </div>
 
   </div>
@@ -6035,6 +6560,37 @@
           <button class="cat-btn-primary" onclick="openProductModal()">+ NUEVO PRODUCTO</button>
           <button class="cat-btn-secondary" onclick="importFromSheets()" title="Importar del Sistema de Ventas ULTIMA">📥 IMPORTAR SHEETS</button>
           <button class="cat-btn-backfill" onclick="openBackfillModal()" title="Completar costos en ventas viejas usando el catálogo">🔧 BACKFILL COSTOS</button>
+          <button class="cat-btn-secondary" onclick="openPriceListView()" title="Ver lista de precios interna">📋 VER LISTA DE PRECIOS</button>
+        </div>
+      </div>
+
+      <!-- TAXONOMÍA · Categorías + Tipos Entrega (colapsable) -->
+      <div class="taxonomy-block">
+        <div class="taxonomy-header" onclick="toggleTaxonomy()">
+          <span class="tx-header-title">▸ CATEGORÍAS · SUB-CATEGORÍAS · TIPOS ENTREGA</span>
+          <span class="tx-header-toggle" id="taxonomyToggleIcon">▾</span>
+        </div>
+        <div class="taxonomy-content" id="taxonomyContent" style="display:none;">
+          <div class="tx-grid">
+            <div class="tx-column">
+              <div class="tx-col-header">
+                <span>📂 CATEGORÍAS</span>
+                <button class="tx-btn-new" onclick="openCategoryModal()">+ NUEVA</button>
+              </div>
+              <div class="tx-list" id="taxonomyCategories">
+                <!-- render dinámico -->
+              </div>
+            </div>
+            <div class="tx-column">
+              <div class="tx-col-header">
+                <span>🚚 TIPOS ENTREGA</span>
+                <button class="tx-btn-new" onclick="openEntryTypeModal()">+ NUEVO</button>
+              </div>
+              <div class="tx-list" id="taxonomyEntryTypes">
+                <!-- render dinámico -->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -6795,7 +7351,53 @@
 
       <div class="form-row">
         <label>Nombre <span class="req">*</span></label>
-        <input type="text" id="prodName" placeholder="Cemento Loma Negra 25kg">
+        <input type="text" id="prodName" placeholder="Cemento Loma Negra 25kg" oninput="onProdNameChange()">
+      </div>
+
+      <div class="prod-categ-block">
+        <div class="prod-price-header">▸ CATEGORIZACIÓN</div>
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label>Categoría</label>
+            <select id="prodCategory" onchange="onProdCategoryChange()">
+              <!-- opciones dinámicas -->
+            </select>
+            <span class="form-help">auto-detectada por nombre · editable</span>
+          </div>
+          <div class="form-row">
+            <label>Unidad</label>
+            <select id="prodUnit">
+              <option value="">— sin definir —</option>
+              <option value="Bolsa">Bolsa</option>
+              <option value="Barra">Barra</option>
+              <option value="Kilo">Kilo</option>
+              <option value="Metro">Metro</option>
+              <option value="Panel">Panel</option>
+              <option value="Pallet">Pallet</option>
+              <option value="Unidad">Unidad</option>
+              <option value="Bolsón">Bolsón</option>
+              <option value="Caño">Caño</option>
+              <option value="m³">m³</option>
+              <option value="Litro">Litro</option>
+              <option value="Camionada">Camionada</option>
+              <option value="KG">KG</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row subcat-row" id="prodSubCatRow">
+          <label>Sub-categoría</label>
+          <select id="prodSubCategory">
+            <option value="">— sin sub-categoría —</option>
+          </select>
+          <span class="form-help">opcional · aparece solo si la categoría tiene subs</span>
+        </div>
+        <div class="form-row">
+          <label>Tipo · Entrega</label>
+          <select id="prodEntryType">
+            <option value="">— sin definir —</option>
+            <!-- opciones dinámicas -->
+          </select>
+        </div>
       </div>
 
       <div class="prod-price-block">
@@ -6813,6 +7415,11 @@
         <div class="prod-margin-preview" id="prodMarginPreview">
           <span class="pmp-label">Margen:</span>
           <span class="pmp-value" id="prodMarginValue">$0 (0%)</span>
+        </div>
+        <div class="form-row">
+          <label>Precio mín. bonif.</label>
+          <input type="number" id="prodMinBonif" placeholder="0" min="0" step="1">
+          <span class="form-help">para dar descuentos (opcional)</span>
         </div>
         <div class="form-row">
           <label>Vigente desde</label>
@@ -6885,6 +7492,15 @@
             </div>
             <input type="file" id="catFileInput" accept=".csv" onchange="handleCatFile(this)">
             <span class="form-help">si no lo subís, todos se importan como ACTIVOS</span>
+          </div>
+
+          <div class="import-upload-block">
+            <div class="import-upload-label">
+              <strong>📋 Lista de Precios (CSV) · opcional</strong>
+              <span class="import-upload-status" id="listaFileStatus">sin cargar</span>
+            </div>
+            <input type="file" id="listaFileInput" accept=".csv" onchange="handleListaFile(this)">
+            <span class="form-help">agrega Unidad, Tipo·Entrega, Precio mín. bonif. y Categoría (secciones negras del sheets)</span>
           </div>
         </div>
 
@@ -7120,6 +7736,83 @@
       <div class="transfer-modal-actions">
         <button class="btn-secondary" onclick="closeCancelSaleModal()">CANCELAR ACCIÓN</button>
         <button class="btn-primary" onclick="confirmCancelSale()">✓ CONFIRMAR CANCELACIÓN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL CATEGORÍA · crear/editar con sub-categorías              -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="categoryModalOverlay" onclick="closeCategoryModal()">
+    <div class="modal category-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background:#4285f4;" id="categoryModalBanner">▸ NUEVA CATEGORÍA</div>
+      <button class="modal-close" onclick="closeCategoryModal()">✕</button>
+      <h2 id="categoryModalTitle">CATEGORÍA</h2>
+      <div class="modal-sub">— nombre y sub-categorías —</div>
+
+      <div class="form-row">
+        <label>Nombre <span class="req">*</span></label>
+        <input type="text" id="catNameInput" placeholder="Ej: Cementos y Cal">
+      </div>
+
+      <div class="tx-subcats-block">
+        <div class="tx-subcats-header">
+          <span>▸ SUB-CATEGORÍAS (opcional)</span>
+          <button class="tx-btn-new" onclick="addSubCategory()">+ AGREGAR</button>
+        </div>
+        <div id="catSubcatList" class="tx-subcats-list">
+          <!-- render dinámico -->
+        </div>
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-danger" id="catDeleteBtn" onclick="confirmDeleteCategory()" style="display:none;">🗑 ELIMINAR</button>
+        <button class="btn-secondary" onclick="closeCategoryModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveCategory()">✓ GUARDAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL TIPO ENTREGA · crear/editar                              -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="entryTypeModalOverlay" onclick="closeEntryTypeModal()">
+    <div class="modal entry-type-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background:#1F8A3A;" id="entryTypeModalBanner">▸ NUEVO TIPO ENTREGA</div>
+      <button class="modal-close" onclick="closeEntryTypeModal()">✕</button>
+      <h2 id="entryTypeModalTitle">TIPO ENTREGA</h2>
+      <div class="modal-sub">— nombre, emoji, color, tiempo estimado —</div>
+
+      <div class="form-row">
+        <label>Nombre <span class="req">*</span></label>
+        <input type="text" id="etNameInput" placeholder="Ej: STOCK, PASAMANOS, ENCARGUE" style="text-transform:uppercase;">
+      </div>
+
+      <div class="form-row-inline">
+        <div class="form-row">
+          <label>Emoji</label>
+          <input type="text" id="etEmojiInput" placeholder="🟢" maxlength="4">
+        </div>
+        <div class="form-row">
+          <label>Color</label>
+          <input type="color" id="etColorInput" value="#1F8A3A">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Descripción / tiempo estimado</label>
+        <input type="text" id="etHintInput" placeholder="Ej: Inmediato · 24hs · 2-3 días">
+      </div>
+
+      <div class="et-preview" id="etPreview">
+        <span class="et-preview-label">Vista previa:</span>
+        <span class="et-preview-badge" id="etPreviewBadge">🟢 STOCK</span>
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-danger" id="etDeleteBtn" onclick="confirmDeleteEntryType()" style="display:none;">🗑 ELIMINAR</button>
+        <button class="btn-secondary" onclick="closeEntryTypeModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveEntryType()">✓ GUARDAR</button>
       </div>
     </div>
   </div>
@@ -7775,7 +8468,9 @@
     sales: [], // {id, seller, amount, date, status: 'pending'|'approved', submittedBy, submittedAt}
     hofPrev: { name: 'LAUTI', amount: 10000000, label: 'Abril 2026' },
     weeklyPayments: {}, // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, bauti: {...} } }
-    products: {} // { P001: {id, name, active, priceHistory: [{from, cost, price, by}], updatedAt} }
+    products: {}, // { P001: {id, name, active, priceHistory: [...], category, subCategory, unit, entryType, minBonif, ...} }
+    categories: {}, // { C001: {id, name, subCategories: {S001: {id, name}}, order, createdAt} }
+    entryTypes: {} // { stock: {id, name, hint, emoji, color, order, createdAt} }
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
@@ -7903,6 +8598,71 @@
         estelaFlowMode = mode;
       }
     }, (err) => { console.warn('Firebase estela pref read error', err); });
+
+    // Listener CATEGORÍAS · CRUD dinámico
+    db.ref('categories').on('value', (snapshot) => {
+      const data = snapshot.val();
+      state.categories = (data && typeof data === 'object') ? data : {};
+      // Seed inicial si Firebase está vacío
+      if (Object.keys(state.categories).length === 0) {
+        seedInitialCategories();
+      }
+      if (currentUser === 'admin' && typeof renderTaxonomyManager === 'function') {
+        renderTaxonomyManager();
+      }
+    }, (err) => { console.warn('Firebase categories read error', err); });
+
+    // Listener TIPOS ENTREGA
+    db.ref('entryTypes').on('value', (snapshot) => {
+      const data = snapshot.val();
+      state.entryTypes = (data && typeof data === 'object') ? data : {};
+      // Seed inicial si Firebase está vacío
+      if (Object.keys(state.entryTypes).length === 0) {
+        seedInitialEntryTypes();
+      }
+      if (currentUser === 'admin' && typeof renderTaxonomyManager === 'function') {
+        renderTaxonomyManager();
+      }
+    }, (err) => { console.warn('Firebase entryTypes read error', err); });
+  }
+
+  // Seed inicial de categorías desde el diccionario hardcodeado
+  async function seedInitialCategories() {
+    const seedCats = {};
+    // Las 14 categorías del CATEGORY_KEYWORDS + Otros
+    const cats = ['Cementos y Cal', 'Pegamentos', 'Revoques y Pastinas', 'Áridos', 'Ladrillos',
+                  'Hierros y Mallas', 'Herrajes', 'Caños y Sanitarios', 'Aislantes',
+                  'Aberturas', 'Estructurales', 'Chapas y Perfiles', 'Pisos y Solados', 'Otros'];
+    cats.forEach((name, idx) => {
+      const id = 'C' + String(idx + 1).padStart(3, '0');
+      seedCats[id] = {
+        id, name,
+        subCategories: {},
+        order: idx,
+        createdAt: Date.now()
+      };
+    });
+    try {
+      await db.ref('categories').set(seedCats);
+      console.log('Seed inicial de categorías completado · 14 categorías');
+    } catch (e) {
+      console.warn('No se pudo hacer seed de categorías', e);
+    }
+  }
+
+  // Seed inicial de tipos entrega
+  async function seedInitialEntryTypes() {
+    const seed = {
+      stock: { id: 'stock', name: 'STOCK', hint: 'Inmediato', emoji: '🟢', color: '#1F8A3A', order: 1, createdAt: Date.now() },
+      pasamanos: { id: 'pasamanos', name: 'PASAMANOS', hint: '24hs', emoji: '🟡', color: '#E5A800', order: 2, createdAt: Date.now() },
+      encargue: { id: 'encargue', name: 'ENCARGUE', hint: '2-3 días', emoji: '🔵', color: '#4285f4', order: 3, createdAt: Date.now() }
+    };
+    try {
+      await db.ref('entryTypes').set(seed);
+      console.log('Seed inicial de tipos entrega completado');
+    } catch (e) {
+      console.warn('No se pudo hacer seed de tipos entrega', e);
+    }
   }
 
   // ===== HELPERS =====
@@ -8021,6 +8781,192 @@
     pinTargetUser = null;
     // Re-render de botones dinámicos (por si hubo cambios en usuarios)
     renderLoginScreen();
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // VISTA LISTA DE PRECIOS · sin login requerido
+  // ═══════════════════════════════════════════════════════════
+  let plCurrentFilter = 'all';
+
+  function openPriceListView() {
+    const login = document.getElementById('selectScreen');
+    const view = document.getElementById('pricelistView');
+    if (login) login.style.display = 'none';
+    if (view) view.style.display = 'block';
+    document.getElementById('plSearch').value = '';
+    plCurrentFilter = 'all';
+    // Poblar filtros dinámicos
+    const filtersEl = document.getElementById('plFilters');
+    if (filtersEl) {
+      const types = Object.values(state.entryTypes || {})
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      let html = `<button class="pl-filter-btn active" data-filter="all" onclick="setPlFilter('all')">TODOS</button>`;
+      types.forEach(t => {
+        html += `<button class="pl-filter-btn" data-filter="${escapeHtml(t.id)}" onclick="setPlFilter('${escapeHtml(t.id)}')" style="border-color:${t.color};color:${t.color};">${t.emoji || ''} ${escapeHtml(t.name)}</button>`;
+      });
+      filtersEl.innerHTML = html;
+    }
+    renderPriceList();
+  }
+  window.openPriceListView = openPriceListView;
+
+  function closePriceListView() {
+    const login = document.getElementById('selectScreen');
+    const view = document.getElementById('pricelistView');
+    if (view) view.style.display = 'none';
+    if (login) login.style.display = 'flex';
+  }
+  window.closePriceListView = closePriceListView;
+
+  function setPlFilter(filter) {
+    plCurrentFilter = filter;
+    document.querySelectorAll('.pl-filter-btn').forEach(b => {
+      const isActive = b.dataset.filter === filter;
+      b.classList.toggle('active', isActive);
+      // Estilo activo para tipos dinámicos
+      if (isActive && filter !== 'all') {
+        const t = state.entryTypes?.[filter];
+        if (t) {
+          b.style.background = t.color;
+          b.style.color = 'white';
+        }
+      } else {
+        b.style.background = '';
+        if (filter === 'all') {
+          b.style.color = '';
+        } else {
+          const t = state.entryTypes?.[b.dataset.filter];
+          if (t) b.style.color = t.color;
+        }
+      }
+    });
+    renderPriceList();
+  }
+  window.setPlFilter = setPlFilter;
+
+  function renderPriceList() {
+    const container = document.getElementById('plContainer');
+    if (!container) return;
+    const search = (document.getElementById('plSearch')?.value || '').toLowerCase().trim();
+    const products = Object.values(state.products || {})
+      .filter(p => p && p.active); // solo activos
+    // Filtrar por búsqueda y filtro
+    const norm = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const searchN = norm(search);
+    let filtered = products.filter(p => {
+      if (plCurrentFilter !== 'all' && p.entryType !== plCurrentFilter) return false;
+      if (searchN) {
+        const nameN = norm(p.name);
+        const catN = norm(p.category || '');
+        if (!nameN.includes(searchN) && !catN.includes(searchN)) return false;
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="pl-empty">Sin productos que mostrar</div>';
+      document.getElementById('plCount').textContent = '0 productos';
+      document.getElementById('plLastUpdate').textContent = '—';
+      return;
+    }
+
+    // Agrupar por categoría
+    const byCategory = {};
+    filtered.forEach(p => {
+      const cat = p.category || autoDetectCategory(p.name) || 'Otros';
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(p);
+    });
+
+    // Ordenar cada categoría por nombre
+    Object.values(byCategory).forEach(arr => arr.sort((a, b) => (a.name || '').localeCompare(b.name || '')));
+
+    // Ordenar categorías por orden preferido, o alfabético
+    const preferredOrder = ['Cementos y Cal', 'Pegamentos', 'Revoques y Pastinas', 'Áridos', 'Ladrillos',
+                            'Hierros y Mallas', 'Herrajes', 'Caños y Sanitarios', 'Aislantes',
+                            'Aberturas', 'Estructurales', 'Chapas y Perfiles', 'Pisos y Solados', 'Otros'];
+    const cats = Object.keys(byCategory).sort((a, b) => {
+      const ai = preferredOrder.indexOf(a);
+      const bi = preferredOrder.indexOf(b);
+      if (ai !== -1 && bi !== -1) return ai - bi;
+      if (ai !== -1) return -1;
+      if (bi !== -1) return 1;
+      return a.localeCompare(b);
+    });
+
+    let latestUpdate = null;
+    let html = '';
+    cats.forEach(cat => {
+      const items = byCategory[cat];
+      html += `
+        <div class="pl-category-block">
+          <div class="pl-category-title">${escapeHtml(cat)} <span class="pl-category-count">${items.length} producto${items.length !== 1 ? 's' : ''}</span></div>
+          <div class="pl-product-list">
+            ${items.map(p => renderPlProduct(p, upd => {
+              if (!latestUpdate || (upd && upd > latestUpdate)) latestUpdate = upd;
+            })).join('')}
+          </div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    document.getElementById('plCount').textContent = `${filtered.length} productos`;
+    document.getElementById('plLastUpdate').textContent = latestUpdate ? latestUpdate : '—';
+  }
+  window.renderPriceList = renderPriceList;
+
+  function renderPlProduct(p, updateCb) {
+    const vigente = getVigenteActual(p);
+    const cost = vigente?.cost || 0;
+    const price = vigente?.price || 0;
+    const marginPct = calcMarginPct(cost, price);
+    const marginCls = marginClass(marginPct);
+    const from = vigente?.from || '';
+    if (updateCb && from) updateCb(from);
+    // Tipo entrega dinámico desde Firebase
+    const t = state.entryTypes?.[p.entryType];
+    const badge = t
+      ? `<span class="pl-badge" style="color:${t.color};background:${t.color}15;border:1px solid ${t.color};">${t.emoji || ''} ${escapeHtml(t.name)}</span>`
+      : '';
+    const unitText = p.unit ? `<span>× ${escapeHtml(p.unit)}</span>` : '';
+    const subCatText = p.subCategory ? `<span class="pl-subcat-badge">${escapeHtml(p.subCategory)}</span>` : '';
+    const cardStyle = t ? `border-left-color:${t.color};` : '';
+    const minBonifCell = p.minBonif
+      ? `<div class="pl-product-cell">
+          <span class="pl-cell-label">MÍN. BONIF.</span>
+          <span class="pl-cell-value minbonif">${fmtMoney(p.minBonif)}</span>
+        </div>`
+      : `<div class="pl-product-cell">
+          <span class="pl-cell-label">MÍN. BONIF.</span>
+          <span class="pl-cell-value dim">—</span>
+        </div>`;
+    return `
+      <div class="pl-product-card" style="${cardStyle}">
+        <div class="pl-product-header">
+          <div class="pl-product-name">${escapeHtml(p.name)} ${subCatText}</div>
+          <div class="pl-product-meta">
+            ${badge}
+            ${unitText}
+          </div>
+        </div>
+        <div class="pl-product-grid">
+          <div class="pl-product-cell">
+            <span class="pl-cell-label">COSTO</span>
+            <span class="pl-cell-value cost">${cost > 0 ? fmtMoney(cost) : '—'}</span>
+          </div>
+          <div class="pl-product-cell">
+            <span class="pl-cell-label">PRECIO</span>
+            <span class="pl-cell-value price">${fmtMoney(price)}</span>
+          </div>
+          <div class="pl-product-cell">
+            <span class="pl-cell-label">MARGEN</span>
+            <span class="pl-cell-value margin ${marginCls}">${cost > 0 ? marginPct.toFixed(1) + '%' : '—'}</span>
+          </div>
+          ${minBonifCell}
+        </div>
+        <div class="pl-product-updated">Actualizado: ${from || '—'}</div>
+      </div>
+    `;
   }
   document.addEventListener('DOMContentLoaded', () => {
     // Registrar Service Worker (PWA) · con auto-update agresivo
@@ -14106,6 +15052,77 @@
     return getVigenteAt(product, todayLocalISO());
   }
 
+  // ═══════════════════════════════════════════════════════════
+  // CATEGORÍAS · auto-detección por keywords en nombre
+  // ═══════════════════════════════════════════════════════════
+  const CATEGORY_KEYWORDS = [
+    // Orden importante · el primero que matchea gana
+    { kw: ['cemento', 'plasticor', 'cal '], cat: 'Cementos y Cal' },
+    { kw: ['pegamento'], cat: 'Pegamentos' },
+    { kw: ['revoque', 'pastina'], cat: 'Revoques y Pastinas' },
+    { kw: ['arena', 'piedra', 'escombro', 'tierra'], cat: 'Áridos' },
+    { kw: ['ladrillo'], cat: 'Ladrillos' },
+    { kw: ['hierro', 'malla', 'alambre'], cat: 'Hierros y Mallas' },
+    { kw: ['clavo', 'tornillo'], cat: 'Herrajes' },
+    { kw: ['caño', 'pvc'], cat: 'Caños y Sanitarios' },
+    { kw: ['hidrófugo', 'hidrofugo', 'ligante', 'membrana', 'isolan'], cat: 'Aislantes' },
+    { kw: ['puerta', 'ventana', 'ventiluz'], cat: 'Aberturas' },
+    { kw: ['vigueta'], cat: 'Estructurales' },
+    { kw: ['chapa', 'perfil'], cat: 'Chapas y Perfiles' },
+    { kw: ['atérmico', 'atermico', 'solarium', 'borde', 'esquinero', 'zócalo', 'zocalo'], cat: 'Pisos y Solados' },
+    { kw: ['telgopor'], cat: 'Estructurales' }
+  ];
+
+  // Auto-detectar categoría por nombre
+  function autoDetectCategory(name) {
+    if (!name) return 'Otros';
+    const norm = String(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    for (const rule of CATEGORY_KEYWORDS) {
+      for (const k of rule.kw) {
+        const kNorm = k.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        if (norm.includes(kNorm)) return rule.cat;
+      }
+    }
+    return 'Otros';
+  }
+
+  // Etiqueta color + nombre corto para tipo entrega
+  function entryTypeLabel(type) {
+    switch(type) {
+      case 'stock': return { color: '#1F8A3A', label: 'STOCK', hint: 'Inmediato', emoji: '🟢' };
+      case 'pasamanos': return { color: '#E5A800', label: 'PASAMANOS', hint: '24hs', emoji: '🟡' };
+      case 'encargue': return { color: '#4285f4', label: 'ENCARGUE', hint: '2-3 días', emoji: '🔵' };
+      default: return { color: '#8E8E8E', label: '—', hint: 'Sin definir', emoji: '⚪' };
+    }
+  }
+
+  // Categorías disponibles (para dropdown de edición) · dinámicas desde Firebase
+  function getAllCategories() {
+    const fromFirebase = Object.values(state.categories || {})
+      .map(c => c.name)
+      .filter(Boolean);
+    if (fromFirebase.length > 0) {
+      // Ordenar por order (persistido)
+      const sorted = Object.values(state.categories || {})
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(c => c.name);
+      return sorted;
+    }
+    // Fallback a hardcodeadas si Firebase aún no cargó
+    const set = new Set(CATEGORY_KEYWORDS.map(r => r.cat));
+    set.add('Otros');
+    return [...set].sort();
+  }
+
+  // Sub-categorías de una categoría específica
+  function getSubCategoriesOf(categoryName) {
+    const cat = Object.values(state.categories || {}).find(c => c.name === categoryName);
+    if (!cat) return [];
+    return Object.values(cat.subCategories || {})
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .map(s => s.name);
+  }
+
   // Helper: margen % dado costo y precio
   function calcMarginPct(cost, price) {
     if (!price || price === 0) return 0;
@@ -14119,6 +15136,434 @@
     if (pct < 25) return 'med';
     return 'high';
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // TAXONOMÍA · CRUD Categorías + Tipos Entrega
+  // ═══════════════════════════════════════════════════════════
+
+  // Toggle panel taxonomía
+  let taxonomyOpen = false;
+  function toggleTaxonomy() {
+    taxonomyOpen = !taxonomyOpen;
+    const content = document.getElementById('taxonomyContent');
+    const icon = document.getElementById('taxonomyToggleIcon');
+    if (content) content.style.display = taxonomyOpen ? 'block' : 'none';
+    if (icon) icon.textContent = taxonomyOpen ? '▴' : '▾';
+    if (taxonomyOpen) renderTaxonomyManager();
+  }
+  window.toggleTaxonomy = toggleTaxonomy;
+
+  // Render de la lista de categorías y tipos entrega
+  function renderTaxonomyManager() {
+    // CATEGORÍAS
+    const catList = document.getElementById('taxonomyCategories');
+    if (catList) {
+      const cats = Object.values(state.categories || {})
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      if (cats.length === 0) {
+        catList.innerHTML = '<div class="tx-empty">Sin categorías · agregá una para empezar</div>';
+      } else {
+        catList.innerHTML = cats.map(c => {
+          const products = countProductsInCategory(c.id);
+          const subCount = Object.keys(c.subCategories || {}).length;
+          const subNames = Object.values(c.subCategories || {})
+            .sort((a, b) => (a.order || 0) - (b.order || 0))
+            .map(s => s.name)
+            .join(' · ');
+          return `
+            <div class="tx-item">
+              <div class="tx-item-info">
+                <div class="tx-item-name">${escapeHtml(c.name)}</div>
+                <div class="tx-item-meta">${products} producto${products !== 1 ? 's' : ''}${subCount > 0 ? ` · ${subCount} sub` : ''}</div>
+                ${subCount > 0 ? `<div class="tx-item-sub">└ ${escapeHtml(subNames)}</div>` : ''}
+              </div>
+              <div class="tx-item-actions">
+                <button class="tx-item-btn" onclick="openCategoryModal('${c.id}')" title="Editar">✏</button>
+                <button class="tx-item-btn del" onclick="confirmDeleteCategoryById('${c.id}')" title="Eliminar">🗑</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // TIPOS ENTREGA
+    const etList = document.getElementById('taxonomyEntryTypes');
+    if (etList) {
+      const types = Object.values(state.entryTypes || {})
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      if (types.length === 0) {
+        etList.innerHTML = '<div class="tx-empty">Sin tipos · agregá uno para empezar</div>';
+      } else {
+        etList.innerHTML = types.map(t => {
+          const products = countProductsInEntryType(t.id);
+          return `
+            <div class="tx-item">
+              <div class="tx-item-info">
+                <div class="tx-item-name" style="color:${t.color || 'inherit'};">${t.emoji || ''} ${escapeHtml(t.name)}</div>
+                <div class="tx-item-meta">${escapeHtml(t.hint || '')} · ${products} producto${products !== 1 ? 's' : ''}</div>
+              </div>
+              <div class="tx-item-actions">
+                <button class="tx-item-btn" onclick="openEntryTypeModal('${t.id}')" title="Editar">✏</button>
+                <button class="tx-item-btn del" onclick="confirmDeleteEntryTypeById('${t.id}')" title="Eliminar">🗑</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+  }
+  window.renderTaxonomyManager = renderTaxonomyManager;
+
+  function countProductsInCategory(catId) {
+    const cat = state.categories?.[catId];
+    if (!cat) return 0;
+    const name = cat.name;
+    return Object.values(state.products || {})
+      .filter(p => p && p.active && p.category === name).length;
+  }
+
+  function countProductsInEntryType(typeId) {
+    return Object.values(state.products || {})
+      .filter(p => p && p.active && p.entryType === typeId).length;
+  }
+
+  // ── MODAL CATEGORÍA ──────────────────────────────
+  let categoryModalContext = { catId: null, isNew: true, tempSubs: [] };
+
+  function openCategoryModal(catId) {
+    if (currentUser !== 'admin') return;
+    const isNew = !catId;
+    categoryModalContext = { catId, isNew, tempSubs: [] };
+
+    const banner = document.getElementById('categoryModalBanner');
+    const title = document.getElementById('categoryModalTitle');
+    const nameInput = document.getElementById('catNameInput');
+    const delBtn = document.getElementById('catDeleteBtn');
+
+    if (isNew) {
+      banner.textContent = '▸ NUEVA CATEGORÍA';
+      banner.style.background = '#1F8A3A';
+      title.textContent = 'NUEVA CATEGORÍA';
+      nameInput.value = '';
+      delBtn.style.display = 'none';
+      categoryModalContext.tempSubs = [];
+    } else {
+      const cat = state.categories?.[catId];
+      if (!cat) return alert('Categoría no encontrada');
+      banner.textContent = '▸ EDITAR CATEGORÍA';
+      banner.style.background = '#4285f4';
+      title.textContent = cat.name;
+      nameInput.value = cat.name || '';
+      delBtn.style.display = 'inline-block';
+      // Cargar sub-categorías existentes
+      categoryModalContext.tempSubs = Object.values(cat.subCategories || {})
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(s => ({ id: s.id, name: s.name }));
+    }
+    renderCatSubcatsList();
+    document.getElementById('categoryModalOverlay').classList.add('open');
+  }
+  window.openCategoryModal = openCategoryModal;
+
+  function closeCategoryModal() {
+    document.getElementById('categoryModalOverlay').classList.remove('open');
+    categoryModalContext = { catId: null, isNew: true, tempSubs: [] };
+  }
+  window.closeCategoryModal = closeCategoryModal;
+
+  function renderCatSubcatsList() {
+    const list = document.getElementById('catSubcatList');
+    if (!list) return;
+    const subs = categoryModalContext.tempSubs || [];
+    if (subs.length === 0) {
+      list.innerHTML = '<div class="tx-subcat-empty">Sin sub-categorías · opcional</div>';
+      return;
+    }
+    list.innerHTML = subs.map((s, idx) => `
+      <div class="tx-subcat-item">
+        <input type="text" value="${escapeHtml(s.name)}" oninput="updateSubcatName(${idx}, this.value)">
+        <button class="tx-item-btn del" onclick="removeSubcat(${idx})" title="Quitar">🗑</button>
+      </div>
+    `).join('');
+  }
+
+  function addSubCategory() {
+    categoryModalContext.tempSubs = categoryModalContext.tempSubs || [];
+    categoryModalContext.tempSubs.push({ id: 'S' + Date.now().toString(36), name: '' });
+    renderCatSubcatsList();
+  }
+  window.addSubCategory = addSubCategory;
+
+  window.updateSubcatName = function(idx, value) {
+    if (categoryModalContext.tempSubs?.[idx]) {
+      categoryModalContext.tempSubs[idx].name = value;
+    }
+  };
+
+  window.removeSubcat = function(idx) {
+    if (categoryModalContext.tempSubs) {
+      categoryModalContext.tempSubs.splice(idx, 1);
+      renderCatSubcatsList();
+    }
+  };
+
+  async function saveCategory() {
+    if (currentUser !== 'admin') return;
+    const name = String(document.getElementById('catNameInput').value || '').trim();
+    if (!name) return alert('El nombre es obligatorio');
+
+    const { catId, isNew, tempSubs } = categoryModalContext;
+
+    // Chequear duplicado por nombre
+    const existing = Object.values(state.categories || {})
+      .find(c => c.name.toLowerCase() === name.toLowerCase() && c.id !== catId);
+    if (existing) return alert(`Ya existe la categoría "${existing.name}"`);
+
+    // Preparar sub-categorías (filtrar vacías)
+    const subs = {};
+    (tempSubs || []).filter(s => (s.name || '').trim()).forEach((s, idx) => {
+      subs[s.id] = { id: s.id, name: s.name.trim(), order: idx };
+    });
+
+    let catData;
+    if (isNew) {
+      const newId = 'C' + Date.now().toString(36).toUpperCase();
+      const maxOrder = Math.max(0, ...Object.values(state.categories || {}).map(c => c.order || 0));
+      catData = {
+        id: newId,
+        name,
+        subCategories: subs,
+        order: maxOrder + 1,
+        createdAt: Date.now()
+      };
+    } else {
+      const existingCat = state.categories?.[catId];
+      const oldName = existingCat?.name;
+      catData = {
+        ...existingCat,
+        name,
+        subCategories: subs,
+        updatedAt: Date.now()
+      };
+      // Si cambió el nombre, propagarlo a productos
+      if (oldName && oldName !== name) {
+        await propagateCategoryRename(oldName, name);
+      }
+    }
+
+    try {
+      await db.ref('categories/' + catData.id).set(catData);
+      showToast(`✓ Categoría ${isNew ? 'creada' : 'actualizada'}: ${name}`, 'success');
+      closeCategoryModal();
+    } catch (e) {
+      alert('Error guardando categoría: ' + e.message);
+    }
+  }
+  window.saveCategory = saveCategory;
+
+  // Cuando se renombra una categoría, actualizar todos los productos que la usan
+  async function propagateCategoryRename(oldName, newName) {
+    const affected = Object.values(state.products || {})
+      .filter(p => p && p.category === oldName);
+    if (affected.length === 0) return;
+    const updates = {};
+    affected.forEach(p => {
+      updates[`products/${p.id}/category`] = newName;
+    });
+    try {
+      await db.ref().update(updates);
+    } catch (e) {
+      console.warn('propagateCategoryRename error', e);
+    }
+  }
+
+  async function confirmDeleteCategoryById(catId) {
+    const cat = state.categories?.[catId];
+    if (!cat) return;
+    const affected = countProductsInCategory(catId);
+    let msg = `¿Eliminar la categoría "${cat.name}"?`;
+    if (affected > 0) {
+      msg += `\n\n⚠ ${affected} producto${affected !== 1 ? 's' : ''} usan esta categoría.\nSe van a mover automáticamente a "Otros".`;
+    }
+    msg += `\n\nEsta acción NO se puede deshacer.`;
+    if (!confirm(msg)) return;
+    // Mover productos a "Otros"
+    if (affected > 0) {
+      const updates = {};
+      Object.values(state.products || {}).forEach(p => {
+        if (p && p.category === cat.name) {
+          updates[`products/${p.id}/category`] = 'Otros';
+        }
+      });
+      try {
+        await db.ref().update(updates);
+      } catch (e) { console.warn('Error moviendo productos', e); }
+    }
+    // Borrar categoría
+    try {
+      await db.ref('categories/' + catId).remove();
+      showToast(`🗑 Categoría eliminada: ${cat.name}`, 'warn');
+    } catch (e) {
+      alert('Error eliminando: ' + e.message);
+    }
+  }
+  window.confirmDeleteCategoryById = confirmDeleteCategoryById;
+
+  function confirmDeleteCategory() {
+    const catId = categoryModalContext.catId;
+    if (catId) {
+      confirmDeleteCategoryById(catId).then(() => closeCategoryModal());
+    }
+  }
+  window.confirmDeleteCategory = confirmDeleteCategory;
+
+  // ── MODAL TIPO ENTREGA ────────────────────────────
+  let entryTypeModalContext = { typeId: null, isNew: true };
+
+  function openEntryTypeModal(typeId) {
+    if (currentUser !== 'admin') return;
+    const isNew = !typeId;
+    entryTypeModalContext = { typeId, isNew };
+
+    const banner = document.getElementById('entryTypeModalBanner');
+    const title = document.getElementById('entryTypeModalTitle');
+    const nameInput = document.getElementById('etNameInput');
+    const emojiInput = document.getElementById('etEmojiInput');
+    const colorInput = document.getElementById('etColorInput');
+    const hintInput = document.getElementById('etHintInput');
+    const delBtn = document.getElementById('etDeleteBtn');
+
+    if (isNew) {
+      banner.textContent = '▸ NUEVO TIPO ENTREGA';
+      banner.style.background = '#1F8A3A';
+      title.textContent = 'NUEVO TIPO';
+      nameInput.value = '';
+      emojiInput.value = '🟢';
+      colorInput.value = '#1F8A3A';
+      hintInput.value = '';
+      delBtn.style.display = 'none';
+    } else {
+      const t = state.entryTypes?.[typeId];
+      if (!t) return alert('Tipo no encontrado');
+      banner.textContent = '▸ EDITAR TIPO ENTREGA';
+      banner.style.background = t.color || '#4285f4';
+      title.textContent = t.name;
+      nameInput.value = t.name || '';
+      emojiInput.value = t.emoji || '🟢';
+      colorInput.value = t.color || '#1F8A3A';
+      hintInput.value = t.hint || '';
+      delBtn.style.display = 'inline-block';
+    }
+    updateEtPreview();
+    // Live preview
+    [nameInput, emojiInput, colorInput].forEach(el => {
+      if (el) el.oninput = updateEtPreview;
+    });
+    document.getElementById('entryTypeModalOverlay').classList.add('open');
+  }
+  window.openEntryTypeModal = openEntryTypeModal;
+
+  function closeEntryTypeModal() {
+    document.getElementById('entryTypeModalOverlay').classList.remove('open');
+    entryTypeModalContext = { typeId: null, isNew: true };
+  }
+  window.closeEntryTypeModal = closeEntryTypeModal;
+
+  function updateEtPreview() {
+    const badge = document.getElementById('etPreviewBadge');
+    if (!badge) return;
+    const name = (document.getElementById('etNameInput').value || 'TIPO').toUpperCase();
+    const emoji = document.getElementById('etEmojiInput').value || '';
+    const color = document.getElementById('etColorInput').value || '#4285f4';
+    badge.textContent = `${emoji} ${name}`;
+    badge.style.color = color;
+    badge.style.borderColor = color;
+    badge.style.background = color + '15';
+  }
+
+  async function saveEntryType() {
+    if (currentUser !== 'admin') return;
+    const name = String(document.getElementById('etNameInput').value || '').trim().toUpperCase();
+    const emoji = String(document.getElementById('etEmojiInput').value || '').trim();
+    const color = document.getElementById('etColorInput').value || '#4285f4';
+    const hint = String(document.getElementById('etHintInput').value || '').trim();
+    if (!name) return alert('El nombre es obligatorio');
+
+    const { typeId, isNew } = entryTypeModalContext;
+
+    // Chequear duplicado
+    const existing = Object.values(state.entryTypes || {})
+      .find(t => t.name === name && t.id !== typeId);
+    if (existing) return alert(`Ya existe el tipo "${name}"`);
+
+    let typeData;
+    if (isNew) {
+      const newId = name.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString(36);
+      const maxOrder = Math.max(0, ...Object.values(state.entryTypes || {}).map(t => t.order || 0));
+      typeData = {
+        id: newId,
+        name, emoji, color, hint,
+        order: maxOrder + 1,
+        createdAt: Date.now()
+      };
+    } else {
+      const existingType = state.entryTypes?.[typeId];
+      typeData = {
+        ...existingType,
+        name, emoji, color, hint,
+        updatedAt: Date.now()
+      };
+    }
+
+    try {
+      await db.ref('entryTypes/' + typeData.id).set(typeData);
+      showToast(`✓ Tipo ${isNew ? 'creado' : 'actualizado'}: ${name}`, 'success');
+      closeEntryTypeModal();
+    } catch (e) {
+      alert('Error guardando: ' + e.message);
+    }
+  }
+  window.saveEntryType = saveEntryType;
+
+  async function confirmDeleteEntryTypeById(typeId) {
+    const t = state.entryTypes?.[typeId];
+    if (!t) return;
+    const affected = countProductsInEntryType(typeId);
+    let msg = `¿Eliminar el tipo entrega "${t.emoji || ''} ${t.name}"?`;
+    if (affected > 0) {
+      msg += `\n\n⚠ ${affected} producto${affected !== 1 ? 's' : ''} usan este tipo.\nSe les va a vaciar el tipo entrega.`;
+    }
+    msg += `\n\nEsta acción NO se puede deshacer.`;
+    if (!confirm(msg)) return;
+    // Vaciar entryType en productos afectados
+    if (affected > 0) {
+      const updates = {};
+      Object.values(state.products || {}).forEach(p => {
+        if (p && p.entryType === typeId) {
+          updates[`products/${p.id}/entryType`] = '';
+        }
+      });
+      try {
+        await db.ref().update(updates);
+      } catch (e) { console.warn('Error vaciando entryType', e); }
+    }
+    try {
+      await db.ref('entryTypes/' + typeId).remove();
+      showToast(`🗑 Tipo eliminado: ${t.name}`, 'warn');
+    } catch (e) {
+      alert('Error eliminando: ' + e.message);
+    }
+  }
+  window.confirmDeleteEntryTypeById = confirmDeleteEntryTypeById;
+
+  function confirmDeleteEntryType() {
+    const typeId = entryTypeModalContext.typeId;
+    if (typeId) {
+      confirmDeleteEntryTypeById(typeId).then(() => closeEntryTypeModal());
+    }
+  }
+  window.confirmDeleteEntryType = confirmDeleteEntryType;
 
   function renderCatalog() {
     const container = document.getElementById('catalogTable');
@@ -14259,6 +15704,31 @@
     const dateInput = document.getElementById('prodVigentFrom');
     const activeInput = document.getElementById('prodActive');
     const histBlock = document.getElementById('prodHistoryBlock');
+    // Nuevos campos
+    const categoryInput = document.getElementById('prodCategory');
+    const unitInput = document.getElementById('prodUnit');
+    const entryTypeInput = document.getElementById('prodEntryType');
+    const minBonifInput = document.getElementById('prodMinBonif');
+
+    // Poblar categorías si aún no está poblado
+    if (categoryInput && categoryInput.options.length <= 1) {
+      const cats = getAllCategories();
+      categoryInput.innerHTML = cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    } else if (categoryInput) {
+      // Re-poblar por si cambiaron categorías dinámicas
+      const currentVal = categoryInput.value;
+      const cats = getAllCategories();
+      categoryInput.innerHTML = cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+      if (currentVal && cats.includes(currentVal)) categoryInput.value = currentVal;
+    }
+
+    // Poblar tipos entrega dinámicos
+    if (entryTypeInput) {
+      const types = Object.values(state.entryTypes || {})
+        .sort((a, b) => (a.order || 0) - (b.order || 0));
+      entryTypeInput.innerHTML = '<option value="">— sin definir —</option>' +
+        types.map(t => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.emoji || '')} ${escapeHtml(t.name)}${t.hint ? ' · ' + escapeHtml(t.hint) : ''}</option>`).join('');
+    }
 
     if (isNew) {
       // NUEVO PRODUCTO
@@ -14273,6 +15743,13 @@
       priceInput.value = '';
       dateInput.value = todayLocalISO();
       activeInput.checked = true;
+      // Nuevos campos vacíos
+      if (categoryInput) categoryInput.value = 'Otros';
+      if (unitInput) unitInput.value = '';
+      if (entryTypeInput) entryTypeInput.value = '';
+      if (minBonifInput) minBonifInput.value = '';
+      // Sub-categoría vacía
+      onProdCategoryChange('');
       histBlock.style.display = 'none';
     } else {
       // EDITAR PRODUCTO
@@ -14297,6 +15774,14 @@
       dateInput.value = todayLocalISO();
       activeInput.checked = !!p.active;
 
+      // Nuevos campos (con auto-detección si están vacíos)
+      if (categoryInput) categoryInput.value = p.category || autoDetectCategory(p.name);
+      if (unitInput) unitInput.value = p.unit || '';
+      if (entryTypeInput) entryTypeInput.value = p.entryType || '';
+      if (minBonifInput) minBonifInput.value = p.minBonif || '';
+      // Sub-categoría después de fijar categoría
+      onProdCategoryChange(p.subCategory || '');
+
       renderProductHistory(p);
       histBlock.style.display = 'block';
     }
@@ -14304,6 +15789,44 @@
     updateProdMarginPreview();
     document.getElementById('productModalOverlay').classList.add('open');
   }
+
+  // Al cambiar la categoría en el modal producto · actualizar sub-categorías disponibles
+  function onProdCategoryChange(preSelect) {
+    const catInput = document.getElementById('prodCategory');
+    const subInput = document.getElementById('prodSubCategory');
+    const subRow = document.getElementById('prodSubCatRow');
+    if (!catInput || !subInput || !subRow) return;
+    const cat = catInput.value;
+    const subs = getSubCategoriesOf(cat);
+    if (subs.length === 0) {
+      subRow.classList.remove('visible');
+      subInput.innerHTML = '<option value="">— sin sub-categoría —</option>';
+      return;
+    }
+    subRow.classList.add('visible');
+    subInput.innerHTML = '<option value="">— sin sub-categoría —</option>' +
+      subs.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    // Pre-seleccionar si viene de edición
+    if (typeof preSelect === 'string' && preSelect && subs.includes(preSelect)) {
+      subInput.value = preSelect;
+    }
+  }
+  window.onProdCategoryChange = onProdCategoryChange;
+
+  // Auto-detectar categoría cuando el usuario tipea el nombre (solo si categoría está en "Otros")
+  function onProdNameChange() {
+    const nameInput = document.getElementById('prodName');
+    const categoryInput = document.getElementById('prodCategory');
+    if (!nameInput || !categoryInput) return;
+    // Solo auto-detectar en modo NUEVO o si la categoría actual es "Otros"
+    const currentCat = categoryInput.value;
+    if (productModalContext.isNew || currentCat === 'Otros' || currentCat === '') {
+      const detected = autoDetectCategory(nameInput.value);
+      categoryInput.value = detected;
+      onProdCategoryChange();
+    }
+  }
+  window.onProdNameChange = onProdNameChange;
 
   function closeProductModal() {
     document.getElementById('productModalOverlay').classList.remove('open');
@@ -14381,6 +15904,13 @@
     const price = parseFloat(priceInput.value);
     const from = dateInput.value;
     const active = activeInput.checked;
+    // Nuevos campos
+    const category = document.getElementById('prodCategory')?.value || autoDetectCategory(name);
+    const subCategory = document.getElementById('prodSubCategory')?.value || '';
+    const unit = document.getElementById('prodUnit')?.value || '';
+    const entryType = document.getElementById('prodEntryType')?.value || '';
+    const minBonifRaw = document.getElementById('prodMinBonif')?.value;
+    const minBonif = minBonifRaw && !isNaN(parseFloat(minBonifRaw)) ? parseFloat(minBonifRaw) : null;
 
     if (!id || !/^P\d{3,4}$/i.test(id)) {
       alert('ID inválido · debe tener formato P### o P#### (ej: P001, P042)');
@@ -14417,6 +15947,12 @@
         name: name,
         active: active,
         priceHistory: [newEntry],
+        // Nuevos campos
+        category: category,
+        subCategory: subCategory,
+        unit: unit,
+        entryType: entryType,
+        minBonif: minBonif,
         createdAt: Date.now(),
         updatedAt: Date.now()
       };
@@ -14447,6 +15983,12 @@
         name: name,
         active: active,
         priceHistory: history,
+        // Nuevos campos (siempre updateados)
+        category: category,
+        subCategory: subCategory,
+        unit: unit,
+        entryType: entryType,
+        minBonif: minBonif,
         updatedAt: Date.now()
       };
     }
@@ -14495,19 +16037,28 @@
   let importState = {
     histRows: null,      // filas parseadas del histórico
     catRows: null,       // filas parseadas del catálogo (activos)
+    listaRows: null,     // filas parseadas de la lista de precios (unidad, tipo, mín. bonif.)
+    listaCategories: null, // categorías detectadas por sección
     preview: null        // objeto con productos consolidados
   };
 
   function importFromSheets() {
     if (currentUser !== 'admin') return;
     // Reset
-    importState = { histRows: null, catRows: null, preview: null };
+    importState = { histRows: null, catRows: null, listaRows: null, listaCategories: null, preview: null };
     document.getElementById('histFileInput').value = '';
     document.getElementById('catFileInput').value = '';
+    const listaFileInput = document.getElementById('listaFileInput');
+    if (listaFileInput) listaFileInput.value = '';
     document.getElementById('histFileStatus').textContent = 'sin cargar';
     document.getElementById('histFileStatus').className = 'import-upload-status';
     document.getElementById('catFileStatus').textContent = 'sin cargar';
     document.getElementById('catFileStatus').className = 'import-upload-status';
+    const listaStatus = document.getElementById('listaFileStatus');
+    if (listaStatus) {
+      listaStatus.textContent = 'sin cargar';
+      listaStatus.className = 'import-upload-status';
+    }
     document.getElementById('importPreviewBtn').disabled = true;
     // Ir al step 1
     document.getElementById('importStep1').style.display = 'block';
@@ -14646,6 +16197,106 @@
     reader.readAsText(file, 'UTF-8');
   }
 
+  // Handler para el CSV de "Lista de precios"
+  // Estructura esperada:
+  //   Producto | Unidad | Precio final | Tipo · Entrega | Margen% | Costo | Precio mín. bonif. | Actualizado
+  // Puede tener filas de sección (nombre negrita) que marcan la categoría
+  function handleListaFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const text = e.target.result;
+        const rows = parseCSV(text);
+        // Buscar la fila header
+        let headerIdx = -1;
+        let colMap = {};
+        for (let i = 0; i < Math.min(rows.length, 20); i++) {
+          const rowLower = rows[i].map(c => (c || '').toLowerCase());
+          if (rowLower.some(c => c.includes('producto')) && rowLower.some(c => c.includes('precio final'))) {
+            headerIdx = i;
+            // Mapear columnas por nombre
+            rowLower.forEach((cell, idx) => {
+              if (cell.includes('producto') && !cell.includes('mín')) colMap.name = idx;
+              else if (cell.includes('unidad')) colMap.unit = idx;
+              else if (cell.includes('precio final')) colMap.price = idx;
+              else if (cell.includes('tipo') || cell.includes('entrega')) colMap.entryType = idx;
+              else if (cell.includes('margen')) colMap.margin = idx;
+              else if (cell === 'costo' || cell.startsWith('costo ')) colMap.cost = idx;
+              else if (cell.includes('mín') || cell.includes('min. bonif') || cell.includes('mín. bonif')) colMap.minBonif = idx;
+              else if (cell.includes('actualizado')) colMap.updated = idx;
+            });
+            break;
+          }
+        }
+        if (headerIdx === -1) {
+          alert('No se encontraron las columnas "Producto" y "Precio final" en el CSV.\n\n¿Seguro es la hoja "Lista de precios"?');
+          input.value = '';
+          return;
+        }
+
+        // Detectar filas de sección (categorías) y filas de producto
+        // Una fila de sección típicamente tiene solo la col A con contenido y el resto vacío
+        const dataRows = rows.slice(headerIdx + 1);
+        const parsed = [];
+        const categoriesByName = {}; // nombreProducto → categoría detectada
+        let currentCategory = 'Otros';
+
+        dataRows.forEach(r => {
+          const nameCell = (r[colMap.name] || '').trim();
+          if (!nameCell) return;
+
+          // Es sección si: solo tiene contenido en col A/name y el resto está vacío
+          const otherCellsEmpty = r.every((c, i) => i === colMap.name || !c || !c.trim());
+          if (otherCellsEmpty && nameCell.length > 0) {
+            // Es una sección/categoría
+            currentCategory = nameCell;
+            return;
+          }
+          // Es un producto
+          const item = {
+            name: nameCell,
+            unit: (r[colMap.unit] || '').trim(),
+            price: parseFloat((r[colMap.price] || '0').toString().replace(/[$.,\s]/g, '').replace(',', '.') || 0) || 0,
+            entryType: mapEntryType((r[colMap.entryType] || '').trim()),
+            cost: parseFloat((r[colMap.cost] || '0').toString().replace(/[$.,\s]/g, '').replace(',', '.') || 0) || 0,
+            minBonif: parseFloat((r[colMap.minBonif] || '0').toString().replace(/[$.,\s]/g, '').replace(',', '.') || 0) || null,
+            updated: (r[colMap.updated] || '').trim(),
+            category: currentCategory
+          };
+          if (item.name) {
+            parsed.push(item);
+            categoriesByName[item.name.toLowerCase()] = currentCategory;
+          }
+        });
+
+        importState.listaRows = parsed;
+        importState.listaCategories = categoriesByName;
+        const statusEl = document.getElementById('listaFileStatus');
+        if (statusEl) {
+          statusEl.textContent = `✓ ${parsed.length} productos con detalle`;
+          statusEl.className = 'import-upload-status loaded';
+        }
+      } catch (err) {
+        alert('Error leyendo CSV: ' + err.message);
+        input.value = '';
+      }
+    };
+    reader.readAsText(file, 'UTF-8');
+  }
+  window.handleListaFile = handleListaFile;
+
+  // Mapear "STOCK · Inmediato" / "PASAMANOS · 24hs" / "ENCARGUE · 2-3 días" a keys internos
+  function mapEntryType(raw) {
+    if (!raw) return '';
+    const low = raw.toLowerCase();
+    if (low.includes('stock')) return 'stock';
+    if (low.includes('pasamano')) return 'pasamanos';
+    if (low.includes('encargue') || low.includes('encargo')) return 'encargue';
+    return '';
+  }
+
   function updateImportPreviewButton() {
     const btn = document.getElementById('importPreviewBtn');
     if (btn) btn.disabled = !importState.histRows;
@@ -14728,6 +16379,50 @@
     }
 
     // ────────────────────────────────────────────
+    // Aplicar datos de LISTA DE PRECIOS · unidad, tipo entrega, mín. bonif., categoría
+    // Match por nombre (fuzzy)
+    // ────────────────────────────────────────────
+    let listaMatched = 0;
+    let listaUnmatched = [];
+    if (importState.listaRows) {
+      const normalizeName = (s) => (s || '').toLowerCase().trim()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      // Crear index de productos por nombre normalizado
+      const byName = {};
+      Object.values(products).forEach(p => {
+        byName[normalizeName(p.name)] = p;
+      });
+
+      importState.listaRows.forEach(li => {
+        const nn = normalizeName(li.name);
+        // Match exacto
+        let match = byName[nn];
+        // Match parcial si no encontrado
+        if (!match) {
+          const partial = Object.values(products).find(p => {
+            const pn = normalizeName(p.name);
+            return pn && (pn.includes(nn) || nn.includes(pn));
+          });
+          match = partial;
+        }
+        if (match) {
+          match.unit = li.unit || match.unit || '';
+          match.entryType = li.entryType || match.entryType || '';
+          match.category = li.category || match.category || autoDetectCategory(match.name);
+          if (li.minBonif) match.minBonif = li.minBonif;
+          listaMatched++;
+        } else {
+          listaUnmatched.push(li.name);
+        }
+      });
+    }
+
+    // Auto-detectar categoría para productos que no vinieron de la lista
+    Object.values(products).forEach(p => {
+      if (!p.category) p.category = autoDetectCategory(p.name);
+    });
+
+    // ────────────────────────────────────────────
     // Ordenar historial por fecha ascendente
     // ────────────────────────────────────────────
     Object.values(products).forEach(p => {
@@ -14764,13 +16459,18 @@
       totalInactive,
       duplicateNames,
       costZero,
-      invalidDate
+      invalidDate,
+      listaMatched,
+      listaUnmatched
     };
 
     // ────────────────────────────────────────────
     // Renderizar resumen
     // ────────────────────────────────────────────
     const summaryEl = document.getElementById('importSummary');
+    const withUnit = Object.values(products).filter(p => p.unit).length;
+    const withEntryType = Object.values(products).filter(p => p.entryType).length;
+    const withMinBonif = Object.values(products).filter(p => p.minBonif).length;
     summaryEl.innerHTML = `
       <div class="import-summary-row"><span>Productos detectados</span><span><strong>${Object.keys(products).length}</strong></span></div>
       <div class="import-summary-row"><span>Nuevos (no existen)</span><span>${newIds.length}</span></div>
@@ -14778,6 +16478,11 @@
       <div class="import-summary-row"><span>Cambios de precio en total</span><span>${totalChanges}</span></div>
       <div class="import-summary-row"><span>Activos</span><span>${totalActive}</span></div>
       <div class="import-summary-row"><span>Inactivos</span><span>${totalInactive}</span></div>
+      ${importState.listaRows ? `
+        <div class="import-summary-row"><span>Con unidad definida</span><span>${withUnit}</span></div>
+        <div class="import-summary-row"><span>Con tipo · entrega</span><span>${withEntryType}</span></div>
+        <div class="import-summary-row"><span>Con precio mín. bonif.</span><span>${withMinBonif}</span></div>
+      ` : ''}
     `;
 
     // ────────────────────────────────────────────
@@ -14796,6 +16501,12 @@
     }
     if (mergeIds.length > 0) {
       alertList.push({ type: 'warn', text: `ℹ ${mergeIds.length} producto${mergeIds.length !== 1 ? 's' : ''} ya existen · se van a MERGEAR (sumar al histórico sin borrar nada)` });
+    }
+    if (importState.listaRows) {
+      alertList.push({ type: 'warn', text: `✓ ${listaMatched} productos matcheados con la Lista de Precios` });
+      if (listaUnmatched.length > 0) {
+        alertList.push({ type: 'warn', text: `⚠ ${listaUnmatched.length} productos de la Lista no matchean con ningún ID del histórico` });
+      }
     }
     if (importState.catRows === null) {
       alertList.push({ type: 'warn', text: 'ℹ No subiste el Catálogo · todos se importan como ACTIVOS' });
@@ -14888,6 +16599,11 @@
             name: importedP.name || existing.name,
             active: importedP.active,
             priceHistory: mergedHist,
+            // Campos extra · sobrescribir si vienen en el import
+            category: importedP.category || existing.category || autoDetectCategory(importedP.name || existing.name),
+            unit: importedP.unit || existing.unit || '',
+            entryType: importedP.entryType || existing.entryType || '',
+            minBonif: importedP.minBonif || existing.minBonif || null,
             updatedAt: Date.now()
           };
           merged++;
@@ -14898,6 +16614,10 @@
             name: importedP.name,
             active: importedP.active,
             priceHistory: importedP.priceHistory,
+            category: importedP.category || autoDetectCategory(importedP.name),
+            unit: importedP.unit || '',
+            entryType: importedP.entryType || '',
+            minBonif: importedP.minBonif || null,
             createdAt: Date.now(),
             updatedAt: Date.now()
           };
