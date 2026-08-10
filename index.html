@@ -162,21 +162,40 @@
   }
 
   /* ═══════════════════════════════════════════════════════════
-     VISTA LISTA DE PRECIOS
+     VISTA LISTA DE PRECIOS · TOP-LEVEL FIXED LAYER
      ═══════════════════════════════════════════════════════════ */
   .pricelist-view {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
     background: var(--bg-page);
-    min-height: 100vh;
-    padding: 0;
+    z-index: 800; /* arriba del login (500) y app */
+    display: none;
+    flex-direction: column;
     color: var(--ink);
+    overflow: hidden;
   }
-  .pl-header {
+  .pricelist-view.visible {
+    display: flex;
+  }
+
+  /* TOPBAR UNIFICADO · header + toolbar + filtros = un solo bloque opaco */
+  .pl-topbar {
     background: var(--ink);
     color: white;
-    padding: 16px 20px;
-    display: flex; align-items: center; gap: 16px;
-    position: sticky; top: 0; z-index: 10;
     border-bottom: 3px solid var(--red);
+    flex-shrink: 0;
+    z-index: 2;
+  }
+  .pl-topbar-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 20px 12px;
+  }
+  .pl-header-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
   }
   .pl-back-btn {
     background: transparent;
@@ -190,12 +209,14 @@
     text-transform: uppercase;
     font-weight: 700;
     transition: all 0.15s;
+    flex-shrink: 0;
   }
   .pl-back-btn:hover {
     background: white; color: var(--ink);
   }
   .pl-title-block {
     flex: 1;
+    min-width: 0;
   }
   .pl-title {
     font-family: 'Anton', sans-serif;
@@ -211,72 +232,83 @@
     margin-top: 4px;
     text-transform: uppercase;
   }
-  .pl-toolbar {
-    padding: 14px 20px;
-    background: var(--bg-card);
-    border-bottom: 1px solid var(--line);
-    display: flex; flex-direction: column; gap: 10px;
-    position: sticky; top: 76px; z-index: 9;
+  .pl-toolbar-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
   }
   #plSearch {
-    width: 100%;
+    flex: 1;
+    min-width: 220px;
     padding: 10px 14px;
-    border: 1.5px solid var(--line);
-    background: var(--bg-soft);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.08);
+    color: white;
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
-    color: var(--ink);
   }
+  #plSearch::placeholder { color: rgba(255,255,255,0.5); }
   #plSearch:focus {
     outline: none;
     border-color: var(--red);
+    background: rgba(255,255,255,0.15);
   }
   .pl-filters {
     display: flex; gap: 6px; flex-wrap: wrap;
   }
   .pl-filter-btn {
-    padding: 6px 10px;
-    background: var(--bg-soft);
-    border: 1.5px solid var(--line);
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.85);
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.08em;
     cursor: pointer;
     transition: all 0.15s;
-    color: var(--ink-3);
     text-transform: uppercase;
   }
   .pl-filter-btn:hover {
-    border-color: var(--ink);
-    color: var(--ink);
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border-color: white;
   }
   .pl-filter-btn.active {
-    background: var(--ink);
-    color: white;
-    border-color: var(--ink);
+    background: white;
+    color: var(--ink);
+    border-color: white;
   }
-  .pl-filter-btn.stock.active { background: #1F8A3A; border-color: #1F8A3A; }
-  .pl-filter-btn.pasamanos.active { background: #E5A800; border-color: #E5A800; color: var(--ink); }
-  .pl-filter-btn.encargue.active { background: #4285f4; border-color: #4285f4; }
 
+  /* SCROLL AREA · flex 1 · scroll interno independiente */
+  .pl-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 60px; /* espacio para footer fixed */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
   .pl-container {
-    padding: 16px 20px 80px;
-    max-width: 900px; margin: 0 auto;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
   }
   .pl-category-block {
-    margin-bottom: 24px;
+    margin-bottom: 32px;
   }
   .pl-category-title {
     font-family: 'Anton', sans-serif;
-    font-size: 20px;
+    font-size: 22px;
     letter-spacing: 0.06em;
     color: var(--red);
-    padding: 12px 0 8px;
+    padding: 12px 0 10px;
     border-bottom: 2px solid var(--red);
-    margin-bottom: 12px;
-    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 16px;
+    display: flex; align-items: baseline; gap: 12px;
     text-transform: uppercase;
+    flex-wrap: wrap;
   }
   .pl-category-count {
     font-family: 'JetBrains Mono', monospace;
@@ -284,25 +316,43 @@
     color: var(--ink-3);
     letter-spacing: 0.1em;
     font-weight: 400;
+    text-transform: uppercase;
   }
+
+  /* GRID RESPONSIVE · 1/2/3/4 columnas según ancho */
   .pl-product-list {
-    display: flex; flex-direction: column; gap: 8px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
+  @media (min-width: 700px) {
+    .pl-product-list { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .pl-product-list { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1500px) {
+    .pl-product-list { grid-template-columns: repeat(4, 1fr); }
+  }
+
   .pl-product-card {
     background: var(--bg-card);
     border: 1px solid var(--line);
-    border-left: 3px solid var(--line);
+    border-left: 4px solid var(--line);
     padding: 12px 14px;
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 8px;
+    transition: box-shadow 0.15s, transform 0.15s;
   }
-  .pl-product-card.stock { border-left-color: #1F8A3A; }
-  .pl-product-card.pasamanos { border-left-color: #E5A800; }
-  .pl-product-card.encargue { border-left-color: #4285f4; }
+  .pl-product-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+  }
   .pl-product-header {
     display: flex; justify-content: space-between;
-    align-items: baseline; gap: 10px; flex-wrap: wrap;
+    align-items: flex-start; gap: 10px;
+    flex-wrap: wrap;
   }
   .pl-product-name {
     font-family: 'Inter', sans-serif;
@@ -310,6 +360,8 @@
     font-size: 14px;
     color: var(--ink);
     flex: 1;
+    line-height: 1.3;
+    min-width: 0;
   }
   .pl-subcat-badge {
     display: inline-block;
@@ -330,22 +382,18 @@
     color: var(--ink-3);
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    display: flex; gap: 6px; align-items: center;
+    flex-wrap: wrap;
   }
   .pl-product-meta .pl-badge {
     display: inline-block;
     padding: 2px 6px;
-    border: 1px solid currentColor;
-    margin-right: 4px;
     font-weight: 700;
   }
-  .pl-product-meta .pl-badge.stock { color: #1F8A3A; background: rgba(31,138,58,0.08); }
-  .pl-product-meta .pl-badge.pasamanos { color: #B45309; background: rgba(229,168,0,0.12); }
-  .pl-product-meta .pl-badge.encargue { color: #4285f4; background: rgba(66,133,244,0.08); }
   .pl-product-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 6px;
-    padding: 6px 0;
   }
   .pl-product-cell {
     background: var(--bg-soft);
@@ -379,17 +427,24 @@
     color: var(--ink-3);
     letter-spacing: 0.05em;
     text-align: right;
+    padding-top: 2px;
+    border-top: 1px dashed var(--line);
   }
+
+  /* FOOTER FIXED · a nivel de la vista, no del body */
   .pl-footer {
-    position: fixed;
+    position: absolute;
     bottom: 0; left: 0; right: 0;
     background: var(--ink);
     color: white;
     padding: 10px 20px;
     display: flex; justify-content: space-between;
+    align-items: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     letter-spacing: 0.1em;
+    z-index: 2;
+    text-transform: uppercase;
   }
   .pl-empty {
     padding: 40px 20px;
@@ -399,11 +454,23 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
   }
+
+  /* MOBILE · ajustes específicos */
   @media (max-width: 700px) {
-    .pl-product-grid { grid-template-columns: repeat(2, 1fr); }
-    .pl-title { font-size: 22px; }
+    .pl-topbar-inner { padding: 12px 14px 10px; }
+    .pl-header-row { gap: 12px; margin-bottom: 10px; }
+    .pl-title { font-size: 20px; }
+    .pl-sub { font-size: 9px; }
     .pl-back-btn { padding: 6px 10px; font-size: 10px; }
+    .pl-toolbar-row { gap: 10px; }
+    #plSearch { min-width: 100%; font-size: 12px; padding: 8px 12px; }
+    .pl-filter-btn { padding: 5px 10px; font-size: 9.5px; }
+    .pl-container { padding: 14px 12px; }
+    .pl-category-title { font-size: 18px; }
+    .pl-product-grid { grid-template-columns: repeat(2, 1fr); }
+    .pl-product-card { padding: 10px 12px; }
   }
+
 
   .pin-screen {
     display: none; flex-direction: column; align-items: center; max-width: 380px; margin: 0 auto;
@@ -3079,8 +3146,14 @@
     box-shadow: 6px 6px 0 var(--red);
     transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     text-transform: uppercase; font-size: 12px;
+    visibility: hidden;
+    pointer-events: none;
   }
-  .toast.show { transform: translateX(0); }
+  .toast.show {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
   .toast.unlock { background: var(--red); box-shadow: 6px 6px 0 var(--ink); }
   .toast.warn { background: var(--amber); box-shadow: 6px 6px 0 var(--ink); }
 
@@ -3096,10 +3169,12 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 8px 8px 0 var(--red);
     text-align: center;
     transition: opacity 0.3s, transform 0.5s cubic-bezier(0.2, 1.5, 0.3, 1);
+    visibility: hidden;
   }
   .big-toast.show {
     opacity: 1; pointer-events: auto;
     transform: translate(-50%, -50%) scale(1);
+    visibility: visible;
   }
   .big-toast.epic {
     border-color: gold;
@@ -3154,6 +3229,10 @@
   .confetti-container {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     pointer-events: none; z-index: 340; overflow: hidden;
+    visibility: hidden;
+  }
+  .confetti-container.active {
+    visibility: visible;
   }
   .confetti-piece {
     position: absolute; top: -20px;
@@ -5690,35 +5769,44 @@
       <div class="pin-hint" id="pinHint">4 dígitos</div>
     </div>
 
-    <!-- VISTA LISTA DE PRECIOS · sin login requerido -->
-    <div class="pricelist-view" id="pricelistView" style="display:none;">
-      <div class="pl-header">
-        <button class="pl-back-btn" onclick="closePriceListView()">← VOLVER AL LOGIN</button>
+  </div>
+</div>
+
+<!-- VISTA LISTA DE PRECIOS · CAPA TOP-LEVEL · fuera de login y app -->
+<div class="pricelist-view" id="pricelistView" style="display:none;">
+  <!-- TOPBAR UNIFICADO · header + toolbar + filtros en un solo bloque sticky opaco -->
+  <div class="pl-topbar">
+    <div class="pl-topbar-inner">
+      <div class="pl-header-row">
+        <button class="pl-back-btn" onclick="closePriceListView()">← VOLVER</button>
         <div class="pl-title-block">
           <div class="pl-title">📋 LISTA DE PRECIOS</div>
           <div class="pl-sub">Graziano Materiales · uso interno</div>
         </div>
       </div>
-
-      <div class="pl-toolbar">
+      <div class="pl-toolbar-row">
         <input type="text" id="plSearch" placeholder="🔍 buscar producto..." oninput="renderPriceList()">
         <div class="pl-filters" id="plFilters">
           <!-- filtros dinámicos -->
         </div>
       </div>
-
-      <div class="pl-container" id="plContainer">
-        <!-- render dinámico -->
-      </div>
-
-      <div class="pl-footer">
-        <span>Actualizado: <span id="plLastUpdate">—</span></span>
-        <span class="pl-count" id="plCount">0 productos</span>
-      </div>
     </div>
+  </div>
 
+  <!-- SCROLL AREA -->
+  <div class="pl-scroll" id="plScrollArea">
+    <div class="pl-container" id="plContainer">
+      <!-- render dinámico -->
+    </div>
+  </div>
+
+  <!-- FOOTER FIXED -->
+  <div class="pl-footer">
+    <span>Actualizado: <span id="plLastUpdate">—</span></span>
+    <span class="pl-count" id="plCount">0 productos</span>
   </div>
 </div>
+
 
 <!-- ===== MAIN ===== -->
 <div class="container" id="mainContainer" style="display:none;">
@@ -8759,10 +8847,15 @@
   // ===== LOGIN FLOW =====
   function enterAs(user) {
     currentUser = user;
+    // Cerrar la vista de lista de precios si estaba abierta
+    const priceView = document.getElementById('pricelistView');
+    if (priceView) priceView.classList.remove('visible');
+    // Ocultar login y mostrar main de una · sin esperar renderAll
     document.getElementById('loginOverlay').classList.add('hidden');
     document.getElementById('mainContainer').style.display = 'block';
     applyUserMode();
-    renderAll();
+    // Diferir el render pesado para que la UI aparezca inmediatamente
+    requestAnimationFrame(() => renderAll());
   }
   function askPin(user) {
     pinTargetUser = user;
@@ -8789,10 +8882,13 @@
   let plCurrentFilter = 'all';
 
   function openPriceListView() {
-    const login = document.getElementById('selectScreen');
     const view = document.getElementById('pricelistView');
-    if (login) login.style.display = 'none';
-    if (view) view.style.display = 'block';
+    if (view) {
+      view.classList.add('visible');
+      // Scroll top al abrir
+      const scroll = document.getElementById('plScrollArea');
+      if (scroll) scroll.scrollTop = 0;
+    }
     document.getElementById('plSearch').value = '';
     plCurrentFilter = 'all';
     // Poblar filtros dinámicos
@@ -8811,10 +8907,8 @@
   window.openPriceListView = openPriceListView;
 
   function closePriceListView() {
-    const login = document.getElementById('selectScreen');
     const view = document.getElementById('pricelistView');
-    if (view) view.style.display = 'none';
-    if (login) login.style.display = 'flex';
+    if (view) view.classList.remove('visible');
   }
   window.closePriceListView = closePriceListView;
 
@@ -12101,6 +12195,7 @@
   function triggerConfetti(count) {
     const container = document.getElementById('confettiContainer');
     if (!container) return;
+    container.classList.add('active');
     const colors = ['#FF2E1F', '#1A1A1A', '#FFD700', '#FFFFFF', '#FF7043'];
     for (let i = 0; i < count; i++) {
       const piece = document.createElement('div');
@@ -12114,6 +12209,10 @@
       container.appendChild(piece);
       setTimeout(() => piece.remove(), 4500);
     }
+    // Desactivar el container cuando termine la animación (5s total safe)
+    setTimeout(() => {
+      if (container.children.length === 0) container.classList.remove('active');
+    }, 5000);
   }
 
   // Cha-ching con WebAudio (sin archivo externo)
