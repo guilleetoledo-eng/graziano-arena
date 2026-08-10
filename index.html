@@ -167,12 +167,13 @@
   .pricelist-view {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: var(--bg-page);
-    z-index: 800; /* arriba del login (500) y app */
+    background: var(--bg);
+    z-index: 9999; /* MUY arriba · por encima de todo */
     display: none;
     flex-direction: column;
     color: var(--ink);
     overflow: hidden;
+    isolation: isolate; /* nuevo stacking context */
   }
   .pricelist-view.visible {
     display: flex;
@@ -289,6 +290,7 @@
     padding-bottom: 60px; /* espacio para footer fixed */
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    background: var(--bg); /* opaco para bloquear vista de abajo */
   }
   .pl-container {
     padding: 20px;
@@ -5860,7 +5862,7 @@
 
   <!-- FOOTER FIXED -->
   <div class="pl-footer">
-    <span>Actualizado: <span id="plLastUpdate">—</span></span>
+    <span>Última actualización: <span id="plLastUpdate">—</span></span>
     <span class="pl-count" id="plCount">0 productos</span>
   </div>
 </div>
@@ -8943,8 +8945,19 @@
   // VISTA LISTA DE PRECIOS · sin login requerido
   // ═══════════════════════════════════════════════════════════
   let plCurrentFilter = 'all';
+  let plPreviousView = 'login'; // 'login' | 'main'
 
   function openPriceListView() {
+    // Detectar de dónde viene · para volver bien al cerrar
+    const loginOverlay = document.getElementById('loginOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+    const mainVisible = mainContainer && mainContainer.style.display !== 'none';
+    plPreviousView = mainVisible ? 'main' : 'login';
+
+    // OCULTAR AMBAS VISTAS ORIGINALES para evitar superposición
+    if (loginOverlay) loginOverlay.style.display = 'none';
+    if (mainContainer) mainContainer.style.display = 'none';
+
     const view = document.getElementById('pricelistView');
     if (view) {
       view.classList.add('visible');
@@ -8972,6 +8985,18 @@
   function closePriceListView() {
     const view = document.getElementById('pricelistView');
     if (view) view.classList.remove('visible');
+
+    // Restaurar la vista de origen
+    const loginOverlay = document.getElementById('loginOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+    if (plPreviousView === 'main') {
+      if (mainContainer) mainContainer.style.display = 'block';
+      if (loginOverlay) loginOverlay.style.display = ''; // dejar CSS decidir (tiene .hidden class)
+    } else {
+      // login
+      if (loginOverlay) loginOverlay.style.display = '';
+      if (mainContainer) mainContainer.style.display = 'none';
+    }
   }
   window.closePriceListView = closePriceListView;
 
@@ -9121,7 +9146,7 @@
           </div>
           ${minBonifCell}
         </div>
-        <div class="pl-product-updated">Actualizado: ${from || '—'}</div>
+        <div class="pl-product-updated">Vigente desde: ${from || '—'}</div>
       </div>
     `;
   }
