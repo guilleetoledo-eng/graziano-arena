@@ -2005,6 +2005,64 @@
     display: inline-block; margin-left: 4px;
     cursor: help; opacity: 0.5; font-size: 10px;
   }
+  /* C3 · Cronómetro para pendings */
+  .td-timer-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 6px;
+    font-size: 9.5px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 2px;
+    cursor: help;
+  }
+  .td-timer-badge.ok {
+    background: rgba(0,0,0,0.06);
+    color: var(--ink-3);
+    border: 1px solid var(--line);
+  }
+  .td-timer-badge.warn {
+    background: rgba(229,168,0,0.15);
+    color: #B45309;
+    border: 1px solid #E5A800;
+    animation: warnPulse 2s ease-in-out infinite;
+  }
+  .td-timer-badge.expired {
+    background: #cc0000;
+    color: white;
+    border: 1px solid #900;
+  }
+  @keyframes warnPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  /* C2 · Badge de venta flotante */
+  .td-floating-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 5px;
+    font-size: 10px;
+    cursor: help;
+    background: rgba(66,133,244,0.12);
+    color: #4285f4;
+    border: 1px solid rgba(66,133,244,0.4);
+    border-radius: 2px;
+  }
+  /* C3 · Badge autocancelada */
+  .td-autocancel-badge {
+    display: inline-block;
+    margin-left: 4px;
+    cursor: help;
+    opacity: 0.7;
+    font-size: 11px;
+  }
+  /* Badge cobros con override/flotante */
+  .cobros-extra-badge {
+    font-size: 14px;
+    margin-left: 6px;
+    cursor: help;
+  }
 
   /* MODAL EDITAR VENTA */
   .edit-sale-modal { max-width: 720px; max-height: 92vh; overflow-y: auto; }
@@ -5773,7 +5831,7 @@
 </div>
 
 <!-- VISTA LISTA DE PRECIOS · CAPA TOP-LEVEL · fuera de login y app -->
-<div class="pricelist-view" id="pricelistView" style="display:none;">
+<div class="pricelist-view" id="pricelistView">
   <!-- TOPBAR UNIFICADO · header + toolbar + filtros en un solo bloque sticky opaco -->
   <div class="pl-topbar">
     <div class="pl-topbar-inner">
@@ -6131,46 +6189,46 @@
       </div>
     </div>
 
-    <div class="seller-card" id="card-emi">
+    <div class="seller-card" id="card-emilio">
       <div class="seller-header">
-        <div class="seller-rank"><span class="rank-emoji" id="emoji-emi"></span><span class="hash">#</span><span id="rank-emi">—</span></div>
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-emilio"></span><span class="hash">#</span><span id="rank-emilio">—</span></div>
         <div class="seller-name-block">
           <div class="seller-name">EMI</div>
           <div class="seller-title">EL NUEVO</div>
         </div>
       </div>
-      <div class="seller-amount"><span class="currency">$</span><span id="amount-emi">0</span></div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-emilio">0</span></div>
       <div class="seller-meta-line">
-        <span class="val" id="count-emi">0</span> OPERACIONES <span class="sep">·</span>
-        TICKET PROM. <span class="val" id="ticket-emi">$0</span>
+        <span class="val" id="count-emilio">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-emilio">$0</span>
       </div>
-      <div class="seller-subline" id="subline-emi"></div>
+      <div class="seller-subline" id="subline-emilio"></div>
       <div class="progress-block">
         <div class="progress-header">
           <span class="progress-label">Meta · $13,5M</span>
-          <span class="progress-pct" id="pct-emi">0%</span>
+          <span class="progress-pct" id="pct-emilio">0%</span>
         </div>
         <div class="progress-track">
-          <div class="progress-fill" id="bar-emi" style="width:0%"></div>
+          <div class="progress-fill" id="bar-emilio" style="width:0%"></div>
         </div>
       </div>
       <div class="seller-stats">
         <div class="stat-cell">
           <div class="stat-label">Excedente</div>
-          <div class="stat-value" id="excess-emi">$0</div>
+          <div class="stat-value" id="excess-emilio">$0</div>
         </div>
         <div class="stat-cell">
           <div class="stat-label">Mejor venta</div>
-          <div class="stat-value" id="best-emi">$0</div>
+          <div class="stat-value" id="best-emilio">$0</div>
         </div>
       </div>
       <div class="earnings">
         <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
-        <div class="earnings-amount" id="earn-emi">$0</div>
-        <div class="earnings-breakdown" id="breakdown-emi">—</div>
+        <div class="earnings-amount" id="earn-emilio">$0</div>
+        <div class="earnings-breakdown" id="breakdown-emilio">—</div>
       </div>
-      <div class="pending-pill" id="pending-emi" style="display:none;">
-        <span class="num" id="pending-num-emi">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-emi">$0</span>
+      <div class="pending-pill" id="pending-emilio" style="display:none;">
+        <span class="num" id="pending-num-emilio">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-emilio">$0</span>
       </div>
     </div>
 
@@ -6382,33 +6440,33 @@
         </div>
       </div>
 
-      <div class="cobros-card" id="cobros-emi">
+      <div class="cobros-card" id="cobros-emilio">
         <div class="cobros-card-header">
           <div class="cobros-seller-block">
-            <span class="cobros-emoji" id="cobros-emoji-emi"></span>
+            <span class="cobros-emoji" id="cobros-emoji-emilio"></span>
             <span class="cobros-name">EMI</span>
           </div>
           <div class="cobros-total">
             <span class="ct-label">COBRADO ESTE MES</span>
-            <span class="ct-value" id="cobros-total-emi">$0</span>
+            <span class="ct-value" id="cobros-total-emilio">$0</span>
           </div>
         </div>
-        <div class="weeks-timeline" id="timeline-emi"></div>
+        <div class="weeks-timeline" id="timeline-emilio"></div>
         <div class="current-week-card">
           <div class="cw-header">
             <span class="cw-label">▸ ESTA SEMANA</span>
-            <span class="cw-range" id="cw-range-emi">SEM 3 · días 15-21</span>
+            <span class="cw-range" id="cw-range-emilio">SEM 3 · días 15-21</span>
           </div>
           <div class="cw-stats">
-            <span>Facturado <strong id="cw-facturado-emi">$0</strong></span>
+            <span>Facturado <strong id="cw-facturado-emilio">$0</strong></span>
             <span class="cw-pipe">·</span>
-            <span>Com. <strong id="cw-comision-emi">$0</strong></span>
+            <span>Com. <strong id="cw-comision-emilio">$0</strong></span>
           </div>
           <div class="cw-amount-block">
             <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
-            <span class="cw-amount" id="cw-amount-emi">$0</span>
+            <span class="cw-amount" id="cw-amount-emilio">$0</span>
           </div>
-          <button class="cw-btn" id="cw-btn-emi" onclick="toggleWeekPaid('emi', currentWeekNum())">✓ MARCAR COBRADO</button>
+          <button class="cw-btn" id="cw-btn-emilio" onclick="toggleWeekPaid('emilio', currentWeekNum())">✓ MARCAR COBRADO</button>
         </div>
       </div>
     </div>
@@ -8602,6 +8660,11 @@
         state.weeklyPayments = {};
       }
       if (currentUser) renderAll();
+      // C3 · Ejecutar auto-cancel de pendings >15 días (una vez por sesión, al load inicial)
+      if (!_autoCancelDone) {
+        _autoCancelDone = true;
+        setTimeout(() => autoCancelExpiredPendings(), 2000);
+      }
     }, (err) => { console.warn('Firebase read error', err); });
 
     // Listener separado para config
@@ -9598,6 +9661,153 @@
       monthKeyOf(s.date) === monthKey
     );
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // C1 · COMMISSION OVERRIDE
+  // Ventas canceladas con override cuentan como si fueran aprobadas
+  // para efectos de comisión (no para volumen ni ranking)
+  // ═══════════════════════════════════════════════════════════
+
+  // Devuelve ventas canceladas del vendedor con commissionOverride del mes dado
+  function overriddenCancelledSales(seller, monthKey = currentMonthKey()) {
+    return state.sales.filter(s =>
+      s.seller === seller &&
+      s.status === 'cancelled' &&
+      s.commissionOverride &&
+      monthKeyOf(s.date) === monthKey
+    );
+  }
+
+  // Suma total de comisión-override en el período
+  function overrideCommissionTotal(seller, monthKey = currentMonthKey()) {
+    return overriddenCancelledSales(seller, monthKey)
+      .reduce((sum, s) => sum + (s.commissionOverride?.amount || 0), 0);
+  }
+
+  // Cuenta de ventas con override en el período
+  function overrideCommissionCount(seller, monthKey = currentMonthKey()) {
+    return overriddenCancelledSales(seller, monthKey).length;
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // C2 · COMISIONES FLOTANTES
+  // Ventas aprobadas DESPUÉS del cierre de la quincena de su fecha
+  // se pagan en la próxima quincena
+  // ═══════════════════════════════════════════════════════════
+
+  // Períodos de liquidación: mensual (mes calendario)
+  // Cierre = fin del mes. Fecha exacta: último día del mes 23:59
+  // Aprobación tarde = approvedAt > cierre del mes de la venta
+  function isFloatingSale(sale) {
+    if (!sale || sale.status !== 'approved' || !sale.date || !sale.approvedAt) return false;
+    // Cierre del mes de la venta
+    const [yy, mm] = String(sale.date).split('-').map(Number);
+    if (!yy || !mm) return false;
+    // Primer día del mes SIGUIENTE (medianoche)
+    const closeDate = new Date(yy, mm, 1); // JS mes 0-indexed → yy, mm es mes siguiente (1-indexed)
+    return sale.approvedAt >= closeDate.getTime();
+  }
+
+  // Ventas flotantes del vendedor que se cargan a un período dado
+  // Regla: la venta se paga en el mes en que fue APROBADA (no en el mes de su fecha)
+  function floatingSalesForPeriod(seller, targetMonthKey) {
+    return state.sales.filter(s => {
+      if (s.seller !== seller) return false;
+      if (s.status !== 'approved') return false;
+      if (!s.approvedAt) return false;
+      // Fecha original de la venta NO está en este mes
+      if (monthKeyOf(s.date) === targetMonthKey) return false;
+      // Fecha original está en un mes ANTERIOR
+      if (monthKeyOf(s.date) >= targetMonthKey) return false;
+      // Y fue aprobada EN este mes
+      const approvedMK = monthKeyOfTs(s.approvedAt);
+      return approvedMK === targetMonthKey;
+    });
+  }
+
+  // monthKey desde timestamp
+  function monthKeyOfTs(ts) {
+    const d = new Date(ts);
+    const yy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    return `${yy}-${mm}`;
+  }
+
+  // Ventas aprobadas del vendedor en el mes que EXCLUYE flotantes
+  // (las flotantes se contabilizan en el mes que fueron aprobadas)
+  function approvedSalesInMonthExcludingFloating(seller, monthKey = currentMonthKey()) {
+    return state.sales.filter(s => {
+      if (s.seller !== seller) return false;
+      if (s.status !== 'approved') return false;
+      if (monthKeyOf(s.date) !== monthKey) return false;
+      // Si la venta es del mes pero aprobada en OTRO mes posterior → NO cuenta acá
+      if (s.approvedAt) {
+        const approvedMK = monthKeyOfTs(s.approvedAt);
+        if (approvedMK > monthKey) return false;
+      }
+      return true;
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════
+  // C3 · AUTO-CANCELACIÓN DE PENDIENTES DE 15 DÍAS
+  // ═══════════════════════════════════════════════════════════
+
+  const PENDING_WARN_DAYS = 12;
+  const PENDING_CANCEL_DAYS = 15;
+
+  // Días desde el submit de la venta
+  function daysSinceSubmit(sale) {
+    if (!sale || !sale.submittedAt) return 0;
+    const diff = Date.now() - sale.submittedAt;
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  }
+
+  // Devuelve estado del cronómetro: 'ok' | 'warn' | 'expired'
+  function pendingTimerStatus(sale) {
+    if (!sale || sale.status !== 'pending') return 'ok';
+    const days = daysSinceSubmit(sale);
+    if (days >= PENDING_CANCEL_DAYS) return 'expired';
+    if (days >= PENDING_WARN_DAYS) return 'warn';
+    return 'ok';
+  }
+
+  // Runner: cancela automáticamente todas las pending que superan 15 días
+  // Se ejecuta al cargar + una vez por hora
+  let _autoCancelRunning = false;
+  let _autoCancelDone = false;
+  async function autoCancelExpiredPendings() {
+    if (_autoCancelRunning) return;
+    _autoCancelRunning = true;
+    try {
+      const expired = state.sales.filter(s =>
+        s.status === 'pending' && daysSinceSubmit(s) >= PENDING_CANCEL_DAYS
+      );
+      if (expired.length === 0) return;
+      let cancelled = 0;
+      for (const sale of expired) {
+        sale.status = 'cancelled';
+        sale.cancelledAt = Date.now();
+        sale.cancelledBy = 'auto-15d';
+        sale.cancelReason = `Auto-cancelada · ${daysSinceSubmit(sale)} días sin aprobar`;
+        // Regla 4A: NO paga comisión
+        cancelled++;
+      }
+      if (cancelled > 0) {
+        await saveState();
+        console.log(`Auto-cancel: ${cancelled} ventas expiradas`);
+        // Si el admin está mirando, avisar y re-render
+        if (currentUser === 'admin') {
+          showToast(`⏰ ${cancelled} venta${cancelled !== 1 ? 's' : ''} auto-cancelada${cancelled !== 1 ? 's' : ''} (>15 días)`, 'warn');
+          renderAll();
+        }
+      }
+    } catch (e) {
+      console.warn('autoCancelExpiredPendings error', e);
+    } finally {
+      _autoCancelRunning = false;
+    }
+  }
   function pendingSales(seller) {
     // pendientes son universales (no filtramos por mes)
     return state.sales.filter(s => s.seller === seller && s.status === 'pending');
@@ -9698,11 +9908,41 @@
       }
     }
 
+    // ═══════════════════════════════════════════════════════════
+    // C1 · COMMISSION OVERRIDE
+    // Ventas canceladas con "pagar comisión igual" suman al bolsillo del vendedor
+    // ═══════════════════════════════════════════════════════════
+    const overrideTotal = !isTracker ? overrideCommissionTotal(key, currentMonthKey()) : 0;
+    const overrideCount = !isTracker ? overrideCommissionCount(key, currentMonthKey()) : 0;
+
+    // ═══════════════════════════════════════════════════════════
+    // C2 · COMISIONES FLOTANTES
+    // Ventas aprobadas después del cierre de su período · se pagan ahora
+    // ═══════════════════════════════════════════════════════════
+    const floatingArr = !isTracker ? floatingSalesForPeriod(key, currentMonthKey()) : [];
+    const floatingTotal = floatingArr.reduce((s, v) => s + v.amount, 0);
+    const floatingCount = floatingArr.length;
+    let floatingComm = 0;
+    if (!isTracker && floatingTotal > 0) {
+      // Calcular la comisión de las flotantes según esquema actual del vendedor
+      const scheme = getCommissionScheme(key, currentMonthKey());
+      if (scheme === 'old') {
+        floatingComm = floatingTotal * CONFIG.baseCommission;
+      } else if (scheme === 'new') {
+        // Comisión marginal: (comm sobre approvedTotal + floating) - (comm sobre approvedTotal)
+        const commWithFloat = calcCommissionNew(totalApproved + floatingTotal);
+        const commWithoutFloat = calcCommissionNew(totalApproved);
+        floatingComm = (commWithFloat.base + commWithFloat.arena) - (commWithoutFloat.base + commWithoutFloat.arena);
+      }
+    }
+
     return {
       total, count, ticketAvg, pct, excess, best,
       totalApproved, countApproved,
       totalPending, countPending,
       baseSalary, baseComm, bonusTarget, extraComm, viatico,
+      overrideTotal, overrideCount,
+      floatingTotal, floatingCount, floatingComm,
       isTracker, seller_target
     };
   }
@@ -9745,7 +9985,9 @@
                   + (s.viatico || 0)
                   + (s.bonusTarget || 0)
                   + (s.teamBonus || 0)
-                  + (s.firstBonus || 0);
+                  + (s.firstBonus || 0)
+                  + (s.overrideTotal || 0)   // C1 · comisión-override
+                  + (s.floatingComm || 0);   // C2 · comisiones flotantes
     });
     result.estela.totalEarn = 0;
 
@@ -10213,6 +10455,14 @@
       if (data.viatico)     parts.push(`<span class="plus">+viático $${fmtFull(data.viatico)}</span>`);
       if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
       if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
+    }
+    // C1 · Override de canceladas
+    if (data.overrideTotal) {
+      parts.push(`<span class="plus" title="${data.overrideCount} venta${data.overrideCount !== 1 ? 's' : ''} cancelada${data.overrideCount !== 1 ? 's' : ''} con comisión pagada">+💰 $${fmtFull(Math.round(data.overrideTotal))}</span>`);
+    }
+    // C2 · Comisiones flotantes
+    if (data.floatingComm) {
+      parts.push(`<span class="plus" title="${data.floatingCount} venta${data.floatingCount !== 1 ? 's' : ''} aprobada${data.floatingCount !== 1 ? 's' : ''} del período anterior · $${fmtFull(data.floatingTotal)} facturados">+🕐 $${fmtFull(Math.round(data.floatingComm))}</span>`);
     }
     if (earnEl) earnEl.textContent = fmtMoney(Math.round(totalEarn));
     if (breakdownEl) breakdownEl.innerHTML = parts.join(' · ');
@@ -11054,7 +11304,7 @@
     const currentMk = currentMonthKey();
     // Todos los cards que POTENCIALMENTE existen en el HTML
     // (lauti/bauti/leo/kevin históricos + emi agregado)
-    const allCardKeys = ['lauti', 'bauti', 'leo', 'kevin', 'emi'];
+    const allCardKeys = ['lauti', 'bauti', 'leo', 'kevin', 'emilio'];
     const sellersToRender = allCardKeys.filter(seller => {
       // ¿Está activo? sí → renderizar
       if (activeSellers.includes(seller)) return true;
@@ -11159,7 +11409,28 @@
       timeline.innerHTML = html;
 
       // Total cobrado del mes
-      document.getElementById(`cobros-total-${seller}`).textContent = fmtMoney(cobradoMes);
+      const totalEl = document.getElementById(`cobros-total-${seller}`);
+      totalEl.textContent = fmtMoney(cobradoMes);
+
+      // C1/C2 · Info de override y flotantes del mes (tooltip informativo)
+      const sellerData = c[seller];
+      let extraInfoBits = [];
+      if (sellerData?.overrideTotal > 0) {
+        extraInfoBits.push(`💰 ${fmtMoney(Math.round(sellerData.overrideTotal))} de ${sellerData.overrideCount} cancelada${sellerData.overrideCount !== 1 ? 's' : ''}`);
+      }
+      if (sellerData?.floatingComm > 0) {
+        extraInfoBits.push(`🕐 ${fmtMoney(Math.round(sellerData.floatingComm))} de ${sellerData.floatingCount} flotante${sellerData.floatingCount !== 1 ? 's' : ''}`);
+      }
+      totalEl.title = extraInfoBits.length > 0 ? 'Incluye: ' + extraInfoBits.join(' · ') : '';
+      // Badge visible si hay algo
+      const existingBadge = totalEl.querySelector('.cobros-extra-badge');
+      if (existingBadge) existingBadge.remove();
+      if (extraInfoBits.length > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'cobros-extra-badge';
+        badge.innerHTML = ' ' + (sellerData?.overrideTotal > 0 ? '💰' : '') + (sellerData?.floatingComm > 0 ? '🕐' : '');
+        totalEl.appendChild(badge);
+      }
 
       // Detalle del período actual
       const payout = currentPayoutForFreq(seller, curWeek);
@@ -11812,8 +12083,9 @@
     const activeCompetitive = CONFIG.competitiveSellers || [];
 
     // OCULTAR cards de vendedores desactivados en /01 CARA A CARA
-    // Recorre TODAS las cards del HTML (los 4 hardcoded) y muestra solo los activos
-    ['lauti', 'bauti', 'leo', 'kevin'].forEach(k => {
+    // Recorre TODAS las cards potenciales del HTML (incluyendo emi que se agregó recientemente)
+    // y muestra solo los activos
+    ['lauti', 'bauti', 'leo', 'kevin', 'emilio'].forEach(k => {
       const cardEl = document.getElementById('card-' + k);
       if (cardEl) {
         cardEl.style.display = activeCompetitive.includes(k) ? '' : 'none';
@@ -18244,6 +18516,28 @@
       const editedBadge = (s.editHistory && s.editHistory.length > 0)
         ? `<span class="td-edited-icon" title="Editada ${s.editHistory.length} vez${s.editHistory.length !== 1 ? 'es' : ''}">✏</span>`
         : '';
+      // C3 · Cronómetro para ventas pending · badge según días desde submit
+      let pendingTimerBadge = '';
+      if (s.status === 'pending' && s.submittedAt) {
+        const days = daysSinceSubmit(s);
+        const timerStatus = pendingTimerStatus(s);
+        const daysLeft = PENDING_CANCEL_DAYS - days;
+        if (timerStatus === 'warn') {
+          pendingTimerBadge = `<span class="td-timer-badge warn" title="Faltan ${daysLeft} día${daysLeft !== 1 ? 's' : ''} para auto-cancelación">⚠ ${days}d</span>`;
+        } else if (timerStatus === 'expired') {
+          pendingTimerBadge = `<span class="td-timer-badge expired" title="Excedió los 15 días · se va a auto-cancelar">⏰ ${days}d</span>`;
+        } else if (days > 0) {
+          pendingTimerBadge = `<span class="td-timer-badge ok" title="${daysLeft} días hasta el límite">${days}d</span>`;
+        }
+      }
+      // C2 · Badge de venta flotante (aprobada tarde, comisión en el mes siguiente)
+      const floatingBadge = (s.status === 'approved' && isFloatingSale(s))
+        ? `<span class="td-floating-badge" title="Aprobada después del cierre · comisión se paga este período">🕐</span>`
+        : '';
+      // Badge auto-cancelada
+      const autoCancelBadge = (s.status === 'cancelled' && s.cancelledBy === 'auto-15d')
+        ? `<span class="td-autocancel-badge" title="Auto-cancelada por 15 días sin aprobar">⏱</span>`
+        : '';
 
       // Columnas de margen · solo si está activado
       let marginCells = '';
@@ -18268,14 +18562,14 @@
       return `
         <tr>
           <td>${s.date}</td>
-          <td class="td-seller">${s.seller}${transferBadge}${editedBadge}</td>
+          <td class="td-seller">${s.seller}${transferBadge}${editedBadge}${floatingBadge}</td>
           <td>${escapeHtml(s.client || '—')}</td>
           <td class="td-products" title="${escapeHtml(items)}">${escapeHtml(items)}</td>
           <td>${escapeHtml(s.channel || '—')}</td>
           <td>${modIcon}</td>
           <td class="td-amount">${fmtMoney(s.amount)}</td>
           ${marginCells}
-          <td class="td-status ${s.status}">${statusLabel}${commOverrideBadge}</td>
+          <td class="td-status ${s.status}">${statusLabel}${pendingTimerBadge}${commOverrideBadge}${autoCancelBadge}</td>
           <td>${action}</td>
         </tr>
       `;
