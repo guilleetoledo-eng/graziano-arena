@@ -1629,6 +1629,249 @@
   .ops-btn-editdate:hover {
     background: #B45309; color: white; border-color: #B45309;
   }
+  .ops-btn-edit {
+    background: transparent; border: 1.5px solid var(--ink);
+    padding: 4px 8px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink); font-weight: 700;
+    letter-spacing: 0.05em; transition: all 0.15s;
+    margin-left: 4px;
+  }
+  .ops-btn-edit:hover {
+    background: #4285f4; color: white; border-color: #4285f4;
+  }
+  .ops-btn-cancel {
+    background: transparent; border: 1.5px solid #cc0000;
+    padding: 4px 8px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: #cc0000; font-weight: 700;
+    letter-spacing: 0.05em; transition: all 0.15s;
+    margin-left: 4px;
+  }
+  .ops-btn-cancel:hover {
+    background: #cc0000; color: white;
+  }
+  .ops-btn-delete {
+    background: transparent; border: 1.5px solid #6b0000;
+    padding: 4px 8px; cursor: pointer;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: #6b0000; font-weight: 700;
+    letter-spacing: 0.05em; transition: all 0.15s;
+    margin-left: 4px;
+  }
+  .ops-btn-delete:hover {
+    background: #6b0000; color: white;
+  }
+
+  /* Badges informativos junto a datos */
+  .td-comm-override-icon {
+    display: inline-block; margin-left: 6px;
+    cursor: help; font-size: 11px;
+  }
+  .td-edited-icon {
+    display: inline-block; margin-left: 4px;
+    cursor: help; opacity: 0.5; font-size: 10px;
+  }
+
+  /* MODAL EDITAR VENTA */
+  .edit-sale-modal { max-width: 720px; max-height: 92vh; overflow-y: auto; }
+  .es-header-banner {
+    background: var(--bg-soft);
+    border-left: 3px solid #4285f4;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+  .es-section {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+    margin-bottom: 4px;
+  }
+  .es-section:last-of-type { border-bottom: none; }
+  .es-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .es-search-wrap { position: relative; }
+  .es-search-wrap input {
+    width: 100%;
+  }
+  .es-search-results {
+    position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--bg-card);
+    border: 1.5px solid var(--line);
+    border-top: none;
+    max-height: 200px; overflow-y: auto;
+    z-index: 10;
+    display: none;
+  }
+  .es-search-results.visible { display: block; }
+  .es-search-item {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    display: flex; justify-content: space-between;
+    align-items: center;
+  }
+  .es-search-item:hover { background: var(--bg-soft); }
+  .es-search-price {
+    color: #1F8A3A; font-weight: 700;
+  }
+  .es-items-list {
+    margin-top: 10px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .es-empty {
+    padding: 16px; text-align: center;
+    color: var(--ink-3); font-style: italic;
+    background: var(--bg-soft);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .es-item-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 90px 90px 32px;
+    gap: 8px; align-items: center;
+    padding: 6px 8px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+  }
+  .es-item-name {
+    font-size: 11px; font-weight: 700;
+    color: var(--ink);
+    overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .es-item-unit {
+    font-weight: 400; color: var(--ink-3);
+    font-size: 10px;
+  }
+  .es-item-qty, .es-item-price {
+    padding: 4px 6px;
+    border: 1px solid var(--line);
+    background: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: right;
+  }
+  .es-item-sub {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .es-item-remove {
+    background: transparent;
+    border: 1px solid #cc0000;
+    color: #cc0000;
+    cursor: pointer;
+    padding: 2px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .es-item-remove:hover { background: #cc0000; color: white; }
+  .es-totals {
+    background: var(--bg-soft);
+    border-left: 3px solid var(--ink);
+    padding: 12px 16px;
+    margin-top: 8px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .es-totals-row {
+    display: flex; justify-content: space-between;
+    padding: 4px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .es-totals-row:last-child { border-bottom: none; }
+  .es-totals-row strong { color: var(--red); font-size: 13px; }
+  .es-history {
+    background: rgba(66,133,244,0.04);
+    padding: 12px 14px;
+    margin-top: 10px;
+  }
+  .es-history-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em;
+    color: #4285f4; font-weight: 700;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .es-history-list {
+    display: flex; flex-direction: column; gap: 4px;
+    max-height: 120px; overflow-y: auto;
+  }
+  .es-history-item {
+    padding: 4px 6px;
+    background: var(--bg-card);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink);
+    border-left: 2px solid #4285f4;
+  }
+  .es-history-empty {
+    font-style: italic;
+    color: var(--ink-3);
+    text-align: center;
+    padding: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+  }
+
+  /* MODAL CANCELAR VENTA */
+  .cancel-sale-modal { max-width: 560px; max-height: 90vh; overflow-y: auto; }
+  .cancel-sale-modal textarea {
+    width: 100%; padding: 8px;
+    border: 1.5px solid var(--line);
+    background: var(--bg-card);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    resize: vertical;
+  }
+  .cancel-commission-toggle {
+    padding: 12px 14px;
+    background: rgba(255,193,7,0.1);
+    border-left: 3px solid #E5A800;
+    margin: 14px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .cancel-commission-toggle-label {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .cancel-commission-toggle-label input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: #E5A800;
+  }
+  .cancel-commission-section {
+    background: var(--bg-soft);
+    border: 1.5px solid #E5A800;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .cc-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+    letter-spacing: 0.03em;
+  }
+  .cc-hint strong { color: var(--ink); }
 
   /* Ícono transferida junto al vendedor en la tabla */
   .td-transferred-icon {
@@ -5275,6 +5518,49 @@
       </div>
     </div>
 
+    <div class="seller-card" id="card-emi">
+      <div class="seller-header">
+        <div class="seller-rank"><span class="rank-emoji" id="emoji-emi"></span><span class="hash">#</span><span id="rank-emi">—</span></div>
+        <div class="seller-name-block">
+          <div class="seller-name">EMI</div>
+          <div class="seller-title">EL NUEVO</div>
+        </div>
+      </div>
+      <div class="seller-amount"><span class="currency">$</span><span id="amount-emi">0</span></div>
+      <div class="seller-meta-line">
+        <span class="val" id="count-emi">0</span> OPERACIONES <span class="sep">·</span>
+        TICKET PROM. <span class="val" id="ticket-emi">$0</span>
+      </div>
+      <div class="seller-subline" id="subline-emi"></div>
+      <div class="progress-block">
+        <div class="progress-header">
+          <span class="progress-label">Meta · $13,5M</span>
+          <span class="progress-pct" id="pct-emi">0%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bar-emi" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="seller-stats">
+        <div class="stat-cell">
+          <div class="stat-label">Excedente</div>
+          <div class="stat-value" id="excess-emi">$0</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-label">Mejor venta</div>
+          <div class="stat-value" id="best-emi">$0</div>
+        </div>
+      </div>
+      <div class="earnings">
+        <div class="earnings-label">▸ GANARÍA SI CIERRA HOY</div>
+        <div class="earnings-amount" id="earn-emi">$0</div>
+        <div class="earnings-breakdown" id="breakdown-emi">—</div>
+      </div>
+      <div class="pending-pill" id="pending-emi" style="display:none;">
+        <span class="num" id="pending-num-emi">0</span> VENTA(S) PENDIENTE(S) · <span id="pending-amount-emi">$0</span>
+      </div>
+    </div>
+
     <!-- ESTELA · TRACKER (dueña) · adentro del grid para orden dinámico -->
     <div class="estela-card" id="card-estela">
       <div class="estela-header">
@@ -5480,6 +5766,36 @@
             <span class="cw-amount" id="cw-amount-kevin">$0</span>
           </div>
           <button class="cw-btn" id="cw-btn-kevin" onclick="toggleWeekPaid('kevin', currentWeekNum())">✓ MARCAR COBRADO</button>
+        </div>
+      </div>
+
+      <div class="cobros-card" id="cobros-emi">
+        <div class="cobros-card-header">
+          <div class="cobros-seller-block">
+            <span class="cobros-emoji" id="cobros-emoji-emi"></span>
+            <span class="cobros-name">EMI</span>
+          </div>
+          <div class="cobros-total">
+            <span class="ct-label">COBRADO ESTE MES</span>
+            <span class="ct-value" id="cobros-total-emi">$0</span>
+          </div>
+        </div>
+        <div class="weeks-timeline" id="timeline-emi"></div>
+        <div class="current-week-card">
+          <div class="cw-header">
+            <span class="cw-label">▸ ESTA SEMANA</span>
+            <span class="cw-range" id="cw-range-emi">SEM 3 · días 15-21</span>
+          </div>
+          <div class="cw-stats">
+            <span>Facturado <strong id="cw-facturado-emi">$0</strong></span>
+            <span class="cw-pipe">·</span>
+            <span>Com. <strong id="cw-comision-emi">$0</strong></span>
+          </div>
+          <div class="cw-amount-block">
+            <span class="cw-amount-label">A COBRAR EL SÁBADO</span>
+            <span class="cw-amount" id="cw-amount-emi">$0</span>
+          </div>
+          <button class="cw-btn" id="cw-btn-emi" onclick="toggleWeekPaid('emi', currentWeekNum())">✓ MARCAR COBRADO</button>
         </div>
       </div>
     </div>
@@ -6670,6 +6986,140 @@
         <div class="transfer-modal-actions">
           <button class="btn-primary" onclick="closeBackfillModal()">✓ LISTO</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL EDITAR VENTA · solo admin                                -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="editSaleModalOverlay" onclick="closeEditSaleModal()">
+    <div class="modal edit-sale-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background: #4285f4;">✏ EDITAR VENTA · SOLO ADMIN</div>
+      <button class="modal-close" onclick="closeEditSaleModal()">✕</button>
+      <h2>EDITAR VENTA</h2>
+      <div class="es-header-banner" id="editSaleBanner">—</div>
+
+      <div class="es-section">
+        <div class="es-section-title">▸ CLIENTE</div>
+        <div class="form-row"><label>Nombre <span class="req">*</span></label><input type="text" id="esClient"></div>
+        <div class="form-row-inline">
+          <div class="form-row"><label>DNI</label><input type="text" id="esDni"></div>
+          <div class="form-row"><label>Teléfono</label><input type="text" id="esPhone"></div>
+        </div>
+        <div class="form-row"><label>Dirección</label><input type="text" id="esAddress"></div>
+        <div class="form-row"><label>Ciudad</label><input type="text" id="esCity"></div>
+      </div>
+
+      <div class="es-section">
+        <div class="es-section-title">▸ FECHA · CANAL · MODALIDAD</div>
+        <div class="form-row-inline">
+          <div class="form-row"><label>Fecha <span class="req">*</span></label><input type="date" id="esDate" onchange="onEsDateChange()"></div>
+          <div class="form-row"><label>Canal</label>
+            <select id="esChannel">
+              <option value="Presencial">Presencial</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Marketplace">Marketplace</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Referido">Referido</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Modalidad</label>
+          <select id="esModality">
+            <option value="ENVÍO">ENVÍO</option>
+            <option value="RETIRO">RETIRO</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="es-section">
+        <div class="es-section-title">▸ ITEMS</div>
+        <div class="es-search-wrap">
+          <input type="text" id="esSearch" placeholder="🔍 buscar producto..." oninput="esProductSearch(this.value)">
+          <div class="es-search-results" id="esSearchResults"></div>
+        </div>
+        <div id="esItemsList" class="es-items-list"></div>
+      </div>
+
+      <div class="es-section">
+        <div class="es-section-title">▸ AJUSTES</div>
+        <div class="form-row-inline">
+          <div class="form-row"><label>Descuento ($)</label><input type="number" id="esDiscount" oninput="updateEsTotals()"></div>
+          <div class="form-row"><label>Flete ($)</label><input type="number" id="esShipping" oninput="updateEsTotals()"></div>
+        </div>
+        <div class="form-row"><label>Seña ($)</label><input type="number" id="esDeposit" oninput="updateEsTotals()"></div>
+      </div>
+
+      <div class="es-totals">
+        <div class="es-totals-row"><span>Subtotal</span><strong id="esSubtotal">$0</strong></div>
+        <div class="es-totals-row"><span>Total (con flete)</span><strong id="esTotalCharged">$0</strong></div>
+        <div class="es-totals-row"><span>Monto s/flete (comisiona)</span><strong id="esAmount">$0</strong></div>
+        <div class="es-totals-row"><span>Saldo</span><strong id="esBalance">$0</strong></div>
+      </div>
+
+      <div class="es-section">
+        <div class="es-section-title">▸ OBSERVACIONES</div>
+        <textarea id="esObs" rows="2" placeholder="Notas internas..."></textarea>
+      </div>
+
+      <div class="es-history">
+        <div class="es-history-title">▸ HISTORIAL DE CAMBIOS</div>
+        <div class="es-history-list" id="esHistoryList"></div>
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-secondary" onclick="closeEditSaleModal()">CANCELAR</button>
+        <button class="btn-primary" onclick="saveEditedSale()">✓ GUARDAR CAMBIOS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MODAL CANCELAR VENTA · con opción comisión                    -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="cancelSaleModalOverlay" onclick="closeCancelSaleModal()">
+    <div class="modal cancel-sale-modal" onclick="event.stopPropagation()">
+      <div class="transfer-modal-banner" style="background: #cc0000;">❌ CANCELAR VENTA</div>
+      <button class="modal-close" onclick="closeCancelSaleModal()">✕</button>
+      <h2>CANCELAR VENTA</h2>
+      <div class="es-header-banner" id="cancelSaleBanner">—</div>
+
+      <div class="form-row">
+        <label>Motivo <span class="req">*</span></label>
+        <textarea id="cancelReason" rows="3" placeholder="Ej: cliente canceló, sin stock, mal cargada..."></textarea>
+      </div>
+
+      <div class="cancel-commission-toggle">
+        <label class="cancel-commission-toggle-label">
+          <input type="checkbox" id="cancelPayCommission" onchange="toggleCancelCommissionSection()">
+          <span>💰 Pagar comisión igual · culpa de logística u otro motivo</span>
+        </label>
+      </div>
+
+      <div class="cancel-commission-section" id="cancelCommissionSection" style="display:none;">
+        <div class="cc-hint">Ingresá <strong>% o monto</strong> · se sincronizan.</div>
+        <div class="form-row-inline">
+          <div class="form-row">
+            <label>% Comisión</label>
+            <input type="number" id="cancelCommissionPct" step="0.1" oninput="syncCommissionFromPct()">
+          </div>
+          <div class="form-row">
+            <label>Monto ($)</label>
+            <input type="number" id="cancelCommissionAmount" step="1" oninput="syncCommissionFromAmount()">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Nota (obligatoria) <span class="req">*</span></label>
+          <textarea id="cancelCommissionNote" rows="2" placeholder="Ej: no llegó el flete a tiempo, vendedor cerró bien la venta..."></textarea>
+        </div>
+      </div>
+
+      <div class="transfer-modal-actions">
+        <button class="btn-secondary" onclick="closeCancelSaleModal()">CANCELAR ACCIÓN</button>
+        <button class="btn-primary" onclick="confirmCancelSale()">✓ CONFIRMAR CANCELACIÓN</button>
       </div>
     </div>
   </div>
@@ -9562,7 +10012,9 @@
     // - Vendedores nunca creados: nunca visibles
     const activeSellers = CONFIG.competitiveSellers || [];
     const currentMk = currentMonthKey();
-    const allCardKeys = ['lauti', 'bauti', 'leo', 'kevin'];
+    // Todos los cards que POTENCIALMENTE existen en el HTML
+    // (lauti/bauti/leo/kevin históricos + emi agregado)
+    const allCardKeys = ['lauti', 'bauti', 'leo', 'kevin', 'emi'];
     const sellersToRender = allCardKeys.filter(seller => {
       // ¿Está activo? sí → renderizar
       if (activeSellers.includes(seller)) return true;
@@ -10887,6 +11339,10 @@
       if (catalogData) {
         it.cost = catalogData.cost;
         it.catalogId = catalogData.catalogId;
+        // Precio también se recalcula si el catálogo tiene precio en esa fecha
+        if (catalogData.price > 0) {
+          it.p = catalogData.price;
+        }
       } else {
         // Fallback: costo legacy del PRODUCTS array o 0
         it.cost = (p && p.co) ? p.co : 0;
@@ -10908,17 +11364,21 @@
     if (existing) {
       existing.qty += 1;
     } else {
-      // Nuevo item · buscar costo en catálogo Firebase con la fecha de la venta
+      // Nuevo item · buscar costo Y PRECIO en catálogo Firebase con la fecha de la venta
       const dateInput = document.getElementById('saleDate');
       const saleDate = (dateInput && dateInput.value) || todayLocalISO();
       const catalogData = getCatalogCostForItem(p, saleDate);
       const cost = catalogData ? catalogData.cost : (p.co || 0);
       const catalogId = catalogData ? catalogData.catalogId : null;
+      // PRECIO: si hay catálogo Firebase con precio vigente en la fecha, usar ese
+      // (NO el legacy p.p, que siempre es el actual del feed externo)
+      // Fallback al precio actual solo si no hay catálogo
+      const price = (catalogData && catalogData.price > 0) ? catalogData.price : p.p;
       saleItems.push({
         idx,
         qty: 1,
-        p: p.p,             // precio del producto legacy (editable en modal)
-        cost,               // costo desde catálogo Firebase (auto)
+        p: price,           // precio vigente al día de la venta (del catálogo Firebase)
+        cost,               // costo vigente al día de la venta (del catálogo Firebase)
         catalogId           // ref al producto Firebase (null si no matcheó)
       });
     }
@@ -15935,14 +16395,35 @@
       if (s.status === 'pending') {
         action = `<button class="ops-btn-approve" style="padding:4px 10px;font-size:9.5px;" onclick="approveSale('${s.id}')">✓</button>`;
       }
-      // Botón transferir · solo admin, no en canceladas/anuladas
-      if (currentUser === 'admin' && s.status !== 'cancelled' && s.status !== 'voided') {
-        action += `<button class="ops-btn-transfer" onclick="openTransferModal('${s.id}')" title="Transferir venta">↔</button>`;
-        action += `<button class="ops-btn-editdate" onclick="openEditDateModal('${s.id}')" title="Corregir fecha">📅</button>`;
+      // Botones de admin
+      if (currentUser === 'admin') {
+        // Editar · en cualquier estado (según regla 4a: OK editar canceladas, sin cambiar estado)
+        action += `<button class="ops-btn-edit" onclick="openEditSaleModal('${s.id}')" title="Editar venta">✏</button>`;
+        // Transferir + editar fecha · solo si NO cancelada/anulada
+        if (s.status !== 'cancelled' && s.status !== 'voided') {
+          action += `<button class="ops-btn-transfer" onclick="openTransferModal('${s.id}')" title="Transferir venta">↔</button>`;
+          action += `<button class="ops-btn-editdate" onclick="openEditDateModal('${s.id}')" title="Corregir fecha">📅</button>`;
+          // Cancelar · aprobadas o pendientes
+          if (s.status === 'approved' || s.status === 'pending') {
+            action += `<button class="ops-btn-cancel" onclick="openCancelSaleModal('${s.id}')" title="Cancelar venta">❌</button>`;
+          }
+        }
+        // Borrar · solo ventas de Estela (según pedido #2)
+        if (s.seller === 'estela') {
+          action += `<button class="ops-btn-delete" onclick="confirmDeleteSale('${s.id}')" title="Borrar venta (Estela)">🗑</button>`;
+        }
       }
       // Ícono si la venta fue transferida alguna vez
       const transferBadge = (s.transferHistory && s.transferHistory.length > 0)
         ? `<span class="td-transferred-icon" title="${buildTransferHistoryTooltip(s)}">↔</span>`
+        : '';
+      // Badge de comisión-aunque-cancelada (pedido #5)
+      const commOverrideBadge = (s.status === 'cancelled' && s.commissionOverride)
+        ? `<span class="td-comm-override-icon" title="Comisión pagada aunque cancelada: ${fmtMoney(s.commissionOverride.amount || 0)}">💰</span>`
+        : '';
+      // Badge de venta editada
+      const editedBadge = (s.editHistory && s.editHistory.length > 0)
+        ? `<span class="td-edited-icon" title="Editada ${s.editHistory.length} vez${s.editHistory.length !== 1 ? 'es' : ''}">✏</span>`
         : '';
 
       // Columnas de margen · solo si está activado
@@ -15968,14 +16449,14 @@
       return `
         <tr>
           <td>${s.date}</td>
-          <td class="td-seller">${s.seller}${transferBadge}</td>
+          <td class="td-seller">${s.seller}${transferBadge}${editedBadge}</td>
           <td>${escapeHtml(s.client || '—')}</td>
           <td class="td-products" title="${escapeHtml(items)}">${escapeHtml(items)}</td>
           <td>${escapeHtml(s.channel || '—')}</td>
           <td>${modIcon}</td>
           <td class="td-amount">${fmtMoney(s.amount)}</td>
           ${marginCells}
-          <td class="td-status ${s.status}">${statusLabel}</td>
+          <td class="td-status ${s.status}">${statusLabel}${commOverrideBadge}</td>
           <td>${action}</td>
         </tr>
       `;
@@ -16648,6 +17129,410 @@
       showToast(`⚠ Aprobada · mes ${saleMonthKey} ya liquidado · sin ajuste retroactivo`, 'warn');
     }
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // #2 BORRAR VENTA (solo Estela) · admin
+  // ═══════════════════════════════════════════════════════════
+  async function confirmDeleteSale(id) {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale) return;
+    if (sale.seller !== 'estela') {
+      alert('Solo se pueden borrar ventas de Estela desde este botón.');
+      return;
+    }
+    const msg = `¿Borrar venta?\n\n` +
+      `Cliente: ${sale.client || '—'}\n` +
+      `Monto: ${fmtMoney(sale.amount || 0)}\n` +
+      `Fecha: ${sale.date}\n\n` +
+      `⚠ ESTA ACCIÓN NO SE PUEDE DESHACER.`;
+    if (!confirm(msg)) return;
+    // Filtrar del array
+    state.sales = state.sales.filter(s => s.id !== id);
+    await saveState();
+    renderAll();
+    showToast(`🗑 Venta borrada · ${fmtMoney(sale.amount || 0)}`, 'warn');
+  }
+  window.confirmDeleteSale = confirmDeleteSale;
+
+  // ═══════════════════════════════════════════════════════════
+  // #4 EDITAR VENTA (solo admin) · abre modal grande
+  // ═══════════════════════════════════════════════════════════
+  let editSaleContext = { saleId: null };
+
+  function openEditSaleModal(id) {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale) return;
+    editSaleContext.saleId = id;
+
+    // Poblar campos
+    const banner = document.getElementById('editSaleBanner');
+    if (banner) {
+      const meta = SELLER_META[sale.seller] || {};
+      const statusName = { approved: 'Aprobada', pending: 'Pendiente', cancelled: 'Cancelada', voided: 'Anulada' }[sale.status] || sale.status;
+      banner.textContent = `#${sale.id.slice(-8).toUpperCase()} · ${meta.name || sale.seller.toUpperCase()} · ${statusName}`;
+    }
+    document.getElementById('esClient').value = sale.client || '';
+    document.getElementById('esDni').value = sale.dni || '';
+    document.getElementById('esPhone').value = sale.phone || '';
+    document.getElementById('esAddress').value = sale.address || '';
+    document.getElementById('esCity').value = sale.city || '';
+    document.getElementById('esDate').value = sale.date || '';
+    document.getElementById('esChannel').value = sale.channel || '';
+    document.getElementById('esModality').value = sale.modality || 'ENVÍO';
+    document.getElementById('esShipping').value = sale.shipping || 0;
+    document.getElementById('esDiscount').value = sale.discount || 0;
+    document.getElementById('esDeposit').value = sale.deposit || 0;
+    document.getElementById('esObs').value = sale.obs || '';
+
+    renderEsItems();
+    renderEsHistory();
+    updateEsTotals();
+
+    document.getElementById('editSaleModalOverlay').classList.add('open');
+  }
+  function closeEditSaleModal() {
+    document.getElementById('editSaleModalOverlay').classList.remove('open');
+    editSaleContext.saleId = null;
+  }
+  window.openEditSaleModal = openEditSaleModal;
+  window.closeEditSaleModal = closeEditSaleModal;
+
+  // ITEMS del modal editar
+  let esItems = []; // {name, qty, price, cost, catalogId, unit}
+
+  function renderEsItems() {
+    const container = document.getElementById('esItemsList');
+    if (!container) return;
+    const sale = state.sales.find(s => s.id === editSaleContext.saleId);
+    if (!sale) return;
+    // Cargar desde sale la primera vez
+    if (!container.dataset.loaded) {
+      esItems = (sale.items || []).map(it => ({
+        idx: it.idx,
+        name: it.name,
+        unit: it.unit || '',
+        qty: it.qty || 0,
+        price: it.price || 0,
+        cost: it.cost || 0,
+        catalogId: it.catalogId || null,
+        _synthetic: it._synthetic || false
+      }));
+      container.dataset.loaded = '1';
+    }
+    if (esItems.length === 0) {
+      container.innerHTML = '<div class="es-empty">Sin items · agregá uno arriba</div>';
+      return;
+    }
+    container.innerHTML = esItems.map((it, i) => {
+      const subtotal = it.qty * it.price;
+      return `
+        <div class="es-item-row">
+          <div class="es-item-name">${escapeHtml(it.name)}${it.unit ? ` <span class="es-item-unit">${escapeHtml(it.unit)}</span>` : ''}</div>
+          <input type="number" class="es-item-qty" value="${it.qty}" min="1" oninput="updateEsItem(${i}, 'qty', this.value)">
+          <input type="number" class="es-item-price" value="${it.price}" min="0" oninput="updateEsItem(${i}, 'price', this.value)">
+          <div class="es-item-sub">${fmtMoney(subtotal)}</div>
+          <button class="es-item-remove" onclick="removeEsItem(${i})" title="Quitar">✕</button>
+        </div>
+      `;
+    }).join('');
+  }
+  window.updateEsItem = function(i, field, value) {
+    if (!esItems[i]) return;
+    const v = parseFloat(value) || 0;
+    esItems[i][field] = v;
+    renderEsItems();
+    updateEsTotals();
+  };
+  window.removeEsItem = function(i) {
+    esItems.splice(i, 1);
+    renderEsItems();
+    updateEsTotals();
+  };
+
+  function esProductSearch(query) {
+    const results = document.getElementById('esSearchResults');
+    if (!results) return;
+    const q = query.trim().toLowerCase();
+    if (q.length < 2) {
+      results.classList.remove('visible');
+      return;
+    }
+    const matches = PRODUCTS
+      .map((p, idx) => ({ ...p, idx }))
+      .filter(p => (p.n || '').toLowerCase().includes(q))
+      .slice(0, 10);
+    if (matches.length === 0) {
+      results.classList.remove('visible');
+      return;
+    }
+    results.innerHTML = matches.map(p =>
+      `<div class="es-search-item" onclick="addEsProduct(${p.idx})">${escapeHtml(p.n)} <span class="es-search-price">$${fmtFull(p.p)}</span></div>`
+    ).join('');
+    results.classList.add('visible');
+  }
+  window.esProductSearch = esProductSearch;
+
+  window.addEsProduct = function(idx) {
+    const p = PRODUCTS[idx];
+    if (!p) return;
+    // Buscar existente
+    const existing = esItems.find(it => it.idx === idx);
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      // Con costo/precio del catálogo según la fecha
+      const dateInput = document.getElementById('esDate');
+      const saleDate = (dateInput && dateInput.value) || todayLocalISO();
+      const catalogData = getCatalogCostForItem(p, saleDate);
+      const cost = catalogData ? catalogData.cost : (p.co || 0);
+      const price = (catalogData && catalogData.price > 0) ? catalogData.price : p.p;
+      const catalogId = catalogData ? catalogData.catalogId : null;
+      esItems.push({
+        idx, name: p.n, unit: p.u,
+        qty: 1, price, cost, catalogId
+      });
+    }
+    document.getElementById('esSearch').value = '';
+    document.getElementById('esSearchResults').classList.remove('visible');
+    renderEsItems();
+    updateEsTotals();
+  };
+
+  function updateEsTotals() {
+    const subtotal = esItems.reduce((s, it) => s + (it.qty * it.price), 0);
+    const shipping = parseFloat(document.getElementById('esShipping').value) || 0;
+    const discount = parseFloat(document.getElementById('esDiscount').value) || 0;
+    const deposit = parseFloat(document.getElementById('esDeposit').value) || 0;
+    const totalCharged = Math.max(0, subtotal - discount + shipping);
+    const amount = Math.max(0, subtotal - discount); // sin flete (para comisión)
+    const balance = Math.max(0, totalCharged - deposit);
+    document.getElementById('esSubtotal').textContent = fmtMoney(subtotal);
+    document.getElementById('esTotalCharged').textContent = fmtMoney(totalCharged);
+    document.getElementById('esAmount').textContent = fmtMoney(amount);
+    document.getElementById('esBalance').textContent = fmtMoney(balance);
+  }
+  window.updateEsTotals = updateEsTotals;
+
+  // Cuando cambia la fecha en el editor · recalcular items del catálogo
+  function onEsDateChange() {
+    const saleDate = document.getElementById('esDate').value;
+    if (!saleDate) return;
+    // Recalcular precio+costo de items que tengan catalogId
+    let touched = 0;
+    esItems.forEach(it => {
+      // Buscar en catálogo Firebase por catalogId o por nombre
+      const cat = it.catalogId ? state.products?.[it.catalogId]
+                                : findCatalogProductByName(it.name);
+      if (!cat) return;
+      const vigente = getVigenteAt(cat, saleDate);
+      if (!vigente) return;
+      if (vigente.cost > 0) it.cost = vigente.cost;
+      if (vigente.price > 0) it.price = vigente.price;
+      touched++;
+    });
+    renderEsItems();
+    updateEsTotals();
+    if (touched > 0) showToast(`↺ ${touched} items recalculados con fecha ${saleDate}`);
+  }
+  window.onEsDateChange = onEsDateChange;
+
+  function renderEsHistory() {
+    const sale = state.sales.find(s => s.id === editSaleContext.saleId);
+    const container = document.getElementById('esHistoryList');
+    if (!container || !sale) return;
+    const hist = sale.editHistory || [];
+    if (hist.length === 0) {
+      container.innerHTML = '<div class="es-history-empty">Sin cambios previos</div>';
+      return;
+    }
+    container.innerHTML = hist.slice(-10).reverse().map(h => {
+      const d = new Date(h.at);
+      const dateStr = d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+      const timeStr = d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
+      return `<div class="es-history-item">${dateStr} ${timeStr} · <strong>${escapeHtml(h.by || '—')}</strong> · ${escapeHtml(h.summary || '(sin resumen)')}</div>`;
+    }).join('');
+  }
+
+  async function saveEditedSale() {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === editSaleContext.saleId);
+    if (!sale) return alert('Venta no encontrada');
+
+    // Recolectar cambios
+    const newData = {
+      client: document.getElementById('esClient').value.trim(),
+      dni: document.getElementById('esDni').value.trim(),
+      phone: document.getElementById('esPhone').value.trim(),
+      address: document.getElementById('esAddress').value.trim(),
+      city: document.getElementById('esCity').value.trim(),
+      date: document.getElementById('esDate').value,
+      channel: document.getElementById('esChannel').value,
+      modality: document.getElementById('esModality').value,
+      shipping: parseFloat(document.getElementById('esShipping').value) || 0,
+      discount: parseFloat(document.getElementById('esDiscount').value) || 0,
+      deposit: parseFloat(document.getElementById('esDeposit').value) || 0,
+      obs: document.getElementById('esObs').value.trim()
+    };
+    if (!newData.client) return alert('Cliente vacío');
+    if (!newData.date) return alert('Fecha vacía');
+    if (esItems.length === 0) {
+      const ok = confirm('⚠ La venta va a quedar SIN items. ¿Guardar así igual?');
+      if (!ok) return;
+    }
+
+    // Calcular subtotales
+    const subtotal = esItems.reduce((s, it) => s + (it.qty * it.price), 0);
+    const totalCharged = Math.max(0, subtotal - newData.discount + newData.shipping);
+    const amount = Math.max(0, subtotal - newData.discount);
+
+    // Detectar cambios significativos para historia
+    const changes = [];
+    if (sale.client !== newData.client) changes.push(`cliente: ${sale.client}→${newData.client}`);
+    if (sale.date !== newData.date) changes.push(`fecha: ${sale.date}→${newData.date}`);
+    if (Math.abs((sale.amount || 0) - amount) > 0.5) changes.push(`monto: ${fmtMoney(sale.amount || 0)}→${fmtMoney(amount)}`);
+    if ((sale.items?.length || 0) !== esItems.length) changes.push(`items: ${sale.items?.length || 0}→${esItems.length}`);
+    if ((sale.modality || '') !== newData.modality) changes.push(`modalidad: ${sale.modality || '—'}→${newData.modality}`);
+
+    // Aplicar cambios
+    Object.assign(sale, newData);
+    sale.items = esItems.map(it => ({
+      idx: it.idx,
+      name: it.name,
+      unit: it.unit || '',
+      qty: it.qty,
+      price: it.price,
+      cost: it.cost || 0,
+      catalogId: it.catalogId || null
+    }));
+    sale.subtotal = subtotal;
+    sale.totalCharged = totalCharged;
+    sale.amount = amount;
+    sale.balance = Math.max(0, totalCharged - newData.deposit);
+    // Product summary
+    sale.product = esItems.length > 0
+      ? esItems.map(it => `${it.qty} ${it.name}`).join(' · ')
+      : '—';
+
+    // Log del cambio
+    sale.editHistory = sale.editHistory || [];
+    sale.editHistory.push({
+      at: Date.now(),
+      by: currentUser,
+      summary: changes.length > 0 ? changes.join(' · ') : 'edición sin cambios significativos'
+    });
+
+    await saveState();
+    renderAll();
+    closeEditSaleModal();
+    showToast(`✓ Venta editada · ${changes.length} cambio${changes.length !== 1 ? 's' : ''}`);
+    // Reset loaded flag para la próxima apertura
+    const container = document.getElementById('esItemsList');
+    if (container) delete container.dataset.loaded;
+    esItems = [];
+  }
+  window.saveEditedSale = saveEditedSale;
+
+  // Cerrar dropdown al hacer click afuera
+  document.addEventListener('click', (e) => {
+    const results = document.getElementById('esSearchResults');
+    const search = document.getElementById('esSearch');
+    if (results && search && !results.contains(e.target) && e.target !== search) {
+      results.classList.remove('visible');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════
+  // #5 CANCELAR VENTA CON COMISIÓN OVERRIDE · admin
+  // ═══════════════════════════════════════════════════════════
+  let cancelSaleContext = { saleId: null };
+
+  function openCancelSaleModal(id) {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === id);
+    if (!sale) return;
+    cancelSaleContext.saleId = id;
+
+    const banner = document.getElementById('cancelSaleBanner');
+    if (banner) {
+      const meta = SELLER_META[sale.seller] || {};
+      banner.textContent = `#${sale.id.slice(-8).toUpperCase()} · ${meta.name || sale.seller.toUpperCase()} · ${fmtMoney(sale.amount || 0)}`;
+    }
+    document.getElementById('cancelReason').value = '';
+    document.getElementById('cancelPayCommission').checked = false;
+    document.getElementById('cancelCommissionPct').value = '3';
+    document.getElementById('cancelCommissionAmount').value = '0';
+    document.getElementById('cancelCommissionNote').value = '';
+    toggleCancelCommissionSection();
+    document.getElementById('cancelSaleModalOverlay').classList.add('open');
+  }
+  function closeCancelSaleModal() {
+    document.getElementById('cancelSaleModalOverlay').classList.remove('open');
+    cancelSaleContext.saleId = null;
+  }
+  window.openCancelSaleModal = openCancelSaleModal;
+  window.closeCancelSaleModal = closeCancelSaleModal;
+
+  function toggleCancelCommissionSection() {
+    const checked = document.getElementById('cancelPayCommission').checked;
+    const section = document.getElementById('cancelCommissionSection');
+    if (section) section.style.display = checked ? '' : 'none';
+    // Recalcular monto default si se acaba de tildar
+    if (checked) syncCommissionFromPct();
+  }
+  window.toggleCancelCommissionSection = toggleCancelCommissionSection;
+
+  function syncCommissionFromPct() {
+    const sale = state.sales.find(s => s.id === cancelSaleContext.saleId);
+    if (!sale) return;
+    const pct = parseFloat(document.getElementById('cancelCommissionPct').value) || 0;
+    const amount = (sale.amount || 0) * (pct / 100);
+    document.getElementById('cancelCommissionAmount').value = Math.round(amount);
+  }
+  window.syncCommissionFromPct = syncCommissionFromPct;
+
+  function syncCommissionFromAmount() {
+    const sale = state.sales.find(s => s.id === cancelSaleContext.saleId);
+    if (!sale || !sale.amount || sale.amount === 0) return;
+    const amount = parseFloat(document.getElementById('cancelCommissionAmount').value) || 0;
+    const pct = (amount / sale.amount) * 100;
+    document.getElementById('cancelCommissionPct').value = pct.toFixed(2);
+  }
+  window.syncCommissionFromAmount = syncCommissionFromAmount;
+
+  async function confirmCancelSale() {
+    if (currentUser !== 'admin') return;
+    const sale = state.sales.find(s => s.id === cancelSaleContext.saleId);
+    if (!sale) return;
+    const reason = document.getElementById('cancelReason').value.trim();
+    if (!reason) return alert('Escribí el motivo de la cancelación');
+    const payComm = document.getElementById('cancelPayCommission').checked;
+    let commissionOverride = null;
+    if (payComm) {
+      const pct = parseFloat(document.getElementById('cancelCommissionPct').value) || 0;
+      const amount = parseFloat(document.getElementById('cancelCommissionAmount').value) || 0;
+      const note = document.getElementById('cancelCommissionNote').value.trim();
+      if (!note) return alert('La nota de la comisión-override es obligatoria');
+      if (pct < 0 || amount < 0) return alert('Valores negativos no permitidos');
+      commissionOverride = { pct, amount, note, setAt: Date.now(), setBy: currentUser };
+    }
+    // Aplicar
+    sale.status = 'cancelled';
+    sale.cancelledAt = Date.now();
+    sale.cancelledBy = currentUser;
+    sale.cancelReason = reason;
+    if (commissionOverride) sale.commissionOverride = commissionOverride;
+    else delete sale.commissionOverride;
+    await saveState();
+    renderAll();
+    closeCancelSaleModal();
+    const msg = commissionOverride
+      ? `❌ Cancelada · 💰 comisión ${fmtMoney(commissionOverride.amount)} se paga`
+      : `❌ Venta cancelada`;
+    showToast(msg, 'warn');
+  }
+  window.confirmCancelSale = confirmCancelSale;
 
   async function rejectSale(id) {
     const sale = state.sales.find(s => s.id === id);
