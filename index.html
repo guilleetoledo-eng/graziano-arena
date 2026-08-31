@@ -19,6 +19,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Archivo:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
   :root {
     --bg: #FAFAF7;
@@ -3632,8 +3634,51 @@
 
   .budget-actions {
     display: flex; gap: 10px; margin-top: 4px;
+    flex-wrap: wrap;
   }
-  .budget-actions .btn-primary { flex: 1; margin-top: 0; }
+  .budget-actions .btn-primary { flex: 1; margin-top: 0; min-width: 130px; }
+  .budget-actions .btn-secondary { min-width: 100px; }
+
+  /* Fila del WhatsApp del vendedor */
+  .budget-phone-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-soft);
+    border-left: 3px solid #25d366;
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    flex-wrap: wrap;
+  }
+  .bpr-label {
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+  }
+  .bpr-value {
+    flex: 1;
+    color: var(--ink);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    min-width: 100px;
+  }
+  .bpr-edit-btn {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    transition: all 0.15s;
+    text-transform: uppercase;
+  }
+  .bpr-edit-btn:hover {
+    background: var(--ink); color: white;
+  }
 
   /* ===== CENTRO DE OPERACIONES ===== */
   .view-toggle {
@@ -8043,8 +8088,14 @@
     </div>
 
     <div class="budget-actions">
-      <button class="btn-primary" onclick="copyBudget()">📋 COPIAR PRESUPUESTO</button>
-      <button class="btn-secondary" onclick="clearBudget()" style="flex-shrink:0;">LIMPIAR TODO</button>
+      <button class="btn-primary" onclick="copyBudget()">📋 COPIAR TEXTO</button>
+      <button class="btn-primary" onclick="downloadBudgetPDF()" style="background:#B81E1A;">📄 DESCARGAR PDF</button>
+      <button class="btn-secondary" onclick="clearBudget()" style="flex-shrink:0;">🗑 LIMPIAR</button>
+    </div>
+    <div class="budget-phone-row">
+      <span class="bpr-label">📱 Mi WhatsApp para presupuestos:</span>
+      <span class="bpr-value" id="budgetPhoneValue">—</span>
+      <button class="bpr-edit-btn" onclick="editMyPhone()">✏ EDITAR</button>
     </div>
   </div>
 </div>
@@ -8436,7 +8487,7 @@
       if (!u.active) return;
       if (u.role === 'seller') {
         PINS[u.key] = u.pin;
-        SELLER_META[u.key] = { name: u.name, title: u.title, emoji: u.emoji };
+        SELLER_META[u.key] = { name: u.name, title: u.title, emoji: u.emoji, phone: u.phone || '' };
       } else if (u.role === 'admin') {
         PINS[u.key] = u.pin;
       }
@@ -8618,7 +8669,8 @@
     weeklyPayments: {}, // { "2026-05": { lauti: { "1": {paid, paidAt, paidBy, amount}, ... }, bauti: {...} } }
     products: {}, // { P001: {id, name, active, priceHistory: [...], category, subCategory, unit, entryType, minBonif, ...} }
     categories: {}, // { C001: {id, name, subCategories: {S001: {id, name}}, order, createdAt} }
-    entryTypes: {} // { stock: {id, name, hint, emoji, color, order, createdAt} }
+    entryTypes: {}, // { stock: {id, name, hint, emoji, color, order, createdAt} }
+    budgetCounter: 0 // contador global de presupuestos generados
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
@@ -8630,7 +8682,8 @@
       await stateRef.set({
         sales: state.sales || [],
         hofPrev: state.hofPrev || null,
-        weeklyPayments: state.weeklyPayments || {}
+        weeklyPayments: state.weeklyPayments || {},
+        budgetCounter: state.budgetCounter || 0
       });
     } catch (e) { console.warn('Firebase save failed', e); }
   }
@@ -8657,9 +8710,11 @@
         }
         if (data.hofPrev) state.hofPrev = data.hofPrev;
         state.weeklyPayments = data.weeklyPayments || {};
+        state.budgetCounter = data.budgetCounter || 0;
       } else {
         state.sales = [];
         state.weeklyPayments = {};
+        state.budgetCounter = 0;
       }
       if (currentUser) renderAll();
       // C3 · Ejecutar auto-cancel de pendings >15 días (una vez por sesión, al load inicial)
@@ -9440,7 +9495,29 @@
     refreshPrices(true);
     if (budgetItems.length === 0) renderBudget();
     setTimeout(() => document.getElementById('budgetSearch').focus(), 100);
+    // Actualizar el display del WhatsApp del vendedor
+    updateBudgetPhoneDisplay();
   }
+
+  function updateBudgetPhoneDisplay() {
+    const el = document.getElementById('budgetPhoneValue');
+    if (!el) return;
+    if (currentUser === 'view' || currentUser === 'admin') {
+      el.textContent = '(usa el WhatsApp del corralón)';
+      el.style.color = 'var(--ink-3)';
+      return;
+    }
+    const meta = SELLER_META[currentUser];
+    const phone = meta?.phone || '';
+    if (phone) {
+      el.textContent = phone;
+      el.style.color = 'var(--ink)';
+    } else {
+      el.textContent = 'No cargado · tocá EDITAR';
+      el.style.color = '#cc0000';
+    }
+  }
+  window.updateBudgetPhoneDisplay = updateBudgetPhoneDisplay;
   function closeBudget() {
     document.getElementById('budgetOverlay').classList.remove('open');
     document.getElementById('budgetResults').classList.remove('visible');
@@ -9631,6 +9708,323 @@
     if (validity > 0) txt += `\n⏰ _Validez: ${validity} días_`;
     return txt;
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // PRESUPUESTO · PDF con jsPDF
+  // ═══════════════════════════════════════════════════════════
+
+  const GRAZIANO_LOGO_URL = 'https://raw.githubusercontent.com/guilleetoledo-eng/graziano-arena/main/logograzianomateriales.png';
+  let _logoBase64Cache = null;
+
+  // Precarga el logo como base64 · lo cachea para reusar
+  async function loadLogoBase64() {
+    if (_logoBase64Cache) return _logoBase64Cache;
+    try {
+      const resp = await fetch(GRAZIANO_LOGO_URL);
+      const blob = await resp.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          _logoBase64Cache = reader.result;
+          resolve(_logoBase64Cache);
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.warn('No se pudo cargar el logo:', e);
+      return null;
+    }
+  }
+
+  // Obtiene o pide el WhatsApp del vendedor logueado
+  async function getOrAskSellerPhone() {
+    if (currentUser === 'view' || currentUser === 'admin') {
+      // Admin y view usan el número por defecto del corralón
+      return SELLER_META.estela?.phone || '';
+    }
+    const meta = SELLER_META[currentUser];
+    if (meta?.phone) return meta.phone;
+    // Pedir por primera vez
+    const phone = prompt(
+      '📱 CARGA TU WHATSAPP\n\n' +
+      'Para incluir tu número en los presupuestos que generás.\n' +
+      'Formato sugerido: +54 342 XXX XXXX\n\n' +
+      'Podés modificarlo después con el botón ✏ del modal.',
+      '+54 342 '
+    );
+    if (!phone || phone.trim().length < 8) return '';
+    // Guardar en Firebase
+    await saveSellerPhone(currentUser, phone.trim());
+    return phone.trim();
+  }
+
+  async function saveSellerPhone(userKey, phone) {
+    if (!userKey) return;
+    // Buscar el user en state.users
+    const users = state.users || {};
+    const entry = Object.entries(users).find(([id, u]) => u.key === userKey);
+    if (!entry) {
+      showToast('⚠ No se pudo guardar el WhatsApp', 'warn');
+      return;
+    }
+    const [userId] = entry;
+    try {
+      await db.ref(`users/${userId}/phone`).set(phone);
+      if (SELLER_META[userKey]) SELLER_META[userKey].phone = phone;
+      showToast(`✓ WhatsApp actualizado: ${phone}`);
+      updateBudgetPhoneDisplay();
+    } catch (e) {
+      console.warn('saveSellerPhone error', e);
+      showToast('⚠ Error guardando WhatsApp', 'warn');
+    }
+  }
+
+  // Prompt para editar el WhatsApp del vendedor actual
+  async function editMyPhone() {
+    if (currentUser === 'view' || currentUser === 'admin') {
+      showToast('Los vendedores editan su propio WhatsApp desde su perfil', 'warn');
+      return;
+    }
+    const meta = SELLER_META[currentUser];
+    const current = meta?.phone || '';
+    const phone = prompt(
+      '📱 EDITAR MI WHATSAPP\n\n' +
+      'Formato sugerido: +54 342 XXX XXXX\n\n' +
+      'Actual: ' + (current || '(no cargado)'),
+      current || '+54 342 '
+    );
+    if (phone === null) return; // canceló
+    if (phone.trim().length < 8 && phone.trim() !== '') {
+      showToast('⚠ Número muy corto', 'warn');
+      return;
+    }
+    await saveSellerPhone(currentUser, phone.trim());
+  }
+  window.editMyPhone = editMyPhone;
+
+  // Generar y descargar el PDF del presupuesto
+  async function downloadBudgetPDF() {
+    if (budgetItems.length === 0) {
+      showToast('AGREGÁ AL MENOS UN PRODUCTO', 'warn');
+      return;
+    }
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      showToast('⚠ Librería PDF no cargada · reintentá en unos segundos', 'warn');
+      return;
+    }
+    showToast('📄 Generando PDF...');
+    // Incrementar contador ANTES de generar (para que aparezca en el PDF)
+    state.budgetCounter = (state.budgetCounter || 0) + 1;
+    const budgetNum = String(state.budgetCounter).padStart(4, '0');
+    await saveState();
+
+    // WhatsApp del vendedor
+    const phone = await getOrAskSellerPhone();
+
+    // Datos
+    const clientName = document.getElementById('budgetClient').value.trim() || 'Cliente';
+    const meta = SELLER_META[currentUser] || SELLER_META.estela || { name: 'GRAZIANO' };
+    const vendorName = meta.name || currentUser.toUpperCase();
+    const today = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const totals = calcBudgetTotals();
+    const validity = parseInt(document.getElementById('budgetValidity')?.value) || 7;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+    const marginX = 15;
+    let cursorY = 15;
+
+    // Precargar logo
+    const logoData = await loadLogoBase64();
+
+    // ═══ HEADER · logo + banda roja ═══
+    if (logoData) {
+      try {
+        // logo negro con caja roja · lo mostramos ~55mm ancho
+        doc.addImage(logoData, 'PNG', marginX, cursorY, 55, 20, undefined, 'FAST');
+      } catch (e) { console.warn('addImage error', e); }
+    } else {
+      // fallback texto
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.setTextColor(229, 37, 33);
+      doc.text('GRAZIANO', marginX, cursorY + 10);
+      doc.setFontSize(11);
+      doc.setTextColor(60, 60, 60);
+      doc.text('MATERIALES', marginX, cursorY + 17);
+    }
+    // Presupuesto # a la derecha del logo
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(120, 120, 120);
+    doc.text('PRESUPUESTO N°', pageW - marginX, cursorY + 8, { align: 'right' });
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.setTextColor(229, 37, 33);
+    doc.text('#' + budgetNum, pageW - marginX, cursorY + 17, { align: 'right' });
+
+    cursorY += 25;
+
+    // Franja roja separadora
+    doc.setFillColor(229, 37, 33);
+    doc.rect(marginX, cursorY, pageW - 2 * marginX, 1.2, 'F');
+    cursorY += 8;
+
+    // ═══ DATOS ═══
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(60, 60, 60);
+    doc.text('Fecha:', marginX, cursorY);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text(today, marginX + 20, cursorY);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.text('Vendedor:', pageW / 2 + 5, cursorY);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text(vendorName, pageW / 2 + 30, cursorY);
+
+    cursorY += 6;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.text('Cliente:', marginX, cursorY);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text(clientName, marginX + 20, cursorY);
+
+    cursorY += 10;
+
+    // ═══ TABLA DE ITEMS ═══
+    const tableBody = budgetItems.map(b => {
+      const p = PRODUCTS[b.idx];
+      const sub = b.p * b.qty;
+      return [
+        p ? p.n : '—',
+        String(b.qty) + (p?.u ? ` ${p.u}` : ''),
+        '$' + fmtFull(b.p),
+        '$' + fmtFull(sub)
+      ];
+    });
+
+    doc.autoTable({
+      startY: cursorY,
+      head: [['PRODUCTO', 'CANTIDAD', 'PRECIO UNIT.', 'SUBTOTAL']],
+      body: tableBody,
+      theme: 'plain',
+      headStyles: {
+        fillColor: [26, 26, 26],
+        textColor: [255, 255, 255],
+        fontSize: 9,
+        fontStyle: 'bold',
+        halign: 'left',
+        cellPadding: 3
+      },
+      bodyStyles: {
+        fontSize: 10,
+        cellPadding: 3,
+        textColor: [30, 30, 30]
+      },
+      columnStyles: {
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 32, halign: 'right' },
+        2: { cellWidth: 30, halign: 'right' },
+        3: { cellWidth: 32, halign: 'right', fontStyle: 'bold' }
+      },
+      alternateRowStyles: { fillColor: [247, 247, 244] },
+      margin: { left: marginX, right: marginX }
+    });
+
+    cursorY = doc.lastAutoTable.finalY + 8;
+
+    // ═══ TOTALES ═══
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.text('Subtotal:', pageW - marginX - 55, cursorY);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont('helvetica', 'bold');
+    doc.text('$' + fmtFull(totals.subtotal), pageW - marginX, cursorY, { align: 'right' });
+    cursorY += 6;
+
+    if (totals.discount > 0) {
+      const lbl = totals.discType === 'pct' ? `Descuento ${totals.discVal}%:` : 'Descuento:';
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
+      doc.text(lbl, pageW - marginX - 55, cursorY);
+      doc.setTextColor(200, 30, 30);
+      doc.setFont('helvetica', 'bold');
+      doc.text('-$' + fmtFull(totals.discount), pageW - marginX, cursorY, { align: 'right' });
+      cursorY += 6;
+    }
+
+    // Línea separadora TOTAL
+    doc.setDrawColor(26, 26, 26);
+    doc.setLineWidth(0.6);
+    doc.line(pageW - marginX - 80, cursorY, pageW - marginX, cursorY);
+    cursorY += 6;
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(229, 37, 33);
+    doc.text('TOTAL:', pageW - marginX - 55, cursorY);
+    doc.text('$' + fmtFull(totals.total), pageW - marginX, cursorY, { align: 'right' });
+    cursorY += 5;
+    doc.setDrawColor(229, 37, 33);
+    doc.setLineWidth(0.8);
+    doc.line(pageW - marginX - 80, cursorY, pageW - marginX, cursorY);
+    cursorY += 10;
+
+    // Validez
+    if (validity > 0) {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'italic');
+      doc.setTextColor(120, 120, 120);
+      doc.text(`⏰ Validez del presupuesto: ${validity} días`, marginX, cursorY);
+      cursorY += 6;
+    }
+
+    // ═══ FOOTER (fondo negro) ═══
+    const footerY = pageH - 22;
+    doc.setFillColor(26, 26, 26);
+    doc.rect(0, footerY, pageW, 22, 'F');
+    doc.setFillColor(229, 37, 33);
+    doc.rect(0, footerY, pageW, 1.2, 'F');
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(255, 255, 255);
+    doc.text('Santo Tomé · Santa Fe', marginX, footerY + 8);
+    if (phone) {
+      doc.setFont('helvetica', 'bold');
+      doc.text(`WhatsApp: ${phone}`, marginX, footerY + 14);
+    }
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(180, 180, 180);
+    doc.text('@graziano.materiales', pageW - marginX, footerY + 14, { align: 'right' });
+    doc.setFontSize(8);
+    doc.text('GRAZIANO MATERIALES', pageW - marginX, footerY + 8, { align: 'right' });
+
+    // Nombre archivo
+    const cleanClient = clientName.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 30) || 'cliente';
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const filename = `presupuesto-${budgetNum}-${cleanClient}-${dateStr}.pdf`;
+
+    doc.save(filename);
+    showToast(`✓ PDF descargado · #${budgetNum}`);
+    // Actualizar el texto preview para que refleje el nuevo número también
+    renderBudget();
+  }
+  window.downloadBudgetPDF = downloadBudgetPDF;
 
   async function copyBudget() {
     if (budgetItems.length === 0) { showToast('AGREGÁ AL MENOS UN PRODUCTO', 'warn'); return; }
