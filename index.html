@@ -11532,14 +11532,18 @@
   }
 
   function renderGlobals(c) {
-    // TOTAL FACTURADO = suma de TODOS los vendedores competitivos activos
-    const total = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.total || 0), 0);
-    const totalCount = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.count || 0), 0);
+    // TOTAL FACTURADO = suma de TODOS los vendedores + Estela (para reflejar volumen real del negocio)
+    const total = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.total || 0), 0)
+                + (c.estela?.total || 0);
+    const totalCount = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.count || 0), 0)
+                     + (c.estela?.count || 0);
 
-    // META DE EQUIPO · leído de CONFIG (dinámico)
+    // META DE EQUIPO · leído de CONFIG (dinámico) · sin Estela (es dueña, no tiene meta)
     const targetTotal = CONFIG.teamTarget;
-    const pct = targetTotal > 0 ? total / targetTotal : 0;
-    const gap = Math.max(0, targetTotal - total);
+    // Total SOLO competitivos para calcular cumplimiento vs meta (Estela no cuenta para meta)
+    const totalCompetitive = CONFIG.competitiveSellers.reduce((sum, key) => sum + (c[key]?.total || 0), 0);
+    const pct = targetTotal > 0 ? totalCompetitive / targetTotal : 0;
+    const gap = Math.max(0, targetTotal - totalCompetitive);
 
     // COSTO DE INCENTIVOS = todo lo pagable por vendedor menos base fija
     // (base solo la tiene Lauti hasta junio 2026 · esquema viejo · no se cuenta como "incentivo")
@@ -11564,7 +11568,7 @@
     document.getElementById('globalPct').textContent = Math.round(pct * 100) + '%';
     document.getElementById('globalGap').textContent = gap > 0
       ? `faltan ${fmtMoney(gap)}`
-      : `excedente ${fmtMoney(total - targetTotal)}`;
+      : `excedente ${fmtMoney(totalCompetitive - targetTotal)}`;
     document.getElementById('globalCost').textContent = fmtMoney(totalCost);
   }
 
