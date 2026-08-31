@@ -9826,7 +9826,7 @@
       const meta = SELLER_META[currentUser] || SELLER_META.estela || { name: 'GRAZIANO' };
       const vendorName = meta.name || (currentUser || 'GRAZIANO').toUpperCase();
       const today = new Date().toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const totals = calcBudgetTotals();
+      const totals = computeBudgetTotals();
       const validityEl = document.getElementById('budgetValidity');
       const validity = validityEl ? (parseInt(validityEl.value) || 7) : 7;
 
