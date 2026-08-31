@@ -3219,6 +3219,25 @@
   .toast.unlock { background: var(--red); box-shadow: 6px 6px 0 var(--ink); }
   .toast.warn { background: var(--amber); box-shadow: 6px 6px 0 var(--ink); }
 
+  /* Toast en mobile · centro-abajo y más grande */
+  @media (max-width: 700px) {
+    .toast {
+      top: auto;
+      bottom: 24px;
+      right: 16px;
+      left: 16px;
+      transform: translateY(150%);
+      text-align: center;
+      font-size: 13px;
+      padding: 18px 20px;
+      letter-spacing: 0.1em;
+      box-shadow: 4px 4px 0 var(--red);
+    }
+    .toast.show {
+      transform: translateY(0);
+    }
+  }
+
   /* BIG TOAST POST-VENTA */
   .big-toast {
     position: fixed; left: 50%; top: 50%;
@@ -9731,19 +9750,45 @@
       clearTimeout(timeoutId);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       const blob = await resp.blob();
-      return new Promise((resolve, reject) => {
+      // Leer como base64
+      const dataUrl = await new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => {
-          _logoBase64Cache = reader.result;
-          resolve(_logoBase64Cache);
-        };
+        reader.onload = () => resolve(reader.result);
         reader.onerror = () => reject(new Error('FileReader failed'));
         reader.readAsDataURL(blob);
       });
+      // Cargar en Image para obtener dimensiones reales
+      const dimensions = await new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve({ w: img.naturalWidth, h: img.naturalHeight });
+        img.onerror = () => resolve({ w: 300, h: 200 });
+        img.src = dataUrl;
+      });
+      _logoBase64Cache = { data: dataUrl, width: dimensions.w, height: dimensions.h };
+      return _logoBase64Cache;
     } catch (e) {
       console.warn('No se pudo cargar el logo (usando fallback texto):', e.message);
       return null;
     }
+  }
+
+  // Dibuja el logo VECTORIAL de fallback (si la imagen falla)
+  function drawLogoVectorFallback(doc, x, y) {
+    // Ladrillo isométrico rojo
+    doc.setFillColor(229, 37, 33);
+    doc.rect(x, y + 2, 12, 8, 'F');
+    // Sombra
+    doc.setFillColor(184, 30, 26);
+    doc.rect(x + 12, y + 3, 2, 8, 'F');
+    doc.rect(x, y + 10, 14, 2, 'F');
+    // Texto
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(20);
+    doc.setTextColor(229, 37, 33);
+    doc.text('GRAZIANO', x + 18, y + 10);
+    doc.setFontSize(9);
+    doc.setTextColor(60, 60, 60);
+    doc.text('MATERIALES', x + 18, y + 16);
   }
 
   // Obtiene el WhatsApp del vendedor · NO bloquea si no lo tiene
@@ -9852,27 +9897,33 @@
       let cursorY = 15;
 
       // ═══ HEADER ═══
-      if (logoData) {
+      // Logo con aspect ratio real · alto máximo 22mm, ancho máximo 70mm
+      let logoDrawnHeight = 0;
+      if (logoData && logoData.data && logoData.width && logoData.height) {
         try {
-          doc.addImage(logoData, 'PNG', marginX, cursorY, 55, 20, undefined, 'FAST');
+          const maxW = 70;
+          const maxH = 22;
+          const aspect = logoData.width / logoData.height;
+          let w, h;
+          if (aspect >= (maxW / maxH)) {
+            // más ancho · ancho máximo, altura calculada
+            w = maxW;
+            h = maxW / aspect;
+          } else {
+            // más alto · altura máxima, ancho calculado
+            h = maxH;
+            w = maxH * aspect;
+          }
+          doc.addImage(logoData.data, 'PNG', marginX, cursorY, w, h, undefined, 'FAST');
+          logoDrawnHeight = h;
         } catch (e) {
-          console.warn('[PDF] addImage falló, usando texto:', e);
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(20);
-          doc.setTextColor(229, 37, 33);
-          doc.text('GRAZIANO', marginX, cursorY + 10);
-          doc.setFontSize(11);
-          doc.setTextColor(60, 60, 60);
-          doc.text('MATERIALES', marginX, cursorY + 17);
+          console.warn('[PDF] addImage falló, usando fallback vectorial:', e);
+          drawLogoVectorFallback(doc, marginX, cursorY);
+          logoDrawnHeight = 18;
         }
       } else {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(20);
-        doc.setTextColor(229, 37, 33);
-        doc.text('GRAZIANO', marginX, cursorY + 10);
-        doc.setFontSize(11);
-        doc.setTextColor(60, 60, 60);
-        doc.text('MATERIALES', marginX, cursorY + 17);
+        drawLogoVectorFallback(doc, marginX, cursorY);
+        logoDrawnHeight = 18;
       }
       // Presupuesto # a la derecha
       doc.setFont('helvetica', 'bold');
@@ -9883,7 +9934,7 @@
       doc.setTextColor(229, 37, 33);
       doc.text('#' + budgetNum, pageW - marginX, cursorY + 17, { align: 'right' });
 
-      cursorY += 25;
+      cursorY += Math.max(logoDrawnHeight, 22) + 4;
 
       // Franja roja
       doc.setFillColor(229, 37, 33);
@@ -10033,7 +10084,22 @@
       }
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(180, 180, 180);
-      doc.text('@graziano.materiales', pageW - marginX, footerY + 14, { align: 'right' });
+      // Icono Instagram (dibujado con vectores · más limpio que emoji)
+      const igText = '@graziano.materiales';
+      const igTextWidth = doc.getTextWidth(igText);
+      const igIconX = pageW - marginX - igTextWidth - 8;
+      const igIconY = footerY + 11;
+      // Cuadrado redondeado (borde blanco)
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.6);
+      doc.roundedRect(igIconX, igIconY, 4.5, 4.5, 1, 1, 'S');
+      // Círculo central
+      doc.circle(igIconX + 2.25, igIconY + 2.25, 1.2, 'S');
+      // Puntito arriba a la derecha
+      doc.setFillColor(255, 255, 255);
+      doc.circle(igIconX + 3.5, igIconY + 1, 0.3, 'F');
+      // Texto del username
+      doc.text(igText, pageW - marginX, footerY + 14, { align: 'right' });
       doc.setFontSize(8);
       doc.text('GRAZIANO MATERIALES', pageW - marginX, footerY + 8, { align: 'right' });
 
@@ -10048,42 +10114,32 @@
 
       console.log('[PDF] Guardando:', filename);
 
-      // ═══ DESCARGA · doble método para máxima compatibilidad ═══
-      // Método 1: doc.save() (funciona en desktop y Android)
-      // Método 2: Blob + anchor (iOS Safari friendly)
+      // ═══ DESCARGA · anchor con download attr (respeta el nombre en TODAS las plataformas) ═══
       try {
-        // Detectar iOS
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        if (isIOS) {
-          // iOS: abrir en nueva pestaña (Safari maneja mejor así)
-          const blob = doc.output('blob');
-          const url = URL.createObjectURL(blob);
-          const win = window.open(url, '_blank');
-          if (!win) {
-            // Popup bloqueado · fallback a download link
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-          }
-          setTimeout(() => URL.revokeObjectURL(url), 10000);
-        } else {
-          // Desktop / Android · método estándar
-          doc.save(filename);
-        }
+        const blob = doc.output('blob');
+        const url = URL.createObjectURL(blob);
+        // Crear anchor con atributo download · esto respeta el filename
+        // y en la mayoría de navegadores mobile abre el share sheet con el nombre correcto
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        // Cleanup
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 1000);
         console.log('[PDF] Descarga OK');
-        showToast(`✓ PDF #${budgetNum} generado`);
+        showToast(`✓ PDF #${budgetNum} descargado`);
         renderBudget();
       } catch (saveErr) {
         console.error('[PDF] Error en descarga:', saveErr);
-        // Último recurso: abrir en pestaña nueva
+        // Último recurso: método estándar de jsPDF
         try {
-          const blob = doc.output('blob');
-          const url = URL.createObjectURL(blob);
-          window.open(url, '_blank');
-          showToast('📄 PDF abierto en pestaña nueva · guardalo desde ahí', 'warn');
+          doc.save(filename);
+          showToast(`✓ PDF #${budgetNum} guardado`);
         } catch (fallbackErr) {
           console.error('[PDF] Fallback también falló:', fallbackErr);
           showToast('⚠ Error al descargar · abrí la consola para más info', 'warn');
