@@ -4691,6 +4691,40 @@
   /* ANÁLISIS DE MÁRGENES · sección /09                           */
   /* ═══════════════════════════════════════════════════════════ */
   .margin-analysis-section { margin-top: 32px; }
+  /* Acciones del header · export + selector */
+  .ma-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .ma-export-btn {
+    background: #1F8A3A;
+    color: white;
+    border: 1.5px solid #1F8A3A;
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .ma-export-btn:hover {
+    background: #157029;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .ma-export-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--ink);
+  }
+  @media (max-width: 700px) {
+    .ma-header-actions { width: 100%; }
+    .ma-export-btn { flex: 1; padding: 12px; font-size: 12px; }
+  }
   .ma-month-selector {
     display: flex; align-items: center; gap: 10px;
   }
@@ -7060,11 +7094,16 @@
           <h3>📈 ANÁLISIS DE MÁRGENES</h3>
           <span class="ops-section-sub">rentabilidad por producto y vendedor · para decidir qué precios tocar</span>
         </div>
-        <div class="ma-month-selector">
-          <label class="ma-selector-label">MES</label>
-          <select id="maMonthSelect" onchange="renderMarginAnalysis()">
-            <!-- opciones dinámicas -->
-          </select>
+        <div class="ma-header-actions">
+          <button class="ma-export-btn" onclick="exportProductAnalysis()" title="Exportar todos los productos con márgenes y volumen para análisis en Excel">
+            📊 EXPORTAR CSV
+          </button>
+          <div class="ma-month-selector">
+            <label class="ma-selector-label">MES</label>
+            <select id="maMonthSelect" onchange="renderMarginAnalysis()">
+              <!-- opciones dinámicas -->
+            </select>
+          </div>
         </div>
       </div>
 
@@ -19558,6 +19597,209 @@
 
   window.setMasterFilter = setMasterFilter;
   window.toggleMtInfo = toggleMtInfo;
+
+  // ═══════════════════════════════════════════════════════════
+  // EXPORT · Análisis de productos con márgenes y volumen
+  // Para decidir qué % subir/bajar según performance
+  // ═══════════════════════════════════════════════════════════
+  function exportProductAnalysis() {
+    if (currentUser !== 'admin') {
+      alert('Solo el admin puede exportar');
+      return;
+    }
+    const products = state.products || {};
+    const activeProducts = Object.values(products).filter(p => p && p.active);
+    if (activeProducts.length === 0) {
+      alert('No hay productos activos para exportar');
+      return;
+    }
+
+    // Definir ventanas de tiempo
+    const now = Date.now();
+    const currentMK = currentMonthKey();
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    const threeMonthsAgoMK = `${threeMonthsAgo.getFullYear()}-${String(threeMonthsAgo.getMonth() + 1).padStart(2, '0')}`;
+
+    // Solo ventas APROBADAS del último cuarto
+    const approvedSales = state.sales.filter(s => s && s.status === 'approved');
+
+    // Función para acumular métricas de un producto en un rango de meses
+    // Match por catalogId primero, luego por nombre normalizado
+    const normalize = (s) => (s || '').toLowerCase().trim()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    // Precomputar todos los items del período (mes actual + 3M) con nombre normalizado
+    const relevantSales = approvedSales.filter(s => {
+      const mk = monthKeyOf(s.date);
+      return mk >= threeMonthsAgoMK && mk <= currentMK;
+    });
+
+    // Agregación: por producto (matcheado por catalogId o nombre normalizado)
+    const agg = {}; // { productKey: { unitsCurrent, revenueCurrent, marginCurrent, units3M, revenue3M, margin3M, ops3M, lastSale } }
+
+    relevantSales.forEach(sale => {
+      if (!sale.items || sale.items.length === 0) return;
+      const saleMK = monthKeyOf(sale.date);
+      const isCurrent = saleMK === currentMK;
+      sale.items.forEach(it => {
+        if (!it || !it.name) return;
+        // Key: catalogId si existe, sino nombre normalizado
+        const key = it.catalogId || normalize(it.name);
+        if (!agg[key]) {
+          agg[key] = {
+            unitsCurrent: 0, revenueCurrent: 0, marginCurrent: 0,
+            units3M: 0, revenue3M: 0, margin3M: 0,
+            ops3M: 0, opsCurrent: 0,
+            lastSaleDate: null
+          };
+        }
+        const qty = it.qty || 0;
+        const price = it.price || 0;
+        const cost = it.cost || 0;
+        const revenue = qty * price;
+        const margin = qty * (price - cost);
+        // Acumulados 3M
+        agg[key].units3M += qty;
+        agg[key].revenue3M += revenue;
+        agg[key].margin3M += margin;
+        agg[key].ops3M += 1;
+        // Acumulados mes actual
+        if (isCurrent) {
+          agg[key].unitsCurrent += qty;
+          agg[key].revenueCurrent += revenue;
+          agg[key].marginCurrent += margin;
+          agg[key].opsCurrent += 1;
+        }
+        // Última venta
+        if (!agg[key].lastSaleDate || sale.date > agg[key].lastSaleDate) {
+          agg[key].lastSaleDate = sale.date;
+        }
+      });
+    });
+
+    // Armar filas: 1 por producto activo
+    const rows = activeProducts.map(p => {
+      const vigente = getVigenteActual(p);
+      const costActual = vigente?.cost || 0;
+      const priceActual = vigente?.price || 0;
+      const marginDollars = priceActual - costActual;
+      const marginPct = costActual > 0 && priceActual > 0
+        ? ((priceActual - costActual) / priceActual) * 100
+        : 0;
+      // Buscar el agg matcheando por id o por nombre
+      const keyById = p.id;
+      const keyByName = normalize(p.name);
+      const data = agg[keyById] || agg[keyByName] || {
+        unitsCurrent: 0, revenueCurrent: 0, marginCurrent: 0,
+        units3M: 0, revenue3M: 0, margin3M: 0,
+        ops3M: 0, opsCurrent: 0, lastSaleDate: null
+      };
+      // Tipo entrega dinámico
+      const et = state.entryTypes?.[p.entryType];
+      const entryLabel = et ? et.name : (p.entryType || '');
+      return {
+        id: p.id,
+        name: p.name || '',
+        category: p.category || '',
+        subCategory: p.subCategory || '',
+        unit: p.unit || '',
+        entryType: entryLabel,
+        costActual,
+        priceActual,
+        marginDollars,
+        marginPct,
+        minBonif: p.minBonif || 0,
+        unitsCurrent: data.unitsCurrent,
+        revenueCurrent: data.revenueCurrent,
+        marginCurrent: data.marginCurrent,
+        opsCurrent: data.opsCurrent,
+        units3M: data.units3M,
+        revenue3M: data.revenue3M,
+        margin3M: data.margin3M,
+        ops3M: data.ops3M,
+        avgTicket3M: data.ops3M > 0 ? data.revenue3M / data.ops3M : 0,
+        lastSale: data.lastSaleDate || ''
+      };
+    });
+
+    // Ordenar por facturación 3M descendente (los más importantes arriba)
+    rows.sort((a, b) => b.revenue3M - a.revenue3M);
+
+    // Generar CSV
+    const headers = [
+      'ID', 'Producto', 'Categoria', 'Sub-categoria', 'Unidad', 'Tipo Entrega',
+      'Costo Actual', 'Precio Actual', 'Margen $', 'Margen %', 'Precio Min. Bonif.',
+      'Unid Vendidas (mes)', 'Facturacion (mes)', 'Margen $ (mes)', 'Cant Operaciones (mes)',
+      'Unid Vendidas (3M)', 'Facturacion (3M)', 'Margen $ (3M)', 'Cant Operaciones (3M)',
+      'Ticket Promedio (3M)', 'Ultima Venta'
+    ];
+
+    const esc = (v) => {
+      if (v === null || v === undefined) return '';
+      const s = String(v).replace(/"/g, '""');
+      return /[",\n;]/.test(s) ? `"${s}"` : s;
+    };
+
+    // Formatear número · sin miles, con coma decimal para Excel Argentina
+    const fmt = (n) => {
+      if (!n || isNaN(n)) return '0';
+      return String(Math.round(n));
+    };
+    const fmtPct = (n) => {
+      if (!n || isNaN(n)) return '0';
+      return n.toFixed(1);
+    };
+
+    const csvRows = [headers.join(';')];
+    rows.forEach(r => {
+      csvRows.push([
+        esc(r.id),
+        esc(r.name),
+        esc(r.category),
+        esc(r.subCategory),
+        esc(r.unit),
+        esc(r.entryType),
+        fmt(r.costActual),
+        fmt(r.priceActual),
+        fmt(r.marginDollars),
+        fmtPct(r.marginPct),
+        fmt(r.minBonif),
+        fmt(r.unitsCurrent),
+        fmt(r.revenueCurrent),
+        fmt(r.marginCurrent),
+        fmt(r.opsCurrent),
+        fmt(r.units3M),
+        fmt(r.revenue3M),
+        fmt(r.margin3M),
+        fmt(r.ops3M),
+        fmt(r.avgTicket3M),
+        esc(r.lastSale)
+      ].join(';'));
+    });
+
+    const csv = '\uFEFF' + csvRows.join('\n'); // BOM para que Excel abra bien los tildes
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const filename = `graziano-productos-margenes-${dateStr}.csv`;
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
+
+    // Feedback
+    const activeCount = activeProducts.length;
+    const withSales = rows.filter(r => r.ops3M > 0).length;
+    showToast(`✓ Exportados ${activeCount} productos (${withSales} con ventas)`);
+  }
+  window.exportProductAnalysis = exportProductAnalysis;
 
   function exportOpsCSV() {
     const fSeller = document.getElementById('opsFilterSeller').value;
