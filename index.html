@@ -611,6 +611,59 @@
   }
   .pending-banner-btn:hover { background: var(--ink); color: white; }
 
+  /* ==== MONTH CLOSE BANNER ==== */
+  .month-close-banner {
+    padding: 16px 20px; margin-bottom: 24px;
+    background: var(--bg-card);
+    border: 1.5px solid var(--ink);
+    box-shadow: 5px 5px 0 var(--ink);
+  }
+  .month-close-banner.pending {
+    background: #FEF3C7;
+    border-color: #B45309;
+  }
+  .month-close-banner.closed {
+    background: #ECFDF5;
+    border-color: #1F8A3A;
+  }
+  .mcb-content {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .mcb-icon {
+    font-size: 26px; line-height: 1;
+  }
+  .mcb-text {
+    flex: 1; min-width: 200px;
+  }
+  .mcb-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .mcb-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    letter-spacing: 0.02em;
+  }
+  .mcb-btn {
+    background: var(--ink);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: transform 0.15s;
+  }
+  .mcb-btn:hover { transform: translateY(-1px); }
+
   /* ==== GLOBAL STRIP ==== */
   .global-strip {
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
@@ -794,6 +847,13 @@
   }
   .earnings-breakdown .plus { color: var(--red); font-weight: 700; }
   .seller-card.leader .earnings-breakdown .plus { color: var(--ink); }
+  /* Bono tentativo · pendiente de cierre */
+  .earnings-breakdown .pending-bonus {
+    opacity: 0.7;
+    text-decoration: underline dotted;
+    text-decoration-color: rgba(229,37,33,0.5);
+    text-underline-offset: 3px;
+  }
   .scheme-tag {
     display: inline-block; padding: 1px 6px; border-radius: 3px;
     font-family: 'JetBrains Mono', monospace; font-size: 9px;
@@ -3633,6 +3693,7 @@
     font-family: 'Archivo Black', sans-serif; font-size: 14px; color: var(--ink);
   }
   .bt-row.discount span:last-child { color: var(--red); }
+  .bt-row.shipping span:last-child { color: #0a7a2f; }
   .bt-row.total {
     border-top: 1.5px dashed var(--line); padding-top: 8px; margin-top: 4px;
   }
@@ -6014,6 +6075,18 @@
     <button class="pending-banner-btn" onclick="openModal()">REVISAR AHORA</button>
   </div>
 
+  <!-- Banner cierre de mes · muestra estado del mes anterior -->
+  <div class="month-close-banner" id="monthCloseBanner" style="display:none;">
+    <div class="mcb-content">
+      <div class="mcb-icon" id="mcbIcon">🕐</div>
+      <div class="mcb-text">
+        <div class="mcb-title" id="mcbTitle">RANKING DE AGOSTO · EN CIERRE</div>
+        <div class="mcb-sub" id="mcbSub">Se define el DD/MM · las ventas flotantes se están contabilizando</div>
+      </div>
+      <button class="mcb-btn" id="mcbForceBtn" onclick="forceCloseMonthNow()" style="display:none;">🔒 CERRAR AHORA</button>
+    </div>
+  </div>
+
   <div class="global-strip">
     <div class="global-cell">
       <span class="label">Total Facturado</span>
@@ -8127,6 +8200,10 @@
         </div>
       </div>
       <div class="form-row compact">
+        <label>Envío / Flete ($)</label>
+        <input type="number" id="budgetShipping" placeholder="0" min="0" step="any" oninput="renderBudget()">
+      </div>
+      <div class="form-row compact">
         <label>Validez (días, opcional)</label>
         <input type="number" id="budgetValidity" placeholder="ej: 7" min="0" oninput="renderBudget()">
       </div>
@@ -8136,6 +8213,9 @@
       <div class="bt-row"><span>SUBTOTAL</span><span id="budgetSubtotal">$0</span></div>
       <div class="bt-row discount" id="budgetDiscountRow" style="display:none;">
         <span id="budgetDiscountLabel">DESCUENTO</span><span id="budgetDiscountAmount">-$0</span>
+      </div>
+      <div class="bt-row shipping" id="budgetShippingRow" style="display:none;">
+        <span>ENVÍO / FLETE</span><span id="budgetShippingAmount">+$0</span>
       </div>
       <div class="bt-row total"><span>TOTAL</span><span id="budgetTotal">$0</span></div>
     </div>
@@ -8729,7 +8809,8 @@
     products: {}, // { P001: {id, name, active, priceHistory: [...], category, subCategory, unit, entryType, minBonif, ...} }
     categories: {}, // { C001: {id, name, subCategories: {S001: {id, name}}, order, createdAt} }
     entryTypes: {}, // { stock: {id, name, hint, emoji, color, order, createdAt} }
-    budgetCounter: 0 // contador global de presupuestos generados
+    budgetCounter: 0, // contador global de presupuestos generados
+    closedMonths: {} // { "2026-09": {rankings, firstPlace, computedAt} } · rankings cerrados definitivos
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
@@ -8780,6 +8861,8 @@
       if (!_autoCancelDone) {
         _autoCancelDone = true;
         setTimeout(() => autoCancelExpiredPendings(), 2000);
+        // También cerrar meses pendientes de cierre
+        setTimeout(() => autoCloseMonths(), 3000);
       }
     }, (err) => { console.warn('Firebase read error', err); });
 
@@ -8891,9 +8974,13 @@
         renderTaxonomyManager();
       }
     }, (err) => { console.warn('Firebase entryTypes read error', err); });
+    // Listener CLOSED MONTHS · rankings cerrados definitivos
+    db.ref('closedMonths').on('value', (snapshot) => {
+      const data = snapshot.val();
+      state.closedMonths = (data && typeof data === 'object') ? data : {};
+      if (currentUser) renderAll();
+    }, (err) => { console.warn('Firebase closedMonths read error', err); });
   }
-
-  // Seed inicial de categorías desde el diccionario hardcodeado
   async function seedInitialCategories() {
     const seedCats = {};
     // Las 14 categorías del CATEGORY_KEYWORDS + Otros
@@ -9472,7 +9559,7 @@
   let budgetItems = []; // { idx, qty, p (price snapshot) }
   let LAST_SYNC_AT = 0;
   let LAST_SYNC_OK = false;
-  const SYNC_TTL_MS = 30 * 1000; // 30 segundos de cache entre llamadas
+  const SYNC_TTL_MS = 10 * 60 * 1000; // 10 minutos de cache · usuario puede forzar refresh clickeando el indicador
 
   async function fetchLatestPrices() {
     if (!PRICES_ENDPOINT_URL) return null;
@@ -9550,8 +9637,9 @@
 
   async function openBudget() {
     document.getElementById('budgetOverlay').classList.add('open');
-    // Refresh INMEDIATO de precios (force=true para ignorar cache)
-    refreshPrices(true);
+    // Cache-first: mostrar precios cacheados INMEDIATAMENTE
+    // Si el cache está viejo, refrescar en BACKGROUND sin bloquear
+    refreshPrices(false); // false = respeta cache
     if (budgetItems.length === 0) renderBudget();
     setTimeout(() => document.getElementById('budgetSearch').focus(), 100);
     // Actualizar el display del WhatsApp del vendedor
@@ -9589,6 +9677,8 @@
     document.getElementById('budgetSearch').value = '';
     document.getElementById('discountType').value = 'none';
     document.getElementById('discountValue').value = '';
+    const shippingEl = document.getElementById('budgetShipping');
+    if (shippingEl) shippingEl.value = '';
     document.getElementById('budgetValidity').value = '';
     renderBudget();
   }
@@ -9677,8 +9767,10 @@
     let discount = 0;
     if (discType === 'pct' && discVal > 0) discount = subtotal * Math.min(100, discVal) / 100;
     else if (discType === 'amt' && discVal > 0) discount = Math.min(subtotal, discVal);
-    const total = Math.max(0, subtotal - discount);
-    return { subtotal, discount, total, discType, discVal };
+    const shippingEl = document.getElementById('budgetShipping');
+    const shipping = shippingEl ? (parseFloat(shippingEl.value) || 0) : 0;
+    const total = Math.max(0, subtotal - discount + shipping);
+    return { subtotal, discount, shipping, total, discType, discVal };
   }
 
   function renderBudget() {
@@ -9726,6 +9818,14 @@
       discRow.style.display = 'none';
     }
     document.getElementById('budgetTotal').textContent = `$${fmtFull(t.total)}`;
+    // Envío
+    const shippingRow = document.getElementById('budgetShippingRow');
+    if (t.shipping > 0) {
+      shippingRow.style.display = 'flex';
+      document.getElementById('budgetShippingAmount').textContent = `+$${fmtFull(t.shipping)}`;
+    } else {
+      shippingRow.style.display = 'none';
+    }
 
     // Preview WhatsApp
     document.getElementById('budgetPreview').value = buildBudgetText(t);
@@ -9762,6 +9862,9 @@
     if (totals.discount > 0) {
       const lbl = totals.discType === 'pct' ? `Descuento ${totals.discVal}%` : 'Descuento';
       txt += `${lbl}: -$${fmtFull(totals.discount)}\n`;
+    }
+    if (totals.shipping > 0) {
+      txt += `Envío/Flete: +$${fmtFull(totals.shipping)}\n`;
     }
     txt += `\n*TOTAL:  $${fmtFull(totals.total)}*\n`;
     if (validity > 0) txt += `\n⏰ _Validez: ${validity} días_`;
@@ -10076,6 +10179,16 @@
         doc.setTextColor(200, 30, 30);
         doc.setFont('helvetica', 'bold');
         doc.text('-$' + fmtFull(totals.discount), pageW - marginX, cursorY, { align: 'right' });
+        cursorY += 6;
+      }
+
+      if (totals.shipping > 0) {
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(60, 60, 60);
+        doc.text('Envio / Flete:', pageW - marginX - 55, cursorY);
+        doc.setTextColor(0, 100, 0);
+        doc.setFont('helvetica', 'bold');
+        doc.text('+$' + fmtFull(totals.shipping), pageW - marginX, cursorY, { align: 'right' });
         cursorY += 6;
       }
 
@@ -10451,6 +10564,16 @@
       cursorY += 6;
     }
 
+    if (totals.shipping > 0) {
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(60, 60, 60);
+      doc.text('Envio / Flete:', pageW - marginX - 55, cursorY);
+      doc.setTextColor(0, 100, 0);
+      doc.setFont('helvetica', 'bold');
+      doc.text('+$' + fmtFull(totals.shipping), pageW - marginX, cursorY, { align: 'right' });
+      cursorY += 6;
+    }
+
     doc.setDrawColor(26, 26, 26);
     doc.setLineWidth(0.6);
     doc.line(pageW - marginX - 80, cursorY, pageW - marginX, cursorY);
@@ -10717,6 +10840,176 @@
     // pendientes son universales (no filtramos por mes)
     return state.sales.filter(s => s.seller === seller && s.status === 'pending');
   }
+
+  // ═══════════════════════════════════════════════════════════
+  // CIERRE DE MES · RANKING DEFINITIVO (Criterio C híbrido)
+  // El ranking del mes se cierra el DÍA 15 DEL MES SIGUIENTE
+  // Considera: aprobadas del mes + flotantes (aprobadas antes del cierre)
+  //            - auto-canceladas por 15 días
+  // ═══════════════════════════════════════════════════════════
+
+  const MONTH_CLOSE_DAY = 15; // día del mes siguiente en que se cierra el ranking
+
+  // Devuelve el mes anterior (formato YYYY-MM)
+  function previousMonthKey(mk) {
+    if (!mk) return null;
+    const [yy, mm] = mk.split('-').map(Number);
+    if (mm === 1) return `${yy - 1}-12`;
+    return `${yy}-${String(mm - 1).padStart(2, '0')}`;
+  }
+
+  // Devuelve la fecha exacta en que se cierra un mes (día 15 del mes siguiente 23:59)
+  function getMonthCloseDate(monthKey) {
+    if (!monthKey) return null;
+    const [yy, mm] = monthKey.split('-').map(Number);
+    // mm es 1-indexed, JS Date es 0-indexed → mm - 1
+    // Mes siguiente = new Date(yy, mm, MONTH_CLOSE_DAY) → JS agrega 1 al mes automáticamente
+    const closeDate = new Date(yy, mm, MONTH_CLOSE_DAY, 23, 59, 59);
+    return closeDate;
+  }
+
+  // ¿El mes ya está cerrado? (fecha actual > fecha de cierre)
+  function isMonthClosed(monthKey) {
+    if (!monthKey) return false;
+    // Si es un mes futuro, no está cerrado
+    const closeDate = getMonthCloseDate(monthKey);
+    if (!closeDate) return false;
+    return Date.now() > closeDate.getTime();
+  }
+
+  // ¿El mes está PENDIENTE de cierre? (ya terminó el mes pero aún no llegó al día 15)
+  function isMonthPendingClose(monthKey) {
+    if (!monthKey) return false;
+    const now = new Date();
+    const currentMK = currentMonthKey();
+    // Si es el mes actual o futuro, aún NO terminó → no pending close
+    if (monthKey >= currentMK) return false;
+    // Si el mes ya terminó (es anterior al actual) pero aún no llegó al 15 del mes siguiente
+    return !isMonthClosed(monthKey);
+  }
+
+  // Formatea fecha de cierre para mostrar al usuario
+  function formatCloseDateShort(monthKey) {
+    const d = getMonthCloseDate(monthKey);
+    if (!d) return '—';
+    return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`;
+  }
+
+  // Ventas VÁLIDAS para el ranking definitivo de un mes
+  // Regla: la venta cuenta si:
+  //   - Su fecha es de ese mes
+  //   - Y fue APROBADA antes del cierre (día 15 mes siguiente)
+  //   - Y NO fue auto-cancelada
+  function validSalesForClosedMonth(seller, monthKey) {
+    const closeDate = getMonthCloseDate(monthKey);
+    if (!closeDate) return [];
+    const closeTs = closeDate.getTime();
+    return state.sales.filter(s => {
+      if (s.seller !== seller) return false;
+      if (monthKeyOf(s.date) !== monthKey) return false;
+      // Debe ser aprobada
+      if (s.status !== 'approved') return false;
+      // Aprobada antes del cierre (si tiene approvedAt) · si no tiene, asumimos que se aprobó en su momento
+      if (s.approvedAt && s.approvedAt > closeTs) return false;
+      return true;
+    });
+  }
+
+  // Calcula el ranking DEFINITIVO de un mes (una vez que ya cerró)
+  // Retorna: { rankings: [{key, total, count}], firstPlace, computedAt }
+  function computeClosedRanking(monthKey) {
+    if (!monthKey) return null;
+    const sellers = CONFIG.competitiveSellers || [];
+    const rankings = sellers.map(key => {
+      const sales = validSalesForClosedMonth(key, monthKey);
+      const total = sales.reduce((s, v) => s + (v.amount || 0), 0);
+      const count = sales.length;
+      return { key, total, count };
+    }).sort((a, b) => b.total - a.total);
+    const firstPlace = rankings.length > 0 && rankings[0].total > 0 ? rankings[0].key : null;
+    return {
+      monthKey,
+      rankings,
+      firstPlace,
+      computedAt: Date.now(),
+      closeDate: getMonthCloseDate(monthKey).getTime()
+    };
+  }
+
+  // Ranking en TIEMPO REAL (provisorio) del mes especificado
+  // Muestra cómo va yendo, se actualiza en vivo
+  function computeLiveRanking(monthKey) {
+    if (!monthKey) return null;
+    const sellers = CONFIG.competitiveSellers || [];
+    const rankings = sellers.map(key => {
+      // Todas las aprobadas del mes (aún si algunas se van a caer)
+      const sales = state.sales.filter(s =>
+        s.seller === key &&
+        monthKeyOf(s.date) === monthKey &&
+        s.status === 'approved'
+      );
+      const total = sales.reduce((s, v) => s + (v.amount || 0), 0);
+      const count = sales.length;
+      // Contar pendientes (para info)
+      const pendingSales = state.sales.filter(s =>
+        s.seller === key &&
+        monthKeyOf(s.date) === monthKey &&
+        s.status === 'pending'
+      );
+      const pendingCount = pendingSales.length;
+      const pendingTotal = pendingSales.reduce((s, v) => s + (v.amount || 0), 0);
+      return { key, total, count, pendingCount, pendingTotal };
+    }).sort((a, b) => b.total - a.total);
+    const firstPlace = rankings.length > 0 && rankings[0].total > 0 ? rankings[0].key : null;
+    return { monthKey, rankings, firstPlace, isLive: true };
+  }
+
+  // Cierra un mes: calcula ranking definitivo y lo persiste en Firebase
+  // Se ejecuta automáticamente al pasar el día 15 · idempotente
+  async function closeMonthIfDue(monthKey) {
+    if (!monthKey) return null;
+    if (!isMonthClosed(monthKey)) return null; // aún no está listo para cerrarse
+    // Ya cerrado? no recalcular
+    if (state.closedMonths?.[monthKey]) return state.closedMonths[monthKey];
+    // Calcular
+    const ranking = computeClosedRanking(monthKey);
+    if (!ranking) return null;
+    // Persistir
+    if (!state.closedMonths) state.closedMonths = {};
+    state.closedMonths[monthKey] = ranking;
+    try {
+      await db.ref(`closedMonths/${monthKey}`).set(ranking);
+      console.log(`[CIERRE] Mes ${monthKey} cerrado · #1: ${ranking.firstPlace || '(nadie)'}`);
+    } catch (e) {
+      console.warn('closeMonthIfDue error persistiendo:', e);
+    }
+    return ranking;
+  }
+
+  // Ejecuta cierres pendientes (por si pasó más de un mes desde el último cierre)
+  // Corre en background al arrancar la app + una vez por hora
+  let _closingMonthsInProgress = false;
+  async function autoCloseMonths() {
+    if (_closingMonthsInProgress) return;
+    _closingMonthsInProgress = true;
+    try {
+      // Chequear los últimos 3 meses previos al actual
+      const current = currentMonthKey();
+      let mk = previousMonthKey(current);
+      let attempts = 0;
+      while (mk && attempts < 6) {
+        if (isMonthClosed(mk) && !state.closedMonths?.[mk]) {
+          await closeMonthIfDue(mk);
+        }
+        mk = previousMonthKey(mk);
+        attempts++;
+      }
+    } catch (e) {
+      console.warn('autoCloseMonths error:', e);
+    } finally {
+      _closingMonthsInProgress = false;
+    }
+  }
   function allPending() {
     return state.sales.filter(s => s.status === 'pending');
   }
@@ -10876,23 +11169,47 @@
     CONFIG.competitiveSellers.forEach(key => {
       result[key].teamBonus = teamBonus;
       result[key].firstBonus = 0;
+      result[key].firstBonusPending = false; // C3: si el ranking en vivo lo pone #1 pero el mes aún no cerró
+      result[key].closedMonthBonus = 0; // C3: bono del mes ANTERIOR ya cerrado (se paga esta quincena)
     });
     result.estela.teamBonus = 0;
     result.estela.firstBonus = 0;
-    if (firstPlace) result[firstPlace].firstBonus = CONFIG.bonusFirstPlace;
+    result.estela.firstBonusPending = false;
+    result.estela.closedMonthBonus = 0;
+
+    // C3 · Bono #1 del mes actual (provisorio)
+    // Solo se marca como "en tránsito" (pendingBonus), pero aún NO se paga
+    if (firstPlace) {
+      result[firstPlace].firstBonus = CONFIG.bonusFirstPlace;
+      result[firstPlace].firstBonusPending = true; // aún no está cerrado
+    }
+
+    // C3 · Bono del mes ANTERIOR (ya cerrado definitivo)
+    // Este es el que EFECTIVAMENTE se paga en esta quincena
+    const prevMK = previousMonthKey(currentMonthKey());
+    const closedRanking = state.closedMonths?.[prevMK];
+    if (closedRanking && closedRanking.firstPlace) {
+      const winner = closedRanking.firstPlace;
+      if (result[winner]) {
+        result[winner].closedMonthBonus = CONFIG.bonusFirstPlace;
+        result[winner].closedMonthKey = prevMK;
+      }
+    }
 
     // Calcular totalEarn de cada vendedor (todo lo pagable)
     CONFIG.competitiveSellers.forEach(key => {
       const s = result[key];
+      // C3 · IMPORTANTE: firstBonus del mes actual es TENTATIVO (aún no cerró)
+      // El bono REAL PAGADO es closedMonthBonus (del mes anterior ya cerrado)
       s.totalEarn = (s.baseSalary || 0)
                   + (s.baseComm || 0)
                   + (s.extraComm || 0)
                   + (s.viatico || 0)
                   + (s.bonusTarget || 0)
                   + (s.teamBonus || 0)
-                  + (s.firstBonus || 0)
-                  + (s.overrideTotal || 0)   // C1 · comisión-override
-                  + (s.floatingComm || 0);   // C2 · comisiones flotantes
+                  + (s.closedMonthBonus || 0)   // C3 · bono #1 del mes ANTERIOR (ya cerrado, se paga)
+                  + (s.overrideTotal || 0)      // C1 · comisión-override
+                  + (s.floatingComm || 0);      // C2 · comisiones flotantes
     });
     result.estela.totalEarn = 0;
 
@@ -11348,7 +11665,14 @@
       if (data.extraComm)  parts.push(`<span class="plus">+arena $${fmtFull(Math.round(data.extraComm))}</span>`);
       if (data.viatico)    parts.push(`<span class="plus">+viático $${fmtFull(data.viatico)}</span>`);
       if (data.bonusTarget)parts.push(`<span class="plus">+meta $${fmtFull(data.bonusTarget)}</span>`);
-      if (data.firstBonus) parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
+      if (data.firstBonus) {
+        // Bono #1 del mes actual · TENTATIVO (aún no está cerrado)
+        parts.push(`<span class="plus pending-bonus" title="Bono tentativo · se define el ${formatCloseDateShort(currentMonthKey())}">+#1 $${fmtFull(data.firstBonus)} 🕐</span>`);
+      }
+      if (data.closedMonthBonus) {
+        // Bono del mes anterior · ya cerrado, efectivamente pagado
+        parts.push(`<span class="plus" title="Bono #1 de ${formatMonthLabel(data.closedMonthKey)} ya cerrado">+🏆 $${fmtFull(data.closedMonthBonus)}</span>`);
+      }
       if (data.teamBonus)  parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
     } else if (scheme === 'old') {
       // Esquema VIEJO · con base $300k + 3%
@@ -11358,7 +11682,12 @@
       if (data.bonusTarget) parts.push(`<span class="plus">+meta $${fmtFull(data.bonusTarget)}</span>`);
       if (data.extraComm)   parts.push(`<span class="plus">+extra $${fmtFull(Math.round(data.extraComm))}</span>`);
       if (data.viatico)     parts.push(`<span class="plus">+viático $${fmtFull(data.viatico)}</span>`);
-      if (data.firstBonus)  parts.push(`<span class="plus">+#1 $${fmtFull(data.firstBonus)}</span>`);
+      if (data.firstBonus) {
+        parts.push(`<span class="plus pending-bonus" title="Bono tentativo · se define el ${formatCloseDateShort(currentMonthKey())}">+#1 $${fmtFull(data.firstBonus)} 🕐</span>`);
+      }
+      if (data.closedMonthBonus) {
+        parts.push(`<span class="plus" title="Bono #1 de ${formatMonthLabel(data.closedMonthKey)} ya cerrado">+🏆 $${fmtFull(data.closedMonthBonus)}</span>`);
+      }
       if (data.teamBonus)   parts.push(`<span class="plus">+equipo $${fmtFull(data.teamBonus)}</span>`);
     }
     // C1 · Override de canceladas
@@ -12473,6 +12802,104 @@
     }
   }
 
+  // Renderiza el banner de cierre de mes · muestra estado del mes anterior
+  function renderMonthCloseBanner() {
+    const banner = document.getElementById('monthCloseBanner');
+    if (!banner) return;
+    const forceBtn = document.getElementById('mcbForceBtn');
+    const icon = document.getElementById('mcbIcon');
+    const title = document.getElementById('mcbTitle');
+    const sub = document.getElementById('mcbSub');
+    const current = currentMonthKey();
+    const prev = previousMonthKey(current);
+    if (!prev) {
+      banner.style.display = 'none';
+      return;
+    }
+    // Mes anterior: puede estar PENDING de cierre, o YA CERRADO
+    // Solo mostramos si el mes anterior tuvo actividad
+    const prevSales = state.sales.filter(s => monthKeyOf(s.date) === prev && s.status !== 'cancelled');
+    if (prevSales.length === 0) {
+      banner.style.display = 'none';
+      return;
+    }
+    const closed = state.closedMonths?.[prev];
+    const monthLabel = formatMonthLabel(prev).toUpperCase();
+    if (closed) {
+      // MES CERRADO · mostrar ganador
+      banner.style.display = 'block';
+      banner.classList.remove('pending');
+      banner.classList.add('closed');
+      icon.textContent = '🔒';
+      const firstPlace = closed.firstPlace;
+      const firstName = firstPlace ? (SELLER_META[firstPlace]?.name || firstPlace.toUpperCase()) : 'nadie';
+      title.textContent = `RANKING DE ${monthLabel} · CERRADO`;
+      if (firstPlace) {
+        sub.textContent = `#1 · ${firstName} · $${fmtFull(closed.rankings[0].total)}`;
+      } else {
+        sub.textContent = `Sin ganador definido`;
+      }
+      if (forceBtn) forceBtn.style.display = 'none';
+    } else if (isMonthPendingClose(prev)) {
+      // MES EN CIERRE (pending)
+      banner.style.display = 'block';
+      banner.classList.add('pending');
+      banner.classList.remove('closed');
+      icon.textContent = '🕐';
+      title.textContent = `RANKING DE ${monthLabel} · EN CIERRE`;
+      sub.textContent = `Se define el ${formatCloseDateShort(prev)} · las ventas flotantes se están contabilizando`;
+      // Solo admin puede forzar cierre
+      if (forceBtn && currentUser === 'admin') {
+        forceBtn.style.display = '';
+        forceBtn.dataset.monthKey = prev;
+      } else if (forceBtn) {
+        forceBtn.style.display = 'none';
+      }
+    } else {
+      banner.style.display = 'none';
+    }
+  }
+
+  // Formatea mes YYYY-MM como "Agosto 2026"
+  function formatMonthLabel(mk) {
+    if (!mk) return '';
+    const [yy, mm] = mk.split('-').map(Number);
+    const nombres = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    return `${nombres[mm - 1] || mm} ${yy}`;
+  }
+
+  // Fuerza el cierre inmediato de un mes (admin only)
+  async function forceCloseMonthNow() {
+    if (currentUser !== 'admin') return;
+    const btn = document.getElementById('mcbForceBtn');
+    const monthKey = btn?.dataset?.monthKey;
+    if (!monthKey) return;
+    const ok = confirm(
+      `¿Cerrar el ranking de ${formatMonthLabel(monthKey)} ahora?\n\n` +
+      `Esto va a fijar el #1 y el bono correspondiente.\n` +
+      `Las ventas flotantes que se aprueben después NO se van a contar.`
+    );
+    if (!ok) return;
+    const ranking = computeClosedRanking(monthKey);
+    if (!ranking) {
+      showToast('⚠ No se pudo calcular el ranking', 'warn');
+      return;
+    }
+    // Persistir
+    if (!state.closedMonths) state.closedMonths = {};
+    state.closedMonths[monthKey] = ranking;
+    try {
+      await db.ref(`closedMonths/${monthKey}`).set(ranking);
+      const firstName = ranking.firstPlace ? (SELLER_META[ranking.firstPlace]?.name || ranking.firstPlace.toUpperCase()) : 'nadie';
+      showToast(`✓ ${formatMonthLabel(monthKey)} cerrado · #1: ${firstName}`);
+      renderAll();
+    } catch (e) {
+      console.warn('forceClose error:', e);
+      showToast('⚠ Error persistiendo el cierre', 'warn');
+    }
+  }
+  window.forceCloseMonthNow = forceCloseMonthNow;
+
   function renderSaleItem(s, opts = {}) {
     const seller = s.seller;
     const client = s.client || '—';
@@ -12986,6 +13413,7 @@
     renderGlobals(c);
     renderCountdownBanner(c);
     renderMySalary(c);
+    renderMonthCloseBanner();
 
     // Ranking entre TODOS los vendedores activos + Estela
     // Por monto absoluto · usa el TOTAL (aprobadas + pendientes)
@@ -13191,8 +13619,9 @@
     if (isSellerUser(currentUser) || currentUser === 'estela') {
       selectedSellerForSale = currentUser;
     }
-    // Refresh INMEDIATO de precios (force=true para ignorar cache)
-    refreshPrices(true);
+    // Cache-first: mostrar precios cacheados INMEDIATAMENTE
+    // Si el cache está viejo, refrescar en BACKGROUND sin bloquear
+    refreshPrices(false); // false = respeta cache
     // Setear fecha según rol · con restricciones para vendedores
     setupSaleDateForRole();
     saleItems = [];
@@ -15795,13 +16224,27 @@
       const pct = total / target;
       return { total, count, ticketAvg, best, pct, target };
     };
-    const sellers = [
-      { key: 'lauti',  name: `LAUTI ${SELLER_META.lauti?.emoji || '🎯'}`,   data: computeForMonth('lauti'),  target: CONFIG.target },
-      { key: 'bauti',  name: `BAUTI ${SELLER_META.bauti?.emoji || '🧱'}`,   data: computeForMonth('bauti'),  target: CONFIG.target },
-      { key: 'leo',    name: `LEO ${SELLER_META.leo?.emoji || '🦴'}`,       data: computeForMonth('leo'),    target: CONFIG.target },
-      { key: 'kevin',  name: `KEVIN ${SELLER_META.kevin?.emoji || '🏹'}`,   data: computeForMonth('kevin'),  target: CONFIG.target },
-      { key: 'estela', name: 'ESTELA',                                       data: computeForMonth('estela'), target: CONFIG.estelaTarget }
-    ];
+    // Vendedores DINÁMICOS · todos los competitivos activos + Estela
+    const sellers = [];
+    const competitivos = CONFIG.competitiveSellers || [];
+    competitivos.forEach(key => {
+      const meta = SELLER_META[key] || {};
+      const emoji = meta.emoji || '🎯';
+      const name = meta.name || key.toUpperCase();
+      sellers.push({
+        key,
+        name: `${name.toUpperCase()} ${emoji}`,
+        data: computeForMonth(key),
+        target: CONFIG.target
+      });
+    });
+    // Estela siempre al final
+    sellers.push({
+      key: 'estela',
+      name: 'ESTELA',
+      data: computeForMonth('estela'),
+      target: CONFIG.estelaTarget
+    });
     document.getElementById('opsBySeller').innerHTML = sellers.map(s => {
       const pct = Math.min(150, s.data.pct * 100);
       const over = pct >= 100;
