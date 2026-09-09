@@ -8935,6 +8935,15 @@
     db.ref('products').on('value', (snapshot) => {
       const data = snapshot.val();
       state.products = (data && typeof data === 'object') ? data : {};
+      // INVALIDAR CACHE DE PRECIOS · el próximo openBudget/openModal va a leer los precios frescos
+      LAST_SYNC_AT = 0;
+      LAST_SYNC_OK = false;
+      // Si el modal de presupuesto o venta está abierto, refrescar YA los precios en pantalla
+      const budgetOpen = document.getElementById('budgetOverlay')?.classList?.contains('open');
+      const saleOpen = document.getElementById('modalOverlay')?.classList?.contains('open');
+      if (budgetOpen || saleOpen) {
+        refreshPrices(true); // fuerza refresh inmediato
+      }
       // Re-render del catálogo si estamos en vista admin
       if (currentUser === 'admin' && typeof renderCatalog === 'function') {
         renderCatalog();
@@ -9587,22 +9596,61 @@
       return;
     }
     updateSyncIndicator('syncing');
-    const data = await fetchLatestPrices();
-    if (data) {
-      PRODUCTS = data.products;
+
+    // ═══════════════════════════════════════════════════════════
+    // NUEVA ESTRATEGIA · leer del CATÁLOGO INTERNO (state.products)
+    // Ya no dependemos de Google Sheets · Cami edita desde Admin
+    // y los cambios se reflejan INMEDIATAMENTE
+    // ═══════════════════════════════════════════════════════════
+    const catalog = state.products || {};
+    const today = todayLocalISO();
+    const newProducts = [];
+
+    Object.values(catalog).forEach(p => {
+      if (!p || !p.active) return; // solo activos
+      const vigente = getVigenteAt(p, today);
+      if (!vigente || !vigente.price || vigente.price <= 0) return; // sin precio no se muestra
+      // Convertir al formato viejo que consumen los buscadores
+      // { n: nombre, c: categoría, u: unidad, p: precio, m: min bonificado, t: tipo entrega }
+      const et = state.entryTypes?.[p.entryType];
+      const typeLabel = et ? et.name : (p.entryType || '');
+      newProducts.push({
+        n: p.name || '',
+        c: p.category || '',
+        u: p.unit || '',
+        p: vigente.price,
+        m: p.minBonif || vigente.price, // fallback al precio si no hay minBonif
+        t: typeLabel,
+        catalogId: p.id // referencia interna para trazabilidad
+      });
+    });
+
+    if (newProducts.length > 0) {
+      PRODUCTS = newProducts;
       LAST_SYNC_AT = now;
       LAST_SYNC_OK = true;
-      updateSyncIndicator('ok', data.updated, data.count);
+      updateSyncIndicator('ok', 'catálogo interno', newProducts.length);
+      console.log(`[PRICES] Cargados ${newProducts.length} productos del catálogo interno`);
     } else {
-      LAST_SYNC_OK = false;
-      updateSyncIndicator('error');
+      // FALLBACK · si el catálogo está vacío, intentar Google Sheets como respaldo
+      console.warn('[PRICES] Catálogo interno vacío · intentando Google Sheets como fallback');
+      const data = await fetchLatestPrices();
+      if (data) {
+        PRODUCTS = data.products;
+        LAST_SYNC_AT = now;
+        LAST_SYNC_OK = true;
+        updateSyncIndicator('ok', data.updated, data.count);
+      } else {
+        LAST_SYNC_OK = false;
+        updateSyncIndicator('error');
+      }
     }
+
     // Si el search tiene texto, refrescar resultados con los nuevos precios
     const sv = document.getElementById('budgetSearch')?.value;
     if (sv && sv.trim().length >= 2) renderSearchResults(sv);
     const ssv = document.getElementById('saleSearch')?.value;
     if (ssv && ssv.trim().length >= 2) renderSaleSearchResults(ssv);
-    // Actualizar precios snapshots de items ya cargados? NO — mantenemos snapshot del momento de agregar
     renderBudget();
   }
 
