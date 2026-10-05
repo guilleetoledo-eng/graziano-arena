@@ -181,6 +181,846 @@
     display: flex;
   }
 
+  /* ═══════════════════════════════════════════════════════════ */
+  /* 📇 CRM · botón launch + panel follow-ups en dashboard       */
+  /* ═══════════════════════════════════════════════════════════ */
+  .crm-launch-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--ink);
+    color: white;
+    border: 2px solid var(--ink);
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    cursor: pointer;
+    box-shadow: 5px 5px 0 var(--red);
+    transition: all 0.15s;
+    position: relative;
+  }
+  .crm-launch-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--red);
+  }
+  .crm-launch-icon { font-size: 22px; }
+  .crm-launch-text {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    flex: 1;
+    text-align: left;
+  }
+  .crm-launch-badge {
+    background: var(--red);
+    color: white;
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .fup-panel {
+    background: white;
+    border: 2px solid #D97706;
+    box-shadow: 5px 5px 0 var(--ink);
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .fup-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #FEF3C7;
+    border-bottom: 1.5px solid #D97706;
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+  .fup-panel-btn {
+    background: var(--ink);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+  .fup-group {
+    padding: 10px 16px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .fup-group:last-child { border-bottom: none; }
+  .fup-group.vencidos { background: #FEF2F2; }
+  .fup-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+  }
+  .fup-group.vencidos .fup-group-title { color: #DC2626; }
+  .fup-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 10px;
+    background: white;
+    border: 1px solid var(--line);
+    margin-bottom: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+  }
+  .fup-row:hover {
+    border-color: var(--ink);
+    transform: translateX(2px);
+  }
+  .fup-prio { font-size: 12px; }
+  .fup-seller { font-size: 14px; }
+  .fup-client {
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .fup-text {
+    grid-column: 1 / 4;
+    font-size: 12px;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+  .fup-date {
+    grid-row: 1;
+    grid-column: 4;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+  .fup-group.vencidos .fup-date { color: #DC2626; }
+  .fup-group.hoy .fup-date { color: #D97706; }
+
+  /* ═══════════════════════════════════════════════════════════ */
+  /* 📇 CRM VIEW · mobile-first                                   */
+  /* ═══════════════════════════════════════════════════════════ */
+  .crm-view {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg);
+    z-index: 9998;
+    display: none;
+    flex-direction: column;
+    color: var(--ink);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .crm-view.visible { display: flex; }
+
+  .crm-topbar {
+    background: white;
+    border-bottom: 2px solid var(--ink);
+    padding: 12px 16px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .crm-topbar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .crm-back-btn {
+    background: var(--ink);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .crm-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    margin: 0;
+    flex: 1;
+    color: var(--ink);
+  }
+  .crm-topbar-btn {
+    background: #1F8A3A;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .crm-kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .crm-kpi {
+    background: #F7F4EF;
+    border: 1px solid var(--line);
+    padding: 8px;
+    text-align: center;
+  }
+  .crm-kpi-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .crm-kpi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+
+  .crm-search-wrap {
+    margin-bottom: 10px;
+  }
+  .crm-search-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--line);
+    background: white;
+    font-size: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .crm-search-input:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+
+  .crm-filters-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+  .crm-filters-scroll::-webkit-scrollbar { display: none; }
+  .crm-filter-chip {
+    flex-shrink: 0;
+    background: white;
+    border: 1.5px solid var(--line);
+    padding: 7px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    white-space: nowrap;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .crm-filter-chip.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .crm-view-mode {
+    display: flex;
+    gap: 0;
+    margin-bottom: 10px;
+    border: 1.5px solid var(--ink);
+  }
+  .crm-vm-btn {
+    flex: 1;
+    background: white;
+    border: none;
+    padding: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .crm-vm-btn.active {
+    background: var(--ink);
+    color: white;
+  }
+
+  .crm-sort-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+  .crm-sort-row label {
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .crm-sort-row select {
+    flex: 1;
+    padding: 6px 8px;
+    border: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    background: white;
+  }
+
+  .crm-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: var(--bg);
+    padding: 12px 16px 60px;
+  }
+  .crm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .crm-client-card {
+    background: white;
+    border: 1.5px solid var(--line);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .crm-client-card:hover {
+    border-color: var(--ink);
+    transform: translateX(2px);
+  }
+  .crm-client-card.priority-A {
+    border-left: 4px solid #DC2626;
+  }
+  .crm-client-card.priority-B {
+    border-left: 4px solid #D97706;
+  }
+  .crm-client-card.priority-C {
+    border-left: 4px solid #6B7280;
+  }
+  .crm-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .crm-card-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .crm-card-priority {
+    background: var(--ink);
+    color: white;
+    padding: 3px 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+  .crm-card-priority.A { background: #DC2626; }
+  .crm-card-priority.B { background: #D97706; }
+  .crm-card-priority.C { background: #6B7280; }
+
+  .crm-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .crm-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: #F3F4F6;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .crm-tag.auto { opacity: 0.9; }
+  .crm-tag.vip { background: #FEF3C7; color: #92400E; }
+  .crm-tag.moroso { background: #FEE2E2; color: #991B1B; }
+  .crm-tag.caliente { background: #FEE2E2; color: #991B1B; }
+  .crm-tag.recurrente { background: #DBEAFE; color: #1E40AF; }
+  .crm-tag.dormido { background: #E0E7FF; color: #4338CA; }
+  .crm-tag.perdido { background: #F3F4F6; color: #4B5563; }
+
+  .crm-card-contact {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .crm-card-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 8px 0;
+    border-top: 1px dashed var(--line);
+    border-bottom: 1px dashed var(--line);
+    margin-bottom: 8px;
+  }
+  .crm-card-stat {
+    text-align: center;
+  }
+  .crm-card-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+  .crm-card-stat-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .crm-card-last {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-bottom: 10px;
+  }
+  .crm-card-last strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .crm-card-last.alerta {
+    color: #DC2626;
+    font-weight: 700;
+  }
+  .crm-card-badges {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: var(--ink-3);
+  }
+  .crm-card-badge {
+    background: #FEF3C7;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+  .crm-card-actions {
+    display: flex;
+    gap: 6px;
+  }
+  .crm-card-action-btn {
+    flex: 1;
+    padding: 8px;
+    border: 1.5px solid var(--line);
+    background: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .crm-card-action-btn:hover {
+    background: var(--ink);
+    color: white;
+  }
+  .crm-card-action-btn.whatsapp {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+  }
+  .crm-card-action-btn.whatsapp:hover {
+    background: #1EA952;
+  }
+
+  .crm-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+
+  /* MODAL FICHA */
+  .crm-ficha-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+  .crm-ficha-overlay.visible {
+    display: flex;
+  }
+  .crm-ficha-modal {
+    background: white;
+    width: 100%;
+    max-width: 600px;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+  .crm-ficha-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--ink);
+    color: white;
+    gap: 10px;
+  }
+  .crm-ficha-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    flex: 1;
+    line-height: 1.1;
+  }
+  .crm-ficha-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 6px;
+    line-height: 1;
+  }
+  .crm-ficha-tabs {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-bottom: 1.5px solid var(--line);
+    flex-shrink: 0;
+  }
+  .crm-ficha-tabs::-webkit-scrollbar { display: none; }
+  .crm-tab {
+    flex-shrink: 0;
+    background: white;
+    border: none;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    white-space: nowrap;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom: 3px solid transparent;
+  }
+  .crm-tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--red);
+    background: #F7F4EF;
+  }
+  .crm-ficha-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .crm-ficha-footer {
+    padding: 10px 12px;
+    border-top: 1.5px solid var(--line);
+    background: #FAFAF7;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .crm-ficha-footer button {
+    flex: 1;
+    padding: 10px 8px;
+    border: 1.5px solid var(--ink);
+    background: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-transform: uppercase;
+    min-width: 90px;
+  }
+  .crm-ficha-footer button.whatsapp {
+    background: #25D366;
+    color: white;
+    border-color: #25D366;
+  }
+  .crm-ficha-footer button.primary {
+    background: var(--red);
+    color: white;
+    border-color: var(--red);
+  }
+
+  /* Contenido de tabs */
+  .ficha-section {
+    margin-bottom: 20px;
+  }
+  .ficha-section-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px dashed var(--line);
+  }
+  .ficha-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .ficha-kpi {
+    background: #F7F4EF;
+    padding: 10px;
+    border-left: 3px solid var(--red);
+  }
+  .ficha-kpi-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .ficha-kpi-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .ficha-sale-row {
+    padding: 10px;
+    border: 1px solid var(--line);
+    margin-bottom: 6px;
+    background: white;
+  }
+  .ficha-sale-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+  }
+  .ficha-sale-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .ficha-sale-amount {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--red);
+  }
+  .ficha-sale-items {
+    font-size: 11px;
+    color: var(--ink-3);
+    line-height: 1.4;
+  }
+  .ficha-sale-footer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-3);
+    margin-top: 4px;
+  }
+  .ficha-sale-status {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .ficha-sale-status.approved { background: #DCFCE7; color: #166534; }
+  .ficha-sale-status.pending { background: #FEF3C7; color: #92400E; }
+
+  .ficha-note-item, .ficha-fup-item, .ficha-log-item {
+    padding: 10px;
+    background: #F7F4EF;
+    border-left: 3px solid var(--ink-3);
+    margin-bottom: 6px;
+  }
+  .ficha-fup-item.pending {
+    border-left-color: #D97706;
+    background: #FEF3C7;
+  }
+  .ficha-fup-item.vencido {
+    border-left-color: #DC2626;
+    background: #FEE2E2;
+  }
+  .ficha-fup-item.hecho {
+    border-left-color: #1F8A3A;
+    opacity: 0.7;
+  }
+  .ficha-note-meta, .ficha-fup-meta, .ficha-log-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .ficha-note-text, .ficha-fup-text, .ficha-log-text {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+    white-space: pre-wrap;
+  }
+  .ficha-fup-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+  }
+  .ficha-fup-btn {
+    padding: 5px 10px;
+    border: 1px solid var(--ink);
+    background: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .ficha-add-input {
+    width: 100%;
+    padding: 10px;
+    border: 1.5px solid var(--line);
+    background: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 60px;
+    margin-bottom: 8px;
+  }
+  .ficha-add-input:focus {
+    outline: none;
+    border-color: var(--red);
+  }
+  .ficha-add-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .ficha-add-row input,
+  .ficha-add-row select {
+    flex: 1;
+    padding: 8px;
+    border: 1.5px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .ficha-add-btn {
+    background: var(--red);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 100%;
+  }
+  .ficha-tag-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px;
+    background: #F7F4EF;
+    margin-bottom: 10px;
+  }
+  .ficha-tag-opt {
+    padding: 5px 10px;
+    border: 1.5px solid var(--line);
+    background: white;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    border-radius: 12px;
+  }
+  .ficha-tag-opt.selected {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .ficha-prio-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .ficha-prio-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1.5px solid var(--line);
+    background: white;
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+  }
+  .ficha-prio-btn.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+  .ficha-prio-btn.A.active { background: #DC2626; border-color: #DC2626; }
+  .ficha-prio-btn.B.active { background: #D97706; border-color: #D97706; }
+  .ficha-prio-btn.C.active { background: #6B7280; border-color: #6B7280; }
+
+  @media (max-width: 700px) {
+    .crm-ficha-modal {
+      max-height: 100vh;
+      height: 100vh;
+      max-width: 100%;
+    }
+    .crm-kpi-value { font-size: 16px; }
+    .crm-kpi-label { font-size: 8px; }
+    .ficha-kpi-grid { grid-template-columns: 1fr; }
+  }
+
   /* TOPBAR UNIFICADO · header + toolbar + filtros = un solo bloque opaco */
   .pl-topbar {
     background: var(--ink);
@@ -6627,6 +7467,89 @@
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 📇 VISTA CRM · CAPA TOP-LEVEL · fuera de login y app         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="crm-view" id="crmView">
+  <!-- TOPBAR -->
+  <div class="crm-topbar">
+    <div class="crm-topbar-row">
+      <button class="crm-back-btn" onclick="closeCRM()">← VOLVER</button>
+      <h1 class="crm-title">📇 CRM · CLIENTES</h1>
+      <button class="crm-topbar-btn" onclick="exportCRMCSV()" title="Exportar CSV">⤓</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="crm-kpis" id="crmKpis"></div>
+
+    <!-- Buscador -->
+    <div class="crm-search-wrap">
+      <input type="text" id="crmSearchInput" class="crm-search-input"
+             placeholder="🔍 Buscar nombre, teléfono o DNI..."
+             oninput="onCrmSearch(this.value)">
+    </div>
+
+    <!-- Filtros scrolleables -->
+    <div class="crm-filters-scroll">
+      <button class="crm-filter-chip active" data-filter="all" onclick="setCrmFilter('all')">TODOS</button>
+      <button class="crm-filter-chip" data-filter="caliente" onclick="setCrmFilter('caliente')">🔥 CALIENTES</button>
+      <button class="crm-filter-chip" data-filter="recurrente" onclick="setCrmFilter('recurrente')">⭐ RECURRENTES</button>
+      <button class="crm-filter-chip" data-filter="vip" onclick="setCrmFilter('vip')">🏆 VIP</button>
+      <button class="crm-filter-chip" data-filter="dormido" onclick="setCrmFilter('dormido')">❄ DORMIDOS</button>
+      <button class="crm-filter-chip" data-filter="perdido" onclick="setCrmFilter('perdido')">💤 PERDIDOS</button>
+      <button class="crm-filter-chip" data-filter="moroso" onclick="setCrmFilter('moroso')">💰 MOROSOS</button>
+      <button class="crm-filter-chip" data-filter="followups" onclick="setCrmFilter('followups')">📅 CON F-UP</button>
+    </div>
+
+    <!-- Toggle Mi cartera / Todos (solo admin) -->
+    <div class="crm-view-mode" id="crmViewModeToggle" style="display:none;">
+      <button class="crm-vm-btn active" data-mode="mine" onclick="setCrmViewMode('mine')">MI CARTERA</button>
+      <button class="crm-vm-btn" data-mode="all" onclick="setCrmViewMode('all')">TODOS</button>
+    </div>
+
+    <!-- Sort -->
+    <div class="crm-sort-row">
+      <label>Ordenar:</label>
+      <select id="crmSortSelect" onchange="setCrmSort(this.value)">
+        <option value="recent">Más reciente</option>
+        <option value="facturacion">Mayor facturación</option>
+        <option value="inactivo">Más días sin comprar</option>
+        <option value="alfabetico">Alfabético</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Lista clientes -->
+  <div class="crm-list-scroll" id="crmListScroll">
+    <div class="crm-list" id="crmList"></div>
+  </div>
+</div>
+
+<!-- MODAL FICHA CLIENTE -->
+<div class="crm-ficha-overlay" id="crmFichaOverlay">
+  <div class="crm-ficha-modal">
+    <div class="crm-ficha-header">
+      <div class="crm-ficha-title" id="crmFichaTitle">Cliente</div>
+      <button class="crm-ficha-close" onclick="closeCrmFicha()">✕</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="crm-ficha-tabs">
+      <button class="crm-tab active" data-tab="resumen" onclick="switchCrmTab('resumen')">📊 RESUMEN</button>
+      <button class="crm-tab" data-tab="compras" onclick="switchCrmTab('compras')">🛒 COMPRAS</button>
+      <button class="crm-tab" data-tab="notas" onclick="switchCrmTab('notas')">📝 NOTAS</button>
+      <button class="crm-tab" data-tab="followups" onclick="switchCrmTab('followups')">📅 F-UP</button>
+      <button class="crm-tab" data-tab="contactos" onclick="switchCrmTab('contactos')">💬 LOG</button>
+    </div>
+
+    <!-- Body -->
+    <div class="crm-ficha-body" id="crmFichaBody"></div>
+
+    <!-- Actions footer -->
+    <div class="crm-ficha-footer" id="crmFichaFooter"></div>
+  </div>
+</div>
+
 <!-- VISTA LISTA DE PRECIOS · CAPA TOP-LEVEL · fuera de login y app -->
 <div class="pricelist-view" id="pricelistView">
   <!-- TOPBAR UNIFICADO · header + toolbar + filtros en un solo bloque sticky opaco -->
@@ -6694,6 +7617,16 @@
     <button class="vt-btn" id="vt-vendedores" onclick="switchView('vendedores')">👥 VENDEDORES</button>
     <button class="vt-btn" id="vt-operaciones" onclick="switchView('operaciones')">⚙ ADMINISTRACIÓN</button>
   </div>
+
+  <!-- Botón CRM · visible para admin y vendedores -->
+  <button class="crm-launch-btn" id="crmLaunchBtn" onclick="openCRM()" style="display:none;">
+    <span class="crm-launch-icon">📇</span>
+    <span class="crm-launch-text">CRM · CLIENTES</span>
+    <span class="crm-launch-badge" id="crmLaunchBadge" style="display:none;">0</span>
+  </button>
+
+  <!-- Panel follow-ups del día · se renderea desde JS -->
+  <div class="fup-panel" id="followUpsPanel" style="display:none;"></div>
 
   <div id="tableroView">
 
@@ -9571,7 +10504,8 @@
     entryTypes: {}, // { stock: {id, name, hint, emoji, color, order, createdAt} }
     budgetCounter: 0, // contador global de presupuestos generados
     closedMonths: {}, // { "2026-09": {rankings, firstPlace, computedAt} } · rankings cerrados definitivos
-    rentabilidad: {} // { "2026-10": { items: [{id, name, icon, amount}], adsReal } } · P&L por mes
+    rentabilidad: {}, // { "2026-10": { items: [{id, name, icon, amount}], adsReal } } · P&L por mes
+    crm: {} // { "cliente_abc": { tags, priority, notes, followUps, contactLog } } · CRM data
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
@@ -9750,6 +10684,18 @@
       state.closedMonths = (data && typeof data === 'object') ? data : {};
       if (currentUser) renderAll();
     }, (err) => { console.warn('Firebase closedMonths read error', err); });
+
+    // Listener CRM · datos de seguimiento de clientes
+    db.ref('crm').on('value', (snapshot) => {
+      const data = snapshot.val();
+      state.crm = (data && typeof data === 'object') ? data : {};
+      // Si estamos en la vista CRM, re-render
+      if (document.getElementById('crmView')?.classList.contains('visible')) {
+        if (typeof renderCRMList === 'function') renderCRMList();
+      }
+      // Si hay follow-ups del día en el dashboard, actualizar
+      if (typeof renderFollowUpsPanel === 'function') renderFollowUpsPanel();
+    }, (err) => { console.warn('Firebase crm read error', err); });
   }
   async function seedInitialCategories() {
     const seedCats = {};
@@ -14223,6 +15169,32 @@
     renderCountdownBanner(c);
     renderMySalary(c);
     renderMonthCloseBanner();
+    // CRM · botón visible para admin + vendedores (no para 'view')
+    const crmBtn = document.getElementById('crmLaunchBtn');
+    if (crmBtn) {
+      const showCrm = currentUser && currentUser !== 'view';
+      crmBtn.style.display = showCrm ? 'flex' : 'none';
+      if (showCrm) {
+        // Badge con follow-ups pendientes/vencidos
+        try {
+          const today = todayLocalISO();
+          let count = 0;
+          computeClients().forEach(cl => {
+            cl.followUps.forEach(f => {
+              if (f.status !== 'pending') return;
+              if (currentUser !== 'admin' && f.by !== currentUser) return;
+              if (f.dueDate <= today) count++;
+            });
+          });
+          const badge = document.getElementById('crmLaunchBadge');
+          if (badge) {
+            badge.style.display = count > 0 ? '' : 'none';
+            badge.textContent = count;
+          }
+        } catch (e) { console.warn('[CRM] badge error', e); }
+      }
+    }
+    if (typeof renderFollowUpsPanel === 'function') renderFollowUpsPanel();
 
     // Ranking entre TODOS los vendedores activos + Estela
     // Por monto absoluto · usa el TOTAL (aprobadas + pendientes)
@@ -21602,6 +22574,945 @@
     }
   }
   window.exportRentabilidadPDF = exportRentabilidadPDF;
+
+  // ═══════════════════════════════════════════════════════════
+  // 📇 CRM · Sistema de seguimiento de clientes
+  // ═══════════════════════════════════════════════════════════
+
+  // Normaliza strings para matching (lowercase, sin tildes, trim)
+  function crmNormalize(s) {
+    if (!s) return '';
+    return String(s).toLowerCase().trim()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/\s+/g, ' ');
+  }
+
+  // Normaliza teléfono (solo números)
+  function crmNormalizePhone(p) {
+    if (!p) return '';
+    return String(p).replace(/\D/g, '');
+  }
+
+  // Normaliza DNI (solo números)
+  function crmNormalizeDni(d) {
+    if (!d) return '';
+    return String(d).replace(/\D/g, '');
+  }
+
+  // Genera un ID canónico para un cliente a partir de sus datos
+  // Prioriza: teléfono > DNI > nombre normalizado
+  function crmClientId(sale) {
+    const phone = crmNormalizePhone(sale.phone);
+    const dni = crmNormalizeDni(sale.dni);
+    const name = crmNormalize(sale.client);
+    if (phone && phone.length >= 6) return `tel_${phone}`;
+    if (dni && dni.length >= 6) return `dni_${dni}`;
+    if (name) return `nom_${name.replace(/[^a-z0-9]/g, '_').slice(0, 40)}`;
+    return 'cliente_sin_datos';
+  }
+
+  // Agrupa TODAS las ventas por cliente y devuelve un array con stats
+  function computeClients() {
+    const clients = {};
+    const now = Date.now();
+
+    (state.sales || []).forEach(sale => {
+      if (!sale || sale.status === 'cancelled') return; // excluir canceladas
+      const id = crmClientId(sale);
+
+      if (!clients[id]) {
+        clients[id] = {
+          id,
+          name: sale.client || 'Sin nombre',
+          phone: sale.phone || '',
+          dni: sale.dni || '',
+          city: sale.city || '',
+          sales: [],
+          sellers: {},    // { lauti: 5, leo: 2 }
+          products: {},   // { "Cemento Loma Negra": qty }
+          totalFacturado: 0,
+          salesCount: 0,
+          firstSaleDate: null,
+          lastSaleDate: null,
+          lastSaleTs: 0
+        };
+      }
+      const c = clients[id];
+      c.sales.push(sale);
+
+      // Mejor nombre: el más largo
+      if (sale.client && sale.client.length > (c.name || '').length) {
+        c.name = sale.client;
+      }
+      if (sale.phone && !c.phone) c.phone = sale.phone;
+      if (sale.dni && !c.dni) c.dni = sale.dni;
+      if (sale.city && !c.city) c.city = sale.city;
+
+      // Solo contar aprobadas para KPIs
+      if (sale.status === 'approved') {
+        c.totalFacturado += (sale.amount || 0);
+        c.salesCount++;
+        c.sellers[sale.seller] = (c.sellers[sale.seller] || 0) + 1;
+        if (sale.items && Array.isArray(sale.items)) {
+          sale.items.forEach(it => {
+            if (!it.name) return;
+            const key = it.name;
+            c.products[key] = (c.products[key] || 0) + (it.qty || 0);
+          });
+        }
+      }
+
+      // Fechas
+      const saleTs = sale.submittedAt || new Date(sale.date).getTime() || 0;
+      if (!c.firstSaleDate || sale.date < c.firstSaleDate) {
+        c.firstSaleDate = sale.date;
+      }
+      if (saleTs > c.lastSaleTs) {
+        c.lastSaleTs = saleTs;
+        c.lastSaleDate = sale.date;
+      }
+    });
+
+    // Agregar datos adicionales calculados + info CRM manual
+    const list = Object.values(clients).map(c => {
+      const daysSinceLast = c.lastSaleTs > 0
+        ? Math.floor((now - c.lastSaleTs) / (1000 * 60 * 60 * 24))
+        : 999;
+      const ticketPromedio = c.salesCount > 0 ? c.totalFacturado / c.salesCount : 0;
+      // Vendedor habitual
+      let topSeller = null;
+      let topSellerCount = 0;
+      Object.entries(c.sellers).forEach(([s, n]) => {
+        if (n > topSellerCount) { topSeller = s; topSellerCount = n; }
+      });
+      // Top 3 productos
+      const topProducts = Object.entries(c.products)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+      // CRM manual data
+      const crmData = state.crm?.[c.id] || {};
+      // Segmentación automática RFM
+      const autoTags = computeAutoTags(c, daysSinceLast);
+      return {
+        ...c,
+        daysSinceLast,
+        ticketPromedio,
+        topSeller,
+        topProducts,
+        tags: crmData.tags || [],
+        autoTags,
+        priority: crmData.priority || 'C',
+        notes: crmData.notes || [],
+        followUps: crmData.followUps || [],
+        contactLog: crmData.contactLog || []
+      };
+    });
+
+    // Ordenar por última compra (más reciente primero)
+    list.sort((a, b) => b.lastSaleTs - a.lastSaleTs);
+    return list;
+  }
+
+  // Calcula etiquetas automáticas según comportamiento (RFM simplificado)
+  function computeAutoTags(client, daysSinceLast) {
+    const tags = [];
+    if (daysSinceLast <= 15) tags.push({ id: 'caliente', emoji: '🔥', label: 'Caliente', auto: true });
+    if (client.salesCount >= 3 && daysSinceLast <= 90) tags.push({ id: 'recurrente', emoji: '⭐', label: 'Recurrente', auto: true });
+    if (daysSinceLast >= 180) tags.push({ id: 'perdido', emoji: '💤', label: 'Perdido', auto: true });
+    else if (daysSinceLast >= 60) tags.push({ id: 'dormido', emoji: '❄', label: 'Dormido', auto: true });
+    return tags;
+  }
+
+  // Catálogo de etiquetas MANUALES disponibles
+  const CRM_MANUAL_TAGS = [
+    { id: 'vip', emoji: '🏆', label: 'VIP', color: '#D97706' },
+    { id: 'moroso', emoji: '💰', label: 'Moroso', color: '#DC2626' },
+    { id: 'problema', emoji: '⚠', label: 'Problema', color: '#DC2626' },
+    { id: 'no-molestar', emoji: '🚫', label: 'No molestar', color: '#6B7280' },
+    { id: 'empresa', emoji: '🏢', label: 'Empresa', color: '#1E40AF' },
+    { id: 'constructor', emoji: '👷', label: 'Constructor', color: '#059669' },
+    { id: 'final', emoji: '🏠', label: 'Final', color: '#7C3AED' }
+  ];
+
+  // Filtra clientes según permisos (admin ve todos, vendedor ve los suyos)
+  function filterClientsByPermission(clients) {
+    if (currentUser === 'admin') return clients;
+    // Vendedor: solo los que le vendió al menos una vez
+    return clients.filter(c => c.sellers[currentUser] > 0);
+  }
+
+  // Estado de filtros en memoria
+  let crmFilterTag = 'all';
+  let crmFilterPriority = 'all';
+  let crmSearch = '';
+  let crmSortBy = 'recent';
+  let crmViewMode = 'mine'; // 'mine' | 'all' (solo admin ve 'all')
+  let crmPreviousView = 'main';
+  let crmCurrentClientId = null;
+  let crmCurrentTab = 'resumen';
+
+  // ─── ABRIR / CERRAR VISTA ───
+  function openCRM() {
+    const loginOverlay = document.getElementById('loginOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+    crmPreviousView = (mainContainer && mainContainer.style.display !== 'none') ? 'main' : 'login';
+    if (loginOverlay) loginOverlay.style.display = 'none';
+    if (mainContainer) mainContainer.style.display = 'none';
+    const view = document.getElementById('crmView');
+    if (view) view.classList.add('visible');
+    // Admin ve toggle Mi cartera / Todos
+    const vmToggle = document.getElementById('crmViewModeToggle');
+    if (vmToggle) {
+      vmToggle.style.display = currentUser === 'admin' ? 'flex' : 'none';
+    }
+    // Admin arranca viendo TODOS, vendedor solo lo suyo
+    crmViewMode = currentUser === 'admin' ? 'all' : 'mine';
+    document.querySelectorAll('.crm-vm-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === crmViewMode);
+    });
+    renderCRMList();
+    const scroll = document.getElementById('crmListScroll');
+    if (scroll) scroll.scrollTop = 0;
+  }
+  window.openCRM = openCRM;
+
+  function closeCRM() {
+    const view = document.getElementById('crmView');
+    if (view) view.classList.remove('visible');
+    const loginOverlay = document.getElementById('loginOverlay');
+    const mainContainer = document.getElementById('mainContainer');
+    if (crmPreviousView === 'main') {
+      if (mainContainer) mainContainer.style.display = 'block';
+      if (loginOverlay) loginOverlay.style.display = '';
+    } else {
+      if (loginOverlay) loginOverlay.style.display = '';
+      if (mainContainer) mainContainer.style.display = 'none';
+    }
+    // Refresh dashboard por si hubo follow-ups nuevos
+    if (currentUser) renderAll();
+  }
+  window.closeCRM = closeCRM;
+
+  // ─── FILTROS ───
+  function onCrmSearch(val) {
+    crmSearch = (val || '').trim();
+    renderCRMList();
+  }
+  window.onCrmSearch = onCrmSearch;
+
+  function setCrmFilter(f) {
+    crmFilterTag = f;
+    document.querySelectorAll('.crm-filter-chip').forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === f);
+    });
+    renderCRMList();
+  }
+  window.setCrmFilter = setCrmFilter;
+
+  function setCrmViewMode(m) {
+    crmViewMode = m;
+    document.querySelectorAll('.crm-vm-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.mode === m);
+    });
+    renderCRMList();
+  }
+  window.setCrmViewMode = setCrmViewMode;
+
+  function setCrmSort(s) {
+    crmSortBy = s;
+    renderCRMList();
+  }
+  window.setCrmSort = setCrmSort;
+
+  // Devuelve clientes filtrados y ordenados
+  function getFilteredClients() {
+    let list = computeClients();
+
+    // Permisos / view mode
+    if (currentUser !== 'admin' || crmViewMode === 'mine') {
+      list = list.filter(c => c.sellers[currentUser] > 0);
+    }
+
+    // Búsqueda
+    if (crmSearch) {
+      const q = crmNormalize(crmSearch);
+      const qNum = crmSearch.replace(/\D/g, '');
+      list = list.filter(c => {
+        if (crmNormalize(c.name).includes(q)) return true;
+        if (qNum && crmNormalizePhone(c.phone).includes(qNum)) return true;
+        if (qNum && crmNormalizeDni(c.dni).includes(qNum)) return true;
+        return false;
+      });
+    }
+
+    // Filtro por tag
+    if (crmFilterTag !== 'all') {
+      list = list.filter(c => {
+        if (crmFilterTag === 'followups') {
+          return c.followUps.some(f => f.status === 'pending');
+        }
+        const hasManual = c.tags.includes(crmFilterTag);
+        const hasAuto = c.autoTags.some(t => t.id === crmFilterTag);
+        return hasManual || hasAuto;
+      });
+    }
+
+    // Ordenar
+    if (crmSortBy === 'recent') list.sort((a, b) => b.lastSaleTs - a.lastSaleTs);
+    else if (crmSortBy === 'facturacion') list.sort((a, b) => b.totalFacturado - a.totalFacturado);
+    else if (crmSortBy === 'inactivo') list.sort((a, b) => b.daysSinceLast - a.daysSinceLast);
+    else if (crmSortBy === 'alfabetico') list.sort((a, b) => a.name.localeCompare(b.name, 'es'));
+
+    return list;
+  }
+
+  // ─── RENDER LISTA ───
+  function renderCRMList() {
+    const listEl = document.getElementById('crmList');
+    const kpisEl = document.getElementById('crmKpis');
+    if (!listEl) return;
+
+    const all = computeClients();
+    const visible = (currentUser !== 'admin' || crmViewMode === 'mine')
+      ? all.filter(c => c.sellers[currentUser] > 0)
+      : all;
+
+    // KPIs
+    if (kpisEl) {
+      const vip = visible.filter(c => c.tags.includes('vip')).length;
+      const caliente = visible.filter(c => c.autoTags.some(t => t.id === 'caliente')).length;
+      const dormido = visible.filter(c => c.autoTags.some(t => t.id === 'dormido' || t.id === 'perdido')).length;
+      const fups = visible.reduce((s, c) => s + c.followUps.filter(f => f.status === 'pending').length, 0);
+      const now = Date.now();
+      const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+      const nuevos = visible.filter(c => {
+        const firstTs = c.firstSaleDate ? new Date(c.firstSaleDate).getTime() : 0;
+        return (now - firstTs) <= thirtyDays;
+      }).length;
+      kpisEl.innerHTML = `
+        <div class="crm-kpi"><div class="crm-kpi-value">${visible.length}</div><div class="crm-kpi-label">Clientes</div></div>
+        <div class="crm-kpi"><div class="crm-kpi-value">${nuevos}</div><div class="crm-kpi-label">Nuevos 30d</div></div>
+        <div class="crm-kpi"><div class="crm-kpi-value">${caliente}</div><div class="crm-kpi-label">🔥 Calientes</div></div>
+        <div class="crm-kpi"><div class="crm-kpi-value">${dormido}</div><div class="crm-kpi-label">❄ Dormidos</div></div>
+        <div class="crm-kpi"><div class="crm-kpi-value">${fups}</div><div class="crm-kpi-label">📅 F-ups</div></div>
+      `;
+    }
+
+    const list = getFilteredClients();
+    if (list.length === 0) {
+      listEl.innerHTML = `<div class="crm-empty">Sin clientes para mostrar con estos filtros</div>`;
+      return;
+    }
+
+    listEl.innerHTML = list.map(c => renderClientCard(c)).join('');
+  }
+  window.renderCRMList = renderCRMList;
+
+  function renderClientCard(c) {
+    const allTags = [
+      ...c.tags.map(id => {
+        const def = CRM_MANUAL_TAGS.find(t => t.id === id);
+        return def ? { ...def, auto: false } : null;
+      }).filter(Boolean),
+      ...c.autoTags
+    ];
+    const tagsHtml = allTags.map(t =>
+      `<span class="crm-tag ${t.id} ${t.auto ? 'auto' : ''}">${t.emoji} ${t.label}</span>`
+    ).join('');
+
+    const pendingFups = c.followUps.filter(f => f.status === 'pending');
+    const vencidos = pendingFups.filter(f => f.dueDate < todayLocalISO()).length;
+    const sellerMeta = c.topSeller ? (SELLER_META[c.topSeller] || {}) : {};
+    const sellerLabel = c.topSeller ? `${sellerMeta.emoji || '🎯'} ${(sellerMeta.name || c.topSeller).toUpperCase()}` : '—';
+
+    const lastLabel = c.daysSinceLast === 0 ? 'hoy'
+      : c.daysSinceLast === 1 ? 'ayer'
+      : `hace ${c.daysSinceLast} días`;
+    const lastClass = c.daysSinceLast >= 60 ? 'alerta' : '';
+
+    let badges = '';
+    if (c.notes.length > 0) badges += `<span class="crm-card-badge">📝 ${c.notes.length}</span>`;
+    if (pendingFups.length > 0) badges += `<span class="crm-card-badge" style="${vencidos > 0 ? 'background:#FEE2E2;color:#991B1B' : ''}">📅 ${pendingFups.length}${vencidos > 0 ? ' ⚠' : ''}</span>`;
+
+    const phoneClean = crmNormalizePhone(c.phone);
+    const waBtn = phoneClean
+      ? `<button class="crm-card-action-btn whatsapp" onclick="event.stopPropagation(); crmWhatsApp('${escapeHtml(c.id)}')">📱 WA</button>`
+      : '';
+
+    return `
+      <div class="crm-client-card priority-${c.priority}" onclick="openCrmFicha('${escapeHtml(c.id)}')">
+        <div class="crm-card-header">
+          <div class="crm-card-name">${escapeHtml(c.name)}</div>
+          <div class="crm-card-priority ${c.priority}">PRIO ${c.priority}</div>
+        </div>
+        ${tagsHtml ? `<div class="crm-card-tags">${tagsHtml}</div>` : ''}
+        <div class="crm-card-contact">
+          ${c.phone ? `<span>📱 ${escapeHtml(c.phone)}</span>` : ''}
+          ${c.city ? `<span>📍 ${escapeHtml(c.city)}</span>` : ''}
+          <span>👤 ${sellerLabel}</span>
+        </div>
+        <div class="crm-card-stats">
+          <div class="crm-card-stat">
+            <div class="crm-card-stat-label">Compras</div>
+            <div class="crm-card-stat-value">${c.salesCount}</div>
+          </div>
+          <div class="crm-card-stat">
+            <div class="crm-card-stat-label">Total</div>
+            <div class="crm-card-stat-value">${fmtMoney(c.totalFacturado)}</div>
+          </div>
+          <div class="crm-card-stat">
+            <div class="crm-card-stat-label">Ticket</div>
+            <div class="crm-card-stat-value">${fmtMoney(c.ticketPromedio)}</div>
+          </div>
+        </div>
+        <div class="crm-card-last ${lastClass}">Última compra: <strong>${c.lastSaleDate || '—'}</strong> (${lastLabel})</div>
+        ${badges ? `<div class="crm-card-badges">${badges}</div>` : ''}
+        <div class="crm-card-actions">
+          <button class="crm-card-action-btn" onclick="event.stopPropagation(); openCrmFicha('${escapeHtml(c.id)}')">👁 FICHA</button>
+          ${waBtn}
+          <button class="crm-card-action-btn" onclick="event.stopPropagation(); openCrmFicha('${escapeHtml(c.id)}', 'followups')">📅 F-UP</button>
+        </div>
+      </div>
+    `;
+  }
+
+  // ─── FICHA CLIENTE ───
+  function getClientById(id) {
+    return computeClients().find(c => c.id === id) || null;
+  }
+
+  function openCrmFicha(id, tab = 'resumen') {
+    crmCurrentClientId = id;
+    crmCurrentTab = tab;
+    const c = getClientById(id);
+    if (!c) { showToast('⚠ Cliente no encontrado', 'warn'); return; }
+    document.getElementById('crmFichaTitle').textContent = c.name;
+    document.querySelectorAll('.crm-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    renderCrmFichaBody();
+    renderCrmFichaFooter();
+    document.getElementById('crmFichaOverlay').classList.add('visible');
+  }
+  window.openCrmFicha = openCrmFicha;
+
+  function closeCrmFicha() {
+    document.getElementById('crmFichaOverlay').classList.remove('visible');
+    crmCurrentClientId = null;
+    renderCRMList(); // refresh por si cambió algo
+  }
+  window.closeCrmFicha = closeCrmFicha;
+
+  function switchCrmTab(tab) {
+    crmCurrentTab = tab;
+    document.querySelectorAll('.crm-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    renderCrmFichaBody();
+  }
+  window.switchCrmTab = switchCrmTab;
+
+  function renderCrmFichaBody() {
+    const body = document.getElementById('crmFichaBody');
+    const c = getClientById(crmCurrentClientId);
+    if (!body || !c) return;
+    switch (crmCurrentTab) {
+      case 'resumen': body.innerHTML = renderFichaResumen(c); break;
+      case 'compras': body.innerHTML = renderFichaCompras(c); break;
+      case 'notas': body.innerHTML = renderFichaNotas(c); break;
+      case 'followups': body.innerHTML = renderFichaFollowUps(c); break;
+      case 'contactos': body.innerHTML = renderFichaContactos(c); break;
+    }
+  }
+
+  function renderCrmFichaFooter() {
+    const footer = document.getElementById('crmFichaFooter');
+    const c = getClientById(crmCurrentClientId);
+    if (!footer || !c) return;
+    const phoneClean = crmNormalizePhone(c.phone);
+    footer.innerHTML = `
+      ${phoneClean ? `<button class="whatsapp" onclick="crmWhatsApp('${escapeHtml(c.id)}')">📱 WHATSAPP</button>` : ''}
+      ${phoneClean ? `<button onclick="crmCall('${escapeHtml(c.id)}')">📞 LLAMAR</button>` : ''}
+      <button class="primary" onclick="switchCrmTab('followups')">📅 NUEVO F-UP</button>
+    `;
+  }
+
+  // TAB RESUMEN
+  function renderFichaResumen(c) {
+    const canEdit = currentUser === 'admin' || c.sellers[currentUser] > 0;
+    const sellerMeta = c.topSeller ? (SELLER_META[c.topSeller] || {}) : {};
+    const topProductsHtml = c.topProducts.length > 0
+      ? c.topProducts.map(([name, qty], i) => `<div style="font-size:12px;padding:4px 0;">${i + 1}. ${escapeHtml(name)} <span style="color:var(--ink-3)">(${qty} unid.)</span></div>`).join('')
+      : '<div style="color:var(--ink-3);font-style:italic;font-size:12px">Sin productos registrados</div>';
+
+    const manualTagsHtml = CRM_MANUAL_TAGS.map(t => {
+      const sel = c.tags.includes(t.id);
+      return `<button class="ficha-tag-opt ${sel ? 'selected' : ''}" onclick="toggleCrmTag('${escapeHtml(c.id)}', '${t.id}')" ${canEdit ? '' : 'disabled'}>${t.emoji} ${t.label}</button>`;
+    }).join('');
+
+    const autoTagsHtml = c.autoTags.length > 0
+      ? c.autoTags.map(t => `<span class="crm-tag ${t.id} auto">${t.emoji} ${t.label}</span>`).join(' ')
+      : '<span style="color:var(--ink-3);font-size:11px">Sin etiquetas automáticas</span>';
+
+    return `
+      <div class="ficha-section">
+        <div class="ficha-section-title">📇 Contacto</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.8;">
+          ${c.phone ? `📱 ${escapeHtml(c.phone)}<br>` : ''}
+          ${c.dni ? `🪪 DNI ${escapeHtml(c.dni)}<br>` : ''}
+          ${c.city ? `📍 ${escapeHtml(c.city)}<br>` : ''}
+          👤 Vendedor habitual: ${c.topSeller ? `${sellerMeta.emoji || ''} ${(sellerMeta.name || c.topSeller).toUpperCase()}` : '—'}
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <div class="ficha-section-title">⭐ Prioridad</div>
+        <div class="ficha-prio-row">
+          ${['A', 'B', 'C'].map(p => `<button class="ficha-prio-btn ${p} ${c.priority === p ? 'active' : ''}" onclick="setCrmPriority('${escapeHtml(c.id)}', '${p}')" ${canEdit ? '' : 'disabled'}>${p}</button>`).join('')}
+        </div>
+        <div style="font-size:10px;color:var(--ink-3);font-family:'JetBrains Mono',monospace">A = máxima atención · B = normal · C = baja</div>
+      </div>
+
+      <div class="ficha-section">
+        <div class="ficha-section-title">🏷 Etiquetas</div>
+        <div style="margin-bottom:8px;">${autoTagsHtml}</div>
+        <div class="ficha-tag-picker">${manualTagsHtml}</div>
+      </div>
+
+      <div class="ficha-section">
+        <div class="ficha-section-title">📊 Números</div>
+        <div class="ficha-kpi-grid">
+          <div class="ficha-kpi"><div class="ficha-kpi-label">Total facturado</div><div class="ficha-kpi-value">${fmtMoney(c.totalFacturado)}</div></div>
+          <div class="ficha-kpi"><div class="ficha-kpi-label">Compras</div><div class="ficha-kpi-value">${c.salesCount}</div></div>
+          <div class="ficha-kpi"><div class="ficha-kpi-label">Ticket promedio</div><div class="ficha-kpi-value">${fmtMoney(c.ticketPromedio)}</div></div>
+          <div class="ficha-kpi"><div class="ficha-kpi-label">Días sin comprar</div><div class="ficha-kpi-value">${c.daysSinceLast}</div></div>
+          <div class="ficha-kpi"><div class="ficha-kpi-label">Primera compra</div><div class="ficha-kpi-value" style="font-size:13px">${c.firstSaleDate || '—'}</div></div>
+          <div class="ficha-kpi"><div class="ficha-kpi-label">Última compra</div><div class="ficha-kpi-value" style="font-size:13px">${c.lastSaleDate || '—'}</div></div>
+        </div>
+      </div>
+
+      <div class="ficha-section">
+        <div class="ficha-section-title">🛒 Productos más comprados</div>
+        ${topProductsHtml}
+      </div>
+    `;
+  }
+
+  // TAB COMPRAS
+  function renderFichaCompras(c) {
+    const sorted = c.sales.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    if (sorted.length === 0) return `<div class="crm-empty">Sin compras registradas</div>`;
+    return `
+      <div class="ficha-section">
+        <div class="ficha-section-title">🛒 Historial · ${sorted.length} operaciones</div>
+        ${sorted.map(s => {
+          const items = (s.items && s.items.length > 0)
+            ? s.items.map(it => `${it.qty} × ${escapeHtml(it.name)}`).join(' · ')
+            : escapeHtml(s.product || '—');
+          const sm = SELLER_META[s.seller] || {};
+          return `
+            <div class="ficha-sale-row">
+              <div class="ficha-sale-head">
+                <span class="ficha-sale-date">${s.date}</span>
+                <span class="ficha-sale-amount">${fmtMoney(s.amount)}</span>
+              </div>
+              <div class="ficha-sale-items">${items}</div>
+              <div class="ficha-sale-footer">
+                ${sm.emoji || ''} ${(sm.name || s.seller || '').toUpperCase()} ·
+                <span class="ficha-sale-status ${s.status}">${s.status === 'approved' ? 'Aprobada' : s.status === 'pending' ? 'Pendiente' : s.status}</span>
+                ${s.channel ? ` · ${escapeHtml(s.channel)}` : ''}
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // TAB NOTAS
+  function renderFichaNotas(c) {
+    const canEdit = currentUser === 'admin' || c.sellers[currentUser] > 0;
+    const sorted = c.notes.slice().sort((a, b) => b.ts - a.ts);
+    return `
+      ${canEdit ? `
+      <div class="ficha-section">
+        <div class="ficha-section-title">📝 Nueva nota</div>
+        <textarea class="ficha-add-input" id="crmNewNoteText" placeholder="Ej: Prefiere entregas por la mañana, pidió presupuesto de hierros para noviembre..."></textarea>
+        <button class="ficha-add-btn" onclick="addCrmNote('${escapeHtml(c.id)}')">+ AGREGAR NOTA</button>
+      </div>
+      ` : ''}
+      <div class="ficha-section">
+        <div class="ficha-section-title">📋 Notas · ${sorted.length}</div>
+        ${sorted.length === 0 ? '<div class="crm-empty">Sin notas aún</div>' : sorted.map(n => {
+          const sm = SELLER_META[n.by] || {};
+          const dateStr = new Date(n.ts).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit', hour: '2-digit', minute: '2-digit' });
+          return `
+            <div class="ficha-note-item">
+              <div class="ficha-note-meta">${dateStr} · ${sm.emoji || ''} ${(sm.name || n.by || '').toUpperCase()}</div>
+              <div class="ficha-note-text">${escapeHtml(n.text)}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // TAB FOLLOW-UPS
+  function renderFichaFollowUps(c) {
+    const canEdit = currentUser === 'admin' || c.sellers[currentUser] > 0;
+    const today = todayLocalISO();
+    const pending = c.followUps.filter(f => f.status === 'pending').sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    const done = c.followUps.filter(f => f.status === 'done').sort((a, b) => (b.doneAt || 0) - (a.doneAt || 0));
+    // Default fecha: 7 días
+    const d = new Date(); d.setDate(d.getDate() + 7);
+    const defaultDate = localISO(d);
+
+    const renderFup = (f, isDone) => {
+      const sm = SELLER_META[f.by] || {};
+      const vencido = !isDone && f.dueDate < today;
+      const cls = isDone ? 'hecho' : (vencido ? 'vencido' : 'pending');
+      const dueLabel = f.dueDate === today ? 'HOY' : vencido ? `VENCIÓ ${f.dueDate}` : f.dueDate;
+      const prioEmoji = f.priority === 'alta' ? '🔴' : f.priority === 'media' ? '🟡' : '🟢';
+      return `
+        <div class="ficha-fup-item ${cls}">
+          <div class="ficha-fup-meta">${prioEmoji} ${dueLabel} · ${sm.emoji || ''} ${(sm.name || f.by || '').toUpperCase()}${isDone ? ' · ✓ HECHO' : ''}</div>
+          <div class="ficha-fup-text">${escapeHtml(f.text)}</div>
+          ${f.resultNote ? `<div style="font-size:11px;color:var(--ink-3);margin-top:4px;font-style:italic">Resultado: ${escapeHtml(f.resultNote)}</div>` : ''}
+          ${!isDone && canEdit ? `
+            <div class="ficha-fup-actions">
+              <button class="ficha-fup-btn" onclick="completeCrmFollowUp('${escapeHtml(c.id)}', '${f.id}')">✓ HECHO</button>
+              <button class="ficha-fup-btn" onclick="deleteCrmFollowUp('${escapeHtml(c.id)}', '${f.id}')">🗑</button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    };
+
+    return `
+      ${canEdit ? `
+      <div class="ficha-section">
+        <div class="ficha-section-title">📅 Programar follow-up</div>
+        <textarea class="ficha-add-input" id="crmNewFupText" placeholder="Ej: Llamar para ofrecer hierros de la obra nueva..." style="min-height:50px"></textarea>
+        <div class="ficha-add-row">
+          <input type="date" id="crmNewFupDate" value="${defaultDate}">
+          <select id="crmNewFupPrio">
+            <option value="media">🟡 Media</option>
+            <option value="alta">🔴 Alta</option>
+            <option value="baja">🟢 Baja</option>
+          </select>
+        </div>
+        <button class="ficha-add-btn" onclick="addCrmFollowUp('${escapeHtml(c.id)}')">+ PROGRAMAR</button>
+      </div>
+      ` : ''}
+      <div class="ficha-section">
+        <div class="ficha-section-title">⏳ Pendientes · ${pending.length}</div>
+        ${pending.length === 0 ? '<div class="crm-empty">Sin follow-ups pendientes</div>' : pending.map(f => renderFup(f, false)).join('')}
+      </div>
+      ${done.length > 0 ? `
+      <div class="ficha-section">
+        <div class="ficha-section-title">✓ Completados · ${done.length}</div>
+        ${done.slice(0, 10).map(f => renderFup(f, true)).join('')}
+      </div>
+      ` : ''}
+    `;
+  }
+
+  // TAB CONTACTOS (log)
+  function renderFichaContactos(c) {
+    const canEdit = currentUser === 'admin' || c.sellers[currentUser] > 0;
+    // Combinar log manual + ventas como contactos automáticos
+    const entries = [
+      ...c.contactLog.map(l => ({ ...l, kind: 'manual' })),
+      ...c.sales.map(s => ({
+        ts: s.submittedAt || new Date(s.date).getTime(),
+        type: 'venta',
+        by: s.seller,
+        note: `Venta ${fmtMoney(s.amount)} · ${s.status === 'approved' ? 'aprobada' : s.status}`,
+        kind: 'auto'
+      }))
+    ].sort((a, b) => b.ts - a.ts);
+
+    const typeEmoji = { llamada: '📞', whatsapp: '📱', visita: '🏪', email: '📧', venta: '🛒', otro: '💬' };
+
+    return `
+      ${canEdit ? `
+      <div class="ficha-section">
+        <div class="ficha-section-title">💬 Registrar contacto</div>
+        <div class="ficha-add-row">
+          <select id="crmNewLogType">
+            <option value="llamada">📞 Llamada</option>
+            <option value="whatsapp">📱 WhatsApp</option>
+            <option value="visita">🏪 Visita</option>
+            <option value="email">📧 Email</option>
+            <option value="otro">💬 Otro</option>
+          </select>
+        </div>
+        <textarea class="ficha-add-input" id="crmNewLogText" placeholder="¿Qué pasó? Ej: Hablamos, quiere presupuesto de ladrillos..." style="min-height:50px"></textarea>
+        <button class="ficha-add-btn" onclick="addCrmContactLog('${escapeHtml(c.id)}')">+ REGISTRAR</button>
+      </div>
+      ` : ''}
+      <div class="ficha-section">
+        <div class="ficha-section-title">📜 Historial · ${entries.length}</div>
+        ${entries.length === 0 ? '<div class="crm-empty">Sin contactos</div>' : entries.slice(0, 50).map(e => {
+          const sm = SELLER_META[e.by] || {};
+          const dateStr = new Date(e.ts).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: '2-digit' });
+          return `
+            <div class="ficha-log-item" style="${e.kind === 'auto' ? 'opacity:0.7' : ''}">
+              <div class="ficha-log-meta">${typeEmoji[e.type] || '💬'} ${(e.type || '').toUpperCase()} · ${dateStr} · ${sm.emoji || ''} ${(sm.name || e.by || '').toUpperCase()}</div>
+              <div class="ficha-log-text">${escapeHtml(e.note || '')}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  }
+
+  // ─── ACCIONES · persistencia en Firebase ───
+  async function saveCrmClient(id, patch) {
+    if (!state.crm) state.crm = {};
+    const current = state.crm[id] || {};
+    const updated = { ...current, ...patch, updatedAt: Date.now() };
+    state.crm[id] = updated;
+    try {
+      await db.ref(`crm/${id}`).set(updated);
+    } catch (e) {
+      console.warn('[CRM] save error', e);
+      showToast('⚠ Error guardando', 'warn');
+    }
+  }
+
+  async function toggleCrmTag(id, tagId) {
+    const c = getClientById(id);
+    if (!c) return;
+    const tags = c.tags.includes(tagId) ? c.tags.filter(t => t !== tagId) : [...c.tags, tagId];
+    await saveCrmClient(id, { tags });
+    renderCrmFichaBody();
+  }
+  window.toggleCrmTag = toggleCrmTag;
+
+  async function setCrmPriority(id, p) {
+    await saveCrmClient(id, { priority: p });
+    renderCrmFichaBody();
+  }
+  window.setCrmPriority = setCrmPriority;
+
+  async function addCrmNote(id) {
+    const ta = document.getElementById('crmNewNoteText');
+    const text = (ta?.value || '').trim();
+    if (!text) { showToast('⚠ Escribí algo', 'warn'); return; }
+    const c = getClientById(id);
+    if (!c) return;
+    const notes = [...c.notes, { ts: Date.now(), text, by: currentUser }];
+    await saveCrmClient(id, { notes });
+    showToast('✓ Nota guardada');
+    renderCrmFichaBody();
+  }
+  window.addCrmNote = addCrmNote;
+
+  async function addCrmFollowUp(id) {
+    const text = (document.getElementById('crmNewFupText')?.value || '').trim();
+    const dueDate = document.getElementById('crmNewFupDate')?.value;
+    const priority = document.getElementById('crmNewFupPrio')?.value || 'media';
+    if (!text) { showToast('⚠ Escribí qué hacer', 'warn'); return; }
+    if (!dueDate) { showToast('⚠ Elegí fecha', 'warn'); return; }
+    const c = getClientById(id);
+    if (!c) return;
+    const fup = {
+      id: 'fup_' + Date.now(),
+      ts: Date.now(),
+      dueDate,
+      text,
+      priority,
+      status: 'pending',
+      by: currentUser
+    };
+    const followUps = [...c.followUps, fup];
+    await saveCrmClient(id, { followUps });
+    showToast(`✓ Follow-up programado para ${dueDate}`);
+    renderCrmFichaBody();
+  }
+  window.addCrmFollowUp = addCrmFollowUp;
+
+  async function completeCrmFollowUp(id, fupId) {
+    const c = getClientById(id);
+    if (!c) return;
+    const resultNote = prompt('¿Cómo salió? (opcional)', '') ;
+    if (resultNote === null) return; // canceló
+    const followUps = c.followUps.map(f =>
+      f.id === fupId ? { ...f, status: 'done', doneAt: Date.now(), doneBy: currentUser, resultNote: resultNote.trim() } : f
+    );
+    await saveCrmClient(id, { followUps });
+    // Registrar también en el log
+    const contactLog = [...c.contactLog, {
+      ts: Date.now(),
+      type: 'otro',
+      by: currentUser,
+      note: `Follow-up completado: ${c.followUps.find(f => f.id === fupId)?.text || ''}${resultNote ? ' · ' + resultNote : ''}`
+    }];
+    await saveCrmClient(id, { contactLog });
+    showToast('✓ Follow-up completado');
+    renderCrmFichaBody();
+  }
+  window.completeCrmFollowUp = completeCrmFollowUp;
+
+  async function deleteCrmFollowUp(id, fupId) {
+    if (!confirm('¿Eliminar este follow-up?')) return;
+    const c = getClientById(id);
+    if (!c) return;
+    const followUps = c.followUps.filter(f => f.id !== fupId);
+    await saveCrmClient(id, { followUps });
+    renderCrmFichaBody();
+  }
+  window.deleteCrmFollowUp = deleteCrmFollowUp;
+
+  async function addCrmContactLog(id) {
+    const type = document.getElementById('crmNewLogType')?.value || 'otro';
+    const note = (document.getElementById('crmNewLogText')?.value || '').trim();
+    if (!note) { showToast('⚠ Escribí qué pasó', 'warn'); return; }
+    const c = getClientById(id);
+    if (!c) return;
+    const contactLog = [...c.contactLog, { ts: Date.now(), type, by: currentUser, note }];
+    await saveCrmClient(id, { contactLog });
+    showToast('✓ Contacto registrado');
+    renderCrmFichaBody();
+  }
+  window.addCrmContactLog = addCrmContactLog;
+
+  // ─── WHATSAPP / LLAMAR ───
+  function crmWhatsApp(id) {
+    const c = getClientById(id);
+    if (!c) return;
+    let phone = crmNormalizePhone(c.phone);
+    if (!phone) { showToast('⚠ Sin teléfono', 'warn'); return; }
+    // Argentina: si no empieza con 54, agregarlo
+    if (!phone.startsWith('54')) {
+      // sacar 0 inicial y 15 si existe
+      phone = phone.replace(/^0/, '').replace(/^(\d{2,4})15/, '$1');
+      phone = '54' + phone;
+    }
+    const sellerMeta = SELLER_META[currentUser] || {};
+    const vendorName = sellerMeta.name || 'Graziano Materiales';
+    const firstName = (c.name || '').split(' ')[0];
+    // Mensaje según estado
+    let msg;
+    const pendingFup = c.followUps.find(f => f.status === 'pending');
+    if (pendingFup) {
+      msg = `Hola ${firstName}! Te escribo de Graziano Materiales. ${pendingFup.text}`;
+    } else if (c.daysSinceLast >= 60) {
+      msg = `Hola ${firstName}! Soy ${vendorName} de Graziano Materiales. Hace un tiempo que no te vemos por el corralón, ¿andás necesitando algo para la obra? Tenemos precios actualizados.`;
+    } else if (c.daysSinceLast <= 7) {
+      msg = `Hola ${firstName}! Soy ${vendorName} de Graziano Materiales. ¿Llegó todo bien? Cualquier cosa que necesites me avisás.`;
+    } else {
+      msg = `Hola ${firstName}! Soy ${vendorName} de Graziano Materiales. ¿Cómo va la obra? Cualquier cosa que necesites, acá estamos.`;
+    }
+    // Registrar en log
+    saveCrmClient(id, {
+      contactLog: [...c.contactLog, { ts: Date.now(), type: 'whatsapp', by: currentUser, note: 'WhatsApp abierto desde CRM' }]
+    });
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
+  window.crmWhatsApp = crmWhatsApp;
+
+  function crmCall(id) {
+    const c = getClientById(id);
+    if (!c) return;
+    const phone = crmNormalizePhone(c.phone);
+    if (!phone) { showToast('⚠ Sin teléfono', 'warn'); return; }
+    saveCrmClient(id, {
+      contactLog: [...c.contactLog, { ts: Date.now(), type: 'llamada', by: currentUser, note: 'Llamada iniciada desde CRM' }]
+    });
+    window.location.href = `tel:${phone}`;
+  }
+  window.crmCall = crmCall;
+
+  // ─── EXPORT CSV ───
+  function exportCRMCSV() {
+    const list = getFilteredClients();
+    if (list.length === 0) { showToast('⚠ Sin clientes para exportar', 'warn'); return; }
+    const headers = ['Nombre', 'Telefono', 'DNI', 'Ciudad', 'Prioridad', 'Etiquetas', 'Compras', 'Total Facturado', 'Ticket Promedio', 'Primera Compra', 'Ultima Compra', 'Dias Sin Comprar', 'Vendedor Habitual', 'Notas', 'FollowUps Pendientes'];
+    const esc = (v) => {
+      if (v === null || v === undefined) return '';
+      const s = String(v).replace(/"/g, '""');
+      return /[",\n;]/.test(s) ? `"${s}"` : s;
+    };
+    const rows = [headers.join(';')];
+    list.forEach(c => {
+      const allTags = [...c.tags, ...c.autoTags.map(t => t.id)].join(', ');
+      const sm = SELLER_META[c.topSeller] || {};
+      rows.push([
+        esc(c.name), esc(c.phone), esc(c.dni), esc(c.city), c.priority, esc(allTags),
+        c.salesCount, Math.round(c.totalFacturado), Math.round(c.ticketPromedio),
+        c.firstSaleDate || '', c.lastSaleDate || '', c.daysSinceLast,
+        esc(sm.name || c.topSeller || ''), c.notes.length,
+        c.followUps.filter(f => f.status === 'pending').length
+      ].join(';'));
+    });
+    const csv = '﻿' + rows.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `graziano-clientes-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+    showToast(`✓ ${list.length} clientes exportados`);
+  }
+  window.exportCRMCSV = exportCRMCSV;
+
+  // ─── PANEL FOLLOW-UPS DEL DÍA (en dashboard principal) ───
+  function renderFollowUpsPanel() {
+    const panel = document.getElementById('followUpsPanel');
+    if (!panel || !currentUser || currentUser === 'view') return;
+    const today = todayLocalISO();
+    const in7 = new Date(); in7.setDate(in7.getDate() + 7);
+    const in7Str = localISO(in7);
+
+    const clients = computeClients();
+    // Recolectar todos los follow-ups pendientes con cliente
+    const all = [];
+    clients.forEach(c => {
+      c.followUps.forEach(f => {
+        if (f.status !== 'pending') return;
+        // Permisos: vendedor ve los suyos, admin ve todos
+        if (currentUser !== 'admin' && f.by !== currentUser) return;
+        all.push({ ...f, client: c });
+      });
+    });
+
+    if (all.length === 0) { panel.style.display = 'none'; return; }
+
+    const vencidos = all.filter(f => f.dueDate < today).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+    const hoy = all.filter(f => f.dueDate === today);
+    const proximos = all.filter(f => f.dueDate > today && f.dueDate <= in7Str).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
+
+    const renderRow = (f) => {
+      const sm = SELLER_META[f.by] || {};
+      const prioEmoji = f.priority === 'alta' ? '🔴' : f.priority === 'media' ? '🟡' : '🟢';
+      return `
+        <div class="fup-row" onclick="openCRM(); setTimeout(() => openCrmFicha('${escapeHtml(f.client.id)}', 'followups'), 100)">
+          <span class="fup-prio">${prioEmoji}</span>
+          <span class="fup-seller">${sm.emoji || ''}</span>
+          <span class="fup-client">${escapeHtml(f.client.name)}</span>
+          <span class="fup-text">${escapeHtml(f.text)}</span>
+          <span class="fup-date">${f.dueDate === today ? 'HOY' : f.dueDate}</span>
+        </div>
+      `;
+    };
+
+    panel.style.display = 'block';
+    panel.innerHTML = `
+      <div class="fup-panel-header">
+        <span>🔔 FOLLOW-UPS · ${all.length} pendientes</span>
+        <button class="fup-panel-btn" onclick="openCRM()">VER CRM →</button>
+      </div>
+      ${vencidos.length > 0 ? `<div class="fup-group vencidos"><div class="fup-group-title">⚠ VENCIDOS (${vencidos.length})</div>${vencidos.map(renderRow).join('')}</div>` : ''}
+      ${hoy.length > 0 ? `<div class="fup-group hoy"><div class="fup-group-title">📅 HOY (${hoy.length})</div>${hoy.map(renderRow).join('')}</div>` : ''}
+      ${proximos.length > 0 ? `<div class="fup-group proximos"><div class="fup-group-title">📆 PRÓXIMOS 7 DÍAS (${proximos.length})</div>${proximos.slice(0, 5).map(renderRow).join('')}</div>` : ''}
+    `;
+  }
+  window.renderFollowUpsPanel = renderFollowUpsPanel;
 
   function exportProductAnalysis() {
     if (currentUser !== 'admin') {
