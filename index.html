@@ -4749,6 +4749,295 @@
   }
 
   /* ═══════════════════════════════════════════════════════════ */
+  /* ═════════════════════════════════════════════════════════════ */
+  /* 💰 RENTABILIDAD REAL                                           */
+  /* ═════════════════════════════════════════════════════════════ */
+  .rentabilidad-section {
+    background: linear-gradient(135deg, #FAFAF7 0%, #F2F2EE 100%);
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    margin: 24px 0;
+    padding: 24px;
+  }
+  .rr-header-actions {
+    display: flex; gap: 10px; flex-wrap: wrap;
+  }
+  .rr-info-btn, .rr-export-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 10px 16px;
+    text-transform: uppercase;
+    border: 1.5px solid var(--ink);
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .rr-info-btn {
+    background: #FEF3C7;
+    color: var(--ink);
+  }
+  .rr-info-btn:hover { background: #FDE68A; transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+  .rr-export-btn {
+    background: #1F8A3A;
+    color: white;
+    border-color: #1F8A3A;
+  }
+  .rr-export-btn:hover { background: #157029; transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+
+  /* INFO PANEL */
+  .rr-info-panel {
+    background: white;
+    border: 2px solid var(--ink);
+    padding: 20px;
+    margin-bottom: 24px;
+    animation: rrSlideDown 0.3s ease;
+  }
+  @keyframes rrSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .rr-info-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 12px; border-bottom: 1.5px dashed var(--line);
+    margin-bottom: 16px;
+  }
+  .rr-info-header h4 {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.03em;
+    margin: 0;
+  }
+  .rr-info-close {
+    background: none; border: none;
+    font-size: 20px; cursor: pointer;
+    color: var(--ink-3);
+    padding: 4px 10px;
+  }
+  .rr-info-close:hover { color: var(--red); }
+  .rr-info-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .rr-info-item:last-child { border-bottom: none; }
+  .rr-info-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .rr-info-formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--red);
+    background: #FEF3C7;
+    padding: 6px 10px;
+    display: inline-block;
+    margin-bottom: 8px;
+    border-left: 3px solid var(--red);
+  }
+  .rr-info-desc {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* CASCADA WATERFALL */
+  .rr-waterfall {
+    background: white;
+    border: 1.5px solid var(--ink);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .rr-wf-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    padding: 14px 0;
+    gap: 20px;
+  }
+  .rr-wf-row.subtitle {
+    padding-top: 20px;
+    padding-bottom: 8px;
+    border-top: 2px solid var(--ink);
+    margin-top: 8px;
+  }
+  .rr-wf-row.subtotal {
+    background: linear-gradient(90deg, #FEF3C7 0%, transparent 100%);
+    border-left: 4px solid var(--red);
+    padding: 16px 16px;
+    margin: 8px -16px;
+  }
+  .rr-wf-row.final {
+    background: linear-gradient(90deg, #DCFCE7 0%, #ECFDF5 100%);
+    border: 2px solid #1F8A3A;
+    padding: 20px 16px;
+    margin: 16px -16px 0 -16px;
+    border-radius: 4px;
+  }
+  .rr-wf-row.final.negative {
+    background: linear-gradient(90deg, #FEE2E2 0%, #FEF2F2 100%);
+    border-color: var(--red);
+  }
+  .rr-wf-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .rr-wf-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: 0.03em;
+  }
+  .rr-wf-row.subtotal .rr-wf-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .rr-wf-row.final .rr-wf-name {
+    font-family: 'Anton', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #1F8A3A;
+  }
+  .rr-wf-row.final.negative .rr-wf-name {
+    color: var(--red);
+  }
+  .rr-wf-detail {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+  .rr-wf-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .rr-wf-row.minus .rr-wf-value {
+    color: var(--red);
+  }
+  .rr-wf-row.subtotal .rr-wf-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 26px;
+    color: var(--red);
+  }
+  .rr-wf-row.final .rr-wf-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 32px;
+    color: #1F8A3A;
+  }
+  .rr-wf-row.final.negative .rr-wf-value {
+    color: var(--red);
+  }
+  .rr-wf-pct {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+  }
+  .rr-wf-row.subtotal .rr-wf-pct {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .rr-wf-row.final .rr-wf-pct {
+    font-size: 14px;
+    color: #1F8A3A;
+    font-weight: 700;
+  }
+  .rr-wf-row.final.negative .rr-wf-pct {
+    color: var(--red);
+  }
+
+  /* INPUTS editables */
+  .rr-inputs-section {
+    background: white;
+    border: 1.5px solid var(--line);
+    padding: 20px;
+  }
+  .rr-inputs-header {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1.5px dashed var(--line);
+  }
+  .rr-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .rr-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rr-input-group.rr-input-ads {
+    grid-column: 1 / -1;
+    background: #FEF3C7;
+    padding: 12px;
+    border-left: 3px solid var(--red);
+  }
+  .rr-input-group label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+  .rr-input-group input {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--line);
+    background: white;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .rr-input-group input:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(229,37,33,0.15);
+  }
+  .rr-input-group small {
+    font-size: 10px;
+    color: var(--ink-3);
+    font-style: italic;
+  }
+  .rr-save-indicator {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #1F8A3A;
+    text-align: right;
+    margin-top: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .rr-save-indicator.visible { opacity: 1; }
+
+  @media (max-width: 700px) {
+    .rr-header-actions { width: 100%; margin-top: 10px; }
+    .rr-info-btn, .rr-export-btn { flex: 1; font-size: 10px; padding: 10px 8px; }
+    .rr-wf-row { grid-template-columns: 1fr; }
+    .rr-wf-value { text-align: left; font-size: 20px; }
+    .rr-wf-row.subtotal .rr-wf-value, .rr-wf-row.final .rr-wf-value { font-size: 26px; }
+    .rr-inputs-grid { grid-template-columns: 1fr; }
+  }
+
   /* ANÁLISIS DE MÁRGENES · sección /09                           */
   /* ═══════════════════════════════════════════════════════════ */
   .margin-analysis-section { margin-top: 32px; }
@@ -6766,6 +7055,110 @@
 
     <!-- KPIs principales -->
     <div class="ops-kpis" id="opsKpis"></div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 💰 RENTABILIDAD REAL · P&L del mes · solo ADMIN              -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ops-section ops-section-full rentabilidad-section">
+      <div class="ops-section-header">
+        <div>
+          <h3>💰 RENTABILIDAD REAL DEL NEGOCIO</h3>
+          <span class="ops-section-sub">cascada completa: facturación → margen bruto → operativo → neto · lo que REALMENTE queda cada mes</span>
+        </div>
+        <div class="rr-header-actions">
+          <button class="rr-info-btn" onclick="toggleRentabilidadInfo()" title="Ver fórmulas y explicación">📖 ¿CÓMO SE CALCULA?</button>
+          <button class="rr-export-btn" onclick="exportRentabilidadPDF()" title="Descargar PDF del P&L">📄 EXPORTAR PDF</button>
+        </div>
+      </div>
+
+      <!-- Modal explicación -->
+      <div class="rr-info-panel" id="rrInfoPanel" style="display:none;">
+        <div class="rr-info-header">
+          <h4>📖 Cómo se calcula cada número</h4>
+          <button class="rr-info-close" onclick="toggleRentabilidadInfo()">✕</button>
+        </div>
+        <div class="rr-info-body">
+          <div class="rr-info-item">
+            <div class="rr-info-title">📊 MARGEN BRUTO</div>
+            <div class="rr-info-formula">(Facturación − Costo productos) / Facturación × 100</div>
+            <div class="rr-info-desc">
+              <strong>Qué incluye:</strong> solo la diferencia entre lo que vendimos y lo que nos costó el producto.<br>
+              <strong>Qué NO incluye:</strong> comisiones, sueldos, ads, estructura fija.<br>
+              <strong>Ojo:</strong> este margen es "sobre el precio". Si cargás un producto con 30% de markup (sobre costo), este número va a ser menor (23% aprox). Son dos miradas distintas del MISMO ladrillo.
+            </div>
+          </div>
+          <div class="rr-info-item">
+            <div class="rr-info-title">📊 MARGEN OPERATIVO</div>
+            <div class="rr-info-formula">Margen Bruto − Comisiones − Ads − Sueldo Lauti</div>
+            <div class="rr-info-desc">
+              <strong>Qué incluye:</strong> todo el costo DIRECTO del equipo de ventas (comisiones escalonadas, viáticos, bonos, ads de Meta, sueldo base de Lauti).<br>
+              <strong>Qué NO incluye:</strong> la estructura fija del corralón (alquiler, sueldos admin, servicios).
+            </div>
+          </div>
+          <div class="rr-info-item">
+            <div class="rr-info-title">💰 RESULTADO NETO</div>
+            <div class="rr-info-formula">Margen Operativo − Estructura Fija</div>
+            <div class="rr-info-desc">
+              <strong>Esto es lo que QUEDA EN CAJA cada mes</strong>, después de pagar TODO (producto, equipo, ads, estructura).<br>
+              Es el verdadero profit del negocio.<br>
+              Antes de impuestos (si corresponden).
+            </div>
+          </div>
+          <div class="rr-info-item">
+            <div class="rr-info-title">⚙ ESTRUCTURA FIJA (editable abajo)</div>
+            <div class="rr-info-desc">
+              Son los gastos que tenés sí o sí todos los meses, se venda o no se venda. Si cambia algún monto (ej: subió el alquiler), editalo abajo y se recalcula todo.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CASCADA -->
+      <div class="rr-waterfall" id="rrWaterfall">
+        <!-- se renderea desde JS -->
+      </div>
+
+      <!-- INPUTS editables · estructura + ads -->
+      <div class="rr-inputs-section">
+        <div class="rr-inputs-header">⚙ COSTOS MENSUALES EDITABLES</div>
+        <div class="rr-inputs-grid">
+          <div class="rr-input-group">
+            <label>📍 Alquiler</label>
+            <input type="number" id="rrAlquiler" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="2400000">
+          </div>
+          <div class="rr-input-group">
+            <label>👤 Emi (depósito)</label>
+            <input type="number" id="rrEmi" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="800000">
+          </div>
+          <div class="rr-input-group">
+            <label>🚚 Facu (chofer)</label>
+            <input type="number" id="rrFacu" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="800000">
+          </div>
+          <div class="rr-input-group">
+            <label>📋 Cami (admin)</label>
+            <input type="number" id="rrCami" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="500000">
+          </div>
+          <div class="rr-input-group">
+            <label>💡 Servicios</label>
+            <input type="number" id="rrServicios" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="281000">
+          </div>
+          <div class="rr-input-group">
+            <label>📊 Contador</label>
+            <input type="number" id="rrContador" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="80000">
+          </div>
+          <div class="rr-input-group">
+            <label>➕ Otros gastos fijos</label>
+            <input type="number" id="rrOtros" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="0">
+          </div>
+          <div class="rr-input-group rr-input-ads">
+            <label>📱 Ads Meta (gasto REAL del mes)</label>
+            <input type="number" id="rrAdsReal" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="2000000">
+            <small>Copiá el gasto del mes desde Meta Business Manager</small>
+          </div>
+        </div>
+        <div class="rr-save-indicator" id="rrSaveIndicator">✓ Guardado automático</div>
+      </div>
+    </div>
 
     <!-- Pendientes -->
     <div class="ops-section ops-section-alert" id="opsPendingSection">
@@ -14508,6 +14901,8 @@
     document.getElementById('opsLastUpdate').textContent =
       `▸ ACTUALIZADO ${new Date().toLocaleString('es-AR')}`;
     renderOpsKPIs(mk);
+    populateRentabilidadInputs();
+    renderRentabilidad();
     renderOpsPending();
     renderOpsTopProducts(mk);
     renderOpsBySeller(mk);
@@ -20093,6 +20488,415 @@
   // EXPORT · Análisis de productos con márgenes y volumen
   // Para decidir qué % subir/bajar según performance
   // ═══════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════
+  // 💰 RENTABILIDAD REAL · P&L cascada completa
+  // ═══════════════════════════════════════════════════════════
+
+  const RR_CONFIG_KEY = 'graziano_rentabilidad_config';
+  const RR_DEFAULTS = {
+    alquiler: 2400000,
+    emi: 800000,
+    facu: 800000,
+    cami: 500000,
+    servicios: 281000,
+    contador: 80000,
+    otros: 0,
+    adsReal: 2000000
+  };
+
+  function loadRentabilidadConfig() {
+    try {
+      const stored = localStorage.getItem(RR_CONFIG_KEY);
+      if (!stored) return { ...RR_DEFAULTS };
+      const parsed = JSON.parse(stored);
+      return { ...RR_DEFAULTS, ...parsed };
+    } catch (e) {
+      return { ...RR_DEFAULTS };
+    }
+  }
+
+  function saveRentabilidadConfig() {
+    const cfg = {
+      alquiler: parseFloat(document.getElementById('rrAlquiler')?.value) || 0,
+      emi: parseFloat(document.getElementById('rrEmi')?.value) || 0,
+      facu: parseFloat(document.getElementById('rrFacu')?.value) || 0,
+      cami: parseFloat(document.getElementById('rrCami')?.value) || 0,
+      servicios: parseFloat(document.getElementById('rrServicios')?.value) || 0,
+      contador: parseFloat(document.getElementById('rrContador')?.value) || 0,
+      otros: parseFloat(document.getElementById('rrOtros')?.value) || 0,
+      adsReal: parseFloat(document.getElementById('rrAdsReal')?.value) || 0
+    };
+    localStorage.setItem(RR_CONFIG_KEY, JSON.stringify(cfg));
+    const ind = document.getElementById('rrSaveIndicator');
+    if (ind) {
+      ind.classList.add('visible');
+      clearTimeout(window._rrSaveTimer);
+      window._rrSaveTimer = setTimeout(() => ind.classList.remove('visible'), 1500);
+    }
+  }
+  window.saveRentabilidadConfig = saveRentabilidadConfig;
+
+  function toggleRentabilidadInfo() {
+    const panel = document.getElementById('rrInfoPanel');
+    if (!panel) return;
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+  }
+  window.toggleRentabilidadInfo = toggleRentabilidadInfo;
+
+  // Carga la config a los inputs al abrir admin
+  function populateRentabilidadInputs() {
+    const cfg = loadRentabilidadConfig();
+    const map = {
+      rrAlquiler: cfg.alquiler, rrEmi: cfg.emi, rrFacu: cfg.facu,
+      rrCami: cfg.cami, rrServicios: cfg.servicios, rrContador: cfg.contador,
+      rrOtros: cfg.otros, rrAdsReal: cfg.adsReal
+    };
+    Object.entries(map).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el && el.value === '') el.value = val;
+    });
+  }
+
+  // Calcula todos los números del P&L para el mes activo del dashboard admin
+  function computeRentabilidad(mk) {
+    if (!mk) mk = activeOpsMonth();
+    const cfg = loadRentabilidadConfig();
+
+    // 1. Facturación bruta (todas las aprobadas del mes · incluye Estela)
+    const sales = state.sales.filter(s =>
+      s.status === 'approved' && monthKeyOf(s.date) === mk
+    );
+    const facturacion = sales.reduce((a, v) => a + (v.amount || 0), 0);
+
+    // 2. Costo de productos vendidos (COGS)
+    // Suma los costos registrados en cada item de venta
+    let costoProductos = 0;
+    sales.forEach(s => {
+      if (s.items && Array.isArray(s.items)) {
+        s.items.forEach(it => {
+          const qty = it.qty || 0;
+          const cost = it.cost || 0;
+          costoProductos += qty * cost;
+        });
+      }
+    });
+
+    // 3. Margen bruto
+    const margenBruto = facturacion - costoProductos;
+    const margenBrutoPct = facturacion > 0 ? (margenBruto / facturacion) * 100 : 0;
+    // Markup equivalente (sobre costo) · lo que vos pensás
+    const markupPct = costoProductos > 0 ? (margenBruto / costoProductos) * 100 : 0;
+
+    // 4. Comisiones + viáticos + bonos + sueldo base
+    // Reusamos computeAll para obtener los totales reales
+    let comisionesVendedores = 0;
+    let sueldoLauti = 0;
+    try {
+      const c = computeAll();
+      CONFIG.competitiveSellers.forEach(key => {
+        const s = c[key];
+        if (!s) return;
+        if (key === 'lauti') {
+          sueldoLauti = s.baseSalary || 0;
+        }
+        comisionesVendedores += (s.baseComm || 0)
+                              + (s.extraComm || 0)
+                              + (s.viatico || 0)
+                              + (s.bonusTarget || 0)
+                              + (s.teamBonus || 0)
+                              + (s.closedMonthBonus || 0)
+                              + (s.overrideTotal || 0)
+                              + (s.floatingComm || 0);
+      });
+    } catch (e) {
+      console.warn('[RR] No pude calcular comisiones:', e);
+    }
+
+    // 5. Ads reales (del input)
+    const adsReal = cfg.adsReal || 0;
+
+    // 6. Margen operativo
+    const margenOperativo = margenBruto - comisionesVendedores - sueldoLauti - adsReal;
+    const margenOperativoPct = facturacion > 0 ? (margenOperativo / facturacion) * 100 : 0;
+
+    // 7. Estructura fija
+    const estructuraFija = (cfg.alquiler || 0) + (cfg.emi || 0) + (cfg.facu || 0)
+                         + (cfg.cami || 0) + (cfg.servicios || 0) + (cfg.contador || 0)
+                         + (cfg.otros || 0);
+
+    // 8. Resultado neto
+    const neto = margenOperativo - estructuraFija;
+    const netoPct = facturacion > 0 ? (neto / facturacion) * 100 : 0;
+
+    return {
+      facturacion, costoProductos,
+      margenBruto, margenBrutoPct, markupPct,
+      comisionesVendedores, sueldoLauti, adsReal,
+      margenOperativo, margenOperativoPct,
+      estructuraFija, cfg,
+      neto, netoPct,
+      mk
+    };
+  }
+
+  function fmtRR(n) {
+    if (n === null || n === undefined || isNaN(n)) return '$0';
+    const abs = Math.abs(Math.round(n));
+    const sign = n < 0 ? '−' : '';
+    return sign + '$' + abs.toLocaleString('es-AR');
+  }
+
+  function renderRentabilidad() {
+    const el = document.getElementById('rrWaterfall');
+    if (!el) return;
+    const mk = activeOpsMonth();
+    const r = computeRentabilidad(mk);
+
+    const html = `
+      <!-- FACTURACIÓN -->
+      <div class="rr-wf-row">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">Facturación Bruta</div>
+          <div class="rr-wf-detail">Todas las ventas aprobadas del mes (incluye Estela)</div>
+        </div>
+        <div class="rr-wf-value">${fmtRR(r.facturacion)}</div>
+      </div>
+
+      <div class="rr-wf-row minus">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">− Costo de productos vendidos</div>
+          <div class="rr-wf-detail">Lo que le pagamos al proveedor por lo que vendimos</div>
+        </div>
+        <div class="rr-wf-value">−${fmtRR(r.costoProductos)}</div>
+      </div>
+
+      <!-- MARGEN BRUTO -->
+      <div class="rr-wf-row subtotal">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">📊 Margen Bruto</div>
+          <div class="rr-wf-detail">
+            Margen sobre precio: <strong>${r.margenBrutoPct.toFixed(1)}%</strong> ·
+            Markup sobre costo: <strong>${r.markupPct.toFixed(1)}%</strong><br>
+            <em>(sin descontar comisiones, ads ni estructura)</em>
+          </div>
+        </div>
+        <div class="rr-wf-value">
+          ${fmtRR(r.margenBruto)}
+          <span class="rr-wf-pct">${r.margenBrutoPct.toFixed(1)}% sobre ventas</span>
+        </div>
+      </div>
+
+      <!-- COSTOS EQUIPO -->
+      <div class="rr-wf-row subtitle">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name" style="color:var(--ink-3)">⬇ Costos directos del equipo de ventas</div>
+        </div>
+      </div>
+
+      <div class="rr-wf-row minus">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">− Comisiones + viáticos + bonos</div>
+          <div class="rr-wf-detail">Todo lo que cobra el equipo competitivo (Lauti, Leo, Kevin, Emi, etc.)</div>
+        </div>
+        <div class="rr-wf-value">−${fmtRR(r.comisionesVendedores)}</div>
+      </div>
+
+      <div class="rr-wf-row minus">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">− Sueldo base Lauti</div>
+          <div class="rr-wf-detail">Esquema viejo con base fija</div>
+        </div>
+        <div class="rr-wf-value">−${fmtRR(r.sueldoLauti)}</div>
+      </div>
+
+      <div class="rr-wf-row minus">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">− Ads Meta (gasto real)</div>
+          <div class="rr-wf-detail">Gasto REAL del mes · se edita en los inputs de abajo</div>
+        </div>
+        <div class="rr-wf-value">−${fmtRR(r.adsReal)}</div>
+      </div>
+
+      <!-- MARGEN OPERATIVO -->
+      <div class="rr-wf-row subtotal">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">📊 Margen Operativo</div>
+          <div class="rr-wf-detail">
+            Lo que queda después de pagar al equipo de ventas y ads · <em>(aún sin descontar estructura fija)</em>
+          </div>
+        </div>
+        <div class="rr-wf-value">
+          ${fmtRR(r.margenOperativo)}
+          <span class="rr-wf-pct">${r.margenOperativoPct.toFixed(1)}% sobre ventas</span>
+        </div>
+      </div>
+
+      <!-- ESTRUCTURA FIJA -->
+      <div class="rr-wf-row subtitle">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name" style="color:var(--ink-3)">⬇ Estructura fija del corralón</div>
+        </div>
+      </div>
+
+      <div class="rr-wf-row minus">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">− Estructura fija total</div>
+          <div class="rr-wf-detail">
+            Alquiler ${fmtRR(r.cfg.alquiler)} ·
+            Emi ${fmtRR(r.cfg.emi)} ·
+            Facu ${fmtRR(r.cfg.facu)} ·
+            Cami ${fmtRR(r.cfg.cami)} ·
+            Servicios ${fmtRR(r.cfg.servicios)} ·
+            Contador ${fmtRR(r.cfg.contador)}
+            ${r.cfg.otros > 0 ? ' · Otros ' + fmtRR(r.cfg.otros) : ''}
+          </div>
+        </div>
+        <div class="rr-wf-value">−${fmtRR(r.estructuraFija)}</div>
+      </div>
+
+      <!-- NETO FINAL -->
+      <div class="rr-wf-row final ${r.neto < 0 ? 'negative' : ''}">
+        <div class="rr-wf-label">
+          <div class="rr-wf-name">${r.neto >= 0 ? '✅' : '⚠'} Resultado Neto</div>
+          <div class="rr-wf-detail">
+            <strong>Lo que REALMENTE queda en caja este mes</strong> ·
+            después de pagar TODO (producto + equipo + ads + estructura).
+            Antes de impuestos.
+          </div>
+        </div>
+        <div class="rr-wf-value">
+          ${fmtRR(r.neto)}
+          <span class="rr-wf-pct">${r.netoPct.toFixed(1)}% sobre ventas</span>
+        </div>
+      </div>
+    `;
+    el.innerHTML = html;
+  }
+  window.renderRentabilidad = renderRentabilidad;
+
+  // Exportar PDF del P&L
+  async function exportRentabilidadPDF() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      showToast('⚠ Librería PDF no cargada', 'warn');
+      return;
+    }
+    showToast('📄 Generando P&L...');
+    const mk = activeOpsMonth();
+    const r = computeRentabilidad(mk);
+
+    try {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const pageW = doc.internal.pageSize.getWidth();
+      const marginX = 15;
+      let y = 20;
+
+      // Header
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(229, 37, 33);
+      doc.text('GRAZIANO MATERIALES', marginX, y);
+      y += 7;
+      doc.setFontSize(11);
+      doc.setTextColor(60, 60, 60);
+      doc.text('P&L · Rentabilidad Real del Negocio · ' + mk, marginX, y);
+      y += 10;
+
+      doc.setFillColor(229, 37, 33);
+      doc.rect(marginX, y, pageW - 2 * marginX, 1.5, 'F');
+      y += 10;
+
+      // Función para dibujar fila
+      const row = (label, value, opts = {}) => {
+        if (opts.subtitle) {
+          doc.setFont('helvetica', 'bold');
+          doc.setFontSize(9);
+          doc.setTextColor(100, 100, 100);
+          doc.text(label, marginX, y);
+          y += 6;
+          return;
+        }
+        doc.setFont('helvetica', opts.bold ? 'bold' : 'normal');
+        doc.setFontSize(opts.big ? 13 : 10);
+        if (opts.red) doc.setTextColor(229, 37, 33);
+        else if (opts.green) doc.setTextColor(31, 138, 58);
+        else doc.setTextColor(0, 0, 0);
+        doc.text(label, marginX, y);
+        doc.text(fmtRR(value), pageW - marginX, y, { align: 'right' });
+        y += opts.big ? 9 : 7;
+        if (opts.underline) {
+          doc.setDrawColor(100, 100, 100);
+          doc.setLineWidth(0.3);
+          doc.line(marginX, y - 3, pageW - marginX, y - 3);
+          y += 2;
+        }
+      };
+
+      row('Facturación Bruta', r.facturacion);
+      row('(−) Costo productos vendidos', -r.costoProductos, { red: true });
+      doc.setDrawColor(0, 0, 0);
+      doc.setLineWidth(0.4);
+      doc.line(marginX, y, pageW - marginX, y);
+      y += 3;
+      row('MARGEN BRUTO', r.margenBruto, { bold: true, big: true });
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`${r.margenBrutoPct.toFixed(1)}% sobre ventas · ${r.markupPct.toFixed(1)}% markup sobre costo`, marginX, y);
+      y += 10;
+
+      row('Costos del equipo de ventas:', 0, { subtitle: true });
+      row('(−) Comisiones + viáticos + bonos', -r.comisionesVendedores, { red: true });
+      row('(−) Sueldo base Lauti', -r.sueldoLauti, { red: true });
+      row('(−) Ads Meta (gasto real)', -r.adsReal, { red: true });
+      doc.setLineWidth(0.4);
+      doc.line(marginX, y, pageW - marginX, y);
+      y += 3;
+      row('MARGEN OPERATIVO', r.margenOperativo, { bold: true, big: true });
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`${r.margenOperativoPct.toFixed(1)}% sobre ventas`, marginX, y);
+      y += 10;
+
+      row('Estructura fija:', 0, { subtitle: true });
+      row(`  Alquiler`, -r.cfg.alquiler);
+      row(`  Emi (depósito)`, -r.cfg.emi);
+      row(`  Facu (chofer)`, -r.cfg.facu);
+      row(`  Cami (admin)`, -r.cfg.cami);
+      row(`  Servicios`, -r.cfg.servicios);
+      row(`  Contador`, -r.cfg.contador);
+      if (r.cfg.otros > 0) row(`  Otros gastos fijos`, -r.cfg.otros);
+      row('(−) Total estructura fija', -r.estructuraFija, { red: true, bold: true });
+      doc.setLineWidth(0.8);
+      doc.setDrawColor(0, 0, 0);
+      doc.line(marginX, y, pageW - marginX, y);
+      y += 5;
+
+      // NETO
+      doc.setFillColor(r.neto >= 0 ? 220 : 254, r.neto >= 0 ? 252 : 226, r.neto >= 0 ? 231 : 226);
+      doc.rect(marginX, y - 2, pageW - 2 * marginX, 14, 'F');
+      row('RESULTADO NETO', r.neto, { bold: true, big: true, green: r.neto >= 0, red: r.neto < 0 });
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      if (r.neto >= 0) doc.setTextColor(31, 138, 58); else doc.setTextColor(229, 37, 33);
+      doc.text(`${r.netoPct.toFixed(1)}% sobre ventas`, marginX, y);
+      y += 10;
+
+      // Footer
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8);
+      doc.setTextColor(120, 120, 120);
+      doc.text(`Generado: ${new Date().toLocaleDateString('es-AR')} · Antes de impuestos`, marginX, 280);
+
+      const filename = `graziano-pnl-${mk}.pdf`;
+      doc.save(filename);
+      showToast(`✓ P&L ${mk} descargado`);
+    } catch (e) {
+      console.error('[RR PDF] error:', e);
+      showToast('⚠ Error generando PDF', 'warn');
+    }
+  }
+  window.exportRentabilidadPDF = exportRentabilidadPDF;
+
   function exportProductAnalysis() {
     if (currentUser !== 'admin') {
       alert('Solo el admin puede exportar');
