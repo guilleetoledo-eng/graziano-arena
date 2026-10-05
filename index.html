@@ -20885,6 +20885,28 @@
       state.rentabilidad = (data && typeof data === 'object') ? data : {};
       // Si el admin está viendo el panel, re-render
       if (currentUser === 'admin' && document.getElementById('rrWaterfall')) {
+        // Si venimos de un save PROPIO, no re-renderear la lista (perdería el foco del input)
+        if (_rrIgnoreNextListener) {
+          _rrIgnoreNextListener = false;
+          // Solo refrescar los componentes NO editables
+          renderRentabilidad();
+          renderFletesPanel();
+          return;
+        }
+        // Si hay un input de la sección con foco activo, respetarlo (no destruir el DOM)
+        const activeEl = document.activeElement;
+        const isEditingSection = activeEl && (
+          activeEl.closest('.rr-fixed-item') ||
+          activeEl.closest('.rr-ads-seller-item') ||
+          activeEl.closest('.rr-ads-container')
+        );
+        if (isEditingSection) {
+          // Solo refrescar los componentes NO editables
+          renderRentabilidad();
+          renderFletesPanel();
+          return;
+        }
+        // Caso normal: re-render completo (cambio desde otro dispositivo o cambio de mes)
         renderRentabilidadFixedList();
         renderRentabilidad();
         renderFletesPanel();
@@ -20909,39 +20931,61 @@
     };
   }
 
-  // Guarda la config del mes activo en Firebase
-  async function saveRentabilidadConfig() {
-    const mk = activeOpsMonth();
+  // Guarda la config del mes activo en Firebase · DEBOUNCED (espera 600ms sin cambios)
+  // Mientras el usuario tipea, actualizamos los totales en vivo pero NO guardamos ni re-rendereamos
+  function saveRentabilidadConfig() {
     const cfg = getCurrentRentabilidadFromDOM();
+    const mk = activeOpsMonth();
+
+    // ─── Actualización LOCAL inmediata (sin re-render) ───
+    // 1. Totales en pantalla
+    const adsTotalEl = document.getElementById('rrAdsTotalDisplay');
+    if (adsTotalEl) {
+      const total = Object.values(cfg.adsBySeller || {}).reduce((s, v) => s + (parseFloat(v) || 0), 0);
+      adsTotalEl.textContent = fmtRR(total);
+    }
+    const fixedTotalEl = document.getElementById('rrFixedTotalDisplay');
+    if (fixedTotalEl) {
+      const total = cfg.items.reduce((s, i) => s + (parseFloat(i.amount) || 0), 0);
+      fixedTotalEl.textContent = fmtRR(total);
+    }
+
+    // 2. State local (sin disparar listener)
     if (!state.rentabilidad) state.rentabilidad = {};
     state.rentabilidad[mk] = cfg;
-    try {
-      await db.ref(`rentabilidad/${mk}`).set(cfg);
-      const ind = document.getElementById('rrSaveIndicator');
-      if (ind) {
-        ind.classList.add('visible');
-        clearTimeout(window._rrSaveTimer);
-        window._rrSaveTimer = setTimeout(() => ind.classList.remove('visible'), 1500);
-      }
-      renderRentabilidad();
-      // Actualizar display total ads por vendedor
-      const adsTotalEl = document.getElementById('rrAdsTotalDisplay');
-      if (adsTotalEl) {
-        const total = Object.values(cfg.adsBySeller || {}).reduce((s, v) => s + v, 0);
-        adsTotalEl.textContent = fmtRR(total);
-      }
-      // Actualizar total estructura fija
-      const fixedTotalEl = document.getElementById('rrFixedTotalDisplay');
-      if (fixedTotalEl) {
-        const total = cfg.items.reduce((s, i) => s + (i.amount || 0), 0);
-        fixedTotalEl.textContent = fmtRR(total);
-      }
-    } catch (e) {
-      console.warn('[RR] save failed:', e);
-      showToast('⚠ Error guardando', 'warn');
+
+    // 3. Re-render del waterfall (NO toca los inputs editables, solo la cascada arriba)
+    renderRentabilidad();
+
+    // ─── Guardado remoto DEBOUNCED (600ms de inactividad antes de pegar a Firebase) ───
+    clearTimeout(window._rrSaveDebounce);
+    const ind = document.getElementById('rrSaveIndicator');
+    if (ind) {
+      ind.textContent = '⏳ Guardando...';
+      ind.classList.add('visible');
     }
+    window._rrSaveDebounce = setTimeout(async () => {
+      try {
+        _rrIgnoreNextListener = true; // flag para que el listener no re-renderee la lista
+        await db.ref(`rentabilidad/${mk}`).set(cfg);
+        if (ind) {
+          ind.textContent = '✓ Guardado en Firebase';
+          clearTimeout(window._rrSaveTimer);
+          window._rrSaveTimer = setTimeout(() => ind.classList.remove('visible'), 1500);
+        }
+      } catch (e) {
+        console.warn('[RR] save failed:', e);
+        if (ind) {
+          ind.textContent = '⚠ Error guardando';
+        }
+        showToast('⚠ Error guardando', 'warn');
+      }
+    }, 600);
   }
   window.saveRentabilidadConfig = saveRentabilidadConfig;
+
+  // Flag para que el listener NO re-renderee después de un guardado propio
+  let _rrIgnoreNextListener = false;
 
   // Lee del DOM la config actual (lista editable + ads por vendedor)
   function getCurrentRentabilidadFromDOM() {
