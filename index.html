@@ -4959,11 +4959,21 @@
     color: var(--red);
   }
 
-  /* INPUTS editables */
+  /* INPUTS editables · nueva versión con lista dinámica */
   .rr-inputs-section {
     background: white;
     border: 1.5px solid var(--line);
     padding: 20px;
+  }
+  .rr-inputs-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+    border-bottom: 1.5px dashed var(--line);
+    flex-wrap: wrap;
   }
   .rr-inputs-header {
     font-family: 'Anton', sans-serif;
@@ -4971,53 +4981,207 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--ink);
-    padding-bottom: 12px;
+  }
+  .rr-inputs-sub {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .rr-copy-prev-btn {
+    background: #DBEAFE;
+    color: #1E40AF;
+    border: 1.5px solid #1E40AF;
+    padding: 10px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .rr-copy-prev-btn:hover {
+    background: #BFDBFE;
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+
+  /* ESTRUCTURA FIJA · lista editable */
+  .rr-fixed-list-container {
+    background: #FAFAF7;
+    border: 1.5px solid var(--line);
+    padding: 16px;
     margin-bottom: 16px;
-    border-bottom: 1.5px dashed var(--line);
   }
-  .rr-inputs-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
+  .rr-fixed-list-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 12px;
   }
-  .rr-input-group {
+  .rr-fixed-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
   }
-  .rr-input-group.rr-input-ads {
-    grid-column: 1 / -1;
-    background: #FEF3C7;
-    padding: 12px;
-    border-left: 3px solid var(--red);
+  .rr-fixed-item {
+    display: grid;
+    grid-template-columns: 1fr 160px auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px;
+    background: white;
+    border: 1px solid var(--line);
+    transition: all 0.15s;
   }
-  .rr-input-group label {
+  .rr-fixed-item:hover {
+    border-color: var(--ink);
+    background: #FEFEF9;
+  }
+  .rr-fixed-item input[type="text"] {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    background: transparent;
     color: var(--ink);
-    text-transform: uppercase;
+    font-weight: 500;
+    width: 100%;
   }
-  .rr-input-group input {
+  .rr-fixed-item input[type="text"]:focus {
+    outline: none;
+    border-color: var(--red);
+    background: white;
+  }
+  .rr-fixed-item input[type="number"] {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    padding: 10px 12px;
+    font-size: 13px;
+    padding: 8px 10px;
     border: 1.5px solid var(--line);
     background: white;
     color: var(--ink);
     font-weight: 700;
+    text-align: right;
   }
-  .rr-input-group input:focus {
+  .rr-fixed-item input[type="number"]:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 2px rgba(229,37,33,0.15);
+  }
+  .rr-fixed-item-icon {
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .rr-fixed-item-icon:hover {
+    background: #F3F4F6;
+    transform: scale(1.1);
+  }
+  .rr-fixed-item-delete {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink-3);
+    font-size: 16px;
+    padding: 4px 8px;
+    transition: color 0.15s;
+    border-radius: 4px;
+  }
+  .rr-fixed-item-delete:hover {
+    color: var(--red);
+    background: #FEE2E2;
+  }
+  .rr-add-item-btn {
+    background: #ECFDF5;
+    color: #1F8A3A;
+    border: 1.5px dashed #1F8A3A;
+    padding: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.15s;
+  }
+  .rr-add-item-btn:hover {
+    background: #D1FAE5;
+    border-style: solid;
+  }
+  .rr-fixed-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--ink);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .rr-fixed-total strong {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+  }
+
+  /* ADS META · separado */
+  .rr-ads-container {
+    background: #FEF3C7;
+    border: 2px solid #B45309;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .rr-ads-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .rr-ads-icon {
+    font-size: 28px;
+  }
+  .rr-ads-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .rr-ads-sub {
+    font-size: 11px;
+    color: var(--ink-3);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .rr-ads-container input {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--ink);
+    background: white;
+    color: var(--ink);
+    font-weight: 700;
+    width: 100%;
+    text-align: right;
+  }
+  .rr-ads-container input:focus {
     outline: none;
     border-color: var(--red);
     box-shadow: 0 0 0 3px rgba(229,37,33,0.15);
   }
-  .rr-input-group small {
-    font-size: 10px;
-    color: var(--ink-3);
-    font-style: italic;
-  }
+
   .rr-save-indicator {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -5028,6 +5192,17 @@
     transition: opacity 0.3s;
   }
   .rr-save-indicator.visible { opacity: 1; }
+
+  @media (max-width: 700px) {
+    .rr-fixed-item {
+      grid-template-columns: 1fr auto;
+      gap: 6px;
+    }
+    .rr-fixed-item input[type="text"] { grid-column: 1 / -1; }
+    .rr-fixed-item input[type="number"] { grid-column: 1 / 2; }
+    .rr-fixed-item-delete { grid-column: 2 / 3; }
+    .rr-fixed-item-icon { display: none; }
+  }
 
   @media (max-width: 700px) {
     .rr-header-actions { width: 100%; margin-top: 10px; }
@@ -7118,45 +7293,45 @@
         <!-- se renderea desde JS -->
       </div>
 
-      <!-- INPUTS editables · estructura + ads -->
+      <!-- COSTOS MENSUALES · EDITABLES, POR MES -->
       <div class="rr-inputs-section">
-        <div class="rr-inputs-header">⚙ COSTOS MENSUALES EDITABLES</div>
-        <div class="rr-inputs-grid">
-          <div class="rr-input-group">
-            <label>📍 Alquiler</label>
-            <input type="number" id="rrAlquiler" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="2400000">
+        <div class="rr-inputs-header-row">
+          <div>
+            <div class="rr-inputs-header">⚙ COSTOS MENSUALES EDITABLES</div>
+            <div class="rr-inputs-sub">Los valores se guardan POR MES · si cambia el alquiler, afecta solo del mes en adelante</div>
           </div>
-          <div class="rr-input-group">
-            <label>👤 Emi (depósito)</label>
-            <input type="number" id="rrEmi" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="800000">
+          <button class="rr-copy-prev-btn" onclick="copyPrevMonthRentabilidad()" title="Copiar los gastos del mes anterior">
+            📋 COPIAR MES ANTERIOR
+          </button>
+        </div>
+
+        <!-- ESTRUCTURA FIJA · lista editable -->
+        <div class="rr-fixed-list-container">
+          <div class="rr-fixed-list-title">🏢 ESTRUCTURA FIJA</div>
+          <div class="rr-fixed-list" id="rrFixedList">
+            <!-- se renderea desde JS -->
           </div>
-          <div class="rr-input-group">
-            <label>🚚 Facu (chofer)</label>
-            <input type="number" id="rrFacu" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="800000">
-          </div>
-          <div class="rr-input-group">
-            <label>📋 Cami (admin)</label>
-            <input type="number" id="rrCami" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="500000">
-          </div>
-          <div class="rr-input-group">
-            <label>💡 Servicios</label>
-            <input type="number" id="rrServicios" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="281000">
-          </div>
-          <div class="rr-input-group">
-            <label>📊 Contador</label>
-            <input type="number" id="rrContador" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="80000">
-          </div>
-          <div class="rr-input-group">
-            <label>➕ Otros gastos fijos</label>
-            <input type="number" id="rrOtros" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="0">
-          </div>
-          <div class="rr-input-group rr-input-ads">
-            <label>📱 Ads Meta (gasto REAL del mes)</label>
-            <input type="number" id="rrAdsReal" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="2000000">
-            <small>Copiá el gasto del mes desde Meta Business Manager</small>
+          <button class="rr-add-item-btn" onclick="addFixedItem()">
+            + AGREGAR NUEVO GASTO FIJO
+          </button>
+          <div class="rr-fixed-total">
+            Total estructura fija: <strong id="rrFixedTotalDisplay">$0</strong>
           </div>
         </div>
-        <div class="rr-save-indicator" id="rrSaveIndicator">✓ Guardado automático</div>
+
+        <!-- ADS META · gasto variable, aparte -->
+        <div class="rr-ads-container">
+          <div class="rr-ads-header">
+            <span class="rr-ads-icon">📱</span>
+            <div>
+              <div class="rr-ads-title">ADS META (gasto variable)</div>
+              <div class="rr-ads-sub">Al cierre del mes, poné el total real gastado desde Meta Business Manager</div>
+            </div>
+          </div>
+          <input type="number" id="rrAdsReal" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="0">
+        </div>
+
+        <div class="rr-save-indicator" id="rrSaveIndicator">✓ Guardado en Firebase</div>
       </div>
     </div>
 
@@ -9203,7 +9378,8 @@
     categories: {}, // { C001: {id, name, subCategories: {S001: {id, name}}, order, createdAt} }
     entryTypes: {}, // { stock: {id, name, hint, emoji, color, order, createdAt} }
     budgetCounter: 0, // contador global de presupuestos generados
-    closedMonths: {} // { "2026-09": {rankings, firstPlace, computedAt} } · rankings cerrados definitivos
+    closedMonths: {}, // { "2026-09": {rankings, firstPlace, computedAt} } · rankings cerrados definitivos
+    rentabilidad: {} // { "2026-10": { items: [{id, name, icon, amount}], adsReal } } · P&L por mes
   };
 
   let currentUser = null; // 'view' | 'lauti' | 'bauti' | 'admin'
@@ -14901,7 +15077,8 @@
     document.getElementById('opsLastUpdate').textContent =
       `▸ ACTUALIZADO ${new Date().toLocaleString('es-AR')}`;
     renderOpsKPIs(mk);
-    populateRentabilidadInputs();
+    setupRentabilidadListener();
+    renderRentabilidadFixedList();
     renderRentabilidad();
     renderOpsPending();
     renderOpsTopProducts(mk);
@@ -20489,52 +20666,93 @@
   // Para decidir qué % subir/bajar según performance
   // ═══════════════════════════════════════════════════════════
   // ═══════════════════════════════════════════════════════════
-  // 💰 RENTABILIDAD REAL · P&L cascada completa
+  // 💰 RENTABILIDAD REAL · P&L cascada completa · POR MES · FIREBASE
   // ═══════════════════════════════════════════════════════════
 
-  const RR_CONFIG_KEY = 'graziano_rentabilidad_config';
-  const RR_DEFAULTS = {
-    alquiler: 2400000,
-    emi: 800000,
-    facu: 800000,
-    cami: 500000,
-    servicios: 281000,
-    contador: 80000,
-    otros: 0,
-    adsReal: 2000000
-  };
+  // Estructura POR MES guardada en Firebase · state.rentabilidad = { "2026-10": {...} }
+  // Cada mes tiene su propia config:
+  //   { items: [{ id, name, icon, amount }], adsReal }
 
-  function loadRentabilidadConfig() {
-    try {
-      const stored = localStorage.getItem(RR_CONFIG_KEY);
-      if (!stored) return { ...RR_DEFAULTS };
-      const parsed = JSON.parse(stored);
-      return { ...RR_DEFAULTS, ...parsed };
-    } catch (e) {
-      return { ...RR_DEFAULTS };
-    }
+  const RR_DEFAULT_ITEMS = [
+    { id: 'alquiler', name: 'Alquiler', icon: '📍', amount: 2400000 },
+    { id: 'emi', name: 'Emi (depósito)', icon: '👤', amount: 800000 },
+    { id: 'facu', name: 'Facu (chofer)', icon: '🚚', amount: 800000 },
+    { id: 'cami', name: 'Cami (admin)', icon: '📋', amount: 500000 },
+    { id: 'servicios', name: 'Servicios', icon: '💡', amount: 281000 },
+    { id: 'contador', name: 'Contador', icon: '📊', amount: 80000 }
+  ];
+
+  // Listener Firebase · se setea en el init
+  let _rrListenerSet = false;
+  function setupRentabilidadListener() {
+    if (_rrListenerSet) return;
+    _rrListenerSet = true;
+    db.ref('rentabilidad').on('value', (snap) => {
+      const data = snap.val();
+      state.rentabilidad = (data && typeof data === 'object') ? data : {};
+      // Si el admin está viendo el panel, re-render
+      if (currentUser === 'admin' && document.getElementById('rrWaterfall')) {
+        renderRentabilidadFixedList();
+        renderRentabilidad();
+      }
+    }, (err) => console.warn('Firebase rentabilidad read error', err));
   }
 
-  function saveRentabilidadConfig() {
-    const cfg = {
-      alquiler: parseFloat(document.getElementById('rrAlquiler')?.value) || 0,
-      emi: parseFloat(document.getElementById('rrEmi')?.value) || 0,
-      facu: parseFloat(document.getElementById('rrFacu')?.value) || 0,
-      cami: parseFloat(document.getElementById('rrCami')?.value) || 0,
-      servicios: parseFloat(document.getElementById('rrServicios')?.value) || 0,
-      contador: parseFloat(document.getElementById('rrContador')?.value) || 0,
-      otros: parseFloat(document.getElementById('rrOtros')?.value) || 0,
-      adsReal: parseFloat(document.getElementById('rrAdsReal')?.value) || 0
+  // Obtiene la config para un mes · si no existe, devuelve defaults
+  function getRentabilidadMonth(mk) {
+    const data = state.rentabilidad?.[mk];
+    if (data && Array.isArray(data.items)) {
+      return {
+        items: data.items.map(i => ({ ...i })),
+        adsReal: data.adsReal || 0
+      };
+    }
+    return {
+      items: RR_DEFAULT_ITEMS.map(i => ({ ...i })),
+      adsReal: 0
     };
-    localStorage.setItem(RR_CONFIG_KEY, JSON.stringify(cfg));
-    const ind = document.getElementById('rrSaveIndicator');
-    if (ind) {
-      ind.classList.add('visible');
-      clearTimeout(window._rrSaveTimer);
-      window._rrSaveTimer = setTimeout(() => ind.classList.remove('visible'), 1500);
+  }
+
+  // Guarda la config del mes activo en Firebase
+  async function saveRentabilidadConfig() {
+    const mk = activeOpsMonth();
+    const cfg = getCurrentRentabilidadFromDOM();
+    if (!state.rentabilidad) state.rentabilidad = {};
+    state.rentabilidad[mk] = cfg;
+    try {
+      await db.ref(`rentabilidad/${mk}`).set(cfg);
+      const ind = document.getElementById('rrSaveIndicator');
+      if (ind) {
+        ind.classList.add('visible');
+        clearTimeout(window._rrSaveTimer);
+        window._rrSaveTimer = setTimeout(() => ind.classList.remove('visible'), 1500);
+      }
+      renderRentabilidad();
+    } catch (e) {
+      console.warn('[RR] save failed:', e);
+      showToast('⚠ Error guardando', 'warn');
     }
   }
   window.saveRentabilidadConfig = saveRentabilidadConfig;
+
+  // Lee del DOM la config actual (lista editable + ads)
+  function getCurrentRentabilidadFromDOM() {
+    const list = document.getElementById('rrFixedList');
+    const items = [];
+    if (list) {
+      list.querySelectorAll('.rr-fixed-item').forEach(row => {
+        const id = row.dataset.itemId;
+        const icon = row.querySelector('.rr-fixed-item-icon')?.textContent || '📌';
+        const nameInput = row.querySelector('input[type="text"]');
+        const amountInput = row.querySelector('input[type="number"]');
+        const name = nameInput?.value?.trim() || 'Sin nombre';
+        const amount = parseFloat(amountInput?.value) || 0;
+        items.push({ id, name, icon, amount });
+      });
+    }
+    const adsReal = parseFloat(document.getElementById('rrAdsReal')?.value) || 0;
+    return { items, adsReal };
+  }
 
   function toggleRentabilidadInfo() {
     const panel = document.getElementById('rrInfoPanel');
@@ -20543,24 +20761,128 @@
   }
   window.toggleRentabilidadInfo = toggleRentabilidadInfo;
 
-  // Carga la config a los inputs al abrir admin
-  function populateRentabilidadInputs() {
-    const cfg = loadRentabilidadConfig();
-    const map = {
-      rrAlquiler: cfg.alquiler, rrEmi: cfg.emi, rrFacu: cfg.facu,
-      rrCami: cfg.cami, rrServicios: cfg.servicios, rrContador: cfg.contador,
-      rrOtros: cfg.otros, rrAdsReal: cfg.adsReal
-    };
-    Object.entries(map).forEach(([id, val]) => {
-      const el = document.getElementById(id);
-      if (el && el.value === '') el.value = val;
+  // Renderea la lista editable de gastos fijos
+  function renderRentabilidadFixedList() {
+    const list = document.getElementById('rrFixedList');
+    const adsInput = document.getElementById('rrAdsReal');
+    if (!list) return;
+    const mk = activeOpsMonth();
+    const cfg = getRentabilidadMonth(mk);
+
+    let html = '';
+    cfg.items.forEach(item => {
+      html += `
+        <div class="rr-fixed-item" data-item-id="${escapeHtml(item.id)}">
+          <input type="text" value="${escapeHtml(item.name)}" placeholder="Nombre del gasto"
+                 oninput="saveRentabilidadConfig()">
+          <input type="number" value="${item.amount || 0}" placeholder="0" step="10000"
+                 oninput="saveRentabilidadConfig()">
+          <span class="rr-fixed-item-icon" onclick="changeFixedItemIcon('${escapeHtml(item.id)}')"
+                title="Click para cambiar emoji">${item.icon || '📌'}</span>
+          <button class="rr-fixed-item-delete" onclick="deleteFixedItem('${escapeHtml(item.id)}')"
+                  title="Eliminar">🗑</button>
+        </div>
+      `;
     });
+    list.innerHTML = html;
+
+    // Actualizar total
+    const total = cfg.items.reduce((s, i) => s + (i.amount || 0), 0);
+    const totalEl = document.getElementById('rrFixedTotalDisplay');
+    if (totalEl) totalEl.textContent = fmtRR(total);
+
+    // Ads
+    if (adsInput) adsInput.value = cfg.adsReal || 0;
   }
+  window.renderRentabilidadFixedList = renderRentabilidadFixedList;
+
+  function addFixedItem() {
+    const list = document.getElementById('rrFixedList');
+    if (!list) return;
+    // Generar ID único
+    const id = 'item_' + Date.now();
+    const html = `
+      <div class="rr-fixed-item" data-item-id="${id}">
+        <input type="text" value="" placeholder="Nombre del gasto" oninput="saveRentabilidadConfig()">
+        <input type="number" value="0" placeholder="0" step="10000" oninput="saveRentabilidadConfig()">
+        <span class="rr-fixed-item-icon" onclick="changeFixedItemIcon('${id}')" title="Click para cambiar emoji">📌</span>
+        <button class="rr-fixed-item-delete" onclick="deleteFixedItem('${id}')" title="Eliminar">🗑</button>
+      </div>
+    `;
+    list.insertAdjacentHTML('beforeend', html);
+    // Focus en el input nuevo
+    const newRow = list.lastElementChild;
+    newRow?.querySelector('input[type="text"]')?.focus();
+    saveRentabilidadConfig();
+  }
+  window.addFixedItem = addFixedItem;
+
+  function deleteFixedItem(id) {
+    const row = document.querySelector(`.rr-fixed-item[data-item-id="${id}"]`);
+    if (!row) return;
+    const name = row.querySelector('input[type="text"]')?.value || 'este gasto';
+    if (!confirm(`¿Eliminar "${name}"?`)) return;
+    row.remove();
+    saveRentabilidadConfig();
+  }
+  window.deleteFixedItem = deleteFixedItem;
+
+  function changeFixedItemIcon(id) {
+    const row = document.querySelector(`.rr-fixed-item[data-item-id="${id}"]`);
+    if (!row) return;
+    const span = row.querySelector('.rr-fixed-item-icon');
+    const current = span?.textContent || '📌';
+    const newIcon = prompt(
+      '🎨 Elegí un emoji para este gasto\n\n' +
+      'Ejemplos: 📍 🏢 👤 🚚 📋 💡 📊 📱 🔧 ⚡ 💰 📦 🏪',
+      current
+    );
+    if (!newIcon) return;
+    span.textContent = newIcon.trim().slice(0, 4);
+    saveRentabilidadConfig();
+  }
+  window.changeFixedItemIcon = changeFixedItemIcon;
+
+  // Copiar los gastos del mes anterior al mes activo
+  async function copyPrevMonthRentabilidad() {
+    const mk = activeOpsMonth();
+    const prev = previousMonthKey(mk);
+    if (!prev) {
+      showToast('⚠ No se encontró mes anterior', 'warn');
+      return;
+    }
+    const prevData = state.rentabilidad?.[prev];
+    if (!prevData || !Array.isArray(prevData.items) || prevData.items.length === 0) {
+      showToast(`⚠ No hay datos cargados para ${formatMonthLabel(prev)}`, 'warn');
+      return;
+    }
+    if (!confirm(`¿Copiar los gastos de ${formatMonthLabel(prev)} al mes actual (${formatMonthLabel(mk)})?\n\nSe van a sobreescribir los valores que haya cargados.`)) return;
+    const copy = {
+      items: prevData.items.map(i => ({ ...i })),
+      adsReal: prevData.adsReal || 0
+    };
+    if (!state.rentabilidad) state.rentabilidad = {};
+    state.rentabilidad[mk] = copy;
+    try {
+      await db.ref(`rentabilidad/${mk}`).set(copy);
+      renderRentabilidadFixedList();
+      renderRentabilidad();
+      showToast(`✓ Copiado de ${formatMonthLabel(prev)}`);
+    } catch (e) {
+      console.warn('[RR] copy failed:', e);
+      showToast('⚠ Error copiando', 'warn');
+    }
+  }
+  window.copyPrevMonthRentabilidad = copyPrevMonthRentabilidad;
 
   // Calcula todos los números del P&L para el mes activo del dashboard admin
   function computeRentabilidad(mk) {
     if (!mk) mk = activeOpsMonth();
-    const cfg = loadRentabilidadConfig();
+    const cfgMonth = getRentabilidadMonth(mk);
+    const cfg = {
+      items: cfgMonth.items,
+      adsReal: cfgMonth.adsReal
+    };
 
     // 1. Facturación bruta (todas las aprobadas del mes · incluye Estela)
     const sales = state.sales.filter(s =>
@@ -20619,10 +20941,8 @@
     const margenOperativo = margenBruto - comisionesVendedores - sueldoLauti - adsReal;
     const margenOperativoPct = facturacion > 0 ? (margenOperativo / facturacion) * 100 : 0;
 
-    // 7. Estructura fija
-    const estructuraFija = (cfg.alquiler || 0) + (cfg.emi || 0) + (cfg.facu || 0)
-                         + (cfg.cami || 0) + (cfg.servicios || 0) + (cfg.contador || 0)
-                         + (cfg.otros || 0);
+    // 7. Estructura fija · suma de todos los items editables del mes
+    const estructuraFija = cfg.items.reduce((s, i) => s + (i.amount || 0), 0);
 
     // 8. Resultado neto
     const neto = margenOperativo - estructuraFija;
@@ -20742,13 +21062,9 @@
         <div class="rr-wf-label">
           <div class="rr-wf-name">− Estructura fija total</div>
           <div class="rr-wf-detail">
-            Alquiler ${fmtRR(r.cfg.alquiler)} ·
-            Emi ${fmtRR(r.cfg.emi)} ·
-            Facu ${fmtRR(r.cfg.facu)} ·
-            Cami ${fmtRR(r.cfg.cami)} ·
-            Servicios ${fmtRR(r.cfg.servicios)} ·
-            Contador ${fmtRR(r.cfg.contador)}
-            ${r.cfg.otros > 0 ? ' · Otros ' + fmtRR(r.cfg.otros) : ''}
+            ${r.cfg.items.filter(i => i.amount > 0).map(i =>
+              `${i.icon || '📌'} ${escapeHtml(i.name)} ${fmtRR(i.amount)}`
+            ).join(' · ') || 'Sin gastos cargados'}
           </div>
         </div>
         <div class="rr-wf-value">−${fmtRR(r.estructuraFija)}</div>
@@ -20858,13 +21174,11 @@
       y += 10;
 
       row('Estructura fija:', 0, { subtitle: true });
-      row(`  Alquiler`, -r.cfg.alquiler);
-      row(`  Emi (depósito)`, -r.cfg.emi);
-      row(`  Facu (chofer)`, -r.cfg.facu);
-      row(`  Cami (admin)`, -r.cfg.cami);
-      row(`  Servicios`, -r.cfg.servicios);
-      row(`  Contador`, -r.cfg.contador);
-      if (r.cfg.otros > 0) row(`  Otros gastos fijos`, -r.cfg.otros);
+      r.cfg.items.forEach(item => {
+        if (item.amount > 0) {
+          row(`  ${item.name}`, -item.amount);
+        }
+      });
       row('(−) Total estructura fija', -r.estructuraFija, { red: true, bold: true });
       doc.setLineWidth(0.8);
       doc.setDrawColor(0, 0, 0);
