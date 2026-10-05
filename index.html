@@ -5182,6 +5182,178 @@
     box-shadow: 0 0 0 3px rgba(229,37,33,0.15);
   }
 
+  /* ADS META por vendedor · grid */
+  .rr-ads-sellers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .rr-ads-seller-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: white;
+    padding: 10px;
+    border: 1px solid var(--line);
+  }
+  .rr-ads-seller-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .rr-ads-seller-item input {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 8px 10px;
+    border: 1.5px solid var(--line);
+    background: white;
+    text-align: right;
+    font-weight: 700;
+  }
+  .rr-ads-seller-item input:focus {
+    outline: none;
+    border-color: var(--red);
+    box-shadow: 0 0 0 2px rgba(229,37,33,0.15);
+  }
+  .rr-ads-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: var(--ink);
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+  .rr-ads-total strong {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.03em;
+  }
+
+  /* 🚚 FLETES SECTION */
+  .fletes-section {
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border: 2px solid #1E40AF;
+    box-shadow: 6px 6px 0 var(--ink);
+    margin: 24px 0;
+    padding: 24px;
+  }
+  .fletes-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .fletes-stat-card {
+    background: white;
+    border: 1.5px solid #1E40AF;
+    padding: 14px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .fletes-stat-card.big {
+    grid-column: span 2;
+    background: #1E40AF;
+    color: white;
+  }
+  .fletes-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1E40AF;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .fletes-stat-card.big .fletes-stat-label {
+    color: #BFDBFE;
+  }
+  .fletes-stat-value {
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+  }
+  .fletes-stat-card.big .fletes-stat-value {
+    font-size: 36px;
+    color: white;
+  }
+  .fletes-stat-sub {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 4px;
+    font-style: italic;
+  }
+  .fletes-stat-card.big .fletes-stat-sub {
+    color: #BFDBFE;
+  }
+  .fletes-vendors-section {
+    grid-column: 1 / -1;
+    background: white;
+    border: 1.5px solid var(--line);
+    padding: 14px;
+    margin-top: 4px;
+  }
+  .fletes-vendors-title {
+    font-family: 'Anton', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .fletes-vendor-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 6px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .fletes-vendor-row + .fletes-vendor-row {
+    border-top: 1px dashed var(--line);
+    padding-top: 8px;
+    margin-top: 2px;
+  }
+  .fletes-vendor-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+  }
+  .fletes-vendor-pct {
+    color: var(--ink-3);
+    font-size: 10px;
+  }
+  .fletes-vendor-amount {
+    font-weight: 700;
+    color: #1E40AF;
+    font-size: 14px;
+  }
+  .fletes-empty {
+    text-align: center;
+    padding: 30px;
+    color: var(--ink-3);
+    font-style: italic;
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 700px) {
+    .fletes-stat-card.big { grid-column: span 1; }
+  }
+
   .rr-save-indicator {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
@@ -7319,19 +7491,39 @@
           </div>
         </div>
 
-        <!-- ADS META · gasto variable, aparte -->
+        <!-- ADS META · gasto variable POR VENDEDOR -->
         <div class="rr-ads-container">
           <div class="rr-ads-header">
             <span class="rr-ads-icon">📱</span>
             <div>
-              <div class="rr-ads-title">ADS META (gasto variable)</div>
-              <div class="rr-ads-sub">Al cierre del mes, poné el total real gastado desde Meta Business Manager</div>
+              <div class="rr-ads-title">ADS META (gasto variable por vendedor)</div>
+              <div class="rr-ads-sub">Al cierre del mes, poné cuánto se gastó por cada vendedor activo (desde Meta Business Manager)</div>
             </div>
           </div>
-          <input type="number" id="rrAdsReal" step="10000" oninput="saveRentabilidadConfig(); renderRentabilidad();" placeholder="0">
+          <div class="rr-ads-sellers-grid" id="rrAdsSellersGrid">
+            <!-- se renderea desde JS con los vendedores activos -->
+          </div>
+          <div class="rr-ads-total">
+            Total Ads Meta: <strong id="rrAdsTotalDisplay">$0</strong>
+          </div>
         </div>
 
         <div class="rr-save-indicator" id="rrSaveIndicator">✓ Guardado en Firebase</div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 🚚 FLETES COBRADOS · panel separado                           -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ops-section ops-section-full fletes-section">
+      <div class="ops-section-header">
+        <div>
+          <h3>🚚 FLETES COBRADOS</h3>
+          <span class="ops-section-sub">panorama del dinero cobrado por envíos en el mes · desglose por vendedor</span>
+        </div>
+      </div>
+      <div class="fletes-stats-grid" id="fletesStatsGrid">
+        <!-- se renderea desde JS -->
       </div>
     </div>
 
@@ -15080,6 +15272,7 @@
     setupRentabilidadListener();
     renderRentabilidadFixedList();
     renderRentabilidad();
+    renderFletesPanel();
     renderOpsPending();
     renderOpsTopProducts(mk);
     renderOpsBySeller(mk);
@@ -20694,6 +20887,7 @@
       if (currentUser === 'admin' && document.getElementById('rrWaterfall')) {
         renderRentabilidadFixedList();
         renderRentabilidad();
+        renderFletesPanel();
       }
     }, (err) => console.warn('Firebase rentabilidad read error', err));
   }
@@ -20704,12 +20898,14 @@
     if (data && Array.isArray(data.items)) {
       return {
         items: data.items.map(i => ({ ...i })),
-        adsReal: data.adsReal || 0
+        adsReal: data.adsReal || 0,
+        adsBySeller: data.adsBySeller || {}
       };
     }
     return {
       items: RR_DEFAULT_ITEMS.map(i => ({ ...i })),
-      adsReal: 0
+      adsReal: 0,
+      adsBySeller: {}
     };
   }
 
@@ -20728,6 +20924,18 @@
         window._rrSaveTimer = setTimeout(() => ind.classList.remove('visible'), 1500);
       }
       renderRentabilidad();
+      // Actualizar display total ads por vendedor
+      const adsTotalEl = document.getElementById('rrAdsTotalDisplay');
+      if (adsTotalEl) {
+        const total = Object.values(cfg.adsBySeller || {}).reduce((s, v) => s + v, 0);
+        adsTotalEl.textContent = fmtRR(total);
+      }
+      // Actualizar total estructura fija
+      const fixedTotalEl = document.getElementById('rrFixedTotalDisplay');
+      if (fixedTotalEl) {
+        const total = cfg.items.reduce((s, i) => s + (i.amount || 0), 0);
+        fixedTotalEl.textContent = fmtRR(total);
+      }
     } catch (e) {
       console.warn('[RR] save failed:', e);
       showToast('⚠ Error guardando', 'warn');
@@ -20735,7 +20943,7 @@
   }
   window.saveRentabilidadConfig = saveRentabilidadConfig;
 
-  // Lee del DOM la config actual (lista editable + ads)
+  // Lee del DOM la config actual (lista editable + ads por vendedor)
   function getCurrentRentabilidadFromDOM() {
     const list = document.getElementById('rrFixedList');
     const items = [];
@@ -20750,8 +20958,19 @@
         items.push({ id, name, icon, amount });
       });
     }
-    const adsReal = parseFloat(document.getElementById('rrAdsReal')?.value) || 0;
-    return { items, adsReal };
+    // Ads por vendedor
+    const adsBySeller = {};
+    const adsGrid = document.getElementById('rrAdsSellersGrid');
+    if (adsGrid) {
+      adsGrid.querySelectorAll('input[data-seller]').forEach(input => {
+        const seller = input.dataset.seller;
+        const val = parseFloat(input.value) || 0;
+        if (seller) adsBySeller[seller] = val;
+      });
+    }
+    // adsReal se calcula sumando adsBySeller
+    const adsReal = Object.values(adsBySeller).reduce((s, v) => s + v, 0);
+    return { items, adsBySeller, adsReal };
   }
 
   function toggleRentabilidadInfo() {
@@ -20761,14 +20980,14 @@
   }
   window.toggleRentabilidadInfo = toggleRentabilidadInfo;
 
-  // Renderea la lista editable de gastos fijos
+  // Renderea la lista editable de gastos fijos + inputs ads por vendedor
   function renderRentabilidadFixedList() {
     const list = document.getElementById('rrFixedList');
-    const adsInput = document.getElementById('rrAdsReal');
     if (!list) return;
     const mk = activeOpsMonth();
     const cfg = getRentabilidadMonth(mk);
 
+    // ─── Lista de gastos fijos ───
     let html = '';
     cfg.items.forEach(item => {
       html += `
@@ -20786,13 +21005,38 @@
     });
     list.innerHTML = html;
 
-    // Actualizar total
+    // Actualizar total estructura fija
     const total = cfg.items.reduce((s, i) => s + (i.amount || 0), 0);
     const totalEl = document.getElementById('rrFixedTotalDisplay');
     if (totalEl) totalEl.textContent = fmtRR(total);
 
-    // Ads
-    if (adsInput) adsInput.value = cfg.adsReal || 0;
+    // ─── Inputs Ads Meta por vendedor ───
+    const adsGrid = document.getElementById('rrAdsSellersGrid');
+    if (adsGrid) {
+      // Vendedores ACTIVOS (CONFIG.competitiveSellers · ya excluye desactivados)
+      const activeSellers = CONFIG.competitiveSellers || [];
+      const adsBySeller = cfg.adsBySeller || {};
+      let adsHtml = '';
+      activeSellers.forEach(key => {
+        const meta = SELLER_META[key] || {};
+        const emoji = meta.emoji || '🎯';
+        const name = (meta.name || key).toUpperCase();
+        const value = adsBySeller[key] || 0;
+        adsHtml += `
+          <div class="rr-ads-seller-item">
+            <label class="rr-ads-seller-label">${emoji} ${escapeHtml(name)}</label>
+            <input type="number" data-seller="${escapeHtml(key)}" value="${value}"
+                   step="10000" placeholder="0" oninput="saveRentabilidadConfig()">
+          </div>
+        `;
+      });
+      adsGrid.innerHTML = adsHtml;
+
+      // Total ads
+      const adsTotal = Object.values(adsBySeller).reduce((s, v) => s + (parseFloat(v) || 0), 0);
+      const adsTotalEl = document.getElementById('rrAdsTotalDisplay');
+      if (adsTotalEl) adsTotalEl.textContent = fmtRR(adsTotal);
+    }
   }
   window.renderRentabilidadFixedList = renderRentabilidadFixedList;
 
@@ -20859,7 +21103,8 @@
     if (!confirm(`¿Copiar los gastos de ${formatMonthLabel(prev)} al mes actual (${formatMonthLabel(mk)})?\n\nSe van a sobreescribir los valores que haya cargados.`)) return;
     const copy = {
       items: prevData.items.map(i => ({ ...i })),
-      adsReal: prevData.adsReal || 0
+      adsReal: prevData.adsReal || 0,
+      adsBySeller: { ...(prevData.adsBySeller || {}) }
     };
     if (!state.rentabilidad) state.rentabilidad = {};
     state.rentabilidad[mk] = copy;
@@ -20867,6 +21112,7 @@
       await db.ref(`rentabilidad/${mk}`).set(copy);
       renderRentabilidadFixedList();
       renderRentabilidad();
+      renderFletesPanel();
       showToast(`✓ Copiado de ${formatMonthLabel(prev)}`);
     } catch (e) {
       console.warn('[RR] copy failed:', e);
@@ -20909,19 +21155,17 @@
     // Markup equivalente (sobre costo) · lo que vos pensás
     const markupPct = costoProductos > 0 ? (margenBruto / costoProductos) * 100 : 0;
 
-    // 4. Comisiones + viáticos + bonos + sueldo base
+    // 4. Comisiones + viáticos + bonos
     // Reusamos computeAll para obtener los totales reales
+    // NOTA: Lauti ya NO tiene esquema viejo (sin sueldo base) · se calcula igual
     let comisionesVendedores = 0;
-    let sueldoLauti = 0;
     try {
       const c = computeAll();
       CONFIG.competitiveSellers.forEach(key => {
         const s = c[key];
         if (!s) return;
-        if (key === 'lauti') {
-          sueldoLauti = s.baseSalary || 0;
-        }
-        comisionesVendedores += (s.baseComm || 0)
+        comisionesVendedores += (s.baseSalary || 0)   // por si queda algún esquema viejo
+                              + (s.baseComm || 0)
                               + (s.extraComm || 0)
                               + (s.viatico || 0)
                               + (s.bonusTarget || 0)
@@ -20934,11 +21178,19 @@
       console.warn('[RR] No pude calcular comisiones:', e);
     }
 
-    // 5. Ads reales (del input)
-    const adsReal = cfg.adsReal || 0;
+    // 5. Ads reales · suma de ads por vendedor
+    // cfg.adsBySeller es objeto { lauti: 500000, leo: 300000, ... }
+    // Fallback: si no hay adsBySeller, usar el valor viejo cfg.adsReal
+    let adsReal = 0;
+    const adsBySeller = cfg.adsBySeller || {};
+    if (Object.keys(adsBySeller).length > 0) {
+      adsReal = Object.values(adsBySeller).reduce((s, v) => s + (parseFloat(v) || 0), 0);
+    } else {
+      adsReal = cfg.adsReal || 0;
+    }
 
-    // 6. Margen operativo
-    const margenOperativo = margenBruto - comisionesVendedores - sueldoLauti - adsReal;
+    // 6. Margen operativo (sin sueldo base de Lauti · ya no aplica)
+    const margenOperativo = margenBruto - comisionesVendedores - adsReal;
     const margenOperativoPct = facturacion > 0 ? (margenOperativo / facturacion) * 100 : 0;
 
     // 7. Estructura fija · suma de todos los items editables del mes
@@ -20948,13 +21200,29 @@
     const neto = margenOperativo - estructuraFija;
     const netoPct = facturacion > 0 ? (neto / facturacion) * 100 : 0;
 
+    // 9. 🚚 Fletes cobrados (informativo · ya está incluido en facturación)
+    let fletesTotal = 0;
+    let fletesCount = 0;
+    let fletesByVendor = {}; // { lauti: 123000, ... }
+    sales.forEach(s => {
+      const sh = parseFloat(s.shipping) || 0;
+      if (sh > 0) {
+        fletesTotal += sh;
+        fletesCount++;
+        const v = s.seller || 'otros';
+        fletesByVendor[v] = (fletesByVendor[v] || 0) + sh;
+      }
+    });
+    const fletePromedio = fletesCount > 0 ? fletesTotal / fletesCount : 0;
+
     return {
       facturacion, costoProductos,
       margenBruto, margenBrutoPct, markupPct,
-      comisionesVendedores, sueldoLauti, adsReal,
+      comisionesVendedores, adsReal, adsBySeller,
       margenOperativo, margenOperativoPct,
       estructuraFija, cfg,
       neto, netoPct,
+      fletesTotal, fletesCount, fletePromedio, fletesByVendor,
       mk
     };
   }
@@ -20977,7 +21245,10 @@
       <div class="rr-wf-row">
         <div class="rr-wf-label">
           <div class="rr-wf-name">Facturación Bruta</div>
-          <div class="rr-wf-detail">Todas las ventas aprobadas del mes (incluye Estela)</div>
+          <div class="rr-wf-detail">
+            Todas las ventas aprobadas del mes (incluye Estela)
+            ${r.fletesTotal > 0 ? `<br><span style="color:#1E40AF">🚚 De los cuales en fletes: <strong>${fmtRR(r.fletesTotal)}</strong> (${r.fletesCount} ventas · promedio ${fmtRR(r.fletePromedio)})</span>` : ''}
+          </div>
         </div>
         <div class="rr-wf-value">${fmtRR(r.facturacion)}</div>
       </div>
@@ -21023,16 +21294,8 @@
 
       <div class="rr-wf-row minus">
         <div class="rr-wf-label">
-          <div class="rr-wf-name">− Sueldo base Lauti</div>
-          <div class="rr-wf-detail">Esquema viejo con base fija</div>
-        </div>
-        <div class="rr-wf-value">−${fmtRR(r.sueldoLauti)}</div>
-      </div>
-
-      <div class="rr-wf-row minus">
-        <div class="rr-wf-label">
           <div class="rr-wf-name">− Ads Meta (gasto real)</div>
-          <div class="rr-wf-detail">Gasto REAL del mes · se edita en los inputs de abajo</div>
+          <div class="rr-wf-detail">Gasto REAL del mes por vendedor · se edita en los inputs de abajo</div>
         </div>
         <div class="rr-wf-value">−${fmtRR(r.adsReal)}</div>
       </div>
@@ -21089,6 +21352,68 @@
     el.innerHTML = html;
   }
   window.renderRentabilidad = renderRentabilidad;
+
+  // ═══════════════════════════════════════════════════════════
+  // 🚚 FLETES COBRADOS · panel de stats
+  // ═══════════════════════════════════════════════════════════
+  function renderFletesPanel() {
+    const el = document.getElementById('fletesStatsGrid');
+    if (!el) return;
+    const mk = activeOpsMonth();
+    const r = computeRentabilidad(mk);
+
+    if (r.fletesTotal === 0) {
+      el.innerHTML = `
+        <div class="fletes-empty">
+          🚚 Este mes no se cobraron fletes · todas las ventas fueron sin envío
+        </div>
+      `;
+      return;
+    }
+
+    // Ordenar vendedores por monto desc
+    const vendorEntries = Object.entries(r.fletesByVendor)
+      .sort((a, b) => b[1] - a[1]);
+
+    const vendorsHtml = vendorEntries.map(([key, amount]) => {
+      const meta = SELLER_META[key] || {};
+      const emoji = meta.emoji || '🎯';
+      const name = (meta.name || key).toUpperCase();
+      const pct = r.fletesTotal > 0 ? (amount / r.fletesTotal) * 100 : 0;
+      return `
+        <div class="fletes-vendor-row">
+          <div class="fletes-vendor-name">
+            ${emoji} ${escapeHtml(name)}
+            <span class="fletes-vendor-pct">(${pct.toFixed(1)}%)</span>
+          </div>
+          <div class="fletes-vendor-amount">${fmtRR(amount)}</div>
+        </div>
+      `;
+    }).join('');
+
+    el.innerHTML = `
+      <div class="fletes-stat-card big">
+        <div class="fletes-stat-label">💰 Total cobrado en fletes</div>
+        <div class="fletes-stat-value">${fmtRR(r.fletesTotal)}</div>
+        <div class="fletes-stat-sub">${r.fletesCount} ventas con envío · ${formatMonthLabel(mk)}</div>
+      </div>
+      <div class="fletes-stat-card">
+        <div class="fletes-stat-label">📦 Cantidad de envíos</div>
+        <div class="fletes-stat-value">${r.fletesCount}</div>
+        <div class="fletes-stat-sub">ventas con flete en el mes</div>
+      </div>
+      <div class="fletes-stat-card">
+        <div class="fletes-stat-label">📊 Flete promedio</div>
+        <div class="fletes-stat-value">${fmtRR(r.fletePromedio)}</div>
+        <div class="fletes-stat-sub">por venta con envío</div>
+      </div>
+      <div class="fletes-vendors-section">
+        <div class="fletes-vendors-title">📋 Desglose por vendedor</div>
+        ${vendorsHtml}
+      </div>
+    `;
+  }
+  window.renderFletesPanel = renderFletesPanel;
 
   // Exportar PDF del P&L
   async function exportRentabilidadPDF() {
@@ -21162,8 +21487,17 @@
 
       row('Costos del equipo de ventas:', 0, { subtitle: true });
       row('(−) Comisiones + viáticos + bonos', -r.comisionesVendedores, { red: true });
-      row('(−) Sueldo base Lauti', -r.sueldoLauti, { red: true });
-      row('(−) Ads Meta (gasto real)', -r.adsReal, { red: true });
+      row('(−) Ads Meta por vendedor:', 0, { subtitle: true });
+      if (r.adsBySeller && Object.keys(r.adsBySeller).length > 0) {
+        Object.entries(r.adsBySeller).forEach(([key, amount]) => {
+          if (amount > 0) {
+            const meta = SELLER_META[key] || {};
+            const name = meta.name || key;
+            row(`  ${name}`, -amount);
+          }
+        });
+      }
+      row('(−) Total Ads Meta', -r.adsReal, { red: true, bold: true });
       doc.setLineWidth(0.4);
       doc.line(marginX, y, pageW - marginX, y);
       y += 3;
@@ -21194,6 +21528,20 @@
       if (r.neto >= 0) doc.setTextColor(31, 138, 58); else doc.setTextColor(229, 37, 33);
       doc.text(`${r.netoPct.toFixed(1)}% sobre ventas`, marginX, y);
       y += 10;
+
+      // 🚚 FLETES COBRADOS (informativo)
+      if (r.fletesTotal > 0) {
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(30, 64, 175);
+        doc.text(`🚚 Fletes cobrados: ${fmtRR(r.fletesTotal)} en ${r.fletesCount} ventas (promedio ${fmtRR(r.fletePromedio)})`, marginX, y);
+        y += 5;
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text('* Los fletes están incluidos en Facturación Bruta pero no comisionan', marginX, y);
+        y += 8;
+      }
 
       // Footer
       doc.setFont('helvetica', 'italic');
